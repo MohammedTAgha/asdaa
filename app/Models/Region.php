@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model
 {
-    use HasFactory;
+    public function citizens()
+    {
+        return $this->hasMany(Citizen::class);
+    }
+
+    public function representatives()
+    {
+        return $this->hasMany(RegionRepresentative::class);
+    }
 }

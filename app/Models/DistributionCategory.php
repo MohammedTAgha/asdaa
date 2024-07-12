@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class DistributionCategory extends Model
 {
-    use HasFactory;
+    public function distributions()
+    {
+        return $this->hasMany(Distribution::class);
+    }
 }

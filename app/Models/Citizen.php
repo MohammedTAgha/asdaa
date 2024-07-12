@@ -7,5 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Citizen extends Model
 {
-    use HasFactory;
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function distributions()
+    {
+        return $this->belongsToMany(Distribution::class, 'distribution_citizens');
+    }
 }

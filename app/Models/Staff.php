@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Staff extends Model
 {
-    use HasFactory;
+    // Staff model can have more relationships if necessary
 }
