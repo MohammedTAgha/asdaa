@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\CitizenController;
+use App\Http\Controllers\RegionController;
 Route::get('/citizens', [CitizenController::class, 'index']);
 Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 Route::post('/citizens', [CitizenController::class, 'store']);
