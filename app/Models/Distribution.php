@@ -32,7 +32,7 @@ class Distribution extends Model
 
     public function citizens()
     {
-        return $this->belongsToMany(Citizen::class, 'distribution_citizens')
-        ->withPivot('quantity', 'recipient', 'note', 'done');
+        return $this->belongsToMany(Citizen::class, 'distribution_citizens');
+        
     }
 }

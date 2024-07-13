@@ -31,9 +31,13 @@ class DistributionCitizenController extends Controller
             'note' => 'nullable|string',
             'done' => 'required|boolean',
         ]);
+        
+        // DistributionCitizen::create($request->all());
+        // logger()->info('Request data: ', $request->all());
+        $distribution = Distribution::find($request->distribution_id);
+        $citizen = Citizen::find($request->citizen_id);
 
-        DistributionCitizen::create($request->all());
-
+       
         return redirect()->route('distribution_citizens.index')->with('success', 'DistributionCitizen created successfully');
     }
 
