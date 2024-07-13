@@ -14,9 +14,10 @@ class Child extends Model
     public $incrementing=false;
 
     protected $fillable = [
-        'name',
-     'date_of_birth',
-      'gender',
+    'id',
+    'name',
+    'date_of_birth',
+    'gender',
     'citizen_id',
     'orphan',
     'infant',
