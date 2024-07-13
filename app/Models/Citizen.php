@@ -29,6 +29,7 @@ class Citizen extends Model
    
     protected $primaryKey='id';
     public $incrementing=false;
+
     public function region()
     {
         return $this->belongsTo(Region::class);
@@ -37,5 +38,10 @@ class Citizen extends Model
     public function distributions()
     {
         return $this->belongsToMany(Distribution::class, 'distribution_citizens');
+    }
+    
+    public function children()
+    {
+        return $this->hasMany(Child::class);
     }
 }

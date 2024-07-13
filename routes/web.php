@@ -20,12 +20,16 @@ use App\Http\Controllers\RegionRepresentativeController;
 
 Route::resource('regions', RegionController::class);
 Route::resource('representatives', RegionRepresentativeController::class);
+Route::resource('citizens', CitizenController::class);
 
-Route::get('/citizens', [CitizenController::class, 'index']);
-Route::get('/citizens/{id}', [CitizenController::class, 'show']);
-Route::post('/citizens', [CitizenController::class, 'store']);
-Route::put('/citizens/{id}', [CitizenController::class, 'update']);
-Route::delete('/citizens/{id}', [CitizenController::class, 'delete']);
+Route::get('/children/create/{citizenId}', [ChildController::class, 'create'])->name('children.create');
+Route::post('/children', [ChildController::class, 'store'])->name('children.store');
+
+// Route::get('/citizens', [CitizenController::class, 'index']);
+// Route::get('/citizens/{id}', [CitizenController::class, 'show']);
+// Route::post('/citizens', [CitizenController::class, 'store']);
+// Route::put('/citizens/{id}', [CitizenController::class, 'update']);
+// Route::delete('/citizens/{id}', [CitizenController::class, 'delete']);
 
 // Route::get('/regions', [RegionController::class, 'index']);
 // Route::get('/regions/{id}', [RegionController::class, 'show']);

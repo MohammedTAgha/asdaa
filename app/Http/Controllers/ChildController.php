@@ -17,25 +17,24 @@ class ChildController extends Controller
         return response()->json($childs);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|string',
+            'citizen_id' => 'required|exists:citizens,id',
+            // Add other validation rules as needed
+        ]);
+
+        Child::create($request->all());
+        return redirect()->back()->with('success', 'Child added successfully.');
+    }
+
+    public function create($citizenId)
+    {
+        $citizen = Citizen::findOrFail($citizenId);
+        return view('child.create', compact('citizen'));
     }
 
     /**

@@ -10,42 +10,58 @@ class CitizenController extends Controller
     public function index()
     {
         $citizens = Citizen::all();
-        return response()->json($citizens);
+        return view('citizens.index', compact('citizens'));
     }
 
     public function show($id)
     {
-        $citizen = Citizen::find($id);
-        return response()->json($citizen);
+        $citizen = Citizen::with('children')->findOrFail($id);
+        return view('citizens.show', compact('citizen'));
+    }
+
+    public function create()
+    {
+        return view('citizens.create');
     }
 
     public function store(Request $request)
     {
-        $citizen = Citizen::create($request->all());
-        return response()->json($citizen, 201);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|string',
+            // Add other validation rules as needed
+        ]);
+
+        Citizen::create($request->all());
+        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
+    }
+
+    public function edit($id)
+    {
+        $citizen = Citizen::findOrFail($id);
+        return view('citizens.edit', compact('citizen'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|string',
+            // Add other validation rules as needed
+        ]);
+
         $citizen = Citizen::findOrFail($id);
         $citizen->update($request->all());
-        return response()->json($citizen, 200);
+        return redirect()->route('citizens.index')->with('success', 'Citizen updated successfully.');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        Citizen::findOrFail($id)->delete();
-        return response()->json(null, 204);
+        $citizen = Citizen::findOrFail($id);
+        $citizen->delete();
+        return redirect()->route('citizens.index')->with('success', 'Citizen deleted successfully.');
     }
-
-    public function age()
-    {
-        return \Carbon\Carbon::parse($this->date_of_birth)->age;
-    }
-    
-    public function children()
-    {
-        return $this->hasMany(Child::class);
-    }
-
 }
+
