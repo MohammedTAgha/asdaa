@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\CitizenController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\RegionRepresentativeController;
+
+
 
 Route::resource('regions', RegionController::class);
+Route::resource('representatives', RegionRepresentativeController::class);
 
 Route::get('/citizens', [CitizenController::class, 'index']);
 Route::get('/citizens/{id}', [CitizenController::class, 'show']);
