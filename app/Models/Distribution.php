@@ -7,6 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Distribution extends Model
 {
+     // use HasFactory;
+     protected $table='distributions';
+     protected $primaryKey='id';
+     protected $fillable = [
+        'name',
+        'date',
+        'distribution_category_id',
+        'arrive_date',
+        'quantity',
+        'target',
+        'source',
+        'done',
+        'target_count',
+        'expectation',
+        'min_count',
+        'max_count',
+        'note'
+        ];
     public function category()
     {
         return $this->belongsTo(DistributionCategory::class);
