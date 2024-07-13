@@ -19,6 +19,12 @@ Route::post('/citizens', [CitizenController::class, 'store']);
 Route::put('/citizens/{id}', [CitizenController::class, 'update']);
 Route::delete('/citizens/{id}', [CitizenController::class, 'delete']);
 
+Route::get('/regions', [RegionController::class, 'index']);
+Route::get('/regions/{id}', [RegionController::class, 'show']);
+Route::post('/regions', [RegionController::class, 'store']);
+Route::put('/regions/{id}', [RegionController::class, 'update']);
+Route::delete('/regions/{id}', [RegionController::class, 'delete']);
+
 
 Route::get('/', function () {
     return view('welcome');
