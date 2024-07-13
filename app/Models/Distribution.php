@@ -27,11 +27,12 @@ class Distribution extends Model
         ];
     public function category()
     {
-        return $this->belongsTo(DistributionCategory::class);
+        return $this->belongsTo(DistributionCategory::class,'distribution_category_id');
     }
 
     public function citizens()
     {
-        return $this->belongsToMany(Citizen::class, 'distribution_citizens');
+        return $this->belongsToMany(Citizen::class, 'distribution_citizens')
+        ->withPivot('quantity', 'recipient', 'note', 'done');
     }
 }

@@ -27,7 +27,6 @@ class Child extends Model
     'obstruction',
     'obstruction_description',
     'note',
-
     ];
     
     public function citizen() //father

@@ -15,16 +15,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CitizenController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\RegionRepresentativeController;
-
+use App\Http\Controllers\DistributionController;
+use App\Http\Controllers\DistributionCategoryController;
+use App\Http\Controllers\DistributionCitizenController;
 
 
 Route::resource('regions', RegionController::class);
 Route::resource('representatives', RegionRepresentativeController::class);
 Route::resource('citizens', CitizenController::class);
-
+Route::resource('distributions', DistributionController::class);
+Route::resource('distribution_categories', DistributionCategoryController::class);
 Route::get('/children/create/{citizenId}', [ChildController::class, 'create'])->name('children.create');
 Route::post('/children', [ChildController::class, 'store'])->name('children.store');
-
+Route::resource('distribution_citizens', DistributionCitizenController::class);
 // Route::get('/citizens', [CitizenController::class, 'index']);
 // Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 // Route::post('/citizens', [CitizenController::class, 'store']);

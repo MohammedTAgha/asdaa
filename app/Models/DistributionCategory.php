@@ -10,7 +10,8 @@ class DistributionCategory extends Model
     protected $table='distribution_categories';
     protected $primaryKey='id';
     protected $fillable = [
-        'name'
+        'name',
+        'description'
 
     ];
     public function distributions()
