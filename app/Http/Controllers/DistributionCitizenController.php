@@ -34,9 +34,17 @@ class DistributionCitizenController extends Controller
         
         // DistributionCitizen::create($request->all());
         // logger()->info('Request data: ', $request->all());
-        $distribution = Distribution::find($request->distribution_id);
-        $citizen = Citizen::find($request->citizen_id);
-
+        // $distribution = Distribution::find($request->distribution_id);
+        // $citizen = Citizen::find($request->citizen_id);
+        $d=new DistributionCitizen();
+        $d->distribution_id=$request->input('distribution_id');
+        $d->citizen_id=$request->input('citizen_id');
+        $d->quantity=$request->input('quantity');
+        $d->recipient=$request->input('recipient');
+        $d->done=$request->input('done');
+        $d->note=$request->input('note');
+        DistributionCitizen::create($request->all());
+       
        
         return redirect()->route('distribution_citizens.index')->with('success', 'DistributionCitizen created successfully');
     }

@@ -17,6 +17,7 @@ class DistributionCitizen extends Model
         'note',
         'done',
     ];
+
     
 
 }
