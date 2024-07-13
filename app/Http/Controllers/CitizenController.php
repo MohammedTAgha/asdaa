@@ -37,4 +37,15 @@ class CitizenController extends Controller
         Citizen::findOrFail($id)->delete();
         return response()->json(null, 204);
     }
+
+    public function age()
+    {
+        return \Carbon\Carbon::parse($this->date_of_birth)->age;
+    }
+    
+    public function children()
+    {
+        return $this->hasMany(Child::class);
+    }
+
 }
