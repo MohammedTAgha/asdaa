@@ -10,7 +10,7 @@
 
 
 </head>
-<body class="bg-gray-100 h-screen antialiased leading-none font-sans">
+<body class="bg-gray-100 h-screen antialiased leading-none font-sans" style="direction:rtl">
     <div class="flex h-full">
         <!-- Sidebar -->
         <div class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2">
