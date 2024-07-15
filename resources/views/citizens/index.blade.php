@@ -10,9 +10,14 @@
         <form method="GET" action="{{ route('citizens.index') }}">
                 <label for="per_page" class="mr-2">Entries per page:</label>
                 <select name="per_page" id="per_page" onchange="this.form.submit()" class="border border-gray-300 rounded p-1">
-                    <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
-                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
                     <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                    <option value="200" {{ request('per_page') == 200 ? 'selected' : '' }}>200</option>
+                    <option value="500" {{ request('per_page') == 500 ? 'selected' : '' }}>500</option>
+                    <option value="1000" {{ request('per_page') == 1000 ? 'selected' : '' }}>1000</option>
+                    <option value="7000" {{ request('per_page') == 7000 ? 'selected' : '' }}>7000</option>
                 </select>
             </form>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -111,8 +116,9 @@
                 </tbody>
                 
             </table>
+            <h3>nav </h3>{{$citizens->links()}}
 </div>
-            <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
+            <!-- <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">Showing <span class="font-semibold text-gray-900 dark:text-white">1-10</span> of <span class="font-semibold text-gray-900 dark:text-white">100</span></span>
                 <ul class="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
                     <li>
@@ -137,7 +143,7 @@
                         <a href="#" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
                     </li>
                 </ul>
-            </nav>
+            </nav> -->
         </div>
     </div>
 @endsection
