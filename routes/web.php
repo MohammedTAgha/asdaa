@@ -18,7 +18,8 @@ use App\Http\Controllers\RegionRepresentativeController;
 use App\Http\Controllers\DistributionController;
 use App\Http\Controllers\DistributionCategoryController;
 use App\Http\Controllers\DistributionCitizenController;
-
+use App\Http\Controllers\HomeController;
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('regions', RegionController::class);
 Route::resource('representatives', RegionRepresentativeController::class);
@@ -40,7 +41,7 @@ Route::resource('distribution_citizens', DistributionCitizenController::class);
 // Route::put('/regions/{id}', [RegionController::class, 'update']);
 // Route::delete('/regions/{id}', [RegionController::class, 'delete']);
 
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/logout', function () {
+    // Implement logout functionality
+    return redirect()->route('home');
+})->name('logout');
