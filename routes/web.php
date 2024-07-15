@@ -19,6 +19,7 @@ use App\Http\Controllers\DistributionController;
 use App\Http\Controllers\DistributionCategoryController;
 use App\Http\Controllers\DistributionCitizenController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ChildController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('regions', RegionController::class);
@@ -26,6 +27,7 @@ Route::resource('representatives', RegionRepresentativeController::class);
 Route::resource('citizens', CitizenController::class);
 Route::resource('distributions', DistributionController::class);
 Route::resource('distribution_categories', DistributionCategoryController::class);
+
 Route::get('/children/create/{citizenId}', [ChildController::class, 'create'])->name('children.create');
 Route::post('/children', [ChildController::class, 'store'])->name('children.store');
 Route::resource('distribution_citizens', DistributionCitizenController::class);

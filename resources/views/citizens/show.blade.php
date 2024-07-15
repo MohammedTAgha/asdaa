@@ -29,8 +29,8 @@
         <div class="mb-4">
             <label for="gender" class="block text-gray-700">Gender:</label>
             <select id="gender" name="gender" required class="mt-1 block w-full rounded border-gray-300">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="0">Male</option>
+                <option value="1">Female</option>
             </select>
         </div>
         <!-- Add other child fields as needed -->
