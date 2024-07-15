@@ -7,6 +7,14 @@
         <h1 class="text-2xl font-bold my-4">المواطنين</h1>
         <a href="{{ route('citizens.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-9">
+        <form method="GET" action="{{ route('citizens.index') }}">
+                <label for="per_page" class="mr-2">Entries per page:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()" class="border border-gray-300 rounded p-1">
+                    <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                    <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                </select>
+            </form>
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase rtl:text-right bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -20,22 +28,55 @@
                             ID
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Name
+                        <a href="{{ route('citizens.index', ['sort' => 'name', 'direction' => $sortField == 'name' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
+                                Name
+                                @if($sortField == 'name')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Date of Birth
+                           
+                        <a href="{{ route('citizens.index', ['sort' => 'date_of_birth', 'direction' => $sortField == 'date_of_birth' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
+                                 Date of Birth
+                                @if($sortField == 'date_of_birth')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            <a href="{{ route('citizens.index', ['sort' => 'gender', 'direction' => $sortField == 'gender' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
                             Gender
+                                @if($sortField == 'gender')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Wife Name
+                        <a href="{{ route('citizens.index', ['sort' => 'wife_name', 'direction' => $sortField == 'wife_name' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
+                            wife name
+                                @if($sortField == 'wife_name')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            
+                            <a href="{{ route('citizens.index', ['sort' => 'social_status', 'direction' => $sortField == 'social_status' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
                             Social Status
+                                @if($sortField == 'social_status')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            
+                            <a href="{{ route('citizens.index', ['sort' => 'region_id', 'direction' => $sortField == 'region_id' && $sortDirection == 'asc' ? 'desc' : 'asc', 'per_page' => $perPage]) }}">
                             Region
+                                @if($sortField == 'region_id')
+                                    <span>{{ $sortDirection == 'asc' ? '↑' : '↓' }}</span>
+                                @endif
+                            </a>
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Note
@@ -68,6 +109,7 @@
     </tr>
     @endforeach
                 </tbody>
+                
             </table>
 </div>
             <nav class="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4" aria-label="Table navigation">

@@ -8,12 +8,20 @@ use Illuminate\Http\Request;
 
 class CitizenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $sortField = $request->get('sort', 'name'); // Default sort field
+        $sortDirection = $request->get('direction', 'asc'); // Default sort direction
+        $perPage = $request->get('per_page', 10); // Default entries per page
+        $citizens = Citizen::orderBy($sortField, $sortDirection)
+        ->paginate($perPage)
+        ->appends($request->all());
+
+    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage'));
         $citizens = Citizen::all();
         return view('citizens.index', compact('citizens'));
     }
-    
+
     public function show($id)
     {
         $citizen = Citizen::with('children')->findOrFail($id);
