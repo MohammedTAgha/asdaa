@@ -22,7 +22,7 @@ class Citizen extends Model
         'job',
         'original_address',
         'elderly_count',
-        'region_id ',
+        'region_id',
         'note',
     
         ];

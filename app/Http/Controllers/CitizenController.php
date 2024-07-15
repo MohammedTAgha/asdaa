@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Citizen;
+use App\Models\Region;
 use Illuminate\Http\Request;
 
 class CitizenController extends Controller
@@ -21,20 +22,37 @@ class CitizenController extends Controller
 
     public function create()
     {
-        return view('citizens.create');
+        $regions = Region::all();
+        return view('citizens.create',compact('regions'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|string',
-            // Add other validation rules as needed
-        ]);
+   
+       
+        $data = [
+            'id' => $request->input('id'),
+            'name' => $request->input('name'),
+            'date_of_birth' => $request->input('date_of_birth'),
+            'gender' => $request->input('gender'),
+            'region_id' => $request->input('region_id'),
+            'wife_id' => $request->input('wife_id'),
+            'wife_name' => $request->input('wife_name'),
+            'widowed' => $request->input('widowed'),
+            'social_status' => $request->input('social_status'),
+            'living_status' => $request->input('living_status'),
+            'job' => $request->input('job'),
+            'original_address' => $request->input('original_address'),
+            'elderly_count' => $request->input('elderly_count'),
+            'note' => $request->input('note'),
 
-        Citizen::create($request->all());
-        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
+        ];
+        
+        Citizen::create($data);
+
+       
+   
+       return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
 
     public function edit($id)
