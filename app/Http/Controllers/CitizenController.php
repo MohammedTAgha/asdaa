@@ -13,7 +13,7 @@ class CitizenController extends Controller
         $citizens = Citizen::all();
         return view('citizens.index', compact('citizens'));
     }
-
+    
     public function show($id)
     {
         $citizen = Citizen::with('children')->findOrFail($id);
