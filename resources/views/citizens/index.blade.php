@@ -7,6 +7,59 @@
         <h1 class="text-2xl font-bold my-4">المواطنين</h1>
         <a href="{{ route('citizens.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a>
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-9">
+
+          <!-- Search and Filter Form -->
+          <form method="GET" action="{{ route('citizens.index') }}" class="mb-4">
+            <div class="flex flex-wrap mb-4">
+                <!-- Search -->
+                <div class="w-full md:w-1/2 lg:w-1/4 px-2 mb-4 md:mb-0">
+                    <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                </div>
+
+              
+                <!-- Regions -->
+                <div class="w-full md:w-1/2 lg:w-1/3 px-2 mb-4 md:mb-0">
+                    <label for="regions" class="block text-sm font-medium text-gray-700">Regions</label>
+                    <select name="regions[]" id="regions" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        @foreach ($regions as $region)
+                            <option value="{{ $region->id }}" {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                            @if ($region->representatives->isNotEmpty())
+                            {{$region->name}} - {{ $region->representatives->first()->name }}
+                            @else
+                                {{$region->name}}
+                            @endif
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Social Status -->
+                <div class="w-full md:w-1/2 lg:w-1/4 px-2 mb-4 md:mb-0">
+                    <label for="social_status" class="block text-sm font-medium text-gray-700">Social Status</label>
+                    <select name="social_status" id="social_status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="">Select Status</option>
+                        <option value="متزوج" {{ request('social_status') == 'متزوج' ? 'selected' : '' }}>متزوج</option>
+                        <option value="مطلق" {{ request('social_status') == 'مطلق' ? 'selected' : '' }}>مطلق</option>
+                        <option value="مطلقة" {{ request('social_status') == 'مطلقة' ? 'selected' : '' }}>مطلقة</option>
+                        <option value="اعزب" {{ request('social_status') == 'اعزب' ? 'selected' : '' }}>اعزب</option>
+                    </select>
+                </div>
+
+                <!-- Widowed -->
+                <div class="w-full md:w-1/2 lg:w-1/4 px-2 mb-4 md:mb-0">
+                    <label for="widowed" class="block text-sm font-medium text-gray-700">Widowed</label>
+                    <select name="widowed" id="widowed" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                        <option value="0">لا</option>
+                        <option value="1" {{ request('widowed') == '1' ? 'selected' : '' }}>ارمل</option>
+                        <option value="2" {{ request('widowed') == '0' ? 'selected' : '' }}>ارملة</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Filter</button>
+        </form>
+
         <form method="GET" action="{{ route('citizens.index') }}">
                 <label for="per_page" class="mr-2">Entries per page:</label>
                 <select name="per_page" id="per_page" onchange="this.form.submit()" class="border border-gray-300 rounded p-1">

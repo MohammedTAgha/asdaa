@@ -10,16 +10,41 @@ class CitizenController extends Controller
 {
     public function index(Request $request)
     {
+        $query = Citizen::query();
+        $regions = Region::all();
+        // Apply search filter
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+        }
+
+        // Apply age filter
+        if ($request->has('age')) {
+            $query->where('age', $request->input('age'));
+        }
+
+        // Apply region filter (handle multiple regions)
+        if ($request->has('regions')) {
+            $query->whereIn('region', $request->input('regions'));
+        }
+
+        // Apply social status filter
+        if ($request->has('social_status')) {
+            $query->where('social_status','like', $request->input('social_status'));
+        }
+        
         $sortField = $request->get('sort', 'name'); // Default sort field
         $sortDirection = $request->get('direction', 'asc'); // Default sort direction
-        $perPage = $request->get('per_page', 10); // Default entries per page
-        $citizens = Citizen::orderBy($sortField, $sortDirection)
-        ->paginate($perPage)
-        ->appends($request->all());
-
-    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage'));
-        $citizens = Citizen::all();
-        return view('citizens.index', compact('citizens'));
+        
+       
+        $perPage = $request->input('perPage', 10);
+        $citizens = $query->paginate($perPage);
+        
+    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions'));
+        // $citizens = Citizen::all();
+        // return view('citizens.index', compact('citizens'));
     }
 
     public function show($id)
