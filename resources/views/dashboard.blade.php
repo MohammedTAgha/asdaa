@@ -5,7 +5,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>ادارة مخيم اصداء</title>
+
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="article" />
+        <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+        <!--begin::Fonts-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+        <!--end::Fonts-->
+        <!--begin::Global Stylesheets Bundle(used by all pages)-->
+        
+        <link href="assets/css/style.bundle.rtl.css" rel="stylesheet" type="text/css" />
+        <!--end::Global Stylesheets Bundle-->
+
+        <link rel="shortcut icon" href="{{ asset('media/logos/favicon.ico') }}" />
+       
+        <link href="{{ asset('plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 
 
