@@ -2,16 +2,30 @@
 
 @section('content')
     @component('components.toolbar',['title'=>'المواطنين'])
+            <!--begin::Compact form-->
+            <form method="GET" action="{{ route('citizens.index') }}">
+            <div class="d-flex align-items-center">
+            <!--begin::Input group-->
+            <div class="position-relative w-md-400px me-md-2">
+                <input type="text" class="form-control form-control-solid ps-10" name="search" value="" placeholder="بحث">
+            </div>
+            <!--end::Input group-->
+            <!--begin:Action-->
+            <div class="d-flex align-items-center">
+                <button type="submit" class="btn btn-primary me-5">بحث</button>
+                <!-- <a id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" href="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a> -->
+            </div>
+            <!--end:Action-->
+        </div>
+        </form>
+        <!--end::Compact form-->
+    @endcomponent
     
-    @endcomponent 
 aa
         <div class="relative overflow-x-auto shadow-md px-4 sm:rounded-lg">
-        <h1 class="text-2xl font-bold my-4">المواطنين</h1>
-        <a href="{{ route('citizens.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a>
+        <!-- <h1 class="text-2xl font-bold my-4">المواطنين</h1>
+        <a href="{{ route('citizens.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a> -->
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-9">
-
-
-
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase rtl:text-right bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>

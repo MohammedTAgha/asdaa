@@ -10,6 +10,7 @@
 									<!--begin::Separator-->
 									<span class="h-20px border-gray-200 border-start mx-4"></span>
 									<!--end::Separator-->
+                                    {{$slot}}
 								</div>
 								<!--end::Page title-->
 								<!--begin::Actions-->
