@@ -11,7 +11,7 @@
         <meta property="og:type" content="article" />
       
         <!--begin::Fonts-->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+        <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" /> -->
         <!--end::Fonts-->
         <!--begin::Global Stylesheets Bundle(used by all pages)-->
         
@@ -70,7 +70,7 @@
             </div>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 overflow-y-auto p-2">
                 @yield('content')
             </main>
         </div>
