@@ -1,7 +1,7 @@
 @extends('dashboard')
 
 @section('content')
-<div class="container mx-auto py-8 ">
+<div class="container mx-auto  ">
 
         <div class="relative overflow-x-auto shadow-md px-4 sm:rounded-lg">
         <h1 class="text-2xl font-bold my-4">المواطنين</h1>

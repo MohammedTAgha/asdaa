@@ -46729,7 +46729,7 @@ body {
   height: 100%;
   margin: 0px;
   padding: 0px;
-  font-size: 13px !important;
+  /* font-size: 13px !important; */
   font-weight: 400;
   font-family: Poppins, Helvetica, "sans-serif";
   -webkit-font-smoothing: antialiased;
@@ -46738,13 +46738,13 @@ body {
 @media (max-width: 991.98px) {
   html,
 body {
-    font-size: 13px !important;
+    /* font-size: 13px !important; */
   }
 }
 @media (max-width: 767.98px) {
   html,
 body {
-    font-size: 12px !important;
+    /* font-size: 12px !important; */
   }
 }
 html a:hover,
@@ -46816,7 +46816,7 @@ body {
 .container-md,
 .container-lg,
 .container-xl {
-    padding: 0 30px;
+    /* padding: 0 30px; */
   }
 
   .wrapper {
@@ -47373,7 +47373,7 @@ body {
 .container-lg,
 .container-xl,
 .container-xxl {
-    padding: 0 30px;
+    /* padding: 0 30px; */
   }
 
   .docs-wrapper {

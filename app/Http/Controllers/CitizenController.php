@@ -43,8 +43,6 @@ class CitizenController extends Controller
         $citizens = $query->paginate($perPage);
         
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions'));
-        // $citizens = Citizen::all();
-        // return view('citizens.index', compact('citizens'));
     }
 
     public function show($id)
