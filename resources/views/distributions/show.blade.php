@@ -1,7 +1,7 @@
 @extends('dashboard')
 
 @section('content')
-
+<div class="container mx-auto px-4">
 @component('components.box',['title'=>'بيانات التوزيع'])
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -67,12 +67,8 @@
 </div>
 @endcomponent
 
-@component('components.box',['title'=>'المواطنين المستفيدين])
-
-@endcomponent
-
-<div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-2xl font-bold mb-6">التوزيع</h1>
+@component('components.box',['title'=>'المستفيدين'])
+<div class="container mx-auto px-4" style="max-width: 100%; overflow-x: hidden;">
         @php
         $citizens = $distribution->citizens;
         @endphp
@@ -95,29 +91,42 @@
                 </thead>
                 <tbody class="text-gray-700">  
                 @foreach($citizens as $citizen)
-                    <tr>
-                        <td class="w-1/7 py-3 px-4">
-                            <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
-                            {{ $citizen->pivot->id }}
-                            </a> 
-                        </td> 
-                     
-                        <td class="w-2/7 py-3 px-4">
+                <tr>
+                    <td class="w-1/7 py-3 px-4">
                         <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
+                        {{ $citizen->id }}
+                        </a> 
+                    </td> 
+                    <td class="w-2/7 py-3 px-4">
+                    <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
                         {{ $citizen->name }}
                         </a>
-                    </td>
-                     
-                        <td class="w-1/7 py-3 px-4">{{ $citizen->source }}</td>
-                        <td class="w-1/7 py-3 px-4">{{ $citizen->pivot->quantity }}</td>
-                        <td class="w-1/7 py-3 px-4">
-                        <input class="text-sm" type="checkbox" name="done" value="{{ $citizen->pivot->done }}" {{ $citizen->pivot->done ? 'checked' : '' }}>
+                    </td>   
+                    <td class="w-2/7 py-3 px-4">
+                    <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
+                        {{ $citizen->region->name }}
+                        </a>
+                    </td>   
+                    <td class="w-2/7 py-3 px-4">
+                    افراد
+                    </td>    
+                    <td class="w-1/7 py-3 px-4">الحالة </td>
+                    <td class="w-1/7 py-3 px-4">
+                            <input type="number" name="quantity" value="{{ $citizen->pivot->quantity }}" id="quantity">
                         </td>
-                        <td class="w-1/7 py-3 px-4">{{ $citizen->pivot->recipient }}</td>
+                        <td class="w-1/7 py-3 px-4">
+                        <input type="checkbox" name="done" value="{{ $citizen->pivot->done }}" {{ $citizen->pivot->done ? 'checked' : '' }}>
+                        </td>
+                        <td class="w-1/7 py-3 px-4">
+                        <input  name="recipient" value="{{ $citizen->pivot->recipient }}" id="recipient">
+                        </td>
                         <td class="w-1/7 py-3 px-4">
                             <input type="date" name="date" value="{{ $citizen->pivot->date }}">
                         </td>
-                        <td class="w-1/7 py-3 px-4"> {{ $citizen->pivot->note }}</td>
+                        <td class="w-1/7 py-3 px-4"> 
+                            <input  name="note" id="note" value="{{ $citizen->pivot->note }}">
+
+                        </td>
                         <td class="w-1/7 py-3 px-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded update-button" data-id="{{ $citizen->pivot->id }}">
                             Update
@@ -130,6 +139,10 @@
             @else
             <h2> no citizns exist</h2>
             @endif
-    </div>
+
+            </div>
+
+@endcomponent
 
 @endsection
+ 
