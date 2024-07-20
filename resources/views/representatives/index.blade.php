@@ -18,7 +18,13 @@
                 <tbody class="text-gray-700">
                     @foreach ($representatives as $representative)
                     <tr>
-                        <td class="w-1/5 py-3 px-4">{{ $representative->name }}</td>
+                        
+                         <td class="w-1/5 py-3 px-4">
+                         <a href="{{ route('representatives.show', $representative->id) }}">
+                            {{ $representative->name }}
+                        </a>
+                        </td>
+                        
                         <td class="w-1/5 py-3 px-4">{{ $representative->region->name }}</td>
                         <td class="w-1/5 py-3 px-4">{{ $representative->phone }}</td>
                         <td class="w-1/5 py-3 px-4">{{ $representative->address }}</td>
