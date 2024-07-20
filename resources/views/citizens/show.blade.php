@@ -4,7 +4,7 @@
 <div class="container mx-auto px-4">
   <!-- show.blade.php -->
   
-    <div class="bg-white shadow-md rounded-lg p-6">
+    <div class="bg-white shadow-md rounded-lg p-6 mb-4">
         <h1 class="text-2xl font-bold mb-6">Citizen Details</h1>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -84,6 +84,64 @@
             <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">Edit</a>
         </div>
     </div>
+
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-6">الابناء</h1>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-6">التوزيع</h1>
+        @php
+        $distributions = $citizen->distributions
+        @endphp
+        @if (!$distributions->isEmpty())
+        <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">رقم</th>
+                        <th class="w-2/7 py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">المزود</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">استلم</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
+
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700">  
+                @foreach($distributions as $distribution)
+                    <tr>
+                        <td class="w-1/7 py-3 px-4">
+                            <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
+                            {{ $distribution->id }}
+                            </a> 
+                        </td> 
+                     
+                        <td class="w-2/7 py-3 px-4">
+                        <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
+                        {{ $distribution->name }}
+                        </a>
+                    </td>
+                     
+                        <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
+                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->quantity }}</td>
+                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->done }}</td>
+                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->recipient }}</td>
+                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->date }}</td>
+                        <td class="w-1/7 py-3 px-4"> {{ $distribution->pivot->note }}</td>
+
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @else
+            <h2>لم يستلم يعد</h2>
+            @endif
+    </div>
+
+
 </div>
     <h2 class="text-xl font-semibold mt-6">Children</h2>
     <ul class="list-disc ml-5">
