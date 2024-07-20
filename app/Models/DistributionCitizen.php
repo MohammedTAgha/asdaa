@@ -16,6 +16,7 @@ class DistributionCitizen extends Model
         'recipient',
         'note',
         'done',
+        'date',
     ];
 
     

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
+use App\Models\DistributionCitizen;
+
 use Illuminate\Http\Request;
 
 class DistributionController extends Controller
@@ -77,6 +79,24 @@ class DistributionController extends Controller
         return redirect()->route('distributions.index')->with('success', 'Distribution updated successfully.');
     }
 
+    public function updatePivot(Request $request)
+{
+    $pivotId = $request->input('pivotId');
+    $isChecked = $request->input('isChecked');
+    $selectedDate = $request->input('selectedDate');
+    $data=0;
+    if ($isChecked ===true){
+        $data = 1;
+    }
+    
+    // Retrieve the pivot record and update the "done" state
+    $pivot = DistributionCitizen::find($pivotId);
+    $pivot->done = $isChecked;
+     $pivot->date=$selectedDate;
+    $pivot->save();
+
+    return response()->json(['message' => $request->input('selectedDate')]);
+}
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();

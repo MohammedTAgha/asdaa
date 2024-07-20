@@ -107,6 +107,7 @@
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm"> </th>
 
                     </tr>
                 </thead>
@@ -115,7 +116,7 @@
                     <tr>
                         <td class="w-1/7 py-3 px-4">
                             <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
-                            {{ $distribution->id }}
+                            {{ $distribution->pivot->id }}
                             </a> 
                         </td> 
                      
@@ -127,11 +128,19 @@
                      
                         <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
                         <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->quantity }}</td>
-                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->done }}</td>
+                        <td class="w-1/7 py-3 px-4">
+                        <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
+                        </td>
                         <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->recipient }}</td>
-                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->date }}</td>
+                        <td class="w-1/7 py-3 px-4">
+                            <input type="date" name="date" value="{{ $distribution->pivot->date }}">
+                        </td>
                         <td class="w-1/7 py-3 px-4"> {{ $distribution->pivot->note }}</td>
-
+                        <td class="w-1/7 py-3 px-4">
+                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded update-button" data-id="{{ $distribution->pivot->id }}">
+                            Update
+                        </button>
+                    </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -173,4 +182,44 @@
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Child</button>
     </form>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Set CSRF token for AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('.update-button').click(function() {
+            var pivotId = $(this).data('id');
+            var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
+            var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
+            var data = isChecked ? 1 : 0;
+            
+            $.ajax({
+                url: '/update-pivot',
+                method: 'POST',
+                data: {
+                    pivotId: pivotId,
+                    isChecked: data,
+                    selectedDate: selectedDate
+                },
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                    alert('Pivot updated successfully');
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                    alert('Failed to update pivot');
+                }
+            });
+        });
+    });
+</script>
 @endsection
