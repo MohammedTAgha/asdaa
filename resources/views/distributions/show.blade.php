@@ -14,5 +14,11 @@
     <p>Min Count: {{ $distribution->min_count }}</p>
     <p>Max Count: {{ $distribution->max_count }}</p>
     <p>Note: {{ $distribution->note }}</p>
+    <ul>
+    
+    @foreach($distribution->citizens as $citizen)
+    <li> {{$citizen->id }}  | {{$citizen->name }}  </li>
+    @endforeach
+    </ul>
 </div>
 @endsection
