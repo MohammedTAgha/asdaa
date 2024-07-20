@@ -84,6 +84,10 @@ class DistributionController extends Controller
     $pivotId = $request->input('pivotId');
     $isChecked = $request->input('isChecked');
     $selectedDate = $request->input('selectedDate');
+    $quantity = $request->input('quantity');
+    $recipient = $request->input('recipient');
+    $note = $request->input('note');
+
     $data=0;
     if ($isChecked ===true){
         $data = 1;
@@ -92,7 +96,11 @@ class DistributionController extends Controller
     // Retrieve the pivot record and update the "done" state
     $pivot = DistributionCitizen::find($pivotId);
     $pivot->done = $isChecked;
-     $pivot->date=$selectedDate;
+    $pivot->date=$selectedDate;
+     $pivot->quantity=$quantity;
+     $pivot->recipient=$recipient;
+     $pivot->note=$note;
+     
     $pivot->save();
 
     return response()->json(['message' => $request->input('selectedDate')]);

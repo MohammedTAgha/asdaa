@@ -100,7 +100,7 @@
                 <thead class="bg-gray-800 text-white">
                     <tr>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                        <th class="w-2/7 py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
+                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">المزود</th>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
                         <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">استلم</th>
@@ -120,22 +120,29 @@
                             </a> 
                         </td> 
                      
-                        <td class="w-2/7 py-3 px-4">
+                        <td class="w-1/7 py-3 px-4">
                         <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
                         {{ $distribution->name }}
                         </a>
                     </td>
                      
                         <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
-                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->quantity }}</td>
+                        <td class="w-1/7 py-3 px-4">
+                            <input type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity">
+                        </td>
                         <td class="w-1/7 py-3 px-4">
                         <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
                         </td>
-                        <td class="w-1/7 py-3 px-4">{{ $distribution->pivot->recipient }}</td>
+                        <td class="w-1/7 py-3 px-4">
+                        <input  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient">
+                        </td>
                         <td class="w-1/7 py-3 px-4">
                             <input type="date" name="date" value="{{ $distribution->pivot->date }}">
                         </td>
-                        <td class="w-1/7 py-3 px-4"> {{ $distribution->pivot->note }}</td>
+                        <td class="w-1/7 py-3 px-4"> 
+                            <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
+
+                        </td>
                         <td class="w-1/7 py-3 px-4">
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded update-button" data-id="{{ $distribution->pivot->id }}">
                             Update
@@ -197,6 +204,10 @@
         $('.update-button').click(function() {
             var pivotId = $(this).data('id');
             var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
+            var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
+            var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
+            var note = $(this).closest('tr').find('input[name="note"]').val();
+
             var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
             var data = isChecked ? 1 : 0;
             
@@ -206,7 +217,10 @@
                 data: {
                     pivotId: pivotId,
                     isChecked: data,
-                    selectedDate: selectedDate
+                    selectedDate: selectedDate,
+                    quantity: quantity,
+                    recipient:recipient,
+                    note:note,
                 },
                 success: function(response) {
                     // Handle success response
