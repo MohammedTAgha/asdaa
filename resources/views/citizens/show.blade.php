@@ -6,7 +6,7 @@
     <p>Date of Birth: {{ $citizen->date_of_birth }}</p>
     <p>Gender: {{ $citizen->gender }}</p>
     <!-- Add other citizen details as needed -->
-
+    
     <h2 class="text-xl font-semibold mt-6">Children</h2>
     <ul class="list-disc ml-5">
         @foreach($citizen->children as $child)

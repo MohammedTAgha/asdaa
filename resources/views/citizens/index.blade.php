@@ -90,7 +90,6 @@
         @endslot
     @endcomponent
 
-aa
         <div class="relative overflow-x-auto shadow-md px-4 sm:rounded-lg">
         <!-- <h1 class="text-2xl font-bold my-4">المواطنين</h1>
         <a href="{{ route('citizens.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a> -->
@@ -175,8 +174,16 @@ aa
                 <label for="checkbox-table-search-{{ $citizen->id }}" class="sr-only">checkbox</label>
             </div>
         </td>
-        <td class="px-6 py-4 bg-gray-50">{{ $citizen->id }}</td>
-        <td class="px-6 py-4">{{ $citizen->name }}</td>
+        <td class="px-6 py-4 bg-gray-50">
+        <a href="{{ route('citizens.show',$citizen->id) }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+            {{ $citizen->id }}
+            </a>
+        </td>
+        <td class="px-6 py-4">
+            <a href="{{ route('citizens.show',$citizen->id) }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+                {{ $citizen->name }}
+            </a>
+        </td>
         <td class="px-6 py-4 bg-gray-50">{{ $citizen->date_of_birth }}</td>
         <td class="px-6 py-4">{{ $citizen->gender }}</td>
         <td class="px-6 py-4 bg-gray-50">{{ $citizen->wife_name }}</td>
@@ -201,6 +208,6 @@ aa
                 </select>
             </form>
             {{$citizens->links()}}
-        </div>
+    </div>
     
 @endsection
