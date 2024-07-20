@@ -39,8 +39,8 @@ class CitizenController extends Controller
         $sortDirection = $request->get('direction', 'asc'); // Default sort direction
         
        
-        $perPage = $request->input('perPage', 10);
-        $citizens = $query->paginate($perPage);
+        $perPage = $request->input('per_page', 10);
+        $citizens = $query->orderBy($sortField ,$sortDirection )->paginate($perPage);
         
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions'));
     }
