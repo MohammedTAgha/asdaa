@@ -47,9 +47,16 @@
                 <a href="{{ route('distributions.index') }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
                     Distributions
                 </a>
+                <a href="{{ route('representatives.index') }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+                    responsitive
+                </a>
+                <a href="{{ route('regions.index') }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+                    regions
+                </a>
                 <a href="{{ route('distribution_citizens.index') }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
                     Distribution Citizens
                 </a>
+                
             </nav>
         </div>
 

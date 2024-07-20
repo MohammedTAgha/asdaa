@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Representative</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('dashboard')
+
+@section('content')
     <div class="container mx-auto py-12">
         <h1 class="text-4xl font-bold mb-4">Edit Region Representative</h1>
         <form action="{{ route('representatives.update', $representative->id) }}" method="POST">
@@ -46,5 +40,4 @@
             </div>
         </form>
     </div>
-</body>
-</html>
+@endsection
