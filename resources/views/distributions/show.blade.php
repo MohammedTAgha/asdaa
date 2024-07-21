@@ -143,6 +143,50 @@
             </div>
 
 @endcomponent
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Set CSRF token for AJAX requests
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
+        $('.update-button').click(function() {
+            var pivotId = $(this).data('id');
+            var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
+            var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
+            var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
+            var note = $(this).closest('tr').find('input[name="note"]').val();
+
+            var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
+            var data = isChecked ? 1 : 0;
+            console.log(data)
+            $.ajax({
+                url: '/update-pivot',
+                method: 'POST',
+                data: {
+                    pivotId: pivotId,
+                    isChecked: data,
+                    selectedDate: selectedDate,
+                    quantity: quantity,
+                    recipient:recipient,
+                    note:note,
+                },
+                success: function(response) {
+                    // Handle success response
+                    console.log(response);
+                    alert('Pivot updated successfully');
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                    alert('Failed to update pivot');
+                }
+            });
+        });
+    });
+</script>
 @endsection
  
