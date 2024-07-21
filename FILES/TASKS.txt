@@ -1,0 +1,15 @@
+ citizen search bar 
+-region and respositive redesighn OK
+-edit ctz IN-P:
+-show Ctz DONE
+-add childs to CTZ NOT STARTED
+	- ADD many childs to ctz
+	- chiled more info
+	- ADD CHILDS STATUS TO CITIZEN MODULE
+-add distriputions to ctz = DONW
+-distripution crud views =
+-resp crud views =
+-distribution add citizen layout bulk
+
+- fix filters 
+-checkbox done
