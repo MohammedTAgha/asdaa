@@ -2,6 +2,10 @@
 @extends('dashboard')
 
 @section('content')
+
+    @component('components.datatable',['citizens'=>$citizens])
+    @endcomponent 
+
     @component('components.citizenstable')
     @endcomponent 
     <div class="container mx-auto">

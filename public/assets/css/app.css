@@ -1,3 +1,7 @@
 tr td{
     text-align: start;
 }
+
+tr td{
+    text-align: start !important;
+}

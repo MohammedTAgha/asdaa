@@ -20,7 +20,7 @@
 
         <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
        
-        <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
         
@@ -78,7 +78,8 @@
             </div>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-2">
+            <main class="flex-1 overflow-y-auto px-10">
+                
                 @yield('content')
             </main>
         </div>
@@ -95,6 +96,18 @@
 		<script src="assets/js/custom/modals/upgrade-plan.js"></script>
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
+        <!--begin::Page Vendors Javascript(used by this page)-->
+    <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <!--end::Page Vendors Javascript-->
+    <!--begin::Page Custom Javascript(used by this page)-->
+    <script src="assets/js/custom/pages/projects/project/project.js"></script>
+    <script src="assets/js/custom/modals/users-search.js"></script>
+    <script src="assets/js/custom/modals/new-target.js"></script>
+    <script src="assets/js/custom/widgets.js"></script>
+    <script src="assets/js/custom/apps/chat/chat.js"></script>
+    <script src="assets/js/custom/modals/create-app.js"></script>
+    <script src="assets/js/custom/modals/upgrade-plan.js"></script>
+    <!--end::Page Custom Javascript-->
     <script>
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             document.querySelector('.bg-gray-800').classList.toggle('hidden');
