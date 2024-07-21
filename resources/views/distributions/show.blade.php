@@ -60,9 +60,6 @@
             </div>
 
         </div>
-    @foreach($distribution->citizens as $citizen)
-    <li> {{$citizen->id }}  | {{$citizen->name }}  </li>
-    @endforeach
     </ul>
 </div>
 @endcomponent
