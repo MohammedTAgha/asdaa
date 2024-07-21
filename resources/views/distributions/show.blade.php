@@ -1,7 +1,7 @@
 @extends('dashboard')
 
 @section('content')
-<div class="container mx-auto px-4">
+<div class="container mx-auto px-4" style="max-width: 100%; overflow-x: hidden;">
 @component('components.box',['title'=>'بيانات التوزيع'])
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -140,6 +140,7 @@
             </div>
 
 @endcomponent
+</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
