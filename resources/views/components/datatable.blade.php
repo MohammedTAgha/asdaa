@@ -104,37 +104,7 @@
                         </td>
                     </tr>
                 @endforeach
-                            <!--begin::User-->
-                            <div class="d-flex align-items-center">
-                                <!--begin::Wrapper-->
-                                <div class="me-5 position-relative">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-35px symbol-circle">
-                                        <span class="symbol-label bg-light-danger text-danger fw-bold">E</span>
-                                    </div>
-                                    <!--end::Avatar-->
-                                    <!--begin::Online-->
-                                    <div class="bg-success position-absolute h-8px w-8px rounded-circle translate-middle start-100 top-100 ms-n1 mt-n1"></div>
-                                    <!--end::Online-->
-                                </div>
-                                <!--end::Wrapper-->
-                                <!--begin::Info-->
-                                <div class="d-flex flex-column justify-content-center">
-                                    <a href="" class="fs-6 text-gray-800 text-hover-primary">Emma Bold</a>
-                                    <div class="fw-bold text-gray-400">emma@intenso.com</div>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::User-->
-                        </td>
-                        <td>May 05, 2021</td>
-                        <td>$665.00</td>
-                        <td>
-                            <span class="badge badge-light-success fw-bolder px-4 py-3">Approved</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="#" class="btn btn-light btn-sm">View</a>
-                        </td>
+                           
 
                 </tbody>
                 <!--end::Body-->
