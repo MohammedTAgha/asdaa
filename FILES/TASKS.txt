@@ -1,5 +1,6 @@
  citizen search bar 
 -region and respositive redesighn OK
+-create a table with select ok
 -edit ctz IN-P:
 -show Ctz DONE
 -add childs to CTZ NOT STARTED

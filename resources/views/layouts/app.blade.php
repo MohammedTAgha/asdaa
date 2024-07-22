@@ -15,17 +15,16 @@
         <!--end::Fonts-->
         <!--begin::Global Stylesheets Bundle(used by all pages)-->
         
-        
-        <!--end::Global Stylesheets Bundle-->
-
         <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
        
         <link href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
-        
-
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
+        <!--end::Global Stylesheets Bundle-->
+        <!-- custum styles  -->
+        @yield('styles')
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
 
 
 </head>

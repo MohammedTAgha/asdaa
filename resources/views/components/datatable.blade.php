@@ -104,8 +104,6 @@
                         </td>
                     </tr>
                 @endforeach
-                           
-
                 </tbody>
                 <!--end::Body-->
             </table>
