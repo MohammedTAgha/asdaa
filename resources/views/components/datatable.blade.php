@@ -6,9 +6,9 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_customers_table">
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_profile_overview_table">
             <!--begin::Head-->
-                <thead class="fs-7 text-gray-400 text-uppercase">
+                <thead >
                 <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                         <th class="w-15px">
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
@@ -80,6 +80,10 @@
 <script src="assets/js/custom/apps/chat/chat.js"></script>
 <script src="assets/js/custom/modals/create-app.js"></script>
 <script src="assets/js/custom/modals/upgrade-plan.js"></script>
+
+<script src="assets/js/custom/pages/projects/project/project.js"></script>
+<script src="assets/js/custom/modals/users-search.js"></script>
+<script src="assets/js/custom/modals/new-target.js"></script>
 <!-- <script src="assets/js/custom/apps/chat/chat.js"></script> -->
 <!-- <script src="assets/js/custom/modals/create-app.js"></script> -->
 <!-- <script src="assets/js/custom/modals/upgrade-plan.js"></script> -->
