@@ -3,10 +3,8 @@
 
 @section('content')
 
-    @component('components.datatable',['citizens'=>$citizens])
-    @endcomponent 
 
-    @component('components.citizenstable')
+    @component('components.citizens',['citizens'=>$citizens])
     @endcomponent 
     <div class="container mx-auto">
         <h1 class="text-2xl font-bold mb-4">Home</h1>
