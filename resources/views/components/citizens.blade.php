@@ -71,7 +71,7 @@
         <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
         <form id="modal-form" method="POST" action="{{ route('distributions.addCitizens') }}">
             @csrf
-            <input type="hidden" name="citizen_ids" id="citizen_ids">
+            <input type="hidden" name="citizen_ids" id="citizen-ids">
             <select name="distribution_id" class="form-select mt-1 block w-full mb-4">
                 <option value="">Select Distribution</option>
                 @foreach($distributions as $distribution)
