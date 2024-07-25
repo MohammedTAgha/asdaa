@@ -92,6 +92,24 @@
 		<script src="assets/js/scripts.bundle.js"></script>
         <script src="assets/js/jquery-3.6.0.min.js"></script>
         <script src="assets/js/jquery.dataTables.min.js"></script>
+        <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#citizens-table').DataTable({
+                    responsive: true,
+                    pagingType: 'simple_numbers',
+                    language: {
+                        search: "_INPUT_",
+                        searchPlaceholder: "Search citizens..."
+                    }
+                });
+
+                $('#select-all').on('change', function() {
+                    const checkboxes = $('input[name="citizens[]"]');
+                    checkboxes.prop('checked', $(this).prop('checked'));
+                });
+            });
+    </script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
 		<script src="assets/js/custom/widgets.js"></script>
@@ -101,7 +119,7 @@
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
         <!--begin::Page Vendors Javascript(used by this page)-->
-    <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    
     
    
     <!-- <script src="https://cdn.datatables.net/1.10.24/js/dataTables.tailwind.js"></script> -->
@@ -115,7 +133,7 @@
     <script src="assets/js/custom/modals/create-app.js"></script>
     <script src="assets/js/custom/modals/upgrade-plan.js"></script>
     <!--end::Page Custom Javascript-->
-    @stack('scripts')
+
     <script>
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             document.querySelector('.bg-gray-800').classList.toggle('hidden');

@@ -60,23 +60,3 @@
         <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution</button>
     </div>
 </form>
-
-@push('scripts')
-<script>
-$(document).ready(function() {
-    $('#citizens-table').DataTable({
-        responsive: true,
-        pagingType: 'simple_numbers',
-        language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Search citizens..."
-        }
-    });
-
-    $('#select-all').on('change', function() {
-        const checkboxes = $('input[name="citizens[]"]');
-        checkboxes.prop('checked', $(this).prop('checked'));
-    });
-});
-</script>
-@endpush
