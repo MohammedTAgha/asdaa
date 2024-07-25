@@ -141,6 +141,24 @@
 
 @endcomponent
 </div>
+
+@if(session('truncated_citizens'))
+    <div id="snackbar" class="fixed bottom-4 left-4 bg-red-600 text-white px-4 py-2 rounded-md shadow-md">
+        Warning: Data truncated for the following citizen IDs: {{ implode(', ', session('truncated_citizens')) }}
+    </div>
+@endif
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($('#snackbar').length) {
+        setTimeout(function() {
+            $('#snackbar').fadeOut('slow');
+        }, 5000);
+    }
+});
+</script>
+@endpush
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {

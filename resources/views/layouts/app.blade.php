@@ -29,7 +29,39 @@
         @yield('styles')
     <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
 
-
+    <style>
+        /* Snackbar styles */
+        .snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+        
+        .snackbar.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;} 
+            to {bottom: 30px; opacity: 1;}
+        }
+        
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;} 
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
 </head>
 <body class="bg-gray-100 h-screen antialiased leading-none font-sans" style="direction:rtl">
     <div class="flex h-full">
@@ -83,32 +115,68 @@
             <main class="flex-1 overflow-y-auto px-10">
                 
                 @yield('content')
+                 <!-- Snackbar container -->
+                <div id="snackbar" class="snackbar">
+                    
+                </div>
             </main>
+
         </div>
     </div>
+        
+        <!-- Scripts -->
+        <script>
+        function showSnackbar(message, type) {
+            var snackbar = document.getElementById("snackbar");
+
+            // Clear existing classes
+            snackbar.className = snackbar.className.replace(/\b(alert-|bg-|border-|text-)\S+/g, '');
+
+            // Add appropriate classes based on type
+            switch(type) {
+                case 'success':
+                    snackbar.classList.add('text-green-800', 'border-t-4', 'border-green-300', 'bg-green-50');
+                    break;
+                case 'danger':
+                    snackbar.classList.add('text-red-800', 'border-t-4', 'border-red-300', 'bg-red-50');
+                    break;
+                case 'info':
+                    snackbar.classList.add('text-blue-800', 'border-t-4', 'border-blue-300', 'bg-blue-50');
+                    break;
+                case 'warning':
+                    snackbar.classList.add('text-yellow-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
+                    break;
+                default:
+                    snackbar.classList.add('text-gray-800', 'border-t-4', 'border-gray-300', 'bg-gray-50');
+                    break;
+            }
+
+            snackbar.innerHTML = message;
+            snackbar.classList.add('show');
+            setTimeout(function() {
+                snackbar.classList.remove('show');
+            }, 3000);
+        }
+
+        // Check for flash messages
+        @if(session('success'))
+            showSnackbar("{{ session('success') }}", 'success');
+        @elseif(session('danger'))
+            showSnackbar("{{ session('danger') }}", 'danger');
+        @elseif(session('info'))
+            showSnackbar("{{ session('info') }}", 'info');
+        @elseif(session('warning'))
+            showSnackbar("{{ session('warning') }}", 'warning');
+        @endif
+    </script>
+
     <!--begin::Javascript-->
 		<!--begin::Global Javascript Bundle(used by all pages)-->
 		<script src="{{ asset('assets/plugins/global/plugins.bundle.js')}}"></script>
 		<script src="{{ asset('assets/js/scripts.bundle.js')}}"></script>
         <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
         <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
-        <script>
-            $(document).ready(function() {
-                $('#citizens-table').DataTable({
-                    responsive: true,
-                    pagingType: 'simple_numbers',
-                    language: {
-                        search: "_INPUT_",
-                        searchPlaceholder: "Search citizens..."
-                    }
-                });
-
-                $('#select-all').on('change', function() {
-                    const checkboxes = $('input[name="citizens[]"]');
-                    checkboxes.prop('checked', $(this).prop('checked'));
-                });
-            });
-    </script>
+        @stack('scripts')
 
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->

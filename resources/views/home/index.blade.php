@@ -3,6 +3,7 @@
 
 @section('content')
     @component('components.box',['title'=>'بيانات المواطنين','styles'=>'mt-19']) 
-        <x-citizens :citizens="$citizens" /> 
+        @component('components.citizens', ['citizens' => $citizens, 'distributions' => $distributions])
+        @endcomponent
     @endcomponent
 @endsection

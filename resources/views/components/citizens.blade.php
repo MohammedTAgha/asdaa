@@ -1,6 +1,6 @@
-@props(['citizens'])
+@props(['citizens', 'distributionId' => null, 'distributions' => []])
 
-<form id="citizens-form" method="POST" action="{{ route('distributions.addCitizens') }}">
+<form id="citizens-form" method="POST" action="{{ $distributionId ? route('distributions.addCitizens', $distributionId) : '#' }}>
     @csrf
     <div class="table-container overflow-x-auto mb-4">
         <table id="citizens-table" class="min-w-full divide-y divide-gray-200">
@@ -28,7 +28,7 @@
                         <!--begin::Checkbox-->
                         <td class="px-2 py-1">
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" name="citizens[]" value="{{ $citizen->id }}" />
+                                <input class="form-check-input" type="checkbox"  name="citizens[]" value="{{ $citizen->id }}"/>
                             </div>
                         </td>
                         <!--begin::Checkbox-->
@@ -57,6 +57,70 @@
         </table>
     </div>
     <div class="mt-4">
-        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution</button>
+        @if($distributionId)
+            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution</button>
+        @else
+            <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-md" id="open-modal">Add to Distribution</button>
+        @endif
     </div>
 </form>
+
+@if(!$distributionId)
+<div id="distribution-modal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 hidden">
+    <div class="bg-white p-6 rounded-md shadow-md w-1/3">
+        <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
+        <form id="modal-form" method="POST" action="{{ route('distributions.addCitizens') }}">
+            @csrf
+            <input type="hidden" name="citizen_ids" id="citizen_ids">
+            <select name="distribution_id" class="form-select mt-1 block w-full mb-4">
+                <option value="">Select Distribution</option>
+                @foreach($distributions as $distribution)
+                    <option value="{{ $distribution->id }}">{{ $distribution->name }}</option>
+                @endforeach
+            </select>
+            <div class="flex justify-end">
+                <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-md mr-2" id="close-modal">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    $('#citizens-table').DataTable({
+        responsive: true,
+        pagingType: 'simple_numbers',
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search citizens..."
+        }
+    });
+
+    $('#select-all').on('change', function() {
+        var checkboxes = $('input[name="citizens[]"]');
+        checkboxes.prop('checked', $(this).prop('checked'));
+    });
+
+    $('#open-modal').on('click', function() {
+        var selectedIds = $('input[name="citizens[]"]:checked').map(function() {
+            return this.value;
+        }).get().join(',');
+
+        if (!selectedIds) {
+            alert('Please select at least one citizen.');
+            return;
+        }
+
+        $('#citizen-ids').val(selectedIds);
+        $('#distribution-modal').removeClass('hidden');
+    });
+
+    $('#close-modal').on('click', function() {
+        $('#distribution-modal').addClass('hidden');
+    });
+}); 
+</script>
+@endpush

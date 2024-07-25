@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
 use App\Models\DistributionCitizen;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 use Illuminate\Http\Request;
 
@@ -108,16 +111,40 @@ class DistributionController extends Controller
 
     public function addCitizens(Request $request)
     {
-        $citizenIds = $request->input('citizens');
-        
-        // Assume you have a distribution to which you are adding citizens
-        $distribution = Distribution::find($request->input('distribution_id'));
+        $citizenIds = explode(',', $request->input('citizen_ids'));
+        dd($citizenIds);
+    $truncatedCitizens = [];
 
-        if ($distribution) {
-            $distribution->citizens()->attach($citizenIds);
+    DB::beginTransaction();
+    try {
+        foreach ($citizenIds as $citizenId) {
+            try {
+                DB::table('distribution_citizen')->insert([
+                    'distribution_id' => $distributionId ?? $request->input('distribution_id'),
+                    'citizen_id' => $citizenId,
+                ]);
+            } catch (QueryException $e) {
+                if (strpos($e->getMessage(), 'Data truncated') !== false) {
+                    $truncatedCitizens[] = $citizenId;
+                } else {
+                    throw $e;
+                }
+            }
         }
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error adding citizens: ', ['error' => $e->getMessage()]);
+        return redirect()->back()->with('error', 'An error occurred while adding citizens.');
+    }
 
-        return redirect()->route('distributions.show', $distribution->id)->with('success', 'Citizens added to distribution successfully!');
+    if (!empty($truncatedCitizens)) {
+        return redirect()->back()->with('truncated_citizens', $truncatedCitizens);
+    }
+
+    return redirect()->back()->with('success', 'Citizens added successfully.');
+
+
     }
     public function destroy(Distribution $distribution)
     {
