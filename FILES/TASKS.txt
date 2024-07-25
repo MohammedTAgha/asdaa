@@ -19,3 +19,10 @@
 -------------------------
 
 composer require maatwebsite/excel
+
+
+how to customize the table component to be used in many views also if Iam in a distribution show page add the selected citizents to its id else show a model to select a distribution and conferm adding  them 
+
+the pagination and sorting not working in responsitive page
+@component('components.citizens',['citizens'=>$representative->region->citizens])
+@endcomponent

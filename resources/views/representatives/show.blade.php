@@ -30,8 +30,11 @@
             @endif
         </div>
         
-        @component('components.box',['title'=>" المواطنين في منطقة".$representative->region->name])
-        
+        @component('components.box',['title'=>" المواطنين في منطقة"." ".$representative->region->name])
+
+        @component('components.citizens',['citizens'=>$representative->region->citizens])
+        @endcomponent
+
         @endcomponent
     </div>
 @endsection
