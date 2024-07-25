@@ -31,9 +31,8 @@
         </div>
         
         @component('components.box',['title'=>" المواطنين في منطقة"." ".$representative->region->name])
-
-        @component('components.citizens',['citizens'=>$representative->region->citizens])
-        @endcomponent
+        <x-citizens :citizens="$representative->region->citizens" /> 
+ 
 
         @endcomponent
     </div>
