@@ -48,8 +48,9 @@ class DistributionController extends Controller
         return redirect()->route('distributions.index')->with('success', 'Distribution created successfully.');
     }
 
-    public function show(Distribution $distribution)
+    public function show($id)
     {
+        $distribution = Distribution::findOrFail($id);
         return view('distributions.show', compact('distribution'));
     }
 
@@ -121,10 +122,25 @@ public function addCitizens(Request $request, $distributionId = null)
         foreach ($citizenIds as $citizenId) {
             Log::error('Citizen ID:', ['...' => $citizenId]);
             try {
-                DB::table('distribution_citizens')->insert([
-                    'distribution_id' => $distributionId ?? $request->input('distribution_id'),
-                    'citizen_id' => $citizenId,
-                ]);
+                $distribution = Distribution::find($distributionId);
+                if (!$distribution)
+                 {
+                    return redirect()->back()->with('error', 'no distribution selected .'); 
+                }
+
+                $existingCitizens = $distribution->citizens()->whereIn('id', $citizenIds)->get();
+                $existingCitizenNames = $existingCitizens->pluck('name')->toArray();
+
+                // Filter out existing citizens from the list
+                $newCitizenIds = array_diff($citizenIds, $existingCitizens->pluck('id')->toArray());
+
+                if (!empty($newCitizenIds)) {
+                    DB::table('distribution_citizens')->insert([
+                        'distribution_id' => $distributionId ?? $request->input('distribution_id'),
+                        'citizen_id' => $citizenId,
+                    ]);  
+                }
+    
             } catch (QueryException $e) {
                 if (strpos($e->getMessage(), 'Data truncated') !== false) {
                     $truncatedCitizens[] = $citizenId;
@@ -139,10 +155,10 @@ public function addCitizens(Request $request, $distributionId = null)
         Log::error('Error adding citizens: ', ['error' => $e->getMessage()]);
         return redirect()->back()->with('error', 'An error occurred while adding citizens.');
     }
-
-    if (!empty($truncatedCitizens)) {
-        return redirect()->back()->with('truncated_citizens', $truncatedCitizens);
+    if (!empty($existingCitizenNames)) {
+        return redirect()->back()->with('error', 'truncatedCitizens');
     }
+
 
     return redirect()->back()->with('success', 'Citizens added successfully.');
 }
