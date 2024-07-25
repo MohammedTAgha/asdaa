@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
 use App\Models\DistributionCitizen;
+use App\Models\Citizen;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
@@ -111,36 +112,33 @@ class DistributionController extends Controller
 }
 
 public function addCitizens(Request $request, $distributionId = null)
-{
-    $citizenIds = explode(',', $request->input('citizen_ids'));
-    
+    {
+        $citizenIds = explode(',', $request->input('citizen_ids'));
+    $distributionId = $distributionId ?? $request->input('distribution_id');
     $truncatedCitizens = [];
+    $existingCitizenNames = [];
 
     DB::beginTransaction();
     try {
         Log::error('Citizen IDs:', ['ids' => $citizenIds]);
-        foreach ($citizenIds as $citizenId) {
+
+        // Retrieve existing citizens in the distribution
+        $existingCitizens = DB::table('distribution_citizens')
+            ->where('distribution_id', $distributionId)
+            ->whereIn('citizen_id', $citizenIds)
+            ->pluck('citizen_id')
+            ->toArray();
+
+        // Filter out existing citizens
+        $newCitizenIds = array_diff($citizenIds, $existingCitizens);
+
+        foreach ($newCitizenIds as $citizenId) {
             Log::error('Citizen ID:', ['...' => $citizenId]);
             try {
-                $distribution = Distribution::find($distributionId);
-                if (!$distribution)
-                 {
-                    return redirect()->back()->with('error', 'no distribution selected .'); 
-                }
-
-                $existingCitizens = $distribution->citizens()->whereIn('id', $citizenIds)->get();
-                $existingCitizenNames = $existingCitizens->pluck('name')->toArray();
-
-                // Filter out existing citizens from the list
-                $newCitizenIds = array_diff($citizenIds, $existingCitizens->pluck('id')->toArray());
-
-                if (!empty($newCitizenIds)) {
-                    DB::table('distribution_citizens')->insert([
-                        'distribution_id' => $distributionId ?? $request->input('distribution_id'),
-                        'citizen_id' => $citizenId,
-                    ]);  
-                }
-    
+                DB::table('distribution_citizens')->insert([
+                    'distribution_id' => $distributionId,
+                    'citizen_id' => $citizenId,
+                ]);
             } catch (QueryException $e) {
                 if (strpos($e->getMessage(), 'Data truncated') !== false) {
                     $truncatedCitizens[] = $citizenId;
@@ -149,19 +147,30 @@ public function addCitizens(Request $request, $distributionId = null)
                 }
             }
         }
+
+        // Get names of existing citizens
+        if (!empty($existingCitizens)) {
+            $existingCitizenNames = Citizen::whereIn('id', $existingCitizens)->pluck('name')->toArray();
+        }
+
         DB::commit();
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Error adding citizens: ', ['error' => $e->getMessage()]);
         return redirect()->back()->with('error', 'An error occurred while adding citizens.');
     }
-    if (!empty($existingCitizenNames)) {
+
+    if (!empty($truncatedCitizens)) {
         return redirect()->back()->with('error', 'truncatedCitizens');
     }
 
+    if (!empty($existingCitizenNames)) {
+        return redirect()->back()->with('error', 'existingCitizenNames');
+    }
 
     return redirect()->back()->with('success', 'Citizens added successfully.');
-}
+
+    }
 
     public function destroy(Distribution $distribution)
     {
