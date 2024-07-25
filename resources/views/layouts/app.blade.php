@@ -88,11 +88,10 @@
     </div>
     <!--begin::Javascript-->
 		<!--begin::Global Javascript Bundle(used by all pages)-->
-		<script src="assets/plugins/global/plugins.bundle.js"></script>
-		<script src="assets/js/scripts.bundle.js"></script>
-        <script src="assets/js/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+		<script src="{{ asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+		<script src="{{ asset('assets/js/scripts.bundle.js')}}"></script>
+        <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
+        <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
         <script>
             $(document).ready(function() {
                 $('#citizens-table').DataTable({
@@ -110,12 +109,13 @@
                 });
             });
     </script>
+
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
-		<script src="assets/js/custom/widgets.js"></script>
-		<script src="assets/js/custom/apps/chat/chat.js"></script>
-		<script src="assets/js/custom/modals/create-app.js"></script>
-		<script src="assets/js/custom/modals/upgrade-plan.js"></script>
+		<script src="{{ asset('assets/js/custom/apps/chat/chat.js')}}"></script>
+		<script src="{{ asset('assets/js/custom/widgets.js')}}"></script>
+		<script src="{{ asset('assets/js/custom/modals/create-app.js')}}"></script>
+		<script src="{{ asset('assets/js/custom/modals/upgrade-plan.js')}}"></script>
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
         <!--begin::Page Vendors Javascript(used by this page)-->
@@ -125,13 +125,13 @@
     <!-- <script src="https://cdn.datatables.net/1.10.24/js/dataTables.tailwind.js"></script> -->
     <!--end::Page Vendors Javascript-->
     <!--begin::Page Custom Javascript(used by this page)-->
-    <script src="assets/js/custom/pages/projects/project/project.js"></script>
-    <script src="assets/js/custom/modals/users-search.js"></script>
-    <script src="assets/js/custom/modals/new-target.js"></script>
-    <script src="assets/js/custom/widgets.js"></script>
-    <script src="assets/js/custom/apps/chat/chat.js"></script>
-    <script src="assets/js/custom/modals/create-app.js"></script>
-    <script src="assets/js/custom/modals/upgrade-plan.js"></script>
+    <script src="{{ asset('assets/js/custom/pages/projects/project/project.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/modals/users-search.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/modals/new-target.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/widgets.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/apps/chat/chat.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/modals/create-app.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/modals/upgrade-plan.js')}}"></script>
     <!--end::Page Custom Javascript-->
 
     <script>

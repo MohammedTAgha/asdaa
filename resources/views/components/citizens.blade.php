@@ -28,7 +28,7 @@
                         <!--begin::Checkbox-->
                         <td class="px-2 py-1">
                             <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                <input class="form-check-input" type="checkbox" value="1" />
+                                <input class="form-check-input" type="checkbox" name="citizens[]" value="{{ $citizen->id }}" />
                             </div>
                         </td>
                         <!--begin::Checkbox-->
