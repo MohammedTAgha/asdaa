@@ -31,7 +31,7 @@ Route::resource('distribution_categories', DistributionCategoryController::class
 Route::get('/children/create/{citizenId}', [ChildController::class, 'create'])->name('children.create');
 Route::post('/children', [ChildController::class, 'store'])->name('children.store');
 Route::resource('distribution_citizens', DistributionCitizenController::class);
-
+Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot');// Route::get('/citizens', [CitizenController::class, 'index']);
 // Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 // Route::post('/citizens', [CitizenController::class, 'store']);

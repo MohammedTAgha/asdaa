@@ -105,6 +105,20 @@ class DistributionController extends Controller
 
     return response()->json(['message' => $request->input('selectedDate')]);
 }
+
+    public function addCitizens(Request $request)
+    {
+        $citizenIds = $request->input('citizens');
+        
+        // Assume you have a distribution to which you are adding citizens
+        $distribution = Distribution::find($request->input('distribution_id'));
+
+        if ($distribution) {
+            $distribution->citizens()->attach($citizenIds);
+        }
+
+        return redirect()->route('distributions.show', $distribution->id)->with('success', 'Citizens added to distribution successfully!');
+    }
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();
