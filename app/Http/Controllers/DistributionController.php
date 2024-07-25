@@ -109,17 +109,19 @@ class DistributionController extends Controller
     return response()->json(['message' => $request->input('selectedDate')]);
 }
 
-    public function addCitizens(Request $request)
-    {
-        $citizenIds = explode(',', $request->input('citizen_ids'));
-        dd($citizenIds);
+public function addCitizens(Request $request, $distributionId = null)
+{
+    $citizenIds = explode(',', $request->input('citizen_ids'));
+    
     $truncatedCitizens = [];
 
     DB::beginTransaction();
     try {
+        Log::error('Citizen IDs:', ['ids' => $citizenIds]);
         foreach ($citizenIds as $citizenId) {
+            Log::error('Citizen ID:', ['...' => $citizenId]);
             try {
-                DB::table('distribution_citizen')->insert([
+                DB::table('distribution_citizens')->insert([
                     'distribution_id' => $distributionId ?? $request->input('distribution_id'),
                     'citizen_id' => $citizenId,
                 ]);
@@ -143,9 +145,8 @@ class DistributionController extends Controller
     }
 
     return redirect()->back()->with('success', 'Citizens added successfully.');
+}
 
-
-    }
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();
