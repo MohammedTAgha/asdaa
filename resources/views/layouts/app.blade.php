@@ -21,7 +21,10 @@
         <link href="{{ asset('assets/css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
         <!--end::Global Stylesheets Bundle-->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.tailwind.css">
         <!-- custum styles  -->
         @yield('styles')
     <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
@@ -87,6 +90,8 @@
 		<!--begin::Global Javascript Bundle(used by all pages)-->
 		<script src="assets/plugins/global/plugins.bundle.js"></script>
 		<script src="assets/js/scripts.bundle.js"></script>
+        <script src="assets/js/jquery-3.6.0.min.js"></script>
+        <script src="assets/js/jquery.dataTables.min.js"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Page Custom Javascript(used by this page)-->
 		<script src="assets/js/custom/widgets.js"></script>
@@ -97,6 +102,9 @@
 		<!--end::Javascript-->
         <!--begin::Page Vendors Javascript(used by this page)-->
     <script src="assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.tailwind.js"></script>
     <!--end::Page Vendors Javascript-->
     <!--begin::Page Custom Javascript(used by this page)-->
     <script src="assets/js/custom/pages/projects/project/project.js"></script>
@@ -107,6 +115,7 @@
     <script src="assets/js/custom/modals/create-app.js"></script>
     <script src="assets/js/custom/modals/upgrade-plan.js"></script>
     <!--end::Page Custom Javascript-->
+    @stack('scripts')
     <script>
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             document.querySelector('.bg-gray-800').classList.toggle('hidden');
