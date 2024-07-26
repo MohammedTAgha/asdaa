@@ -27,9 +27,12 @@ Route::resource('representatives', RegionRepresentativeController::class);
 Route::resource('citizens', CitizenController::class);
 Route::resource('distributions', DistributionController::class);
 Route::resource('distribution_categories', DistributionCategoryController::class);
+Route::resource('children', ChildController::class);
 
-Route::get('/children/create/{citizenId}', [ChildController::class, 'create'])->name('children.create');
 Route::post('/children', [ChildController::class, 'store'])->name('children.store');
+Route::put('/children/{child}', [ChildController::class, 'update'])->name('children.update');
+Route::delete('/children/{child}', [ChildController::class, 'destroy'])->name('children.destroy');
+
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');

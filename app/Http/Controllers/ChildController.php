@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Child;
+use App\Models\Citizen;
 class ChildController extends Controller
 {
     /**
@@ -13,29 +14,38 @@ class ChildController extends Controller
      */
     public function index()
     {
-        $childs = Child::all();
-        return response()->json($childs);
+        $children = Child::with('citizen')->get();
+        return view('children.index', compact('children'));
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|string',
             'citizen_id' => 'required|exists:citizens,id',
-            // Add other validation rules as necessary
+            'orphan' => 'sometimes|boolean',
+            'infant' => 'sometimes|boolean',
+            'bambers_size' => 'nullable|string|max:255',
+            'disease' => 'sometimes|boolean',
+            'disease_description' => 'nullable|string|max:255',
+            'obstruction' => 'sometimes|boolean',
+            'obstruction_description' => 'nullable|string|max:255',
+            'note' => 'nullable|string',
         ]);
+
+        Child::create($request->all());
 
         $child = Child::create($validatedData);
         
         return response()->json(['success' => true, 'child' => $child]);
     }
 
-    public function create($citizenId)
+   public function create()
     {
-        $citizen = Citizen::findOrFail($citizenId);
-        return view('child.create', compact('citizen'));
+        $citizens = Citizen::all();
+        return view('children.create', compact('citizens'));
     }
 
     /**
@@ -46,40 +56,45 @@ class ChildController extends Controller
      */
     public function show($id)
     {
-        //
+        $child = Child::with('citizen')->findOrFail($id);
+        return view('children.show', compact('child'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $child = Child::findOrFail($id);
+        $citizens = Citizen::all();
+        return view('children.edit', compact('child', 'citizens'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|string',
+            'citizen_id' => 'required|exists:citizens,id',
+            'orphan' => 'sometimes|boolean',
+            'infant' => 'sometimes|boolean',
+            'bambers_size' => 'nullable|string|max:255',
+            'disease' => 'sometimes|boolean',
+            'disease_description' => 'nullable|string|max:255',
+            'obstruction' => 'sometimes|boolean',
+            'obstruction_description' => 'nullable|string|max:255',
+            'note' => 'nullable|string',
+        ]);
+
+        $child = Child::findOrFail($id);
+        $child->update($request->all());
+
+        return redirect()->route('children.index')->with('success', 'Child updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        //
+        $child=Child::findOrFail($id);
+        $child->delete();
+
+        return response()->json(['success' => true]);
     }
 }

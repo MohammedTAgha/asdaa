@@ -124,15 +124,30 @@
             <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
         @endslot
         <div id="childrenList" class="mt-4">
-                @foreach($citizen->children as $child)
-                <div class="border-b-2 border-gray-200 py-2">
-                    <p>Name: {{ $child->name }}</p>
-                    <p>Date of Birth: {{ $child->date_of_birth }}</p>
-                    <p>Gender: {{ $child->gender }}</p>
-                    <!-- Add more fields as necessary -->
-                </div>
-                @endforeach
-            </div>
+        <table id="childrenTable" class="min-w-full bg-white">
+    <thead class="bg-gray-800 text-white">
+        <tr>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Name</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Date of Birth</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Gender</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($citizen->children as $child)
+        <tr data-id="{{ $child->id }}">
+            <td>{{ $child->name }}</td>
+            <td>{{ $child->date_of_birth }}</td>
+            <td>{{ $child->gender }}</td>
+            <td>
+                <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
+                <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="{{ $child->id }}">Delete</button>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+        </div>
     @endcomponent
 
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
@@ -212,37 +227,8 @@
 
 
 </div>
-    <h2 class="text-xl font-semibold mt-6">Children</h2>
-    <ul class="list-disc ml-5">
-        @foreach($citizen->children as $child)
-            <li>{{ $child->name }} ({{ $child->age() }} years old)</li>
-        @endforeach
-    </ul>
+  
 
-    <h3 class="text-xl font-semibold mt-6">Add a Child</h3>
-    <form action="{{ route('children.store') }}" method="POST" class="mt-4">
-        @csrf
-        <input type="hidden" name="citizen_id" value="{{ $citizen->id }}">
-        <div class="mb-4">
-            <label for="name" class="block text-gray-700">Name:</label>
-            <input type="text" id="name" name="name" required class="mt-1 block w-full rounded border-gray-300">
-        </div>
-        <div class="mb-4">
-            <label for="date_of_birth" class="block text-gray-700">Date of Birth:</label>
-            <input type="date" id="date_of_birth" name="date_of_birth" required class="mt-1 block w-full rounded border-gray-300">
-        </div>
-        <div class="mb-4">
-            <label for="gender" class="block text-gray-700">Gender:</label>
-            <select id="gender" name="gender" required class="mt-1 block w-full rounded border-gray-300">
-                <option value="0">Male</option>
-                <option value="1">Female</option>
-            </select>
-        </div>
-        <!-- Add other child fields as needed -->
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Child</button>
-    </form>
-
-</div>
 
 <div id="childModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
     <div class="flex items-center justify-center min-h-screen p-4">
@@ -438,6 +424,45 @@ function removeCitizenFromDistribution(id) {
         alert('An error occurred.');
     });
 }
+
+document.querySelector('#childrenTable').addEventListener('click', function(event) {
+    if (event.target.classList.contains('edit-button')) {
+        let childId = event.target.dataset.id;
+        let row = event.target.closest('tr');
+        let name = row.querySelector('td:nth-child(1)').textContent;
+        let dateOfBirth = row.querySelector('td:nth-child(2)').textContent;
+        let gender = row.querySelector('td:nth-child(3)').textContent;
+
+        document.querySelector('#addChildForm [name="name"]').value = name;
+        document.querySelector('#addChildForm [name="date_of_birth"]').value = dateOfBirth;
+        document.querySelector('#addChildForm [name="gender"]').value = gender === 'Male' ? 'male' : 'female';
+        document.getElementById('addChildForm').dataset.editingId = childId;
+        document.querySelector('#addChildForm button[type="submit"]').textContent = 'Update Child';
+    }
+
+    if (event.target.classList.contains('delete-button')) {
+        let childId = event.target.dataset.id;
+        fetch(`/children/${childId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                event.target.closest('tr').remove();
+            } else {
+                alert('An error occurred while deleting the child.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred.');
+        });
+    }
+});
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
