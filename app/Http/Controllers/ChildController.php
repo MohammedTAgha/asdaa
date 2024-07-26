@@ -19,16 +19,17 @@ class ChildController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|string',
             'citizen_id' => 'required|exists:citizens,id',
-            // Add other validation rules as needed
+            // Add other validation rules as necessary
         ]);
 
-        Child::create($request->all());
-        return redirect()->back()->with('success', 'Child added successfully.');
+        $child = Child::create($validatedData);
+        
+        return response()->json(['success' => true, 'child' => $child]);
     }
 
     public function create($citizenId)

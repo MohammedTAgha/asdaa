@@ -120,16 +120,26 @@
 
     @component('components.box',['title'=>'الابناء','styles'=>'mt-4'])
         @slot('side')
-            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+           <!-- Button to trigger modal -->
+            <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
         @endslot
-        
+        <div id="childrenList" class="mt-4">
+                @foreach($citizen->children as $child)
+                <div class="border-b-2 border-gray-200 py-2">
+                    <p>Name: {{ $child->name }}</p>
+                    <p>Date of Birth: {{ $child->date_of_birth }}</p>
+                    <p>Gender: {{ $child->gender }}</p>
+                    <!-- Add more fields as necessary -->
+                </div>
+                @endforeach
+            </div>
     @endcomponent
 
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
-    @slot('side')
-            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
-    @endslot
-    @php
+        @slot('side')
+                <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+        @endslot
+        @php
         $distributions = $citizen->distributions
         @endphp
         @if (!$distributions->isEmpty())
@@ -234,6 +244,72 @@
 
 </div>
 
+<div id="childModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full md:w-1/2">
+            <h2 class="text-2xl font-bold mb-4">Add Child Information</h2>
+            <form id="addChildForm">
+                @csrf
+                <input type="hidden" name="citizen_id" value="{{ $citizen->id }}">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                        <input type="text" name="name" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth:</label>
+                        <input type="date" name="date_of_birth" id="date_of_birth" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700">Gender:</label>
+                        <select name="gender" id="gender" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="0">Male</option>
+                            <option value="1">Female</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="orphan" id="orphan" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <label for="orphan" class="ml-2 block text-sm text-gray-900">Orphan</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="infant" id="infant" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <label for="infant" class="ml-2 block text-sm text-gray-900">Infant</label>
+                    </div>
+                    <div>
+                        <label for="bambers_size" class="block text-sm font-medium text-gray-700">Bambers Size:</label>
+                        <input type="text" name="bambers_size" id="bambers_size" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="disease" id="disease" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <label for="disease" class="ml-2 block text-sm text-gray-900">Disease</label>
+                    </div>
+                    <div>
+                        <label for="disease_description" class="block text-sm font-medium text-gray-700">Disease Description:</label>
+                        <input type="text" name="disease_description" id="disease_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="obstruction" id="obstruction" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                        <label for="obstruction" class="ml-2 block text-sm text-gray-900">Obstruction</label>
+                    </div>
+                    <div>
+                        <label for="obstruction_description" class="block text-sm font-medium text-gray-700">Obstruction Description:</label>
+                        <input type="text" name="obstruction_description" id="obstruction_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="note" class="block text-sm font-medium text-gray-700">Note:</label>
+                        <textarea name="note" id="note" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Child</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="hideChildModal()">close</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
 <script>
 
     function showModal() {
@@ -244,6 +320,51 @@
 function hideModal() {
     document.getElementById('addCitizenModal').classList.add('hidden');
 }
+function showChildModal() {
+        document.getElementById('childModal').classList.toggle('hidden');
+}
+function hideChildModal() {
+        document.getElementById('childModal').classList.toggle('hidden');
+}
+
+document.getElementById('addChildForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    let formData = new FormData(this);
+    fetch('{{ route('children.store') }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let child = data.child;
+            let childrenList = document.getElementById('childrenList');
+            let newChild = document.createElement('div');
+            newChild.innerHTML = `
+                <p>Name: ${child.name}</p>
+                <p>Date of Birth: ${child.date_of_birth}</p>
+                <p>Gender: ${child.gender}</p>
+                <!-- Add more fields as necessary -->
+            `;
+            childrenList.appendChild(newChild);
+
+            // Clear the form
+            document.getElementById('addChildForm').reset();
+            hideChildModal();
+        } else {
+            alert('An error occurred while adding the child.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     fetch('{{ route('getDistributions') }}') // Ensure you have this route
         .then(response => response.json())
