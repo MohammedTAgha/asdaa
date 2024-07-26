@@ -110,7 +110,11 @@ class DistributionController extends Controller
 
     return response()->json(['message' => $request->input('selectedDate')]);
 }
-
+public function getDistributions()
+{
+    $distributions = Distribution::all();
+    return response()->json(['distributions' => $distributions]);
+}
 public function addCitizens(Request $request, $distributionId = null)
     {
         $citizenIds = explode(',', $request->input('citizen_ids'));
@@ -157,19 +161,32 @@ public function addCitizens(Request $request, $distributionId = null)
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Error adding citizens: ', ['error' => $e->getMessage()]);
-        return redirect()->back()->with('error', 'An error occurred while adding citizens.');
-    }
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'An error occurred while adding citizens.'], 500);
+        } else {
+            return redirect()->back()->with('error', 'An error occurred while adding citizens.');
+        }
+        }
 
     if (!empty($truncatedCitizens)) {
-        return redirect()->back()->with('error', 'truncatedCitizens');
-    }
+        if ($request->expectsJson()) {
+            return response()->json(['truncated_citizens' => $truncatedCitizens], 400);
+        } else {
+            return redirect()->back()->with('error', 'Some citizens could not be added due to data truncation.');
+        }    }
 
     if (!empty($existingCitizenNames)) {
-        return redirect()->back()->with('error', 'existingCitizenNames');
+        if ($request->expectsJson()) {
+            return response()->json(['existing_citizens' => $existingCitizenNames], 200);
+        } else {
+            return redirect()->back()->with('warning', 'Some citizens already exist in the distribution.');    }
+
+    if ($request->expectsJson()) {
+        return response()->json(['success' => 'Citizens added successfully.'], 200);
+    } else {
+        return redirect()->back()->with('success', 'Citizens added successfully.');
     }
-
-    return redirect()->back()->with('success', 'Citizens added successfully.');
-
+    }
     }
 
     public function destroy(Distribution $distribution)
