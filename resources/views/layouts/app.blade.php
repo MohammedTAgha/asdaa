@@ -126,48 +126,55 @@
         
         <!-- Scripts -->
         <script>
-        function showSnackbar(message, type) {
-            var snackbar = document.getElementById("snackbar");
+            function showSnackbar(message, type) {
+                var snackbar = document.getElementById("snackbar");
 
-            // Clear existing classes
-            snackbar.className = snackbar.className.replace(/\b(alert-|bg-|border-|text-)\S+/g, '');
+                // Clear existing classes
+                snackbar.className = snackbar.className.replace(/\b(alert-|bg-|border-|text-)\S+/g, '');
 
-            // Add appropriate classes based on type
-            switch(type) {
-                case 'success':
-                    snackbar.classList.add('text-green-800', 'border-t-4', 'border-green-300', 'bg-green-50');
+                // Add appropriate classes based on type
+                switch(type) {
+                    case 'success':
+                        snackbar.classList.add('text-green-800', 'border-t-4', 'border-green-300', 'bg-green-50');
+                        break;
+                    case 'danger':
+                        snackbar.classList.add('text-red-800', 'border-t-4', 'border-red-300', 'bg-red-50');
+                        break;
+                    case 'info':
+                        snackbar.classList.add('text-blue-800', 'border-t-4', 'border-blue-300', 'bg-blue-50');
+                        break;
+                    case 'warning':
+                        snackbar.classList.add('text-yellow-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
+                        break;
+                    case 'erorr':
+                    snackbar.classList.add('text-red-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
                     break;
-                case 'danger':
-                    snackbar.classList.add('text-red-800', 'border-t-4', 'border-red-300', 'bg-red-50');
-                    break;
-                case 'info':
-                    snackbar.classList.add('text-blue-800', 'border-t-4', 'border-blue-300', 'bg-blue-50');
-                    break;
-                case 'warning':
-                    snackbar.classList.add('text-yellow-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
-                    break;
-                default:
-                    snackbar.classList.add('text-gray-800', 'border-t-4', 'border-gray-300', 'bg-gray-50');
-                    break;
+                    default:
+                        snackbar.classList.add('text-gray-800', 'border-t-4', 'border-gray-300', 'bg-gray-50');
+                        break;
+                }
+
+                snackbar.innerHTML = message;
+                snackbar.classList.add('show');
+                setTimeout(function() {
+                    snackbar.classList.remove('show');
+                }, 3000);
             }
 
-            snackbar.innerHTML = message;
-            snackbar.classList.add('show');
-            setTimeout(function() {
-                snackbar.classList.remove('show');
-            }, 3000);
-        }
+            // Check for flash messages
+            @if(session('success'))
+                showSnackbar("{{ session('success') }}", 'success');
+            @elseif(session('danger'))
+                showSnackbar("{{ session('danger') }}", 'danger');
+            @elseif(session('error'))
+            showSnackbar("{{ session('error') }}", 'warning');
+            @elseif(session('info'))
+                showSnackbar("{{ session('info') }}", 'info');
+            @elseif(session('warning'))
+                showSnackbar("{{ session('warning') }}", 'warning');
 
-        // Check for flash messages
-        @if(session('success'))
-            showSnackbar("{{ session('success') }}", 'success');
-        @elseif(session('danger'))
-            showSnackbar("{{ session('danger') }}", 'danger');
-        @elseif(session('info'))
-            showSnackbar("{{ session('info') }}", 'info');
-        @elseif(session('warning'))
-            showSnackbar("{{ session('warning') }}", 'warning');
-        @endif
+
+            @endif
     </script>
 
     <!--begin::Javascript-->
