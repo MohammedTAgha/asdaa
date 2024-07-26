@@ -1,4 +1,3 @@
-<!-- resources/views/dashboard.blade.php -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +21,7 @@
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />
         <!--end::Global Stylesheets Bundle-->
         <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
 
@@ -183,6 +183,7 @@
 		<script src="{{ asset('assets/js/scripts.bundle.js')}}"></script>
         <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
         <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
+        <script src="{{ asset('assets/js/dataTables.tailwindcss.js')}}"></script>
         @stack('scripts')
 
 		<!--end::Global Javascript Bundle-->

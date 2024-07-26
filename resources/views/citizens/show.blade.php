@@ -2,97 +2,134 @@
 
 @section('content')
 <div class="container mx-auto px-4">
+        <!-- Modal -->
+        <div id="addCitizenModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+                    <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+                <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                    اختر التوزيع
+                                </h3>
+                                <div class="mt-2">
+                                    <select id="distributionSelect" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <!-- Options will be populated dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="addCitizenToDistribution()">
+                            تأكيد
+                        </button>
+                        <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm" onclick="hideModal()">
+                            إلغاء
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
   <!-- show.blade.php -->
-  
-    <div class="bg-white shadow-md rounded-lg p-6 mb-4">
-        <h1 class="text-2xl font-bold mb-6">Citizen Details</h1>
+    @component('components.box',['title'=>'بيانات النازح'.' '.$citizen->name,'styles'=>'mt-8'])
+            @slot('side')
+                <div class="mt-6">
+                    <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">Back to List</a>
+                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">Edit</a>
+                </div>
+            @endslot
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ID</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->id }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->name }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Gender</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->gender }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Region</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Wife ID</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->wife_id }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Wife Name</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Widowed</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'Yes' : 'No' }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Social Status</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Living Status</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Job</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->job }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Original Address</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->original_address }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Elderly Count</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">Note</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->note }}</p>
+                </div>
+            </div>
+          
+    @endcomponent
+
+    @component('components.box',['title'=>'الابناء','styles'=>'mt-4'])
+        @slot('side')
+            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+        @endslot
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">ID</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->id }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Name</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->name }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Gender</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->gender }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Region</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Wife ID</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->wife_id }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Wife Name</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Widowed</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'Yes' : 'No' }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Social Status</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Living Status</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Job</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->job }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Original Address</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->original_address }}</p>
-            </div>
-            
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Elderly Count</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
-            </div>
-            
-            <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700">Note</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->note }}</p>
-            </div>
-        </div>
-        
-        <div class="mt-6">
-            <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">Back to List</a>
-            <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">Edit</a>
-        </div>
-    </div>
+    @endcomponent
 
-
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-2xl font-bold mb-6">الابناء</h1>
-    </div>
-
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-2xl font-bold mb-6">التوزيع</h1>
-        @php
+    @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
+    @slot('side')
+            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+    @endslot
+    @php
         $distributions = $citizen->distributions
         @endphp
         @if (!$distributions->isEmpty())
@@ -155,7 +192,9 @@
             @else
             <h2>لم يستلم يعد</h2>
             @endif
-    </div>
+
+    @endcomponent
+
 
 
 </div>
@@ -188,9 +227,69 @@
         <!-- Add other child fields as needed -->
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Child</button>
     </form>
+
 </div>
 
+<script>
+    function showModal() {
+    document.getElementById('addCitizenModal').classList.remove('hidden');
+    // Optionally, populate the distribution select options here
+}
 
+function hideModal() {
+    document.getElementById('addCitizenModal').classList.add('hidden');
+}
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('{{ route('getDistributions') }}') // Ensure you have this route
+        .then(response => response.json())
+        .then(data => {
+            const distributionSelect = document.getElementById('distributionSelect');
+            data.distributions.forEach(distribution => {
+                const option = document.createElement('option');
+                option.value = distribution.id;
+                option.textContent = distribution.name;
+                distributionSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
+function addCitizenToDistribution() {
+    const citizenId = {{ $citizen->id }}; // Assuming you have the citizen ID in the Blade template
+    const distributionId = document.getElementById('distributionSelect').value;
+    console.log(citizenId)
+    console.log(distributionId)
+
+    fetch('{{ route('distributions.addCitizens') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            citizen_ids: [citizenId].join(','),
+            distribution_id: distributionId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('data')
+        console.log(data)
+        
+        if (data.success) {
+            alert('تمت الاضفاة');
+        } else if (data.existing_citizens) {
+            alert('موجود مسبقا ');
+        } else {
+            alert('خطا');
+        }
+        hideModal();
+    })
+    .catch(error => {
+
+        hideModal();
+    });
+}
+</script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {

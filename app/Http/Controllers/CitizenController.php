@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Citizen;
 use App\Models\Region;
+use App\Models\Distribution;
 use Illuminate\Http\Request;
 
 class CitizenController extends Controller
@@ -12,6 +13,7 @@ class CitizenController extends Controller
     {
         $query = Citizen::query();
         $regions = Region::all();
+        $distributions = Distribution::all();
         // Apply search filter
         if ($request->has('search')) {
             $query->where('name', 'like', '%' . $request->input('search') . '%')
@@ -40,9 +42,9 @@ class CitizenController extends Controller
         
        
         $perPage = $request->input('per_page', 10);
-        $citizens = $query->orderBy($sortField ,$sortDirection )->paginate($perPage);
+        $citizens = Citizen::all();
         
-    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions'));
+    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
     }
 
     public function show($id)

@@ -183,9 +183,10 @@ class DistributionController extends Controller
                     500
                 );
             } else {
-                return redirect()
-                    ->back()
-                    ->with("error", "An error occurred while adding citizens.");
+                return response()->json(
+                    ["error" => "An error occurred while adding citizens."],
+                    500
+                );
             }
         }
 
@@ -196,12 +197,10 @@ class DistributionController extends Controller
                     400
                 );
             } else {
-                return redirect()
-                    ->back()
-                    ->with(
-                        "error",
-                        "Some citizens could not be added due to data truncation."
-                    );
+                return response()->json(
+                    ["truncated_citizens" => $truncatedCitizens],
+                    400
+                );
             }
         }
 
@@ -212,12 +211,10 @@ class DistributionController extends Controller
                     200
                 );
             } else {
-                return redirect()
-                    ->back()
-                    ->with(
-                        "warning",
-                        "Some citizens already exist in the distribution."
-                    );
+                return response()->json(
+                    ["existing_citizens" => $existingCitizenNames],
+                    200
+                );
             }
 
             return response()->json(
