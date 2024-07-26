@@ -296,7 +296,7 @@ function addCitizenToDistribution() {
 }
 
 function removeCitizenFromDistribution(id) {
-    fetch(`{{ route('distributions.removeCitizen',$distribution->pivot->id)}}`, {
+    fetch(`/distributions/pivot/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
