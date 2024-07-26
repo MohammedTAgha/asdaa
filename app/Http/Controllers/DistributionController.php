@@ -224,6 +224,26 @@ class DistributionController extends Controller
         }
     }
 
+    public function removeCitizenFromDistribution($id) //pivot table id
+    {
+        
+        try {
+            // Delete the record from the pivot table
+            DB::table('distribution_citizens')
+            ->where('id', $id)
+            ->delete();
+            // DB::table('distribution_citizens')
+            //     ->where('distribution_id', $distributionId)
+            //     ->where('citizen_id', $citizenId)
+            //     ->delete();
+
+            return response()->json(['success' => 'Citizen removed successfully.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Error removing citizen: ', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'An error occurred while removing the citizen.'], 500);
+        }
+    }
+    
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();

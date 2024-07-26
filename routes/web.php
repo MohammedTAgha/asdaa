@@ -33,6 +33,7 @@ Route::post('/children', [ChildController::class, 'store'])->name('children.stor
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
+Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot');// Route::get('/citizens', [CitizenController::class, 'index']);
 // Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 // Route::post('/citizens', [CitizenController::class, 'store']);

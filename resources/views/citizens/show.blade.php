@@ -180,11 +180,15 @@
                             <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
 
                         </td>
-                        <td class="w-1/7 py-3 px-4">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded update-button" data-id="{{ $distribution->pivot->id }}">
-                            Update
-                        </button>
-                    </td>
+                        <td class="flex-1 w-1/7 py-3 px-4" >
+                            
+                        <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
+                        <i class="fas fa-upload" style="color: green;"></i>
+                    </button>
+
+                    <a href="#" onclick="removeCitizenFromDistribution({{ $distribution->pivot->id }})" class="text-red-600 hover:text-red-900">
+                        <i class="fas fa-trash-alt" style="color: red;"></i>
+                    </a>                    </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -231,6 +235,7 @@
 </div>
 
 <script>
+
     function showModal() {
     document.getElementById('addCitizenModal').classList.remove('hidden');
     // Optionally, populate the distribution select options here
@@ -287,6 +292,29 @@ function addCitizenToDistribution() {
     .catch(error => {
 
         hideModal();
+    });
+}
+
+function removeCitizenFromDistribution(id) {
+    fetch(`{{ route('distributions.removeCitizen',$distribution->pivot->id)}}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Citizen removed successfully!');
+            // Optionally, you can update the UI to reflect the deletion
+        } else {
+            alert('An error occurred while removing the citizen.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred.');
     });
 }
 </script>

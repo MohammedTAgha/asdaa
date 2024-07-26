@@ -15,7 +15,8 @@
         <!--begin::Global Stylesheets Bundle(used by all pages)-->
         
         <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
-       
+        <link href="{{ asset('assets/css/fas/all.min.css') }}" rel="stylesheet" type="text/css" />
+
         <link href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
