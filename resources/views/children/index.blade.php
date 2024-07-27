@@ -8,10 +8,10 @@
         <table class="min-w-full mt-4">
             <thead>
                 <tr>
-                    <th class="border px-4 py-2">Name</th>
-                    <th class="border px-4 py-2">Date of Birth</th>
-                    <th class="border px-4 py-2">Gender</th>
-                    <th class="border px-4 py-2">Father</th>
+                    <th class="border px-4 py-2">الاسم</th>
+                    <th class="border px-4 py-2">تاريخ الميلاد</th>
+                    <th class="border px-4 py-2">الجنس</th>
+                    <th class="border px-4 py-2">الاب</th>
                     <th class="border px-4 py-2">Actions</th>
                 </tr>
             </thead>

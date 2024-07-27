@@ -1,8 +1,8 @@
 @extends('dashboard')
 @section('content')
 <div class="container mx-auto px-4">
-    <h1 class="text-2xl font-bold my-4">Distributions</h1>
-    <a href="{{ route('distributions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add Distribution</a>
+    <h1 class="text-2xl font-bold my-4">الكشوفات</h1>
+    <a href="{{ route('distributions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">اضافة كشف</a>
     <ul class="mt-4">
     <div class="mt-6">
             <table class="min-w-full bg-white">
@@ -39,10 +39,10 @@
                         <td class="w-1/7 py-3 px-4">{{ $distribution->done }}</td>
                         <td class="w-1/7 py-3 px-4"> 
                             <a href="{{route('distributions.show',$distribution->id)}}">
-                            info 
+                            عرض 
                             </a>
                             <a href="{{route('distributions.edit',$distribution->id)}}">
-                            edit
+                            تحرير
                             </a>
                         </td>
 

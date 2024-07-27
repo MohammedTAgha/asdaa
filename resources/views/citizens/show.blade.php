@@ -42,72 +42,72 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">ID</label>
+                    <label class="block text-sm font-medium text-gray-700"><strong>الهوية</strong></label>
                     <p class="mt-1 text-gray-900">{{ $citizen->id }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Name</label>
+                    <label class="block text-sm font-medium text-gray-700">الاسم</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->name }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                    <label class="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Gender</label>
+                    <label class="block text-sm font-medium text-gray-700">الجنس</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->gender }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Region</label>
+                    <label class="block text-sm font-medium text-gray-700">المنطقة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Wife ID</label>
+                    <label class="block text-sm font-medium text-gray-700">رقم الزوجة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->wife_id }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Wife Name</label>
+                    <label class="block text-sm font-medium text-gray-700">اسم الزوجة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Widowed</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'Yes' : 'No' }}</p>
+                    <label class="block text-sm font-medium text-gray-700">ارمل</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'نعم' : 'a لا ' }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Social Status</label>
+                    <label class="block text-sm font-medium text-gray-700">الحالة الاجتماعبة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Living Status</label>
+                    <label class="block text-sm font-medium text-gray-700">الحالة المعيشية</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Job</label>
+                    <label class="block text-sm font-medium text-gray-700">العمل</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->job }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Original Address</label>
+                    <label class="block text-sm font-medium text-gray-700">العنوان الاصلي</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->original_address }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Elderly Count</label>
+                    <label class="block text-sm font-medium text-gray-700">عدد كبار السن</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
                 </div>
                 
                 <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">Note</label>
+                    <label class="block text-sm font-medium text-gray-700">ملاحطة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->note }}</p>
                 </div>
             </div>
@@ -119,13 +119,14 @@
            <!-- Button to trigger modal -->
             <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
         @endslot
+        @if (!$citizen->children->isEmpty())
         <div id="childrenList" class="mt-4">
         <table id="childrenTable" class="min-w-full bg-white">
     <thead class="bg-gray-800 text-white">
         <tr>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Name</th>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Date of Birth</th>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Gender</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">العمر</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الجنس</th>
             <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
         </tr>
     </thead>
@@ -144,6 +145,9 @@
     </tbody>
 </table>
         </div>
+        @else
+            <h2>لم يتم تسجيل اطفال </h2>
+            @endif
     @endcomponent
 
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
