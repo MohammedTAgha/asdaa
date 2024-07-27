@@ -20,7 +20,7 @@ class ChildController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData= $request->validate([
             'name' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'gender' => 'required|string',
@@ -35,7 +35,7 @@ class ChildController extends Controller
             'note' => 'nullable|string',
         ]);
 
-        Child::create($request->all());
+       
 
         $child = Child::create($validatedData);
         
