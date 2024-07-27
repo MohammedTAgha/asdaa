@@ -111,7 +111,7 @@
                     <a href="{{ route('logout') }}" class="text-gray-600 hover:text-gray-800">Logout</a>
                 </div>
             </div>
-
+            @yield('topbar')
             <!-- Content -->
             <main class="flex-1 overflow-y-auto px-10">
                 
