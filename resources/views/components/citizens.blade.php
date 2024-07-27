@@ -12,7 +12,7 @@
                             </div>
                         </th>
                         <th class="min-w-90px">الهوية</th>
-                        <th class="min-w-180px">الاسم</th>
+                        <th class="min-w-280px">............الاسم.........</th>
                         <th class="min-w-90px">تاريخ الميلاد</th>
                         <th class="min-w-40px">الجنس</th>
                         <th class="min-w-100px ">اسم الزوجة</th>

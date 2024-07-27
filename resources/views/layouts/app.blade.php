@@ -69,7 +69,7 @@
         <!-- Sidebar -->
         <div class="bg-gray-800 text-white w-64 space-y-6 py-7 px-2">
             <div class="text-white flex items-center space-x-2 px-4">
-                <span class="text-2xl font-extrabold">Dashboard</span>
+                <span class="text-2xl font-extrabold">لوحة التحكم</span>
             </div>
 
             <nav>

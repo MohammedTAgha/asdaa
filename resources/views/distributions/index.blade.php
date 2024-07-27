@@ -37,7 +37,14 @@
                         <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
                         <td class="w-1/7 py-3 px-4">{{ $distribution->quantity }}</td>
                         <td class="w-1/7 py-3 px-4">{{ $distribution->done }}</td>
-                        <td class="w-1/7 py-3 px-4"> info edid</td>
+                        <td class="w-1/7 py-3 px-4"> 
+                            <a href="{{route('distributions.show',$distribution->id)}}">
+                            info 
+                            </a>
+                            <a href="{{route('distributions.edit',$distribution->id)}}">
+                            edit
+                            </a>
+                        </td>
 
                     </tr>
                     @endforeach

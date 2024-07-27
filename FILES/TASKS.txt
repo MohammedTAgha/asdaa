@@ -3,14 +3,14 @@
 -create a table with select ok
 -edit ctz IN-P:
 -show Ctz DONE
--add childs to CTZ NOT STARTED
-	- ADD many childs to ctz
-	- chiled more info
-	- ADD CHILDS STATUS TO CITIZEN MODULE
--add distriputions to ctz = DONW
--distripution crud views =
--resp crud views =
--distribution add citizen layout bulk
+-add childs to CTZ NOT DONE
+	- ADD many childs to ctz 
+	- chiled more info OK
+	- ADD CHILDS STATUS TO CITIZEN MODULE 
+-add distriputions to ctz = DONE
+-distripution crud views = DONE
+-resp crud views = DONE
+-distribution add citizen layout bulk = DONE
 
 - fix filters 
 -checkbox done
