@@ -3,9 +3,8 @@
 @section('content')
     <div class="container mx-auto py-12">
         <h1 class="text-4xl font-bold mb-4">تحرير بيانات المندوب</h1>
-        <form action="{{ route('representatives.update', $representative->id) }}" method="POST">
+        <form action="{{ route('representatives.update', $representative->id) }}" method="PATCH">
             @csrf
-            @method('PUT')
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الهوية:</label>
                 <input type="text" name="id" id="id" value="{{ $representative->id }}" class="w-full px-4 py-2 border rounded-md" required>
@@ -14,6 +13,9 @@
                 <label for="name" class="block text-gray-700">الاسم:</label>
                 <input type="text" name="name" id="name" value="{{ $representative->name }}" class="w-full px-4 py-2 border rounded-md" required>
             </div>
+           
+            <!-- name -->
+
             <div class="mb-4">
                 <label for="region_id" class="block text-gray-700">المنطقة:</label>
                 <select name="region_id" id="region_id" class="w-full px-4 py-2 border rounded-md" required>
