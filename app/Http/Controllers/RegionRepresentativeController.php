@@ -50,17 +50,25 @@ class RegionRepresentativeController extends Controller
 
     public function update(Request $request, $id)
     {
+     
         $request->validate([
             'id' => 'required|numeric|digits_between:1,20',
             'name' => 'required|string|max:255',
-            'region_id' => 'required|exists:regions,id',
+            'region_id' => 'required|string',
             'phone' => 'required|string|max:15',
             'address' => 'required|string|max:255',
             'note' => 'nullable|string',
         ]);
-
-        $representative = RegionRepresentative::findOrFail($id);
-        $representative->update($request->all());
+        try {
+            $representative = RegionRepresentative::findOrFail($id);
+            $representative->update($request->all());
+            
+        }
+        catch (QueryException $e) {
+            Log::error("eroor:", [">>>>>" => $e]);
+            dd($e);
+        }
+       
 
         return redirect()->route('representatives.index')->with('success', 'Representative updated successfully.');
     }

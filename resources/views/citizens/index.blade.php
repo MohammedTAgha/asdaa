@@ -1,4 +1,5 @@
 @extends('dashboard')
+
 @section('topbar')
 
 
@@ -46,17 +47,15 @@
             <!--begin::Input group-->
             <div class="mb-6">
                 <!--begin::Label-->
-                <label class="form-label fw-bold">Status:</label>
+                <label class="form-label fw-bold">اختر المناديب:</label>
                 <!--end::Label-->
                 <!--begin::Input-->
                 <div>
-                    <select class="form-select form-select-solid" data-kt-select2="true" data-placeholder="Select option" data-dropdown-parent="#kt_menu_61484c45b0e77" data-allow-clear="true">
-                        <option></option>
-                        <option value="1">Approved</option>
-                        <option value="2">Pending</option>
-                        <option value="2">In Process</option>
-                        <option value="2">Rejected</option>
-                    </select>
+                <!-- <select class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                    <option></option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                </select> -->
                 </div>
                 <!--end::Input-->
             </div>

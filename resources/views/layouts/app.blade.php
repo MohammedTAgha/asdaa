@@ -23,6 +23,7 @@
         <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/sass/vendors/plugins/_select2.scss') }}" rel="stylesheet" type="text/scss" />
         <!--end::Global Stylesheets Bundle-->
         <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
 
@@ -193,6 +194,8 @@
 		<script src="{{ asset('assets/js/custom/widgets.js')}}"></script>
 		<script src="{{ asset('assets/js/custom/modals/create-app.js')}}"></script>
 		<script src="{{ asset('assets/js/custom/modals/upgrade-plan.js')}}"></script>
+		<script src="{{ asset('assets/js/vendors/plugins/select2.init.js')}}"></script>
+
 		<!--end::Page Custom Javascript-->
 		<!--end::Javascript-->
         <!--begin::Page Vendors Javascript(used by this page)-->

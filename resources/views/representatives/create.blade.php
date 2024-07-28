@@ -23,11 +23,11 @@
             </div>
             <div class="mb-4">
                 <label for="phone" class="block text-gray-700">رقم الهاتف:</label>
-                <input type="text" name="phone" id="phone" class="w-full px-4 py-2 border rounded-md" required>
+                <input type="text" name="phone" id="phone" class="w-full px-4 py-2 border rounded-md" >
             </div>
             <div class="mb-4">
                 <label for="address" class="block text-gray-700">العنوان:</label>
-                <input type="text" name="address" id="address" class="w-full px-4 py-2 border rounded-md" required>
+                <input type="text" name="address" id="address" class="w-full px-4 py-2 border rounded-md" >
             </div>
             <div class="mb-4">
                 <label for="note" class="block text-gray-700">ملاحظة:</label>

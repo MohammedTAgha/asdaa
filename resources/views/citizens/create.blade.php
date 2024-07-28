@@ -15,7 +15,7 @@
             </div>
             <div>
                 <label for="date_of_birth" class="block font-medium text-gray-700">تاريخ الميلاد</label>
-                <input type="date" id="date_of_birth" name="date_of_birth" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                <input type="date" id="date_of_birth" name="date_of_birth" class="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" >
             </div>
             <div>
                 <label for="gender" class="block font-medium text-gray-700">الجنس</label>

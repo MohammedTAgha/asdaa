@@ -30,7 +30,7 @@
                         <td class="w-1/5 py-3 px-4">{{ $representative->address }}</td>
                         <td class="w-1/5 py-3 px-4">
                             <a href="{{ route('representatives.show', $representative->id) }}" class="text-blue-500">عرض</a>
-                            <a href="{{ route('representatives.edit', $representative->id) }}" class="text-green-500 ml-2">الغاء</a>
+                            <a href="{{ route('representatives.edit', $representative->id) }}" class="text-green-500 ml-2">تعديل</a>
                             <form action="{{ route('representatives.destroy', $representative->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')

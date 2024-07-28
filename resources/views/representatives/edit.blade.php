@@ -8,7 +8,7 @@
             @method('PUT')
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الهوية:</label>
-                <input type="text" name="id" id="id" value="{{ $representative->id }}" class="w-full px-4 py-2 border rounded-md" >
+                <input type="text" name="id" id="id" value="{{ $representative->id }}" class="w-full px-4 py-2 border rounded-md" required>
             </div>
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الاسم:</label>
