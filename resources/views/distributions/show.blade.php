@@ -96,7 +96,7 @@
                     </td> 
                     <td class="w-2/7 py-3 px-4">
                     <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
-                        {{ $citizen->name }}
+                    {{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}
                         </a>
                     </td>   
                     <td class="w-2/7 py-3 px-4">

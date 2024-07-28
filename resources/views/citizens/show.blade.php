@@ -32,7 +32,7 @@
         </div>
 
   <!-- show.blade.php -->
-    @component('components.box',['title'=>'بيانات النازح'.' '.$citizen->name,'styles'=>'mt-8'])
+    @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-8'])
             @slot('side')
                 <div class="mt-6">
                     <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">Back to List</a>
@@ -48,7 +48,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">الاسم</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->name }}</p>
+                    <p class="mt-1 text-gray-900">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }} </p>
                 </div>
                 
                 <div>
@@ -119,7 +119,7 @@
            <!-- Button to trigger modal -->
             <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
         @endslot
-        @if (!$citizen->children->isEmpty())
+        
         <div id="childrenList" class="mt-4">
         <table id="childrenTable" class="min-w-full bg-white">
     <thead class="bg-gray-800 text-white">
@@ -131,6 +131,7 @@
         </tr>
     </thead>
     <tbody>
+    @if (!$citizen->children->isEmpty())
         @foreach($citizen->children as $child)
         <tr data-id="{{ $child->id }}">
             <td>{{ $child->name }}</td>
@@ -142,12 +143,13 @@
             </td>
         </tr>
         @endforeach
+        @else
+            <h2>لم يتم تسجيل اطفال </h2>
+        @endif
     </tbody>
 </table>
         </div>
-        @else
-            <h2>لم يتم تسجيل اطفال </h2>
-            @endif
+        
     @endcomponent
 
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])

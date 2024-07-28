@@ -19,7 +19,7 @@
         <select name="citizen_id" id="citizen_id" required>
             @foreach($citizens as $citizen)
                 <option value="{{ $citizen->id }}" {{ $citizen->id == $distributionCitizen->citizen_id ? 'selected' : '' }}>
-                    {{ $citizen->name }}
+                {{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}
                 </option>
             @endforeach
         </select>

@@ -39,7 +39,7 @@
                         </td>
                         <td class="px-2 py-1">
                             <a href="{{ route('citizens.show',$citizen->id) }}" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
-                                {{ $citizen->name }}
+                            {{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}
                             </a>
                         </td>
                         <td class="px-2 py-1 bg-gray-50">{{ $citizen->date_of_birth }}</td>

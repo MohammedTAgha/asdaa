@@ -6,13 +6,29 @@
     <form action="{{ route('citizens.update', $citizen->id) }}" method="POST">
         @csrf
         @method('PUT')
-        <div class="mb-4">
-            <label for="name" class="block text-gray-700">Name:</label>
-            <input type="text" id="name" name="name" value="{{ $citizen->name }}" required class="mt-1 block w-full rounded border-gray-300">
-        </div>
+         <!-- name -->
+         <div class="mb-4">
+                <label for="name" class="block text-gray-700">الاسم الاول:</label>
+                <input type="text" name="firstname" id="firstname" value="{{ $citizen->firstname }}" class="w-full px-4 py-2 border rounded-md" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700">الاب:</label>
+                <input type="text" name="secondname" id="secondname" value="{{ $citizen->secondname }}" class="w-full px-4 py-2 border rounded-md" >
+            </div>
+
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700">الجد:</label>
+                <input type="text" name="thirdname" id="thirdname" value="{{ $citizen->thirdname }}" class="w-full px-4 py-2 border rounded-md" >
+            </div>
+
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700">العائلة:</label>
+                <input type="text" name="lastname" id="lastname" value="{{ $citizen->lastname }}" class="w-full px-4 py-2 border rounded-md" required>
+            </div>
         <div class="mb-4">
             <label for="date_of_birth" class="block text-gray-700">Date of Birth:</label>
-            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ $citizen->date_of_birth }}" required class="mt-1 block w-full rounded border-gray-300">
+            <input type="date" id="date_of_birth" name="date_of_birth" value="{{ $citizen->date_of_birth }}"  class="mt-1 block w-full rounded border-gray-300">
         </div>
         <div class="mb-4">
             <label for="gender" class="block text-gray-700">Gender:</label>

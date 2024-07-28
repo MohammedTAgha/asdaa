@@ -27,7 +27,7 @@
                     <label for="citizen_id" class="block text-sm font-medium text-gray-700">الاب:</label>
                     <select name="citizen_id" id="citizen_id" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         @foreach($citizens as $citizen)
-                            <option value="{{ $citizen->id }}" {{ old('citizen_id', $child->citizen_id ?? '') == $citizen->id ? 'selected' : '' }}>{{ $citizen->name }}</option>
+                            <option value="{{ $citizen->id }}" {{ old('citizen_id', $child->citizen_id ?? '') == $citizen->id ? 'selected' : '' }}>{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}</option>
                         @endforeach
                     </select>
                 </div>

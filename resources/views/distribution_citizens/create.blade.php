@@ -15,7 +15,7 @@
         <label for="citizen_id">Citizen:</label>
         <select name="citizen_id" id="citizen_id" required>
             @foreach($citizens as $citizen)
-                <option value="{{ $citizen->id }}">{{ $citizen->name }}</option>
+                <option value="{{ $citizen->id }}">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}</option>
             @endforeach
         </select>
         
