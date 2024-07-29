@@ -19,8 +19,8 @@
                 <div>
                     <label for="gender" class="block text-sm font-medium text-gray-700">الجنس:</label>
                     <select name="gender" id="gender" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="male" {{ old('gender', $child->gender ?? '') === 'male' ? 'selected' : '' }}>ذكر</option>
-                        <option value="female" {{ old('gender', $child->gender ?? '') === 'female' ? 'selected' : '' }}>انثى</option>
+                        <option value="0" {{ old('gender', $child->gender ?? '') === 'O' ? 'selected' : '' }}>ذكر</option>
+                        <option value="1" {{ old('gender', $child->gender ?? '') === '1' ? 'selected' : '' }}>انثى</option>
                     </select>
                 </div>
                 <div>

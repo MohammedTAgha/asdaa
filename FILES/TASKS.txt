@@ -16,6 +16,14 @@
 -checkbox done
 
 
+-fix all codes and make it done
+-in distribution add form to add bulk citizens 
+-add filters to te searc layout
+-create te export to excel
+-import bulk file 
+-create user aut
+-desin te queru for users 
+- redesin  te layouts
 -------------------------
 
 composer require maatwebsite/excel
