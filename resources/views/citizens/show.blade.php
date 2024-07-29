@@ -62,18 +62,18 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">المنطقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
+                    <label class="block text-sm font-medium text-gray-700">اسم الزوجة</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">رقم الزوجة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->wife_id }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">اسم الزوجة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
+                    <label class="block text-sm font-medium text-gray-700">المنطقة</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
                 </div>
                 
                 <div>
@@ -138,7 +138,9 @@
             <td>{{ $child->date_of_birth }}</td>
             <td>{{ $child->gender }}</td>
             <td>
-                <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
+                <a href="{{ route('children.edit' , $child->id) }}">
+                    <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
+                </a>
                 <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="{{ $child->id }}">Delete</button>
             </td>
         </tr>
@@ -163,59 +165,59 @@
         <table class="min-w-full bg-white">
                 <thead class="bg-gray-800 text-white">
                     <tr>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">المزود</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">استلم</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
-                        <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm"> </th>
+                        <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">رقم</th>
+                        <th class="w-140px py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
+                        <th class="w-90px py-3 px-4 uppercase font-semibold text-sm">المزود</th>
+                        <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
+                        <th class="w-50px py-3 px-4 uppercase font-semibold text-sm">استلم</th>
+                        <th class="w-100px py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
+                        <th class="w-120px py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
+                        <th class="w-150px py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
+                        <th class="w-100px py-3 px-4 uppercase font-semibold text-sm"> - </th>
 
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">  
                 @foreach($distributions as $distribution)
                     <tr>
-                        <td class="w-1/7 py-3 px-4">
+                        <td class=" py-3 px-4">
                             <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
                             {{ $distribution->pivot->id }}
                             </a> 
                         </td> 
                      
-                        <td class="w-1/7 py-3 px-4">
+                        <td class=" py-3 px-4">
                         <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
                         {{ $distribution->name }}
                         </a>
                     </td>
                      
-                        <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
-                        <td class="w-1/7 py-3 px-4">
+                        <td class=" py-3 px-4">{{ $distribution->source }}</td>
+                        <td class=" py-3 px-4">
                             <input type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity">
                         </td>
-                        <td class="w-1/7 py-3 px-4">
+                        <td class="w-90px py-3 px-4">
                         <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
                         </td>
-                        <td class="w-1/7 py-3 px-4">
+                        <td class=" py-3 px-4">
                         <input  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient">
                         </td>
-                        <td class="w-1/7 py-3 px-4">
+                        <td class=" py-3 px-4">
                             <input type="date" name="date" value="{{ $distribution->pivot->date }}">
                         </td>
-                        <td class="w-1/7 py-3 px-4"> 
+                        <td class=" py-3 px-4"> 
                             <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
 
                         </td>
-                        <td class="flex-1 w-1/7 py-3 px-4" >
-                            
-                        <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
-                        <i class="fas fa-upload" style="color: green;"></i>
-                    </button>
+                        <td class="flex-1  py-3 px-4" >
+                            <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
+                            <i class="fas fa-upload" style="color: green;"></i>
+                            </button>
 
-                    <a href="#" onclick="removeCitizenFromDistribution({{ $distribution->pivot->id }})" class="text-red-600 hover:text-red-900">
-                        <i class="fas fa-trash-alt" style="color: red;"></i>
-                    </a>                    </td>
+                            <a href="#" onclick="removeCitizenFromDistribution({{ $distribution->pivot->id }})" class="text-red-600 hover:text-red-900">
+                                <i class="fas fa-trash-alt" style="color: red;"></i>
+                            </a>                    
+                         </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -466,7 +468,7 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
     }
 });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         // Set CSRF token for AJAX requests
@@ -485,7 +487,7 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
 
             var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
             var data = isChecked ? 1 : 0;
-            
+            console.log('click')
             $.ajax({
                 url: '/update-pivot',
                 method: 'POST',

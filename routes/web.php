@@ -29,9 +29,6 @@ Route::resource('distributions', DistributionController::class);
 Route::resource('distribution_categories', DistributionCategoryController::class);
 Route::resource('children', ChildController::class);
 
-Route::post('/children', [ChildController::class, 'store'])->name('children.store');
-Route::put('/children/{child}', [ChildController::class, 'update'])->name('children.update');
-Route::delete('/children/{child}', [ChildController::class, 'destroy'])->name('children.destroy');
 
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
