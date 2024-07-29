@@ -44,7 +44,6 @@ class CitizenController extends Controller
         $perPage = $request->input('per_page', 10);
        // $citizens = Citizen::all();
         $citizens = $query->get();
-        
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
     }
 
