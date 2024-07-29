@@ -478,6 +478,38 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
 <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
 <script>
     $(document).ready(function() {
+    // Initialize Select2
+    $('#prepositives').select2({
+        placeholder: "Select Prepositives",
+        allowClear: true
+    });
+
+    // Handle Apply button click
+    $('#applyFilters').on('click', function() {
+        let filters = {
+            prepositives: $('#prepositives').val(),
+            living_status: $('#living_status').val(),
+            social_status: $('#social_status').val(),
+            gender: $('#gender').val()
+        };
+
+        // Make an AJAX request to apply the filters (adjust the URL and method as needed)
+        $.ajax({
+            url: '/path/to/filter/endpoint', // Replace with your endpoint
+            method: 'GET', // or 'POST' if needed
+            data: filters,
+            success: function(response) {
+                // Handle the response to update the citizens list
+                console.log(response);
+                // Update the citizens list on the page using the response data
+            },
+            error: function(xhr) {
+                console.error('Error applying filters:', xhr);
+            }
+        });
+    });
+});
+    $(document).ready(function() {
         // Set CSRF token for AJAX requests
         $.ajaxSetup({
             headers: {

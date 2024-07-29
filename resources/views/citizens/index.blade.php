@@ -33,56 +33,72 @@
     </span>
     <!--end::Svg Icon-->فلترة</a>
     <!--begin::Menu 1-->
-    <div class="menu menu-sub menu-sub-dropdown w-250px w-md-300px" data-kt-menu="true" id="kt_menu_61484c45b0e77">
-        <!--begin::Header-->
-        <div class="px-5 py-3">
-            <div class="fs-6 text-dark fw-bolder">خيارات التصنيف</div>
-        </div>
-        <!--end::Header-->
-        <!--begin::Menu separator-->
-        <div class="separator border-gray-200"></div>
-        <!--end::Menu separator-->
-        <!--begin::Form-->
-        <div class="px-5 py-3">
-            <!--begin::Input group-->
-            <div class="mb-6">
-                <!--begin::Label-->
-                <label class="form-label fw-bold">اختر المناديب:</label>
-                <!--end::Label-->
-                <!--begin::Input-->
-                <div>
-                <!-- <select class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
-                    <option></option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                </select> -->
-                </div>
-                <!--end::Input-->
-            </div>
-            <!--end::Input group-->
-            
-            <!--begin::Input group-->
-            <div class="mb-10">
-                <!--begin::Label-->
-                <label class="form-label fw-bold">Notifications:</label>
-                <!--end::Label-->
-                <!--begin::Switch-->
-                <div class="form-check form-switch form-switch-sm form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" value="" name="notifications" checked="checked" />
-                    <label class="form-check-label">Enabled</label>
-                </div>
-                <!--end::Switch-->
-            </div>
-            <!--end::Input group-->
-            <!--begin::Actions-->
-            <div class="d-flex justify-content-end">
-                <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
-                <button type="submit" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
-            </div>
-            <!--end::Actions-->
-        </div>
-        <!--end::Form-->
+    <div class="menu menu-sub menu-sub-dropdown w-450px " data-kt-menu="true" id="kt_menu_61484c45b0e77">
+    <!--begin::Header-->
+    <div class="px-5 py-3">
+        <div class="fs-6 text-dark fw-bolder">خيارات التصنيف</div>
     </div>
+    <!--end::Header-->
+    <!--begin::Menu separator-->
+    <div class="separator border-gray-200"></div>
+    <!--end::Menu separator-->
+    <!--begin::Form-->
+    <div class="px-5 py-3">
+        <!--begin::Input group-->
+        <div class="mb-6">
+            <!--begin::Label-->
+            <label class="form-label ">اختر المناديب:</label>
+            <!--end::Label-->
+            <!--begin::Input-->
+            <select class="js-example-basic-multiple w-350px" name="states[]" multiple="multiple">
+                <option value="AL">Alabama</option>
+                    ...
+                <option value="WY">Wyoming</option>
+            </select>
+            <!--end::Input-->
+        </div>
+        <!--end::Input group-->
+        <!--begin::Input group-->
+        <div class="mb-6">
+            <label class="form-label fw-bold">Living Status:</label>
+            <select id="living_status" class="form-control">
+                <option value="">Select</option>
+                <option value="alive">Alive</option>
+                <option value="deceased">Deceased</option>
+            </select>
+        </div>
+        <!--end::Input group-->
+        <!--begin::Input group-->
+        <div class="mb-6">
+            <label class="form-label fw-bold">Social Status:</label>
+            <select id="social_status" class="form-control">
+                <option value="">Select</option>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="divorced">Divorced</option>
+                <option value="widowed">Widowed</option>
+            </select>
+        </div>
+        <!--end::Input group-->
+        <!--begin::Input group-->
+        <div class="mb-6">
+            <label class="form-label fw-bold">Gender:</label>
+            <select id="gender" class="form-control">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+        <!--end::Input group-->
+        <!--begin::Actions-->
+        <div class="d-flex justify-content-end">
+            <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
+            <button id="applyFilters" type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
+        </div>
+        <!--end::Actions-->
+    </div>
+    <!--end::Form-->
+</div>
     <!--end::Menu 1-->
     <!--end::Menu-->
     <a href="{{ route('citizens.create') }}" class="btn btn-sm btn-primary">اضافة جديد</a>
@@ -90,11 +106,19 @@
     @endslot
 @endcomponent
 
-
 @endsection
+
 @section('content')
     @component('components.box',['title'=>'بيانات المواطنين','styles'=>'mt-19']) 
         @component('components.citizens', ['citizens' => $citizens, 'distributions' => $distributions])
         @endcomponent
     @endcomponent
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+    </script>
+@endpush
