@@ -50,8 +50,9 @@ class CitizenController extends Controller
 
     public function show($id)
     {
+        $citizens=Citizen::all();
         $citizen = Citizen::with('children')->findOrFail($id);
-        return view('citizens.show', compact('citizen'));
+        return view('citizens.show', compact('citizen','citizens'));
     }
 
     public function create()

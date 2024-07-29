@@ -4,8 +4,6 @@
 <div class="container mx-auto px-4">
         <!-- Modal -->
        
-
-        
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
             <div class="bg-white p-6 rounded-md shadow-md w-1/3">
                 <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
@@ -30,6 +28,12 @@
                 
             </div>
         </div>
+        @component('children.partilas.form',['citizens'=>$citizens])
+        @endcomponent
+        <div id="childModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+
+        </div>
+
 
   <!-- show.blade.php -->
     @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-8'])
@@ -73,7 +77,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">المنطقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
+                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }} و مندوبه {{ $citizen->region->representatives->first()->name }}</p>
                 </div>
                 
                 <div>
@@ -122,36 +126,36 @@
         
         <div id="childrenList" class="mt-4">
         <table id="childrenTable" class="min-w-full bg-white">
-    <thead class="bg-gray-800 text-white">
-        <tr>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">العمر</th>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الجنس</th>
-            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    @if (!$citizen->children->isEmpty())
-        @foreach($citizen->children as $child)
-        <tr data-id="{{ $child->id }}">
-            <td>{{ $child->name }}</td>
-            <td>{{ $child->date_of_birth }}</td>
-            <td>{{ $child->gender }}</td>
-            <td>
-                <a href="{{ route('children.edit' , $child->id) }}">
-                    <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
-                </a>
-                <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="{{ $child->id }}">Delete</button>
-            </td>
-        </tr>
-        @endforeach
-        @else
-            <h2>لم يتم تسجيل اطفال </h2>
-        @endif
-    </tbody>
-</table>
-        </div>
-        
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
+                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">العمر</th>
+                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الجنس</th>
+                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if (!$citizen->children->isEmpty())
+                @foreach($citizen->children as $child)
+                <tr data-id="{{ $child->id }}">
+                    <td>{{ $child->name }}</td>
+                    <td>{{ $child->date_of_birth }}</td>
+                    <td>{{ $child->gender }}</td>
+                    <td>
+                        <a href="{{ route('children.edit' , $child->id) }}">
+                            <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
+                        </a>
+                        <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="{{ $child->id }}">Delete</button>
+                    </td>
+                </tr>
+                @endforeach
+                @else
+                    <h2>لم يتم تسجيل اطفال </h2>
+                @endif
+            </tbody>
+        </table>
+                </div>
+                
     @endcomponent
 
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
@@ -234,71 +238,7 @@
   
 
 
-<div id="childModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
-    <div class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full md:w-1/2">
-            <h2 class="text-2xl font-bold mb-4">Add Child Information</h2>
-            <form id="addChildForm">
-                @csrf
-                <input type="hidden" name="citizen_id" value="{{ $citizen->id }}">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
-                        <input type="text" name="name" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth:</label>
-                        <input type="date" name="date_of_birth" id="date_of_birth" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div>
-                        <label for="gender" class="block text-sm font-medium text-gray-700">Gender:</label>
-                        <select name="gender" id="gender" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option value="0">Male</option>
-                            <option value="1">Female</option>
-                        </select>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="orphan" id="orphan" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                        <label for="orphan" class="ml-2 block text-sm text-gray-900">Orphan</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="infant" id="infant" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                        <label for="infant" class="ml-2 block text-sm text-gray-900">Infant</label>
-                    </div>
-                    <div>
-                        <label for="bambers_size" class="block text-sm font-medium text-gray-700">Bambers Size:</label>
-                        <input type="text" name="bambers_size" id="bambers_size" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="disease" id="disease" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                        <label for="disease" class="ml-2 block text-sm text-gray-900">Disease</label>
-                    </div>
-                    <div>
-                        <label for="disease_description" class="block text-sm font-medium text-gray-700">Disease Description:</label>
-                        <input type="text" name="disease_description" id="disease_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" name="obstruction" id="obstruction" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                        <label for="obstruction" class="ml-2 block text-sm text-gray-900">Obstruction</label>
-                    </div>
-                    <div>
-                        <label for="obstruction_description" class="block text-sm font-medium text-gray-700">Obstruction Description:</label>
-                        <input type="text" name="obstruction_description" id="obstruction_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label for="note" class="block text-sm font-medium text-gray-700">Note:</label>
-                        <textarea name="note" id="note" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-                    </div>
-                </div>
-                <div class="mt-6 flex justify-end">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Add Child</button>
-                    <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="hideChildModal()">close</button>
 
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 <script>
 
@@ -317,6 +257,7 @@ function hideChildModal() {
         document.getElementById('childModal').classList.toggle('hidden');
 }
 
+// addin cild frome ere
 document.getElementById('addChildForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
