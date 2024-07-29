@@ -5,104 +5,51 @@
 
 @component('components.toolbar',['title'=>'المواطنين'])
 
-    <!--begin::Compact form-->
-    <form method="GET" action="{{ route('citizens.index') }}">
-    <div class="d-flex align-items-center">
-    <!--begin::Input group-->
-    <div class="position-relative w-md-400px me-md-2">
-        <input type="text" class="form-control form-control-solid ps-10" name="search" value="" placeholder="بحث">
-    </div>
-    <!--end::Input group-->
-    <!--begin:Action-->
-    <div class="d-flex align-items-center">
-        <button type="submit" class="btn btn-primary me-5">بحث</button>
-        <!-- <a id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" href="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a> -->
-    </div>
-    <!--end:Action-->
-    </div>
-    </form>
-    <!--end::Compact form-->
-    @slot('side')
-    <!--begin::Menu-->
-    <a  class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-    <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-    <span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19.0759 3H4.72777C3.95892 3 3.47768 3.83148 3.86067 4.49814L8.56967 12.6949C9.17923 13.7559 9.5 14.9582 9.5 16.1819V19.5072C9.5 20.2189 10.2223 20.7028 10.8805 20.432L13.8805 19.1977C14.2553 19.0435 14.5 18.6783 14.5 18.273V13.8372C14.5 12.8089 14.8171 11.8056 15.408 10.964L19.8943 4.57465C20.3596 3.912 19.8856 3 19.0759 3Z" fill="black" />
-        </svg>
-    </span>
-    <!--end::Svg Icon-->فلترة</a>
-    <!--begin::Menu 1-->
-    <div class="menu menu-sub menu-sub-dropdown w-450px " data-kt-menu="true" id="kt_menu_61484c45b0e77">
-    <!--begin::Header-->
-    <div class="px-5 py-3">
-        <div class="fs-6 text-dark fw-bolder">خيارات التصنيف</div>
-    </div>
-    <!--end::Header-->
-    <!--begin::Menu separator-->
-    <div class="separator border-gray-200"></div>
-    <!--end::Menu separator-->
-    <!--begin::Form-->
-    <div class="px-5 py-3">
-        <!--begin::Input group-->
-        <div class="mb-6">
-            <!--begin::Label-->
-            <label class="form-label ">اختر المناديب:</label>
-            <!--end::Label-->
-            <!--begin::Input-->
-            <select class="js-example-basic-multiple w-350px" name="states[]" multiple="multiple">
-                <option value="AL">Alabama</option>
-                    ...
-                <option value="WY">Wyoming</option>
-            </select>
-            <!--end::Input-->
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="mb-6">
-            <label class="form-label fw-bold">Living Status:</label>
-            <select id="living_status" class="form-control">
-                <option value="">Select</option>
-                <option value="alive">Alive</option>
-                <option value="deceased">Deceased</option>
-            </select>
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="mb-6">
-            <label class="form-label fw-bold">Social Status:</label>
-            <select id="social_status" class="form-control">
-                <option value="">Select</option>
-                <option value="single">Single</option>
-                <option value="married">Married</option>
-                <option value="divorced">Divorced</option>
-                <option value="widowed">Widowed</option>
-            </select>
-        </div>
-        <!--end::Input group-->
-        <!--begin::Input group-->
-        <div class="mb-6">
-            <label class="form-label fw-bold">Gender:</label>
-            <select id="gender" class="form-control">
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select>
-        </div>
-        <!--end::Input group-->
-        <!--begin::Actions-->
-        <div class="d-flex justify-content-end">
-            <button type="reset" class="btn btn-sm btn-light btn-active-light-primary me-2" data-kt-menu-dismiss="true">Reset</button>
-            <button id="applyFilters" type="button" class="btn btn-sm btn-primary" data-kt-menu-dismiss="true">Apply</button>
-        </div>
-        <!--end::Actions-->
-    </div>
-    <!--end::Form-->
-</div>
-    <!--end::Menu 1-->
-    <!--end::Menu-->
-    <a href="{{ route('citizens.create') }}" class="btn btn-sm btn-primary">اضافة جديد</a>
+<form action="#" data-select2-id="select2-data-86-t9rz">
+    <!--begin::Card-->
+    <div class="card mb-7" data-select2-id="select2-data-85-v0vm">
+        <!--begin::Card body-->
+        <div class="card-body" data-select2-id="select2-data-84-b7f1">
+            <!--begin::Compact form-->
+            <div class="d-flex align-items-center">
+                <!--begin::Input group-->
+                <div class="position-relative w-md-400px me-md-2">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                    <span class="svg-icon svg-icon-3 svg-icon-gray-500 position-absolute top-50 translate-middle ms-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                    <input type="text" class="form-control form-control-solid ps-10" name="search" value="" placeholder="Search">
+                </div>
+                <!--end::Input group-->
+                <!--begin:Action-->
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary me-5">Search</button>
+                    <a id="kt_horizontal_search_advanced_link" class="btn btn-link collapsed" data-bs-toggle="collapse" href="#kt_advanced_search_form" aria-expanded="false">Advanced Search</a>
+                </div>
+                <!--end:Action-->
+            </div>
+            <!--end::Compact form-->
+            <!--begin::Advance form-->
+            <div class="collapse" id="kt_advanced_search_form" style="" data-select2-id="select2-data-kt_advanced_search_form">
+                <!--begin::Separator-->
+                <div class="separator separator-dashed mt-9 mb-6"></div>
+                <!--end::Separator-->
+                <!--begin::Row-->
 
+                <!--end::Row-->
+            </div>
+            <!--end::Advance form-->
+        </div>
+        <!--end::Card body-->
+    </div>
+    <!--end::Card-->
+</form>
+    @slot('side')
+    
     @endslot
 @endcomponent
 
