@@ -1,12 +1,12 @@
 @extends('dashboard')
 
 @section('content')
-<div class="container mx-auto px-4">
+    <div class="container mx-auto px-4">
         <!-- Modal -->
        
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
             <div class="bg-white p-6 rounded-md shadow-md w-1/3">
-                <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
+                <h2 class="text-lg font-semibold mb-4">اختر الكشف</h2>
               
                     <input type="hidden" name="citizen_ids" id="citizen-ids">
 
@@ -14,7 +14,6 @@
                             <!-- Options will be populated dynamically -->
                     </select>   
                        
-                    </select>
                     <div class="flex justify-end mt-4">
                     <!-- <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="addCitizenToDistribution()">
                             تأكيد
@@ -28,12 +27,72 @@
                 
             </div>
         </div>
-        @component('children.partilas.form',['citizens'=>$citizens])
-        @endcomponent
+        
         <div id="childModal" class="fixed z-10 inset-0 overflow-y-auto hidden">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full md:w-1/2">
+                    <h2 class="text-2xl font-bold mb-4">{{ $citizen->name }}اضافة  طفل جديد ل </h2>
+                    <form id="addChildForm">
+                        @csrf
+                        <input type="hidden" name="citizen_id" value="{{ $citizen->id }}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">الاسم:</label>
+                                <input type="text" name="name" id="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="date_of_birth" class="block text-sm font-medium text-gray-700">تاريخ الميلاد:</label>
+                                <input type="date" name="date_of_birth" id="date_of_birth"  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="gender" class="block text-sm font-medium text-gray-700">الجنس:</label>
+                                <select name="gender" id="gender" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <option value="0">Male</option>
+                                    <option value="1">Female</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="orphan" id="orphan" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="orphan" class="ml-2 block text-sm text-gray-900">يتيم</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="infant" id="infant" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="infant" class="ml-2 block text-sm text-gray-900">رضيع</label>
+                            </div>
+                            <div>
+                                <label for="bambers_size" class="block text-sm font-medium text-gray-700">حجم الحفاظات:</label>
+                                <input type="text" name="bambers_size" id="bambers_size" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="disease" id="disease" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="disease" class="ml-2 block text-sm text-gray-900">المرض</label>
+                            </div>
+                            <div>
+                                <label for="disease_description" class="block text-sm font-medium text-gray-700">وصف المرض :</label>
+                                <input type="text" name="disease_description" id="disease_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" name="obstruction" id="obstruction" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                <label for="obstruction" class="ml-2 block text-sm text-gray-900">يوجد اعاقة</label>
+                            </div>
+                            <div>
+                                <label for="obstruction_description" class="block text-sm font-medium text-gray-700">وصف الاعاقة:</label>
+                                <input type="text" name="obstruction_description" id="obstruction_description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="note" class="block text-sm font-medium text-gray-700">ملاحظات:</label>
+                                <textarea name="note" id="note" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">اضافة طفل</button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="hideChildModal()">الغاء</button>
 
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
 
   <!-- show.blade.php -->
     @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-8'])
@@ -124,7 +183,7 @@
             <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
         @endslot
         
-        <div id="childrenList" class="mt-4">
+        <div   class="mt-4">
         <table id="childrenTable" class="min-w-full bg-white">
             <thead class="bg-gray-800 text-white">
                 <tr>
@@ -134,7 +193,7 @@
                     <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody  id='childrenList'>
             @if (!$citizen->children->isEmpty())
                 @foreach($citizen->children as $child)
                 <tr data-id="{{ $child->id }}">
@@ -243,7 +302,7 @@
 <script>
 
     function showModal() {
-    document.getElementById('addCitizenModal').classList.remove('hidden');
+    //document.getElementById('addCitizenModal').classList.remove('hidden');
     // Optionally, populate the distribution select options here
 }
 
@@ -272,14 +331,21 @@ document.getElementById('addChildForm').addEventListener('submit', function(even
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            console.log(`data`,data);
             let child = data.child;
             let childrenList = document.getElementById('childrenList');
-            let newChild = document.createElement('div');
+            let newChild = document.createElement('tr');
             newChild.innerHTML = `
-                <p>Name: ${child.name}</p>
-                <p>Date of Birth: ${child.date_of_birth}</p>
-                <p>Gender: ${child.gender}</p>
-                <!-- Add more fields as necessary -->
+                <tr data-id="${child.id}">
+                        <td>${child.name}</td>
+                        <td>${child.date_of_birth}</td>
+                        <td>${child.gender}</td>
+                        <td>
+                            
+                            <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="${child.id}">Delete</button>
+                        </td>
+                </tr>
+
             `;
             childrenList.appendChild(newChild);
 
