@@ -23,10 +23,11 @@
         <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
         
         <!--end::Global Stylesheets Bundle-->
         <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
         <!-- custum styles  -->
         @yield('styles')
     <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
@@ -186,6 +187,7 @@
         <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
         <script src="{{ asset('assets/js/jquery.dataTables.min.js')}}"></script>
         <script src="{{ asset('assets/js/dataTables.tailwindcss.js')}}"></script>
+        <script src="{{ asset('assets/js/select2.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         
 

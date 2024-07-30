@@ -20,21 +20,30 @@
                 <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
             </div>
             <!-- Filter Form -->
-            <form>
+            <form action="{{ route('citizens.index') }}" method="GET">
                 <!-- Prepositives -->
                 <div class="mb-4">
                     <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                    <select id="prepositives" class="w-350 p-2 border border-gray-300 rounded-lg" multiple>
+                    <select id="regions" name="regions[]" class="select2-multiple p-2 border border-gray-300 rounded-lg" style="width: 260px;" multiple>
                         @foreach ($regions as $region )
-                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                        <option value="{{ $region->id }}" {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                            
+                            @if ($region->representatives->isNotEmpty())
+                            {{$region->name}} </br> :
+                             {{ $region->representatives->first()->name }}
+                            @else
+                                {{$region->name}}
+                            @endif
+
+                        </option>
                         @endforeach
                     </select>
                 </div>
                 <!-- Living Status -->
                 <div class="mb-4">
                     <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
-                    <select id="living_status" class="w-full p-2 border border-gray-300 rounded-lg">
-                        <option value="">Select</option>
+                    <select id="living_status" name="living_status" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="">غير محدد</option>
                         <option value="1">سيئ</option>
                         <option value="2">جيد</option>
                         <option value="3">ممتاز</option>
@@ -43,31 +52,33 @@
                 <!-- Social Status -->
                 <div class="mb-4">
                     <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
-                    <select id="social_status" class="w-full p-2 border border-gray-300 rounded-lg">
-                        <option value="1">اختر</option>
+                    <select id="social_status" name="social_status" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="">غير محدد</option>
                         <option value="0">اعزب</option>
-                        <option value="2">متزوج</option>
+                        <option value="1">متزوج</option>
+                        <option value="2">ارمل</option>
                         <option value="3">متعدد</option>
                         <option value="4">مطلق</option>
                         <option value="5">زوجة 1</option>
                         <option value="6">زوجة 2</option>
                         <option value="7">زوجة 3</option>
                         <option value="8">زوجة 4</option>
-                        <option value="9">ارمل</option>
+                        
                     </select>
                 </div>
                 <!-- Gender -->
                 <div class="mb-4">
                     <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
                     <select id="gender" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="">غير محدد</option>
                         <option value="0">ذكر</option>
                         <option value="1">انثى</option>
                     </select>
                 </div>
                 <!-- Actions -->
                 <div class="flex justify-end">
-                    <button type="reset" class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">Reset</button>
-                    <button id="applyFilters" type="button" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Apply</button>
+                    <button type="close" class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">Reset</button>
+                    <button id="applyFilters" type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Apply</button>
                 </div>
             </form>
         </div>
@@ -91,14 +102,22 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-    $('#prepositives').select2();
+        $('.select2-multiple').select2({
+                width: 'resolve', // or 'style' or 'element'..
+                 dropdownAutoWidth: true,
+            });
     });
    document.addEventListener('DOMContentLoaded', function() {
     // Toggle filter menu
     const filterButton = document.getElementById('filterButton');
+    const closeButton = document.getElementById('close');
     const filterMenu = document.getElementById('filterMenu');
-    
+
     filterButton.addEventListener('click', function() {
+        filterMenu.classList.toggle('hidden');
+    });
+
+    closeButton.addEventListener('click', function() {
         filterMenu.classList.toggle('hidden');
     });
 

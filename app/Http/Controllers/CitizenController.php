@@ -29,21 +29,20 @@ class CitizenController extends Controller
 
         // Apply region filter (handle multiple regions)
         if ($request->has('regions')) {
-            $query->whereIn('region', $request->input('regions'));
+            //dd($request->input('regions'));
+            $query->whereIn('region_id', $request->regions);
         }
 
-        // Apply social status filter
-        if ($request->has('social_status')) {
-            $query->where('social_status','like', $request->input('social_status'));
-        }
-        
+    
         $sortField = $request->get('sort', 'name'); // Default sort field
         $sortDirection = $request->get('direction', 'asc'); // Default sort direction
         
        
         $perPage = $request->input('per_page', 10);
        // $citizens = Citizen::all();
+       
         $citizens = $query->get();
+        //dd($citizens );
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
     }
 
