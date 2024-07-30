@@ -218,6 +218,17 @@
     <!--end::Page Custom Javascript-->
 
     <script>
+        //  document.addEventListener('DOMContentLoaded', () => {
+        //     const form = document.querySelector('form');
+        //     form.addEventListener('submit', (event) => {
+        //         const inputs = form.querySelectorAll('input');
+        //         inputs.forEach(input => {
+        //             if (input.value.trim() === '') {
+        //                 input.disabled = true;
+        //             }
+        //         });
+        //     });
+        // });
         document.getElementById('sidebarToggle').addEventListener('click', function() {
             document.querySelector('.bg-gray-800').classList.toggle('hidden');
         });

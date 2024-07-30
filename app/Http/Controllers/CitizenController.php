@@ -15,23 +15,30 @@ class CitizenController extends Controller
         $regions = Region::all();
         $distributions = Distribution::all();
         // Apply search filter
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->input('search'))) {
             $query->where('firstname', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('id', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+                    ->orWhere('secondname', 'like', '%' . $search . '%')
+                    ->orWhere('thirdname', 'like', '%' . $search . '%')
+                    ->orWhere('lastname', 'like', '%' . $search . '%')
+                    ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+        }
+
+        if ($request->has('id') && !empty($request->input('id'))) {
+            $query->where('id', $request->input('id'));
         }
 
         // Apply age filter
-        if ($request->has('age')) {
+        if ($request->has('age') ) {
             $query->where('age', $request->input('age'));
         }
 
-        if ($request->has('gender') ) {
+        if ($request->has('gender') && !empty($request->input('gender'))) {
             $query->where('gender', $request->input('gender'));
         }
         // Apply region filter (handle multiple regions)
-        if ($request->has('regions')) {
+        if ($request->has('regions')  && !empty($request->input('regions'))) {
             //dd($request->input('regions'));
             $query->whereIn('region_id', $request->regions);
         }
@@ -46,6 +53,9 @@ class CitizenController extends Controller
        
         $citizens = $query->get();
         //dd($citizens );
+        if ($request->wantsJson()) {
+            return response()->json($citizens);
+        }
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
     }
 
