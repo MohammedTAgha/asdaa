@@ -16,7 +16,7 @@ class CitizenController extends Controller
         $distributions = Distribution::all();
         // Apply search filter
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->input('search') . '%')
+            $query->where('firstname', 'like', '%' . $request->input('search') . '%')
                   ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
                   ->orWhere('id', 'like', '%' . $request->input('search') . '%')
                   ->orWhere('note', 'like', '%' . $request->input('search') . '%');
@@ -27,6 +27,9 @@ class CitizenController extends Controller
             $query->where('age', $request->input('age'));
         }
 
+        if ($request->has('gender') ) {
+            $query->where('gender', $request->input('gender'));
+        }
         // Apply region filter (handle multiple regions)
         if ($request->has('regions')) {
             //dd($request->input('regions'));

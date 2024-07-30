@@ -5,14 +5,19 @@
 
 @component('components.toolbar',['title'=>'المواطنين'])
 
- <div class="relative flex items-center justify-between p-4 bg-white shadow-md rounded-lg">
+ <div class="relative flex items-center justify-between p-2 px-6">
     <!-- Search Input -->
-    <div class="flex items-center w-full">
-        <input type="text" placeholder="Search..." class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <form method="GET" action="{{ route('citizens.index') }}" >
+    <div class="flex items-center w-full me-6">
+        
+            <input type="text" name="search" placeholder=" بحث عام..." class="w-full me-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="px-4 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">بحث</button>
+        
     </div>
+    </form>
     <!-- Filter Button -->
     <div class="ml-4 relative">
-        <button id="filterButton" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Filters</button>
+        <button id="filterButton" class="px-4 py-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Filters</button>
         <!-- Filter Popup Menu -->
         <div id="filterMenu" class="absolute right-0 z-10 hidden w-80 p-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
             <!-- Header -->
@@ -69,7 +74,7 @@
                 <!-- Gender -->
                 <div class="mb-4">
                     <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
-                    <select id="gender" class="w-full p-2 border border-gray-300 rounded-lg">
+                    <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
                         <option value="">غير محدد</option>
                         <option value="0">ذكر</option>
                         <option value="1">انثى</option>
@@ -77,8 +82,8 @@
                 </div>
                 <!-- Actions -->
                 <div class="flex justify-end">
-                    <button type="close" class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">Reset</button>
-                    <button id="applyFilters" type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Apply</button>
+                    <button id="close" type="button" class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"> اغلاق</button>
+                    <button id="applyFilters" type="submit" class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">تطبيق</button>
                 </div>
             </form>
         </div>
