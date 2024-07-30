@@ -77,8 +77,7 @@
             .then(data => {
                 // Show modal
                 document.getElementById('modal').classList.remove('hidden');
-                console.log('data');
-                console.log(data);
+                
                 // Populate modal with data
                 const cardsContainer = document.getElementById('cardsContainer');
                 cardsContainer.innerHTML = ''; // Clear previous content
