@@ -11,6 +11,7 @@ class CitizenController extends Controller
 {
     public function index(Request $request)
     {
+
         $query = Citizen::query();
         $regions = Region::all();
         $distributions = Distribution::all();
@@ -53,12 +54,55 @@ class CitizenController extends Controller
        
         $citizens = $query->get();
         //dd($citizens );
-        if ($request->wantsJson()) {
+
+        // if ($request->isMethod('post')) {
+        //     // Return a view
+        //     
+        // } 
+
+        // if ($request->wantsJson()) {
+            
+        // }
+        //dd($request->input('returnjson'));
+        // $contentType = $request->header('Content-Type');
+        // if ($contentType != 'application/json') {
+        //     
+        // }
+        if($request->has('returnjson') && $request->input('returnjson')==1){
+
             return response()->json($citizens);
         }
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
     }
 
+    public function query(Request $request)
+    {
+        $query = Citizen::query();
+
+        // Apply filters based on query parameters
+        if ($request->has('id')) {
+            $query->where('id', $request->input('id'));
+        }
+        if ($request->has('first_name')) {
+            $query->where('first_name', 'like', '%' . $request->input('first_name') . '%');
+        }
+        if ($request->has('second_name')) {
+            $query->where('second_name', 'like', '%' . $request->input('second_name') . '%');
+        }
+        if ($request->has('third_name')) {
+            $query->where('third_name', 'like', '%' . $request->input('third_name') . '%');
+        }
+        if ($request->has('last_name')) {
+            $query->where('last_name', 'like', '%' . $request->input('last_name') . '%');
+        }
+
+        // Execute query and get results
+        $citizens = $query->get();
+
+        return response()->json($citizens);
+    }
+    
+    
     public function show($id)
     {
         $citizens=Citizen::all();

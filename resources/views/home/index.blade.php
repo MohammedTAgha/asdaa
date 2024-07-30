@@ -5,7 +5,7 @@
 <div class="bg-gray-100 flex items-center justify-center mt-18">
     <div class="w-full max-w-lg py-6 px-8 bg-white rounded-lg shadow-md">
         <h1 class="mb-6 text-2xl font-bold text-center text-gray-700">استعلام عن البيانات</h1>
-        <form>
+        <div >
             <!-- ID Field -->
             <div class="mb-4">
                 <label for="id" class="block mb-2 font-medium text-gray-700">الهوية</label>
@@ -36,9 +36,9 @@
             </div>
             <!-- Submit Button -->
             <div class="flex justify-center">
-                <button type="submit" class="px-10 py-4 text-xl font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
+                <button type="button" id="submitButton" class="px-10 py-4 text-xl font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
             </div>
-        </form>
+        </div>
 
         <!-- Modal -->
     <div id="modal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-75">
@@ -55,53 +55,64 @@
 
     </div>
 </div>
-
+@push('scripts')
 <script>
-        document.getElementById('submitButton').addEventListener('click', function() {
-            const formData = new FormData(document.getElementById('queryForm'));
-            const searchParams = new URLSearchParams();
+    console.log('ccc');
+     $(document).ready(function() {
+        $('#submitButton').click(function() {
+            console.log('ccc');
+            var id = $('#id').val();
+            var first_name = $('#first_name').val();
+            var second_name = $('#second_name').val();
+            var third_name = $('#third_name').val();
+            var last_name = $('#last_name').val();
 
-            for (const pair of formData) {
-                searchParams.append(pair[0], pair[1]);
-            }
-
-            fetch('/citizens', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            $.ajax({
+                url: '/citizens', // Use the resource route for citizens
+                type: 'GET',
+                data: {
+                    id: id,
+                    first_name: first_name,
+                    second_name: second_name,
+                    third_name: third_name,
+                    last_name: last_name,
+                    returnjson:1,
                 },
-                body: searchParams
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Show modal
-                document.getElementById('modal').classList.remove('hidden');
-                
-                // Populate modal with data
-                const cardsContainer = document.getElementById('cardsContainer');
+                success: function(response) {
+                    // Handle the response data here
+                    document.getElementById('modal').classList.remove('hidden');
+                    console.log(response);
+                    const cardsContainer = document.getElementById('cardsContainer');
                 cardsContainer.innerHTML = ''; // Clear previous content
-                data.forEach(citizen => {
+                response.forEach(citizen => {
                     const card = document.createElement('div');
                     card.className = 'p-4 bg-gray-100 rounded-lg shadow';
                     card.innerHTML = `
-                        <p><strong>ID:</strong> ${citizen.id}</p>
-                        <p><strong>Name:</strong> ${citizen.name}</p>
-                        <p><strong>Date of Birth:</strong> ${citizen.date_of_birth}</p>
-                        <p><strong>Gender:</strong> ${citizen.gender}</p>
-                        <p><strong>Wife Name:</strong> ${citizen.wife_name}</p>
-                        <p><strong>Job:</strong> ${citizen.job}</p>
-                        <p><strong>Original Address:</strong> ${citizen.original_address}</p>
+                        <p><strong>الهوية:</strong> ${citizen.id}</p>
+                        <p><strong>الاسم:</strong> ${citizen.first_name} ${citizen.second_name} ${citizen.third_name} ${citizen.last_name}</p>
+                        <p><strong>تاريخ الميلاد:</strong> ${citizen.date_of_birth}</p>
+                        <p><strong>الجنس:</strong> ${citizen.gender}</p>
+                        <p><strong>الزوجة:</strong> ${citizen.wife_name}</p>
+                        <p><strong>رقم المنقطة:</strong> ${citizen.region_id}</p>
+                        <p><strong>العمل:</strong> ${citizen.job}</p>
+                        <p><strong>الحالة الاجتماعية:</strong> ${citizen.living_status}</p>
                         <p><strong>Note:</strong> ${citizen.note}</p>
                     `;
                     cardsContainer.appendChild(card);
                 });
-            })
-            .catch(error => console.error('Error:', error));
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
         });
+    });
 
-        document.getElementById('closeModalButton').addEventListener('click', function() {
+    document.getElementById('closeModalButton').addEventListener('click', function() {
             document.getElementById('modal').classList.add('hidden');
         });
-    </script>
+
+</script>
+@endpush
+
 @endsection
