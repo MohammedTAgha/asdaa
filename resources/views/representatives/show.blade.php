@@ -16,24 +16,22 @@
                 <h2 class="text-2xl font-semibold">الهاتف:</h2>
                 <p class="text-gray-700">{{ $representative->phone }}</p>
             </div>
-            @if($representative->address)
-            <div class="mb-4">
-                <h2 class="text-2xl font-semibold">العنوان:</h2>
-                <p class="text-gray-700">{{ $representative->address }}</p>
-            </div>
+            @if ($representative->address)
+                <div class="mb-4">
+                    <h2 class="text-2xl font-semibold">العنوان:</h2>
+                    <p class="text-gray-700">{{ $representative->address }}</p>
+                </div>
             @endif
-            @if($representative->note)
-            <div class="mb-4">
-                <h2 class="text-2xl font-semibold">ملاحظة:</h2>
-                <p class="text-gray-700">{{ $representative->note }}</p>
-            </div>
+            @if ($representative->note)
+                <div class="mb-4">
+                    <h2 class="text-2xl font-semibold">ملاحظة:</h2>
+                    <p class="text-gray-700">{{ $representative->note }}</p>
+                </div>
             @endif
         </div>
-        
-        @component('components.box',['title'=>" المواطنين في منطقة"." ".$representative->region->name])
-        <x-citizens :citizens="$representative->region->citizens" /> 
- 
 
+        @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $representative->region->name])
+            <x-citizens :citizens="$representative->region->citizens" />
         @endcomponent
     </div>
 @endsection
