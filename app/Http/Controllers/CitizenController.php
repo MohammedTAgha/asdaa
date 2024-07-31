@@ -147,9 +147,24 @@ class CitizenController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|string',
+        
+            'id' => 'required|string|max:255',
+            'firstname' => 'required|string',
+            'secondname' => 'nullable|string',
+            'thirdname' => 'nullable|string',
+            'lastname' => 'required|string',
+            // 'date_of_birth' => 'nullable|date',
+            // 'gender' => 'nullable|string',
+            // 'region_id' => 'nullable|string',
+            // 'wife_id' => 'nullable|string',
+            // 'wife_name' => 'nullable|string',
+            // 'widowed' => 'nullable|string',
+            // 'social_status' => 'nullable|string',
+            // 'living_status' =>'nullable|string',
+            // 'job' =>'nullable|string',
+            // 'original_address' =>'nullable|string',
+            // 'elderly_count' => 'nullable|string',
+            'note' => 'nullable|string',
             // Add other validation rules as needed
         ]);
 

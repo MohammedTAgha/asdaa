@@ -121,7 +121,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">الجنس</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->gender }}</p>
+                    <p class="mt-1 text-gray-900">{{ $citizen->gender == '0' ? 'ذكر' : 'انثى' }}</p>
                 </div>
                 
                 <div>
@@ -136,7 +136,7 @@
                 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">المنطقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }} و مندوبه {{ $citizen->region->representatives->first()->name }}</p>
+                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }} و مندوبه {{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</p>
                 </div>
                 
                 <div>

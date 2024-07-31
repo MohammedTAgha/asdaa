@@ -6,7 +6,14 @@
         <form action="{{ route('citizens.update', $citizen->id) }}" method="POST">
             @csrf
             @method('PUT')
+            <div>
+                <label for="id" class="block font-medium text-gray-700">الهوية</label>
+                <input type="text" id="id" name="id" value="{{ $citizen->id }}"
+                    class="w-full border-gray-300 w-full px-4 py-2 border rounded-md"
+                    required>
+            </div>
             <!-- name -->
+
             <div class="mb-4">
                 <label for="firstname" class="block text-gray-700">الاسم الاول:</label>
                 <input type="text" name="firstname" id="firstname" value="{{ $citizen->firstname }}"
@@ -38,12 +45,12 @@
             <div class="mb-4">
                 <label for="gender" class="block text-gray-700">Gender:</label>
                 <select id="gender" name="gender" required class="mt-1 block w-full rounded border-gray-300">
-                    <option value="male" {{ $citizen->gender == 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ $citizen->gender == 'female' ? 'selected' : '' }}>Female</option>
+                    <option value="0" {{ $citizen->gender == '0' ? 'selected' : '' }}>ذكر</option>
+                    <option value="1" {{ $citizen->gender == '1' ? 'selected' : '' }}>انثى</option>
                 </select>
             </div>
             <!-- Add other citizen fields as needed -->
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update Citizen</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">تحديث البيانات</button>
         </form>
     </div>
 @endsection
