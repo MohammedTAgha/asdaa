@@ -3,6 +3,19 @@
 <form id="citizens-form" method="POST"
     action="{{ $distributionId ? route('distributions.addCitizens', $distributionId) : '#' }}>
     @csrf
+    <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}">
+    <input type="hidden" name="citizen_ids" id="citizen-ids">
+    <div class="mt-4 w-full ">
+        @if ($distributionId)
+            <button type="submit" class=" flex-end px-4 py-2 bg-green-600 text-white rounded-md">
+                اضافة التحديد لكشف
+                {{ $distributionId }} </button>
+        @else
+            <button type="button" class="flex-end px-4 py-2 bg-green-600 text-white rounded-md" id="open-modal">
+                اضافة التحديد لكشف
+                </button>
+        @endif
+    </div>
     <div class="table-container
     overflow-x-auto mb-4">
     <table id="citizens-table" class="min-w-full divide-y divide-gray-200">
@@ -62,17 +75,6 @@
             @endforeach
         </tbody>
     </table>
-    </div>
-    <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}" >
-<input type="hidden" name="citizen_ids" id="citizen-ids">
-    <div class="mt-4">
-        @if ($distributionId)
-            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution to
-                {{$distributionId}} </button>
-        @else
-            <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-md" id="open-modal">Add to
-                Distribution</button>
-        @endif
     </div>
 </form>
 
