@@ -112,7 +112,10 @@ class CitizenController extends Controller
 
         $data = [
             'id' => $request->input('id'),
-            'name' => $request->input('name'),
+            'firstname' => $request->input('firstname'),
+            'secondname' => $request->input('secondname'),
+            'thirdname' => $request->input('thirdname'),
+            'lastname' => $request->input('lastname'),
             'date_of_birth' => $request->input('date_of_birth'),
             'gender' => $request->input('gender'),
             'region_id' => $request->input('region_id'),

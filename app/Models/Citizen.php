@@ -11,7 +11,10 @@ class Citizen extends Model
     protected $table='citizens';
     protected $fillable = [
         'id',
-        'name',
+        'firstname',
+        'secondname',
+        'tairdname',
+        'lastname',
         'date_of_birth',
         'gender',
         'wife_name',

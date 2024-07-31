@@ -8,25 +8,25 @@
             @method('PUT')
             <!-- name -->
             <div class="mb-4">
-                <label for="name" class="block text-gray-700">الاسم الاول:</label>
+                <label for="firstname" class="block text-gray-700">الاسم الاول:</label>
                 <input type="text" name="firstname" id="firstname" value="{{ $citizen->firstname }}"
                     class="w-full px-4 py-2 border rounded-md" required>
             </div>
 
             <div class="mb-4">
-                <label for="name" class="block text-gray-700">الاب:</label>
+                <label for="secondname" class="block text-gray-700">الاب:</label>
                 <input type="text" name="secondname" id="secondname" value="{{ $citizen->secondname }}"
                     class="w-full px-4 py-2 border rounded-md">
             </div>
 
             <div class="mb-4">
-                <label for="name" class="block text-gray-700">الجد:</label>
+                <label for="thirdname" class="block text-gray-700">الجد:</label>
                 <input type="text" name="thirdname" id="thirdname" value="{{ $citizen->thirdname }}"
                     class="w-full px-4 py-2 border rounded-md">
             </div>
 
             <div class="mb-4">
-                <label for="name" class="block text-gray-700">العائلة:</label>
+                <label for="lastname" class="block text-gray-700">العائلة:</label>
                 <input type="text" name="lastname" id="lastname" value="{{ $citizen->lastname }}"
                     class="w-full px-4 py-2 border rounded-md" required>
             </div>
