@@ -16,15 +16,51 @@
 -checkbox done
 
 
--fix all codes and make it done
+-fix all codes and make it done  inproress
 -in distribution add form to add bulk citizens 
--add filters to te searc layout
+-add filters to te searc layout OK
 -create te export to excel
 -import bulk file 
--create user aut
--desin te queru for users 
+-create user auth
+-desin the query for users ok
 - redesin  te layouts
+-ADD STAF AND COMMIIES CRUD
 -------------------------
+
+*ADD BULK CTZ FROM EXEL FILE TO A distribution > DISTRIBUTION PAGE 
+	EACH USER MUST BE IN THE SYSTEM
+	EACH USE MUST NOT BE IN THE SAME DISTRIBUTION
+	RETURN A REBORT OF THE ADDING AND GIVE THE IDS THATS HAVE AN ISSUS 
+
+*ADD BULK CTZINTS TO A RESBOSITIVE FROM EXEL 
+	CHECK IF EXIST BEFORE IN THE SYSTEM
+	RETURN A REBORT OF THATS HAVE AN ISSUS
+
+
+
+
+----------- CODE REVIEW --------
+
+**** HOME ****
+-ENHANCE MODEL LAYOUT 
+-CARD DATA MUST AVE A TEXT NOT NUMBERS 
+
+**** /citizens ****
+/index
+-ADD NEW LAYOUT FROM MITRONIC
+
+/create
+-SEPERATE NAMES -  OK
+
+
+
+
+
+
+
+
+
+
 
 composer require maatwebsite/excel
 

@@ -126,16 +126,21 @@ class DistributionController extends Controller
         $distributions = Distribution::all();
         return response()->json(["distributions" => $distributions]);
     }
-    public function addCitizens(Request $request, $distributionId = null)
+    public function addCitizens(Request $request, $distributionId =null)
     {
+        //Log::error("distributionId IDs:", ["distributionId" => $distributionId]);
+
+        dd($request->input("citizens[]"));
         $citizenIds = explode(",", $request->input("citizen_ids"));
         $distributionId = $distributionId ?? $request->input("distribution_id");
         $truncatedCitizens = [];
         $existingCitizenNames = [];
-
+        Log::error("-------", ["-" => "-------"]);
+        Log::error("distributionId IDs:", ["distributionId" => $distributionId]);
+        Log::error("Citizen IDs:", ["ids" => $citizenIds]);
         DB::beginTransaction();
         try {
-            Log::error("Citizen IDs:", ["ids" => $citizenIds]);
+            Log::error("Citizen IDs 2:", ["ids" => $citizenIds]);
 
             // Retrieve existing citizens in the distribution
             $existingCitizens = DB::table("distribution_citizens")

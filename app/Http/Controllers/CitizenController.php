@@ -108,8 +108,6 @@ class CitizenController extends Controller
 
     public function store(Request $request)
     {
-
-
         $data = [
             'id' => $request->input('id'),
             'firstname' => $request->input('firstname'),
@@ -132,9 +130,6 @@ class CitizenController extends Controller
         ];
 
         Citizen::create($data);
-
-
-
        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
 
