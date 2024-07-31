@@ -1,7 +1,7 @@
 @props(['citizens', 'distributionId' => null, 'distributions' => []])
 
 <form id="citizens-form" method="POST"
-    action="{{ $distributionId ? route('distributions.addCitizens', $distributionId) : '#' }}>
+     action="{{ $distributionId ? route('distributions.addCitizens', $distributionId) : '#' }}">
     @csrf
     <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}">
     <input type="hidden" name="citizen_ids" id="citizen-ids">
@@ -76,11 +76,11 @@
         </tbody>
     </table>
     </div>
-</form>
+</form> 
 
 @if (!$distributionId)
-    <div id="distribution-modal"
-        class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 hidden">
+<div id="distribution-modal"
+    class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-md shadow-md w-1/3">
             <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
             <form id="modal-form" method="POST" action="{{ route('distributions.addCitizens') }}">
@@ -94,7 +94,7 @@
                 </select>
                 <div class="flex justify-end">
                     <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-md mr-2"
-                        id="close-modal">Cancel</button>
+                    id="close-modal">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Confirm</button>
                 </div>
             </form>
@@ -115,7 +115,6 @@
                     searchPlaceholder: "Search citizens..."
                 }
             });
-
             $('#select-all').on('change', function() {
                 var checkboxes = $('input[name="citizens[]"]');
                 checkboxes.prop('checked', $(this).prop('checked'));
