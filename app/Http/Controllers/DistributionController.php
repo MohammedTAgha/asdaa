@@ -30,18 +30,18 @@ class DistributionController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "date" => "required|date",
+            "date" => "nullable|date",
             "distribution_category_id" =>
-                "required|exists:distribution_categories,id",
-            "arrive_date" => "required|date",
-            "quantity" => "required|integer",
-            "target" => "required",
-            "source" => "required",
-            "done" => "required|boolean",
-            "target_count" => "required|integer",
-            "expectation" => "required",
-            "min_count" => "required|integer",
-            "max_count" => "required|integer",
+                "nullable|exists:distribution_categories,id",
+            "arrive_date" => "nullable|date",
+            "quantity" => "nullable|integer",
+            "target" => "nullable",
+            "source" => "nullable",
+            "done" => "nullable|boolean",
+            "target_count" => "nullable|integer",
+            "expectation" => "nullable",
+            "min_count" => "nullable|integer",
+            "max_count" => "nullable|integer",
             "note" => "nullable|string",
         ]);
 
@@ -73,19 +73,19 @@ class DistributionController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "date" => "required|date",
+            "date" => "nullable|date",
             "distribution_category_id" =>
-                "required|exists:distribution_categories,id",
-            "arrive_date" => "required|date",
-            "quantity" => "required|integer",
-            "target" => "required",
-            "source" => "required",
-            "done" => "required|boolean",
-            "target_count" => "required|integer",
-            "expectation" => "required",
-            "min_count" => "required|integer",
-            "max_count" => "required|integer",
-            "note" => "nullable|string",
+                "nullable|exists:distribution_categories,id",
+            "arrive_date" => "nullable|date",
+            "quantity" => "nullable|integer",
+            "target" => "nullable",
+            "source" => "nullable",
+            "done" => "nullable|boolean",
+            "target_count" => "nullable|integer",
+            "expectation" => "nullable",
+            "min_count" => "nullable|integer",
+            "max_count" => "nullable|integer",
+            "note" => "|string",
         ]);
 
         $distribution->update($request->all());
