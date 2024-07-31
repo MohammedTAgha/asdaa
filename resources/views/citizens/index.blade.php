@@ -98,12 +98,34 @@
             </div>
         </div>
         @slot('side')
+        <button id="openModalButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            add excel
+        </button>
             <a href="{{ route('citizens.create') }}" class="btn btn-sm btn-primary">اضافة جديد</a>
         @endslot
     @endcomponent
 @endsection
 
+<div id="myModal" class="hidden fixed inset-0 z-50 overflow-auto bg-black  flex justify-center items-center">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <h1 class="mb-6 text-2xl font-bold text-center text-gray-700">Upload Excel File</h1>
 
+        <!-- Your previous HTML form here -->
+        <form action="{{ route('citizens.upload') }}" method="POST" enctype="multipart/form-data" class="mb-4">
+            @csrf
+            <div>
+                <label for="excel_file" class="block mb-2 font-medium text-gray-700">Excel File</label>
+                <input type="file" id="excel_file" name="excel_file" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div class="flex justify-center">
+                <button type="submit" class="px-10 py-4 text-xl font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Upload</button>
+            </div>
+        </form>
+
+        <button id="closeModalButton" class="mt-4 block mx-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Close</button>
+    </div>
+</div>
 @section('content')
     @component('components.box', ['title' => 'بيانات المواطنين', 'styles' => 'mt-19'])
         @component('components.citizens', ['citizens' => $citizens, 'distributions' => $distributions, 'distributionId'=>$distributionId ? $distributionId : null])
@@ -112,6 +134,19 @@
 @endsection
 
 @push('scripts')
+<script>
+    const openModalButton = document.getElementById('openModalButton');
+    const closeModalButton = document.getElementById('closeModalButton');
+    const modal = document.getElementById('myModal');
+
+    openModalButton.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+</script>
     <script>
         $(document).ready(function() {
             $('.select2-multiple').select2({

@@ -6,6 +6,11 @@ use App\Models\Citizen;
 use App\Models\Region;
 use App\Models\Distribution;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CitizensImport;
+use Illuminate\Support\Facades\Log;
+//use App\Exports\CitizensTemplateExport;
+
 
 class CitizenController extends Controller
 {
@@ -173,6 +178,32 @@ class CitizenController extends Controller
         return redirect()->route('citizens.index')->with('success', 'Citizen updated successfully.');
     }
 
+    // public function downloadTemplate()
+    // {
+    //     return Excel::download(new CitizensTemplateExport, 'citizens_template.xlsx');
+    // }
+    
+    public function export()
+    {
+        
+    }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        $file = $request->file('excel_file');
+
+        $import = new CitizensImport();
+        Excel::import($import, $file);
+        Log::error("--------------:", ["--------------" =>"--------------" ]);
+
+        Log::error("Citizen IDs:", ["ids" => $import->getErrors()]);
+    
+        return redirect()->route('citizens.index')->withErrors($import->getErrors());
+    }
     public function destroy($id)
     {
         $citizen = Citizen::findOrFail($id);

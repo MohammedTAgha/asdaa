@@ -24,6 +24,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('regions', RegionController::class);
 Route::resource('representatives', RegionRepresentativeController::class);
+Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
 Route::resource('citizens', CitizenController::class);
 Route::resource('distributions', DistributionController::class);
 Route::resource('distribution_categories', DistributionCategoryController::class);

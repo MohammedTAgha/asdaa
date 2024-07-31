@@ -98,6 +98,10 @@
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
                     كل الاسماء
                 </a>
+                <a href="{{ route('citizens.upload') }}"
+                class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
+                رفع كشف الاسماء
+            </a>
                 <a href="{{ route('distributions.index') }}"
                     class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
                     الكشوفات
