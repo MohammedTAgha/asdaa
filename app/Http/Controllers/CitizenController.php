@@ -15,6 +15,11 @@ class CitizenController extends Controller
         $query = Citizen::query();
         $regions = Region::all();
         $distributions = Distribution::all();
+        $distribution=null;
+        $distributionId=$request->input('distributionId');
+        if($request->has('distributionId') && !empty($request->input('distributionId'))){
+            $distribution=Distribution::find($request->input('distributionId'));
+        }
         // Apply search filter
         if ($request->has('search') && !empty($request->input('search'))) {
             $query->where('firstname', 'like', '%' . $request->input('search') . '%')
@@ -44,35 +49,20 @@ class CitizenController extends Controller
             $query->whereIn('region_id', $request->regions);
         }
 
-    
+
         $sortField = $request->get('sort', 'name'); // Default sort field
         $sortDirection = $request->get('direction', 'asc'); // Default sort direction
-        
-       
+
+
         $perPage = $request->input('per_page', 10);
        // $citizens = Citizen::all();
-       
+
         $citizens = $query->get();
-        //dd($citizens );
-
-        // if ($request->isMethod('post')) {
-        //     // Return a view
-        //     
-        // } 
-
-        // if ($request->wantsJson()) {
-            
-        // }
-        //dd($request->input('returnjson'));
-        // $contentType = $request->header('Content-Type');
-        // if ($contentType != 'application/json') {
-        //     
-        // }
         if($request->has('returnjson') && $request->input('returnjson')==1){
 
             return response()->json($citizens);
         }
-    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions'));
+    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions','distributionId'));
     }
 
     public function query(Request $request)
@@ -101,8 +91,8 @@ class CitizenController extends Controller
 
         return response()->json($citizens);
     }
-    
-    
+
+
     public function show($id)
     {
         $citizens=Citizen::all();
@@ -118,8 +108,8 @@ class CitizenController extends Controller
 
     public function store(Request $request)
     {
-   
-       
+
+
         $data = [
             'id' => $request->input('id'),
             'name' => $request->input('name'),
@@ -137,11 +127,11 @@ class CitizenController extends Controller
             'note' => $request->input('note'),
 
         ];
-        
+
         Citizen::create($data);
 
-       
-   
+
+
        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
 

@@ -53,9 +53,11 @@ class DistributionController extends Controller
     }
 
     public function show($id)
-    {
+    {   
+        $distributions = Distribution::all();
+        $citizens = Citizen::all();
         $distribution = Distribution::findOrFail($id);
-        return view("distributions.show", compact("distribution"));
+        return view("distributions.show", compact("distribution","citizens","distributions"));
     }
 
     public function edit(Distribution $distribution)

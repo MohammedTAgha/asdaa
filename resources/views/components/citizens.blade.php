@@ -63,9 +63,12 @@
         </tbody>
     </table>
     </div>
+    <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}" >
+<input type="hidden" name="citizen_ids" id="citizen-ids">
     <div class="mt-4">
         @if ($distributionId)
-            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution</button>
+            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add to Distribution to
+                {{$distributionId}} </button>
         @else
             <button type="button" class="px-4 py-2 bg-green-600 text-white rounded-md" id="open-modal">Add to
                 Distribution</button>

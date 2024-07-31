@@ -98,6 +98,7 @@
             </div>
         </div>
         @slot('side')
+            <a href="{{ route('citizens.create') }}" class="btn btn-sm btn-primary">اضافة جديد</a>
         @endslot
     @endcomponent
 @endsection
@@ -105,7 +106,7 @@
 
 @section('content')
     @component('components.box', ['title' => 'بيانات المواطنين', 'styles' => 'mt-19'])
-        @component('components.citizens', ['citizens' => $citizens, 'distributions' => $distributions])
+        @component('components.citizens', ['citizens' => $citizens, 'distributions' => $distributions, 'distributionId'=>$distributionId ? $distributionId : null])
         @endcomponent
     @endcomponent
 @endsection

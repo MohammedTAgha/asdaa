@@ -94,16 +94,20 @@
                                 const card = document.createElement('div');
                                 card.className = 'p-4 bg-gray-100 rounded-lg shadow';
                                 card.innerHTML = `
-                        <p><strong>الهوية:</strong> ${citizen.id}</p>
-                        <p><strong>الاسم:</strong> ${citizen.first_name} ${citizen.second_name} ${citizen.third_name} ${citizen.last_name}</p>
-                        <p><strong>تاريخ الميلاد:</strong> ${citizen.date_of_birth}</p>
-                        <p><strong>الجنس:</strong> ${citizen.gender}</p>
-                        <p><strong>الزوجة:</strong> ${citizen.wife_name}</p>
-                        <p><strong>رقم المنقطة:</strong> ${citizen.region_id}</p>
-                        <p><strong>العمل:</strong> ${citizen.job}</p>
-                        <p><strong>الحالة الاجتماعية:</strong> ${citizen.living_status}</p>
-                        <p><strong>Note:</strong> ${citizen.note}</p>
-                    `;
+                                <div>
+                                <a href="/citizens/${citizen.id}">
+                                <p><strong>الهوية:</strong> ${citizen.id}</p>
+                                <p><strong>الاسم:</strong> ${citizen.firstname} ${citizen.secondname} ${citizen.thirdname} ${citizen.lastname}</p>
+                                <p><strong>تاريخ الميلاد:</strong> ${citizen.date_of_birth}</p>
+                                <p><strong>الجنس:</strong> ${citizen.gender}</p>
+                                <p><strong>الزوجة:</strong> ${citizen.wife_name}</p>
+                                <p><strong>رقم المنقطة:</strong> ${citizen.region_id}</p>
+                                <p><strong>العمل:</strong> ${citizen.job}</p>
+                                <p><strong>الحالة الاجتماعية:</strong> ${citizen.living_status}</p>
+                                <p><strong>Note:</strong> ${citizen.note}</p>
+                                </div>
+                                </a>
+                            `;
                                 cardsContainer.appendChild(card);
                             });
                         },
