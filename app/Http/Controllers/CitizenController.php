@@ -20,6 +20,24 @@ class CitizenController extends Controller
         if($request->has('distributionId') && !empty($request->input('distributionId'))){
             $distribution=Distribution::find($request->input('distributionId'));
         }
+
+         // Apply filters based on query parameters
+         if ($request->has('id') && !empty($request->input('id'))) {
+            $query->where('id', $request->input('id'));
+        }
+        if ($request->has('first_name') && !empty($request->input('first_name'))) {
+            $query->where('firstname', 'like', '%' . $request->input('first_name') . '%');
+        }
+        if ($request->has('second_name') && !empty($request->input('second_name'))) {
+            $query->where('secondname', 'like', '%' . $request->input('second_name') . '%');
+        }
+        if ($request->has('third_name') && !empty($request->input('third_name'))) {
+            $query->where('thirdname', 'like', '%' . $request->input('third_name') . '%');
+        }
+        if ($request->has('last_name') && !empty($request->input('last_name'))) {
+            $query->where('lastname', 'like', '%' . $request->input('last_name') . '%');
+        }
+
         // Apply search filter
         if ($request->has('search') && !empty($request->input('search'))) {
             $query->where('firstname', 'like', '%' . $request->input('search') . '%')
@@ -31,9 +49,6 @@ class CitizenController extends Controller
                     ->orWhere('note', 'like', '%' . $request->input('search') . '%');
         }
 
-        if ($request->has('id') && !empty($request->input('id'))) {
-            $query->where('id', $request->input('id'));
-        }
 
         // Apply age filter
         if ($request->has('age') ) {
@@ -69,22 +84,7 @@ class CitizenController extends Controller
     {
         $query = Citizen::query();
 
-        // Apply filters based on query parameters
-        if ($request->has('id')) {
-            $query->where('id', $request->input('id'));
-        }
-        if ($request->has('first_name')) {
-            $query->where('first_name', 'like', '%' . $request->input('first_name') . '%');
-        }
-        if ($request->has('second_name')) {
-            $query->where('second_name', 'like', '%' . $request->input('second_name') . '%');
-        }
-        if ($request->has('third_name')) {
-            $query->where('third_name', 'like', '%' . $request->input('third_name') . '%');
-        }
-        if ($request->has('last_name')) {
-            $query->where('last_name', 'like', '%' . $request->input('last_name') . '%');
-        }
+       
 
         // Execute query and get results
         $citizens = $query->get();

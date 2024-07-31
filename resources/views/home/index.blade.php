@@ -46,8 +46,8 @@
             </div>
 
             <!-- Modal -->
-            <div id="modal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-75">
-                <div class="w-full max-w-2xl p-6 bg-white rounded-lg shadow-lg">
+            <div id="modal" class="  fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-75">
+                <div class="w-full h-500px overflow-y-auto max-w-2xl p-6 bg-white rounded-lg shadow-lg">
                     <h2 class="mb-4 text-2xl font-bold text-center text-gray-700">Found Citizens</h2>
                     <div id="cardsContainer" class="space-y-4">
                         <!-- Cards will be appended here -->
