@@ -1,9 +1,9 @@
 @props(['citizens', 'distributionId' => null, 'distributions' => []])
 
 <form id="citizens-form" method="POST"
-     action="{{ $distributionId ? route('distributions.addCitizens', $distributionId) : '#' }}">
+     action="{{  route('distributions.addCitizens', $distributionId)  }}">
     @csrf
-    <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}">
+    {{-- <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}"> --}}
     <input type="hidden" name="citizen_ids" id="citizen-ids">
     <div class="mt-4 w-full ">
         @if ($distributionId)
@@ -76,17 +76,14 @@
         </tbody>
     </table>
     </div>
-</form> 
-
-@if (!$distributionId)
+    @if (!$distributionId)
 <div id="distribution-modal"
     class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 hidden">
         <div class="bg-white p-6 rounded-md shadow-md w-1/3">
             <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
-            <form id="modal-form" method="POST" action="{{ route('distributions.addCitizens') }}">
-                @csrf
-                <input type="hidden" name="citizen_ids" id="citizen-ids">
-                <select name="distribution_id" class="form-select mt-1 block w-full mb-4">
+            
+                
+                <select name="distributionId" class="form-select mt-1 block w-full mb-4">
                     <option value="">Select Distribution</option>
                     @foreach ($distributions as $distribution)
                         <option value="{{ $distribution->id }}">{{ $distribution->name }}</option>
@@ -97,10 +94,13 @@
                     id="close-modal">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Confirm</button>
                 </div>
-            </form>
+            
         </div>
     </div>
 @endif
+</form> 
+
+
 
 @push('scripts')
     <script>

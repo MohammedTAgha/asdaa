@@ -541,7 +541,7 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
                 success: function(response) {
                     // Handle success response
                     console.log(response);
-                    alert('Pivot updated successfully');
+                    alert('تم تحديث');
                 },
                 error: function(xhr, status, error) {
                     // Handle error response
