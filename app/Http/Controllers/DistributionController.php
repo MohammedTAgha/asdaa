@@ -129,7 +129,10 @@ class DistributionController extends Controller
     public function addCitizens(Request $request, $distributionId = null)
     {
         
-        $citizenIds = explode(",", $request->input("citizen_ids"));
+        $citizenIds = $request->input("citizens");
+    //     dd([ "citizen_ids"=>$citizenIds,
+    //      "citizens"=>$request->input("citizens")
+    // ]);
         $distributionId = $distributionId ?? $request->input("distributionId");
         $truncatedCitizens = [];
         $existingCitizenNames = [];
