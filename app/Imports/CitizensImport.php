@@ -5,15 +5,15 @@ use App\Models\Citizen;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
+// use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Illuminate\Support\Collection;
 
-class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithEvents
+class CitizensImport implements ToModel, WithHeadingRow, WithValidation,   WithEvents
 {
-    use SkipsFailures;
+    //use SkipsFailures;
 
     private $errors = [];
 
