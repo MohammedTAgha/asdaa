@@ -1,3 +1,4 @@
+<?php
 namespace App\Exports;
 
 use App\Models\Citizen;
@@ -11,10 +12,8 @@ class CitizensExport implements FromCollection, WithHeadings
         return Citizen::all();
     }
 
-    public function headings(): array
-    {
-        return [
-            'id', 'firstname','secondname','thirdname',lastname', 'Date of Birth', 'Gender', 'Region', 'Wife ID', 'Wife Name', 'Widowed', 'Social Status', 'Living Status', 'Job', 'Original Address', 'Elderly Count', 'Note'
-        ];
-    }
+    // public function headings(): array
+    // {
+    //     return ['id', 'firstname','secondname','thirdname',lastname', 'Date of Birth', 'Gender', 'Region', 'Wife ID', 'Wife Name', 'Widowed', 'Social Status', 'Living Status', 'Job', 'Original Address', 'Elderly Count', 'Note'];
+    // }
 }

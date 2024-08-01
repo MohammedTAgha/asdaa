@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CitizensImport;
 use Illuminate\Support\Facades\Log;
-//use App\Exports\CitizensTemplateExport;
+use App\Exports\CitizensTemplateExport;
 
 
 class CitizenController extends Controller
