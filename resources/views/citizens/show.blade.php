@@ -177,6 +177,80 @@
           
     @endcomponent
 
+    @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
+    @slot('side')
+            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+    @endslot
+    @php
+    $distributions = $citizen->distributions
+    @endphp
+    @if (!$distributions->isEmpty())
+    <table class="min-w-full bg-white">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">رقم</th>
+                    <th class="w-140px py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
+                    <th class="w-90px py-3 px-4 uppercase font-semibold text-sm">المزود</th>
+                    <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
+                    <th class="w-50px py-3 px-4 uppercase font-semibold text-sm">استلم</th>
+                    <th class="w-100px py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
+                    <th class="w-120px py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
+                    <th class="w-150px py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
+                    <th class="w-100px py-3 px-4 uppercase font-semibold text-sm"> - </th>
+
+                </tr>
+            </thead>
+            <tbody class="text-gray-700">  
+            @foreach($distributions as $distribution)
+                <tr>
+                    <td class=" py-3 px-4">
+                        <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
+                        {{ $distribution->pivot->id }}
+                        </a> 
+                    </td> 
+                 
+                    <td class=" py-3 px-4">
+                    <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
+                    {{ $distribution->name }}
+                    </a>
+                </td>
+                 
+                    <td class=" py-3 px-4">{{ $distribution->source }}</td>
+                    <td class=" py-3 px-4">
+                        <input type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity">
+                    </td>
+                    <td class="w-90px py-3 px-4">
+                    <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
+                    </td>
+                    <td class=" py-3 px-4">
+                    <input  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient">
+                    </td>
+                    <td class=" py-3 px-4">
+                        <input type="date" name="date" value="{{ $distribution->pivot->date }}">
+                    </td>
+                    <td class=" py-3 px-4"> 
+                        <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
+
+                    </td>
+                    <td class="flex-1  py-3 px-4" >
+                        <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
+                        <i class="fas fa-upload" style="color: green;"></i>
+                        </button>
+
+                        <a href="#" onclick="removeCitizenFromDistribution({{ $distribution->pivot->id }})" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash-alt" style="color: red;"></i>
+                        </a>                    
+                     </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @else
+        <h2>لم يستلم يعد</h2>
+        @endif
+
+@endcomponent
+
     @component('components.box',['title'=>'الابناء','styles'=>'mt-4'])
         @slot('side')
            <!-- Button to trigger modal -->
@@ -217,79 +291,6 @@
                 
     @endcomponent
 
-    @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
-        @slot('side')
-                <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
-        @endslot
-        @php
-        $distributions = $citizen->distributions
-        @endphp
-        @if (!$distributions->isEmpty())
-        <table class="min-w-full bg-white">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                        <th class="w-140px py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
-                        <th class="w-90px py-3 px-4 uppercase font-semibold text-sm">المزود</th>
-                        <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
-                        <th class="w-50px py-3 px-4 uppercase font-semibold text-sm">استلم</th>
-                        <th class="w-100px py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
-                        <th class="w-120px py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
-                        <th class="w-150px py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
-                        <th class="w-100px py-3 px-4 uppercase font-semibold text-sm"> - </th>
-
-                    </tr>
-                </thead>
-                <tbody class="text-gray-700">  
-                @foreach($distributions as $distribution)
-                    <tr>
-                        <td class=" py-3 px-4">
-                            <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
-                            {{ $distribution->pivot->id }}
-                            </a> 
-                        </td> 
-                     
-                        <td class=" py-3 px-4">
-                        <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
-                        {{ $distribution->name }}
-                        </a>
-                    </td>
-                     
-                        <td class=" py-3 px-4">{{ $distribution->source }}</td>
-                        <td class=" py-3 px-4">
-                            <input type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity">
-                        </td>
-                        <td class="w-90px py-3 px-4">
-                        <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
-                        </td>
-                        <td class=" py-3 px-4">
-                        <input  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient">
-                        </td>
-                        <td class=" py-3 px-4">
-                            <input type="date" name="date" value="{{ $distribution->pivot->date }}">
-                        </td>
-                        <td class=" py-3 px-4"> 
-                            <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
-
-                        </td>
-                        <td class="flex-1  py-3 px-4" >
-                            <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
-                            <i class="fas fa-upload" style="color: green;"></i>
-                            </button>
-
-                            <a href="#" onclick="removeCitizenFromDistribution({{ $distribution->pivot->id }})" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash-alt" style="color: red;"></i>
-                            </a>                    
-                         </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @else
-            <h2>لم يستلم يعد</h2>
-            @endif
-
-    @endcomponent
 
 
 
@@ -302,7 +303,7 @@
 <script>
 
     function showModal() {
-    //document.getElementById('addCitizenModal').classList.remove('hidden');
+    document.getElementById('addCitizenModal').classList.remove('hidden');
     // Optionally, populate the distribution select options here
 }
 
@@ -390,7 +391,7 @@ function addCitizenToDistribution() {
         },
         body: JSON.stringify({
             citizen_ids: [citizenId].join(','),
-            distribution_id: distributionId
+            distributionId: distributionId
         })
     })
     .then(response => response.json())

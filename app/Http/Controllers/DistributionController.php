@@ -128,13 +128,13 @@ class DistributionController extends Controller
     }
     public function addCitizens(Request $request, $distributionId = null)
     {
-        //dd($request);
+        
         $citizenIds = explode(",", $request->input("citizen_ids"));
         $distributionId = $distributionId ?? $request->input("distributionId");
         $truncatedCitizens = [];
         $existingCitizenNames = [];
         Log::error("--------------:", ["--------------" =>"--------------" ]);
-
+        Log::error("reqyest:", ["ids" => $request]);
         Log::error("Citizen IDs:", ["ids" => $citizenIds]);
         Log::error("sds IDs:", ["ids" => $distributionId]);
         DB::beginTransaction();
@@ -173,7 +173,7 @@ class DistributionController extends Controller
                     "id",
                     $existingCitizens
                 )
-                    ->pluck("name")
+                    ->pluck("firstname")
                     ->toArray();
             }
 

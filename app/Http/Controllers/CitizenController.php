@@ -114,7 +114,6 @@ class CitizenController extends Controller
     public function store(Request $request)
     {
 
-
         $data = [
             'id' => $request->input('id'),
             'firstname' => $request->input('firstname'),
@@ -137,9 +136,6 @@ class CitizenController extends Controller
         ];
 
         Citizen::create($data);
-
-
-
        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
 
@@ -158,8 +154,8 @@ class CitizenController extends Controller
             'secondname' => 'nullable|string',
             'thirdname' => 'nullable|string',
             'lastname' => 'required|string',
-            // 'date_of_birth' => 'nullable|date',
-            // 'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'gender' => 'nullable|string',
             // 'region_id' => 'nullable|string',
             // 'wife_id' => 'nullable|string',
             // 'wife_name' => 'nullable|string',
@@ -175,7 +171,7 @@ class CitizenController extends Controller
 
         $citizen = Citizen::findOrFail($id);
         $citizen->update($request->all());
-        return redirect()->route('citizens.index')->with('success', 'Citizen updated successfully.');
+        return redirect()->route('citizens.index')->with('success', 'تم تحديث بيانات '. $citizen->firstname.' '.$citizen->lasttname);
     }
 
     public function downloadTemplate()
