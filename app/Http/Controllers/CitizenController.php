@@ -178,11 +178,16 @@ class CitizenController extends Controller
         return redirect()->route('citizens.index')->with('success', 'Citizen updated successfully.');
     }
 
-    // public function downloadTemplate()
-    // {
-    //     return Excel::download(new CitizensTemplateExport, 'citizens_template.xlsx');
-    // }
+    public function downloadTemplate()
+    {
+        return Excel::download(new CitizensTemplateExport, 'citizens_template.xlsx');
+    }
     
+    public function import()
+    {
+        return(view('citizens.import'));
+    }
+
     public function export()
     {
         
@@ -190,18 +195,20 @@ class CitizenController extends Controller
 
     public function upload(Request $request)
     {
+        Log::error("--------------:", ["--------------" =>"--------------" ]);
         $request->validate([
-            'excel_file' => 'required|mimes:xlsx,xls',
+            'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
+        Log::error("--------------:", ["--------------" =>"--------------" ]);
 
+        
+        
         $file = $request->file('excel_file');
 
         $import = new CitizensImport();
+        Log::error("---", ["---" => $import]);
         Excel::import($import, $file);
-        Log::error("--------------:", ["--------------" =>"--------------" ]);
 
-        Log::error("Citizen IDs:", ["ids" => $import->getErrors()]);
-    
         return redirect()->route('citizens.index')->withErrors($import->getErrors());
     }
     public function destroy($id)
