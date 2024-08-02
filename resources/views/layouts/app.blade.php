@@ -151,13 +151,18 @@
                        
                     </li>
 
-                    <li class="menu-item open">
+                    <li class="menu-item open" >
                         <a href="{{ route('citizens.index') }}" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons ti ti-users"></i>
                             <div>النازحين</div>
                             {{-- <div class="badge bg-label-primary rounded-pill ms-auto">3</div> --}}
                         </a>
                         <ul class="menu-sub">
+                            <li class="menu-item ">
+                                <a href="{{ route('citizens.index') }}" class="menu-link">
+                                  <div>عرض الكل</div>
+                                </a>
+                              </li>
                             <li class="menu-item ">
                               <a href="{{ route('citizens.create') }}" class="menu-link">
                                 <div>اضافة جديد</div>
