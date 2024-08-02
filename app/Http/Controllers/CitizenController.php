@@ -45,10 +45,11 @@ class CitizenController extends Controller
 
         // Apply search filter
         if ($request->has('search') && !empty($request->input('search'))) {
+
             $query->where('firstname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('secondname', 'like', '%' . $search . '%')
-                    ->orWhere('thirdname', 'like', '%' . $search . '%')
-                    ->orWhere('lastname', 'like', '%' . $search . '%')
+                    ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('id', 'like', '%' . $request->input('search') . '%')
                     ->orWhere('note', 'like', '%' . $request->input('search') . '%');
