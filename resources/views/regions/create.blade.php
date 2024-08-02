@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('dashboard')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Region</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-
-<body>
+@section('content')
     <div class="container mx-auto py-12">
         <h1 class="text-4xl font-bold mb-4">اضافة منطقة</h1>
         <form action="{{ route('regions.store') }}" method="POST">
@@ -32,6 +24,5 @@
             </div>
         </form>
     </div>
-</body>
 
-</html>
+@endsection
