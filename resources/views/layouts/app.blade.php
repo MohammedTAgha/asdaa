@@ -45,7 +45,7 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
 
-<!-- Page CSS -->
+<!-- Page CSS and customozed 00 -->
 @yield('styles')
 <!-- Helpers -->
 <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
@@ -374,6 +374,15 @@
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
 
+    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    <!-- Flat Picker -->
+    <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script>
+    <!-- Form Validation -->
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
@@ -385,6 +394,8 @@
     <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.tailwindcss.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+     <!-- Page JS -->
+     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>
 
 
