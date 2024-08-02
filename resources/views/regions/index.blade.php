@@ -8,17 +8,28 @@
             <table class="min-w-full bg-white">
                 <thead class="bg-gray-800 text-white">
                     <tr>
-                        <th class="w-1/3 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
-                        <th class="w-1/3 py-3 px-4 uppercase font-semibold text-sm">المكان</th>
-                        <th class="w-1/3 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+                        <th class=" py-3 px-4 uppercase font-semibold text-sm">المنطقة</th>
+                        <th class=" py-3 px-4 uppercase font-semibold text-sm">اسم المندوب</th>
+                        <th class=" py-3 px-4 uppercase font-semibold text-sm">عدد السكان</th>
+                        <th class=" py-3 px-4 uppercase font-semibold text-sm">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
                     @foreach ($regions as $region)
                         <tr>
-                            <td class="w-1/3 py-3 px-4">{{ $region->name }}</td>
-                            <td class="w-1/3 py-3 px-4">{{ $region->position }}</td>
-                            <td class="w-1/3 py-3 px-4">
+                            
+                            <td class=" py-3 px-4">
+                                <a href="{{route('regions.show',$region->id)}}">
+                                     {{ $region->name }}
+                                </a>
+                            </td>
+                            <td class=" py-3 px-4">
+                                
+                                 {{ $region->representatives->first()->name ??'N/A' }}
+                                
+                            </td>
+                            <td class=" py-3 px-4">{{ $region->citizens->count() }}</td>
+                            <td class=" py-3 px-4">
                                 <a href="{{ route('regions.show', $region->id) }}" class="text-blue-500">عرض</a>
                                 <a href="{{ route('regions.edit', $region->id) }}" class="text-green-500 ml-2">تحرير</a>
                                 <form action="{{ route('regions.destroy', $region->id) }}" method="POST" class="inline">

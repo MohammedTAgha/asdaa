@@ -15,7 +15,11 @@
                 
                 @if (!$region->representatives->isEmpty())
                     @foreach ($region->representatives as $representative)
-                    <p class="text-gray-700">{{ $representative->name }} </p>
+                    <p class="text-gray-700">
+                        <a href="{{route('representatives.show',$representative->id)}}">
+                            {{ $representative->name }}
+                        </a>
+                    </p>
                     @endforeach
                 @else
                 <p class="text-gray-700">N/A</p>

@@ -11,8 +11,7 @@
             </div>
             <div class="mb-4">
                 <label for="position" class="block text-gray-700">موقع المنطقة:</label>
-                <input type="text" name="position" id="position" class="w-full px-4 py-2 border rounded-md"
-                    required>
+                <input type="text" name="position" id="position" class="w-full px-4 py-2 border rounded-md">
             </div>
             <div class="mb-4">
                 <label for="note" class="block text-gray-700">ملاحطة:</label>
