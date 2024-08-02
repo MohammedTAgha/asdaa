@@ -40,6 +40,8 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" />
+
+
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
@@ -314,27 +316,7 @@
                     </div>
                     <!-- / Content -->
 
-                    <!-- Footer -->
-                    <footer class="content-footer footer bg-footer-theme">
-                        <div class="container-xxl">
-                            <div
-                                class="footer-container d-flex align-items-center justify-content-between py-2 flex-md-row flex-column">
-                                <div>
-                                    ©
-                                    <script>
-                                        document.write(new Date().getFullYear());
-                                    </script>
-                                    , made with ❤️ by <a href="https://pixinvent.com" target="_blank"
-                                        class="fw-semibold">Pixinvent</a>
-                                </div>
-                                <div>
-                                    <a href="https://demos.pixinvent.com/vuexy-html-admin-template/documentation/"
-                                        target="_blank" class="footer-link me-4">Documentation</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
-                    <!-- / Footer -->
+
 
                     <div class="content-backdrop fade"></div>
                 </div>
