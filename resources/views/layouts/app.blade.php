@@ -369,8 +369,8 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <!-- Page JS -->
- 
-  
+    @stack('scripts')
+    
  
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
      <!-- Page JS -->
