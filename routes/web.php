@@ -21,6 +21,7 @@ use App\Http\Controllers\DistributionCitizenController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChildController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/test', [HomeController::class, 'test'])->name('test');
 
 Route::resource('regions', RegionController::class);
 Route::resource('representatives', RegionRepresentativeController::class);

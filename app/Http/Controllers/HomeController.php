@@ -13,4 +13,10 @@ class HomeController extends Controller{
         $distributions = Distribution::with('category')->get();
         return view('home.index',compact('citizens','distributions'));
     }
+
+    public function test(){
+        $citizens = Citizen::all();
+        $distributions = Distribution::with('category')->get();
+        return view('home.test',compact('citizens','distributions'));
+    }
 }

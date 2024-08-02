@@ -147,10 +147,14 @@
                         <a href="{{ route('home') }}" class="menu-link  ">
                             <i class="menu-icon tf-icons ti ti-smart-home"></i>
                             <div>الرئيسية</div>
-                        </a>
-                       
+                        </a>                 
                     </li>
-
+                    <li class="menu-item active">
+                        <a href="{{ route('test') }}" class="menu-link  ">
+                            <i class="menu-icon tf-icons ti ti-smart-home"></i>
+                            <div>test</div>
+                        </a>                 
+                    </li>
                     <li class="menu-item open" >
                         <a href="{{ route('citizens.index') }}" class="menu-link menu-toggle">
                             <i class="menu-icon tf-icons ti ti-users"></i>
