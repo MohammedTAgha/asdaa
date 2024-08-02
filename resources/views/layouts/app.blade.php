@@ -308,7 +308,7 @@
                     @yield('topbar')
                     <div class="container-xxl flex-grow-1 container-p-y">
 
-                        <h4 class="fw-bold py-3 mb-4">Page title</h4>
+                        {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
 
                         @yield('content')
                         <!-- Snackbar container -->
@@ -369,7 +369,7 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <!-- Page JS -->
-    @stack('scripts')
+     @stack('scripts')
     
  
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>

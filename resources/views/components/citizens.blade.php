@@ -20,8 +20,8 @@
     overflow-x-auto mb-4">
     <table id="citizens-table" class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
-            <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                <th class="w-15px">
+            <tr class="text-start text-gray-400 fw-bolder  text-uppercase gs-0">
+                <th class="w-8px p-0">
                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                         <input class="form-check-input" type="checkbox" id="select-all" value="1"
                             data-kt-check="true" data-kt-check-target="#kt_customers_table .form-check-input" />
@@ -43,7 +43,7 @@
                 <tr
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <!--begin::Checkbox-->
-                    <td class="px-2 py-1">
+                    <td class=" w-8px p-0g">
                         <div class="form-check form-check-sm form-check-custom form-check-solid">
                             <input class="form-check-input" type="checkbox" name="citizens[]"
                                 value="{{ $citizen->id }}" />
