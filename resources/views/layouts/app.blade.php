@@ -387,12 +387,9 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <!-- Page JS -->
-    @stack('scripts')
-    <script src="{{ asset('assets/js/form-wizard-numbered.js') }}"></script>
-    <script src="{{ asset('assets/js/form-wizard-validation.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTables.tailwindcss.js') }}"></script>
+ 
+  
+ 
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
      <!-- Page JS -->
      <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
