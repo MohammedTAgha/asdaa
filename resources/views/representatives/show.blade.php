@@ -10,7 +10,7 @@
             </div>
             <div class="mb-4">
                 <h2 class="text-2xl font-semibold">المنطقة:</h2>
-                <p class="text-gray-700">{{ $representative->region->name }}</p>
+                <p class="text-gray-700">{{ $representative->region->name ??'N/A'}}</p>
             </div>
             <div class="mb-4">
                 <h2 class="text-2xl font-semibold">الهاتف:</h2>
@@ -29,9 +29,11 @@
                 </div>
             @endif
         </div>
-
-        @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $representative->region->name])
+        @if ($representative->region)
+            @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $representative->region->name ??'N/A'])
             <x-citizens :citizens="$representative->region->citizens" />
         @endcomponent
+        @endif
+       <h3> no reion</h3>
     </div>
 @endsection

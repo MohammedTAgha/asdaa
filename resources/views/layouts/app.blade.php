@@ -135,82 +135,8 @@
             <!-- Menu -->
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
-                    <h1>
-                    ادارة مدينة اصدء
-                    </h1>
-                </div>
 
-                <div class="menu-inner-shadow"></div>
-
-                <ul class="menu-inner py-1">
-                    <!-- Page -->
-                    <li class="menu-item active">
-                        <a href="{{ route('home') }}" class="menu-link  ">
-                            <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                            <div>الرئيسية</div>
-                        </a>                 
-                    </li>
-                    <li class="menu-item active">
-                        <a href="{{ route('test') }}" class="menu-link  ">
-                            <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                            <div>test</div>
-                        </a>                 
-                    </li>
-                    <li class="menu-item open" >
-                        <a href="{{ route('citizens.index') }}" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons ti ti-users"></i>
-                            <div>النازحين</div>
-                            {{-- <div class="badge bg-label-primary rounded-pill ms-auto">3</div> --}}
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item ">
-                                <a href="{{ route('citizens.index') }}" class="menu-link">
-                                  <div>عرض الكل</div>
-                                </a>
-                              </li>
-                            <li class="menu-item ">
-                              <a href="{{ route('citizens.create') }}" class="menu-link">
-                                <div>اضافة جديد</div>
-                              </a>
-                            </li>
-
-                            <li class="menu-item ">
-                                <a href="{{ route('citizens.import') }}" class="menu-link">
-                                  <div>رفع كشف</div>
-                                </a>
-                              </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{ route('citizens.import') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-file-upload"></i>
-                            <div>رفع كشف جديد</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{ route('distributions.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-list"></i>
-                            <div> كل الكشوفات</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{ route('representatives.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-man"></i>
-                            <div>المناديب</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item">
-                        <a href="{{ route('regions.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-map"></i>
-                            <div>المناطق</div>
-                        </a>
-                    </li>
-                </ul>
+                
             </aside>
             <!-- / Menu -->
 

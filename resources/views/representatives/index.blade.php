@@ -26,7 +26,7 @@
                                 </a>
                             </td>
 
-                            <td class="w-1/5 py-3 px-4">{{ $representative->region->name }}</td>
+                            <td class="w-1/5 py-3 px-4">{{ $representative->region->name ??'N/A' }}</td>
                             <td class="w-1/5 py-3 px-4">{{ $representative->phone }}</td>
                             <td class="w-1/5 py-3 px-4">{{ $representative->address }}</td>
                             <td class="w-1/5 py-3 px-4">

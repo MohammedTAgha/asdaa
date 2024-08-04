@@ -129,11 +129,16 @@
                     </div>
 
                 </div>
-                <div class="ml-4 relative">
-                    <button id="filterButton" type="button" class="btn btn-primary waves-effect waves-light">
+                <div class="me-2 relative">
+                    
+                    <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
                     </button>
+                    <a href="{{route('citizens.create')}}" type="button" class="btn btn-primary waves-effect waves-light text-white">
+                        اضافة جديد
+                        <span class="ti-xs ti ti-user-plus ms-1"></span>
+                    </a>
                     <!-- Filter Popup Menu -->
                     <div id="filterMenu"
                         class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">

@@ -13,8 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('citizens', function (Blueprint $table) {
-            $table->string('phone')->after('lastname');
+        Schema::create('committees', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->foreign('staff_id')->references('id')->on('staff');
+            $table->string('description')->nullable();
+            $table->string('note')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('citizens', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('committees');
     }
 };
