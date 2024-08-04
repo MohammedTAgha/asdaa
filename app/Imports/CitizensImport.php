@@ -10,7 +10,7 @@ class CitizensImport implements ToModel
 
     public function model(array $row)
     {
-
+        
         return new Citizen([
             'id' => $row['id'],
             'firstname' => $row['firstname'],
