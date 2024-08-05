@@ -1,0 +1,24 @@
+return [
+    'id' => 'رقم الهوية', // ID
+    'firstname' => 'الاسم الأول', // First Name
+    'secondname' => 'الاسم الثاني', // Second Name
+    'thirdname' => 'الاسم الثالث', // Third Name
+    'lastname' => 'العائلة', // Last Name
+    'phone' => 'رقم الهاتف', // Phone
+    'family_members' => 'أفراد العائلة', // Family Members
+    'wife_id' => 'رقم تعريف الزوجة', // Wife ID
+    'wife_name' => 'اسم الزوجة', // Wife Name
+    'date_of_birth' => 'تاريخ الميلاد', // Date of Birth
+    'gender' => 'الجنس', // Gender
+    'elderly_count' => 'عدد المسنين', // Elderly Count
+    'obstruction' => 'الإعاقة عدد', // Obstruction
+    'obstruction_description' => 'وصف الإعاقة', // Obstruction Description
+    'disease' => 'عدد مرضى', // Disease
+    'disease_description' => 'وصف المرض', // Disease Description
+    'job' => 'الوظيفة', // Job
+    'living_status' => 'الوضع السكني', // Living Status
+    'social_status' => 'الوضع الاجتماعي', // Social Status
+    'original_address' => 'العنوان الأصلي', // Original Address
+    'region_id' => 'رقم المنطقة', // Region ID
+    'note' => 'ملاحظة', // Note
+];
