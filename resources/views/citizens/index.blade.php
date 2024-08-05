@@ -108,6 +108,67 @@
 
 @section('content')
     <div>
+        @if (session('import_result'))
+            <!-- Modal -->
+            <div class="modal fade" id="importResultModal" tabindex="-1" aria-labelledby="importResultModalLabel">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="importResultModalLabel">نتائج استيراد الكشف</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <p><strong>{{ session('import_result.message') }}</strong></p>
+                                <p>المضافة بنجاح: {{ session('import_result.addedCount') }} | فشل في:
+                                    {{ session('import_result.failedCount') }}</p>
+                            </div>
+
+                            @if (session('import_result.failedCount') > 0)
+                                <h6>الاسماء التي بها مشاكل:</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>الهوية</th>
+                                                <th>الاسم</th>
+                                                <th>errors</th>
+                                                <th>الخلل</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (session('import_result.failedRows') as $row)
+                                                <tr>
+                                                    <td>{{ $row['id'] }}</td>
+                                                    <td>{{ $row['firstname'] }} {{ $row['lastname'] }}</td>
+                                                    <td>{{ $row['errors'] }}</td>
+                                                    <td>{{ $row['values'] }}</td>
+
+
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @if (session('import_result.failedExcelPath'))
+                                    <a href="{{ session('import_result.failedExcelPath') }}" class="btn btn-secondary"
+                                        download>تحميل الكشف</a>
+                                @endif
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var myModal = new bootstrap.Modal(document.getElementById('importResultModal'));
+                    myModal.show();
+                });
+                </script>
+        @endif
         <div class="card px-4">
             <div class="card-header d-flex justify-content-between">
                 <div>
@@ -130,12 +191,13 @@
 
                 </div>
                 <div class="me-2 relative">
-                    
+
                     <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
                     </button>
-                    <a href="{{route('citizens.create')}}" type="button" class="btn btn-primary waves-effect waves-light text-white">
+                    <a href="{{ route('citizens.create') }}" type="button"
+                        class="btn btn-primary waves-effect waves-light text-white">
                         اضافة جديد
                         <span class="ti-xs ti ti-user-plus ms-1"></span>
                     </a>
@@ -219,13 +281,13 @@
                     </div>
                 </div>
             </div>
-                 @component('components.citizens', [
-                    'citizens' => $citizens,
-                    'distributions' => $distributions,
-                    'distributionId' => $distributionId ? $distributionId : null,
-                ])
-                @endcomponent
-           
+            @component('components.citizens', [
+                'citizens' => $citizens,
+                'distributions' => $distributions,
+                'distributionId' => $distributionId ? $distributionId : null,
+            ])
+            @endcomponent
+
         </div>
     </div>
 

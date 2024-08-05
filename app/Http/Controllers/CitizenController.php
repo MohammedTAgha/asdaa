@@ -221,14 +221,19 @@ class CitizenController extends Controller
             $failedExcelPath = 'failed_citizens_' . time() . '.xlsx';
             Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
         }
-    
-     return view('citizens.import_result', [
-        'message' => 'Import completed',
-        'addedCount' => $addedCount,
-        'failedCount' => count($import->failedRows),
-        'failedRows' => $import->failedRows,
-        'failedExcelPath' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
-    ]);
+
+        $result = [
+            'message' => 'Import completed',
+            'addedCount' => $addedCount,
+            'failedCount' => count($import->failedRows),
+            'failedRows' => $import->failedRows,
+            'failedExcelPath' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
+        ];
+    // Flash the result data to the session
+    session()->flash('import_result', $result);
+
+    // Redirect to the index page
+    return redirect()->route('citizens.index');
     }
     public function destroy($id)
     {
