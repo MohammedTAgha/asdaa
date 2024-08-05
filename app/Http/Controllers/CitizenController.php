@@ -10,8 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CitizensImport;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CitizensTemplateExport;
-use App\Exports\FailedRowsExport;
-use Illuminate\Support\Facades\Storage;
+
 
 class CitizenController extends Controller
 {
@@ -193,13 +192,16 @@ class CitizenController extends Controller
 
     public function upload(Request $request)
     {
-        Log::error("--------------:", ["--------------" => "--------------"]);
+        Log::error("--------------:", ["--------------" =>"--------------" ]);
         $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
-    
+        Log::error("--------------:", ["--------------" =>"--------------" ]);
+
+        
+        
         $file = $request->file('excel_file');
-        $import = new CitizensImport;
+        $import = new CitizensImport();
     
         try {
             $initialCount = Citizen::count(); // Count before import
@@ -216,18 +218,19 @@ class CitizenController extends Controller
     
         // Generate Excel file with failed rows
         $failedExcelPath = null;
-        if (!empty($import->failedRows)) {
+        $failedExcelPath = null;
+        if (!empty($failedRows)) {
             Log::error("data fails:", ["-->>" => 'xxxx']);
             $failedExcelPath = 'failed_citizens_' . time() . '.xlsx';
-            Excel::store(new FailedRowsExport($import->failedRows), $failedExcelPath, 'public');
+            Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
         }
     
         return response()->json([
             'message' => 'Import completed',
             'added_count' => $addedCount,
-            'failed_count' => count($import->failedRows),
-            'failed_rows' => $import->failedRows,
-            'failed_excel_path' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
+            'failed_count' => count($failedRows),
+            'failed_rows' => $failedRows,
+            'failed_excel_path' => $failedExcelPath ? url('storage/failed_citizens.xlsx') : null,
         ]);
     }
     public function destroy($id)
