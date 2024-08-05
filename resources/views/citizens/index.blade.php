@@ -171,12 +171,13 @@
         @endif
         <div class="card px-4">
             <div class="card-header d-flex justify-content-between">
+
                 <div>
                     <div class="ml-4 relative d-flex">
-                        <h2 class="card-title mb-0 fs-4 text-dark fw-bolder me-2">كشف المواطنين</h2>
-                        <span class="h-13px border-gray-200 border-start mx-2"></span>
+                        {{-- <h2 class="card-title mb-0 fs-4 text-dark fw-bolder me-2">كشف المواطنين</h2>
+                        <span class="h-13px border-gray-200 border-start mx-2"></span> --}}
                         <!-- Search Input -->
-                        <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
+                        {{-- <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
                             <div class="flex items-center w-full mx-2 me-6">
                                 <input type="text" name="search" placeholder=" بحث عام..."
                                     class="w-full me-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -184,15 +185,11 @@
                                     type="submit"class="px-3 py-1 fs-5 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">بحث</button>
 
                             </div>
-                        </form>
-
-
+                        </form> --}}
                     </div>
-
                 </div>
                 <div class="me-2 relative">
-
-                    <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
+                    {{-- <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
                     </button>
@@ -200,7 +197,7 @@
                         class="btn btn-primary waves-effect waves-light text-white">
                         اضافة جديد
                         <span class="ti-xs ti ti-user-plus ms-1"></span>
-                    </a>
+                    </a> --}}
                     <!-- Filter Popup Menu -->
                     <div id="filterMenu"
                         class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
