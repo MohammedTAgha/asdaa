@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -12,7 +11,7 @@ class FailedRowsExport implements FromArray, WithHeadings
 
     public function __construct(array $rows)
     {
-        $this->rows = $rows;
+        $this->rows = $this->formatRows($rows);
     }
 
     public function array(): array
@@ -22,12 +21,27 @@ class FailedRowsExport implements FromArray, WithHeadings
 
     public function headings(): array
     {
-        // Adjust these headings based on your data structure
         return [
-            'Row',
+            'id',
+            'fullname',
             'Attribute',
             'Error',
-            'Value',
+            'Value'
         ];
+    }
+
+    private function formatRows(array $rows): array
+    {
+        $formattedRows = [];
+        foreach ($rows as $row) {
+            $formattedRows[] = [
+                $row['row'] ?? '', // This will be the 'id'
+                $row['fullname'] ?? '', // You need to ensure this data is available
+                $row['attribute'] ?? '',
+                $row['errors'] ?? '',
+                $row['values'] ?? ''
+            ];
+        }
+        return $formattedRows;
     }
 }

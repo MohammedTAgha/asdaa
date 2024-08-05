@@ -216,19 +216,18 @@ class CitizenController extends Controller
     
         // Generate Excel file with failed rows
         $failedExcelPath = null;
-        $failedExcelPath = null;
-        if (!empty($failedRows)) {
+        if (!empty($import->failedRows)) {
             Log::error("data fails:", ["-->>" => 'xxxx']);
             $failedExcelPath = 'failed_citizens_' . time() . '.xlsx';
-            Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
+            Excel::store(new FailedRowsExport($import->failedRows), $failedExcelPath, 'public');
         }
     
         return response()->json([
             'message' => 'Import completed',
             'added_count' => $addedCount,
-            'failed_count' => count($failedRows),
-            'failed_rows' => $failedRows,
-            'failed_excel_path' => $failedExcelPath ? url('storage/failed_citizens.xlsx') : null,
+            'failed_count' => count($import->failedRows),
+            'failed_rows' => $import->failedRows,
+            'failed_excel_path' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
         ]);
     }
     public function destroy($id)

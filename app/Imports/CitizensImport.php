@@ -90,6 +90,19 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         return $this->errors;
     }
 
+    public function onFailure(Failure ...$failures)
+    {
+        foreach ($failures as $failure) {
+            $this->failedRows[] = [
+                'row' => $failure->row(),
+                'fullname' => $failure->values()['fullname'] ?? '', // Adjust this based on your actual column name
+                'attribute' => $failure->attribute(),
+                'errors' => implode(', ', $failure->errors()),
+                'values' => $failure->values()[$failure->attribute()] ?? ''
+            ];
+        }
+    }
+    
     public function registerEvents(): array
     {
         return [
