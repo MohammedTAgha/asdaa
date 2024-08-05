@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Illuminate\Support\Collection;
-
+use Maatwebsite\Excel\Validators\Failure;
 class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithEvents
 {
     use SkipsFailures;
@@ -94,15 +94,15 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         foreach ($failures as $failure) {
             $this->failedRows[] = [
-                'row' => $failure->row(),
-                'fullname' => $failure->values()['fullname'] ?? '', // Adjust this based on your actual column name
+                // 'row' => $failure->row(),
+                'firstname' => $failure->values()['firstname'] ?? '', // Adjust this based on your actual column name
                 'attribute' => $failure->attribute(),
                 'errors' => implode(', ', $failure->errors()),
                 'values' => $failure->values()[$failure->attribute()] ?? ''
             ];
         }
     }
-    
+
     public function registerEvents(): array
     {
         return [
