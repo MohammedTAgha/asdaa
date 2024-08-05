@@ -15,12 +15,23 @@ use Illuminate\Support\Collection;
 class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithEvents
 {
     use SkipsFailures;
-
+    public $failedRows = [];
     private $errors = [];
 
     public function model(array $row)
     {
         // Skip rows with empty or duplicate IDs
+
+        if (!isset($row['id']) || empty($row['id'])) {
+            $this->failedRows[] = ['row' => $row, 'reason' => 'Empty ID'];
+            return null;
+        }
+
+        if (Citizen::where('id', $row['id'])->exists()) {
+            $this->failedRows[] = ['row' => $row, 'reason' => 'Duplicate ID'];
+            return null;
+        }
+
         if (empty($row['id']) || Citizen::where('id', $row['id'])->exists()) {
             $this->errors[] = [
                 'row' => $row,
@@ -35,17 +46,22 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'secondname' => $row['secondname'],
             'thirdname' => $row['thirdname'],
             'lastname' => $row['lastname'],
-            'date_of_birth' => $row['date_of_birth'],
-            'gender' => $row['gender'],
-            'region_id' => $row['region_id'],
+            'phone' => $row['phone'],
+            'family_members' => $row['family_members'],
             'wife_id' => $row['wife_id'],
             'wife_name' => $row['wife_name'],
-            'widowed' => $row['widowed'],
-            'social_status' => $row['social_status'],
-            'living_status' => $row['living_status'],
-            'job' => $row['job'],
-            'original_address' => $row['original_address'],
+            'date_of_birth' => $row['date_of_birth'],
+            'gender' => $row['gender'],
             'elderly_count' => $row['elderly_count'],
+            'obstruction' => $row['obstruction'],
+            'obstruction_description' => $row['obstruction_description'],
+            'disease' => $row['disease'],
+            'disease_description' => $row['disease_description'],
+            'job' => $row['job'],
+            'living_status' => $row['living_status'],
+            'social_status' => $row['social_status'],
+            'original_address' => $row['original_address'],
+            'region_id' => $row['region_id'],
             'note' => $row['note'],
         ]);
     }
@@ -54,8 +70,12 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         return [
             '*.id' => 'required|distinct',
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'region_id' => 'required|exists:regions,id',
         ];
     }
+
 
     public function customValidationMessages()
     {
