@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="myModal" class=" fixed inset-0 z-50 overflow-auto   flex justify-center items-center">
+<div id="myModal" class="  inset-0 z-50 overflow-auto   flex justify-center items-center">
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h1 class="mb-6 text-2xl font-bold text-center text-gray-700">تحميل ملف اكسل</h1>
         @if(session('errors'))

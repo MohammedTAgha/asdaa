@@ -22,23 +22,28 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         // Skip rows with empty or duplicate IDs
 
-        if (!isset($row['id']) || empty($row['id'])) {
-            $this->failedRows[] = ['row' => $row, 'reason' => 'Empty ID'];
-            return null;
-        }
+        // if (!isset($row['id']) || empty($row['id'])) {
+        //     $this->failedRows[] = ['row' => $row, 'reason' => 'Empty ID'];
+        //     return null;
+        // }
 
-        if (Citizen::where('id', $row['id'])->exists()) {
-            $this->failedRows[] = ['row' => $row, 'reason' => 'تكرر رقم الهوية'];
-            return null;
-        }
+        // if (Citizen::where('id', $row['id'])->exists()) {
+        //     $this->failedRows[] = ['row' => $row, 'reason' => 'تكرر رقم الهوية'];
+        //     return null;
+        // }
 
-        if (empty($row['id']) || Citizen::where('id', $row['id'])->exists()) {
-            $this->errors[] = [
-                'row' => $row,
-                'reason' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',
-            ];
-            return null;
-        }
+        // if (empty($row['id']) || Citizen::where('id', $row['id'])->exists()) {
+        //     $this->failedRows[] = [
+        //         'row' => $row['id'] ?? 'no id ',
+        //         'id' => $row['id'] ?? 'no id ',
+        //         'firstname' => $row['firstname'] ?? '', // Adjust this based on your actual column name
+        //         'lastname' => $row['lastname'] ?? '',
+        //         'attribute' => 'الهوية',
+        //         'errors' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',
+        //         'values' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',  
+        //         ];
+        //     return null;
+        // }
 
         return new Citizen([
             'id' => $row['id'],
@@ -69,7 +74,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            '*.id' => 'required|distinct',
+            'id' => 'required|unique:citizens,id',
             'firstname' => 'required',
             'lastname' => 'required',
             'region_id' => 'required|exists:regions,id',
@@ -94,8 +99,10 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         foreach ($failures as $failure) {
             $this->failedRows[] = [
-                // 'row' => $failure->row(),
+                'row' => $failure->row(),
+                'id' => $failure->values()['id'] ?? '',
                 'firstname' => $failure->values()['firstname'] ?? '', // Adjust this based on your actual column name
+                'lastname' => $failure->values()['lastname'] ?? '',
                 'attribute' => $failure->attribute(),
                 'errors' => implode(', ', $failure->errors()),
                 'values' => $failure->values()[$failure->attribute()] ?? ''

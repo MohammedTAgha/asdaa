@@ -24,9 +24,12 @@ class FailedRowsExport implements FromArray, WithHeadings
         // Adjust these headings based on your data structure
         return [
             'Row',
-            'Attribute',
-            'Error',
-            'Value',
+            'هوية المواطن',
+            'اسم الموطن',
+            'العائلة',
+            'الخلل في',
+            'الخلل',
+            'القيمة',
         ];
     }
 }

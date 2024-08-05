@@ -178,7 +178,7 @@ class CitizenController extends Controller
 
     public function downloadTemplate()
     {
-        return Excel::download(new CitizensTemplateExport, 'citizens_template.xlsx');
+        return Excel::download(new CitizensTemplateExport, 'الترويسة.xlsx');
     }
     
     public function import()
@@ -222,13 +222,13 @@ class CitizenController extends Controller
             Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
         }
     
-        return response()->json([
-            'message' => 'Import completed',
-            'added_count' => $addedCount,
-            'failed_count' => count($failedRows),
-            'failed_rows' => $failedRows,
-            'failed_excel_path' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
-        ]);
+     return view('citizens.import_result', [
+        'message' => 'Import completed',
+        'addedCount' => $addedCount,
+        'failedCount' => count($import->failedRows),
+        'failedRows' => $import->failedRows,
+        'failedExcelPath' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
+    ]);
     }
     public function destroy($id)
     {
