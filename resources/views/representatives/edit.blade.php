@@ -3,8 +3,10 @@
 @section('content')
     <div class="container mx-auto py-12">
         <h1 class="text-4xl font-bold mb-4">تحرير بيانات المندوب</h1>
-        <form action="{{ route('representatives.update', $representative->id) }}" method="PATCH">
+        <form action="{{ route('representatives.update', $representative->id) }}" method="POST">
+            
             @csrf
+            @method('PUT')
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الهوية:</label>
                 <input type="text" name="id" id="id" value="{{ $representative->id }}"

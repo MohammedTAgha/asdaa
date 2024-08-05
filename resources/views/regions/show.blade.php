@@ -3,9 +3,14 @@
 @section('content')
 @component('components.box', ['title' => 'منطقة' . ' ' . $region->name . ' ' , 'styles'=> 'mb-4'])
 
+        @slot('side')
+            <div class="mt-6">
+                <a href="{{ route('regions.edit', $region->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعدبل</a>
+                <a href="{{ route('regions.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
+            </div>
+        @endslot
     
-        {{-- <h1 class="text-4xl font-bold mb-4">بيانات المنطقة</h1> --}}
-        <div class="bg-white shadow-md rounded-lg p-6">
+
             <div class="mb-4">
                 <h2 class="text-2xl font-semibold">الاسم:</h2>
                 <p class="text-gray-700">{{ $region->name }}</p>
@@ -37,7 +42,7 @@
             <div>
                 <a href="{{ route('regions.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded">رجوع</a>
             </div>
-        </div>
+
 
     @endcomponent
 @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $region->name , 'styles'=> 'mb-8'])
