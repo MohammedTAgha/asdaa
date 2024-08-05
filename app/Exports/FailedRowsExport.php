@@ -23,7 +23,7 @@ class FailedRowsExport implements FromArray, WithHeadings
     {
         return [
             'id',
-            'fullname',
+            'firstname',
             'Attribute',
             'Error',
             'Value'
@@ -36,7 +36,7 @@ class FailedRowsExport implements FromArray, WithHeadings
         foreach ($rows as $row) {
             $formattedRows[] = [
                 $row['row'] ?? '', // This will be the 'id'
-                $row['fullname'] ?? '', // You need to ensure this data is available
+                $row['firstname'] ?? '', // You need to ensure this data is available
                 $row['attribute'] ?? '',
                 $row['errors'] ?? '',
                 $row['values'] ?? ''
