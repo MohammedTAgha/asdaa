@@ -28,14 +28,14 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         }
 
         if (Citizen::where('id', $row['id'])->exists()) {
-            $this->failedRows[] = ['row' => $row, 'reason' => 'Duplicate ID'];
+            $this->failedRows[] = ['row' => $row, 'reason' => 'تكرر رقم الهوية'];
             return null;
         }
 
         if (empty($row['id']) || Citizen::where('id', $row['id'])->exists()) {
             $this->errors[] = [
                 'row' => $row,
-                'reason' => empty($row['id']) ? 'Empty ID' : 'Duplicate ID',
+                'reason' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',
             ];
             return null;
         }

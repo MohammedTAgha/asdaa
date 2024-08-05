@@ -11,7 +11,7 @@ class FailedRowsExport implements FromArray, WithHeadings
 
     public function __construct(array $rows)
     {
-        $this->rows = $this->formatRows($rows);
+        $this->rows = $rows;
     }
 
     public function array(): array
@@ -21,27 +21,12 @@ class FailedRowsExport implements FromArray, WithHeadings
 
     public function headings(): array
     {
+        // Adjust these headings based on your data structure
         return [
-            'id',
-            'firstname',
+            'Row',
             'Attribute',
             'Error',
-            'Value'
+            'Value',
         ];
-    }
-
-    private function formatRows(array $rows): array
-    {
-        $formattedRows = [];
-        foreach ($rows as $row) {
-            $formattedRows[] = [
-                $row['row'] ?? '', // This will be the 'id'
-                $row['firstname'] ?? '', // You need to ensure this data is available
-                $row['attribute'] ?? '',
-                $row['errors'] ?? '',
-                $row['values'] ?? ''
-            ];
-        }
-        return $formattedRows;
     }
 }
