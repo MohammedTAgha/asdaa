@@ -106,16 +106,19 @@
 @endsection
 
 @section('styles')
-<style>
-#regions {
-    width: 260px; /* Set the width of the select element */
-}
+    <style>
+        #regions {
+            width: 260px;
+            /* Set the width of the select element */
+        }
 
-#regions option {
-    max-width: 240px; /* Set the maximum width for the options */
-    overflow: hidden; /* Hide any overflowing content */
-}
-</style>
+        #regions option {
+            max-width: 240px;
+            /* Set the maximum width for the options */
+            overflow: hidden;
+            /* Hide any overflowing content */
+        }
+    </style>
 @endsection
 @section('content')
     <div>
@@ -213,28 +216,43 @@
                         <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
                             <div class="flex items-center w-full mx-2 me-6">
                                 <div class="col-md-6">
-                                    <input type="text" id="search" name="search" class="form-control" placeholder="بحث عام...">
+                                    <input type="text" id="search" name="search" class="form-control"
+                                        placeholder="بحث عام...">
                                 </div>
                                 <button type="submit" class="ms-3 btn btn-primary waves-effect waves-light">
                                     بحث
                                     <span class="ti-xs ti ti-user-search ms-1"></span>
                                 </button>
-                                
+
                             </div>
                         </form>
                     </div>
                 </div>
-                <div class="me-2 relative">
-                    <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
+                <div class="me-2 relative flex">
+                    <button id="filterButton" type="button" class=" mx-1 btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
                     </button>
-                    <button type="button" class="btn btn-success waves-effect waves-light">
-                        تصدير
-                        <span class="ti-xs ti ti-table-export ms-1"></span>
-                    </button>
+                    {{-- form --}}
+                    <form action="{{ route('citizens.export') }}" method="GET">
+                        <!-- Add hidden inputs for each filter parameter -->
+                        <input type="hidden" name="id" value="{{ request('id') }}">
+                        <input type="hidden" name="first_name" value="{{ request('first_name') }}">
+                        <input type="hidden" name="second_name" value="{{ request('second_name') }}">
+                        <input type="hidden" name="third_name" value="{{ request('third_name') }}">
+                        <input type="hidden" name="last_name" value="{{ request('last_name') }}">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <input type="hidden" name="gender" value="{{ request('gender') }}">
+                        <input type="hidden" name="regions" value="{{ request('regions') }}">
+                        <button type="submit" class=" mx-1 btn btn-success waves-effect waves-light">
+                            تصدير
+                            <span class="ti-xs ti ti-table-export ms-1"></span>
+                        </button>
+                    </form>
+                    
+
                     <a href="{{ route('citizens.create') }}" type="button"
-                        class="btn btn-primary waves-effect waves-light text-white">
+                        class="btn mx-1 btn-primary waves-effect waves-light text-white">
                         اضافة جديد
                         <span class="ti-xs ti ti-user-plus ms-1"></span>
                     </a>
@@ -250,7 +268,7 @@
                             <!-- Prepositives -->
                             <div class="mb-4">
                                 <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                                <select id="regions" name="regions[]" 
+                                <select id="regions" name="regions[]"
                                     class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;"
                                     multiple>
                                     @foreach ($regions as $region)
@@ -317,7 +335,8 @@
                             <!-- Gender -->
                             <div class="mb-4">
                                 <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
-                                <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
+                                <select id="gender" name= "gender"
+                                    class="w-full p-2 border border-gray-300 rounded-lg">
                                     <option value="">غير محدد</option>
                                     <option value="0">ذكر</option>
                                     <option value="1">انثى</option>
@@ -345,47 +364,48 @@
         </div>
     </div>
 
-        <!-- Advanced Filter Modal 2 -->
-        <div class="modal fade" id="advancedFilterModal" tabindex="-1" aria-labelledby="advancedFilterModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="advancedFilterModalLabel">Advanced Filter</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="advancedFilterForm">
-                            <div class="mb-3">
-                                <label for="regions" class="form-label">Regions</label>
-                                <select id="regions" class="form-select" multiple="multiple">
-                                    <!-- Populate with region options -->
-                                </select>
+    <!-- Advanced Filter Modal 2 -->
+    <div class="modal fade" id="advancedFilterModal" tabindex="-1" aria-labelledby="advancedFilterModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="advancedFilterModalLabel">Advanced Filter</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="advancedFilterForm">
+                        <div class="mb-3">
+                            <label for="regions" class="form-label">Regions</label>
+                            <select id="regions" class="form-select" multiple="multiple">
+                                <!-- Populate with region options -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select id="gender" class="form-select">
+                                <option value="">All</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ageRange" class="form-label">Age Range</label>
+                            <div class="input-group">
+                                <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                <span class="input-group-text">-</span>
+                                <input type="number" id="maxAge" class="form-control" placeholder="Max">
                             </div>
-                            <div class="mb-3">
-                                <label for="gender" class="form-label">Gender</label>
-                                <select id="gender" class="form-select">
-                                    <option value="">All</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="ageRange" class="form-label">Age Range</label>
-                                <div class="input-group">
-                                    <input type="number" id="minAge" class="form-control" placeholder="Min">
-                                    <span class="input-group-text">-</span>
-                                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" id="applyFilter">Apply Filter</button>
-                    </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="applyFilter">Apply Filter</button>
                 </div>
             </div>
         </div>
+    </div>
 @endsection
 
 @push('scripts')
