@@ -186,9 +186,9 @@ class CitizenController extends Controller
         return(view('citizens.import'));
     }
 
-    public function export()
+    public function export(Request $request)
     {
-        
+        return Excel::download(new CitizensExport($request), 'citizens.xlsx');
     }
 
     public function upload(Request $request)
