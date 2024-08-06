@@ -105,7 +105,18 @@
     @endcomponent --}}
 @endsection
 
+@section('styles')
+<style>
+#regions {
+    width: 260px; /* Set the width of the select element */
+}
 
+#regions option {
+    max-width: 240px; /* Set the maximum width for the options */
+    overflow: hidden; /* Hide any overflowing content */
+}
+</style>
+@endsection
 @section('content')
     <div>
         @if (session('import_result'))
