@@ -1,19 +1,56 @@
 <?php
+
 namespace App\Exports;
 
 use App\Models\Citizen;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Http\Request;
 
-class CitizensExport implements FromCollection, WithHeadings
+class CitizensExport implements FromQuery, WithHeadings
 {
-    public function collection()
+    protected $request;
+
+    public function __construct(Request $request)
     {
-        return Citizen::all();
+        $this->request = $request;
     }
 
-    // public function headings(): array
-    // {
-    //     return ['id', 'firstname','secondname','thirdname',lastname', 'Date of Birth', 'Gender', 'Region', 'Wife ID', 'Wife Name', 'Widowed', 'Social Status', 'Living Status', 'Job', 'Original Address', 'Elderly Count', 'Note'];
-    // }
+    public function query()
+    {
+        $query = Citizen::query();
+
+        // Apply the same filters as in the index method
+        // (Copy the filtering logic from the CitizenController index method)
+
+        return $query;
+    }
+
+    public function headings(): array
+    {
+        return [
+            'id',
+            'firstname',
+            'secondname',
+            'thirdname',
+            'lastname',
+            'phone',
+            'family_members',
+            'wife_id',
+            'wife_name',
+            'date_of_birth',
+            'gender',
+            'elderly_count',
+            'obstruction',
+            'obstruction_description',
+            'disease',
+            'disease_description',   
+            'job', 
+            'living_status',
+            'social_status',
+            'original_address',
+            'region_id',
+            'note',      
+        ];
+    }
 }
