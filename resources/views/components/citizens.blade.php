@@ -1,5 +1,9 @@
 @props(['citizens', 'distributionId' => null, 'distributions' => []])
-
+<style>
+    .dataTables_filter {
+    display: none;
+}
+</style>
 <form id="citizens-form" method="POST"
      action="{{  route('distributions.addCitizens', $distributionId)  }}">
     @csrf
@@ -19,6 +23,7 @@
                 </button>
         @endif
     </div>
+    <input type="text" id="searchbar"  class="form-control" placeholder='بحث فوري ...'>
     <div class="table-container
     overflow-x-auto mb-4">
     <table id="citizens-table" class="min-w-full divide-y divide-gray-200">
@@ -108,7 +113,7 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            $('#citizens-table').DataTable({
+            oTable = $('#citizens-table').DataTable({
                 responsive: true,
                 "scrollY": "4000px",
                 "scrollCollapse": true,
@@ -118,6 +123,11 @@
                     searchPlaceholder: "Search citizens..."
                 }
             });
+            $('#searchbar').keyup(function() {
+            
+                oTable.search($(this).val()).draw();
+        });
+
             $('#select-all').on('change', function() {
                 var checkboxes = $('input[name="citizens[]"]');
                 checkboxes.prop('checked', $(this).prop('checked'));

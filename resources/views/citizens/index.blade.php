@@ -215,10 +215,11 @@
                                 <div class="col-md-6">
                                     <input type="text" id="search" name="search" class="form-control" placeholder="بحث عام...">
                                 </div>
+                                <button type="submit" class="ms-3 btn btn-primary waves-effect waves-light">
+                                    بحث
+                                    <span class="ti-xs ti ti-user-search ms-1"></span>
+                                </button>
                                 
-                                <button
-                                    type="submit"class="px-3 py-1 fs-5 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">بحث</button>
-
                             </div>
                         </form>
                     </div>
@@ -227,6 +228,10 @@
                     <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
+                    </button>
+                    <button type="button" class="btn btn-success waves-effect waves-light">
+                        تصدير
+                        <span class="ti-xs ti ti-table-export ms-1"></span>
                     </button>
                     <a href="{{ route('citizens.create') }}" type="button"
                         class="btn btn-primary waves-effect waves-light text-white">
