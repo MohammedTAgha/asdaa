@@ -24,7 +24,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/test', [HomeController::class, 'test'])->name('test');
 
 Route::resource('regions', RegionController::class);
-Route::resource('representatives', RegionRepresentativeController::class);
+Route::resource('representatives', RegionRepresentativeController ::class);
 Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
 Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
 Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
