@@ -133,14 +133,13 @@
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
-
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <h1>ادارة مدينة اصدء</h1>
                 </div>
-                
+
                 <div class="menu-inner-shadow"></div>
-                
+
                 <ul class="menu-inner py-1">
                     <!-- Page -->
                     <li class="menu-item {{ request()->routeIs('home') ? 'active' : '' }}">
@@ -203,14 +202,11 @@
                         </a>
                     </li>
                 </ul>
-                
             </aside>
             <!-- / Menu -->
-
             <!-- Layout container -->
             <div class="layout-page">
                 <!-- Navbar -->
-
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -292,9 +288,7 @@
                         </ul>
                     </div>
                 </nav>
-
                 <!-- / Navbar -->
-
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
@@ -302,15 +296,12 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
 
                         {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
-
+                        <x-alert/>
                         @yield('content')
                         <!-- Snackbar container -->
                         <div id="snackbar" class="snackbar"></div>
                     </div>
                     <!-- / Content -->
-
-
-
                     <div class="content-backdrop fade"></div>
                 </div>
                 <!-- Content wrapper -->
@@ -320,10 +311,10 @@
 
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
-
-        <!-- Drag Target Area To SlideIn Menu On Small Screens -->
+        
         <div class="drag-target"></div>
     </div>
+    
     <!-- / Layout wrapper -->
 
     <!-- Core JS -->
@@ -362,12 +353,12 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
     <!-- Page JS -->
-     @stack('scripts')
-    
- 
+    @stack('scripts')
+
+
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-     <!-- Page JS -->
-     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
+    <!-- Page JS -->
+    <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>
 
 
