@@ -5,8 +5,11 @@
     @csrf
     {{-- <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}"> --}}
     <input type="hidden" name="citizen_ids" id="citizen-ids">
+    
+   
     <div class="mt-4 w-full ">
         @if ($distributionId)
+             <input type="hidden" name="distributionId" value="{{$distributionId}}" >
             <button type="submit" class=" flex-end px-4 py-2 bg-green-600 text-white rounded-md">
                 اضافة التحديد لكشف
                 {{ $distributionId }} </button>

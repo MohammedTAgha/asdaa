@@ -167,29 +167,53 @@
                     var myModal = new bootstrap.Modal(document.getElementById('importResultModal'));
                     myModal.show();
                 });
-                </script>
+            </script>
         @endif
         <div class="card px-4">
             <div class="card-header d-flex justify-content-between">
 
                 <div>
+                    {{-- <div class="row mb-3">
+                        <div class="col-md-6">
+                            <input type="text" id="search" class="form-control" placeholder="Search citizens...">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#advancedFilterModal">
+                                Advanced Filter
+                            </button>
+                        </div>
+                        <div class="col-md-2">
+                            <select id="orderBy" class="form-select">
+                                <option value="id">Order by ID</option>
+                                <option value="firstname">Order by First Name</option>
+                                <option value="lastname">Order by Last Name</option>
+                                <option value="date_of_birth">Order by Date of Birth</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button id="exportBtn" class="btn btn-success">Export to Excel</button>
+                        </div>
+                    </div> --}}
                     <div class="ml-4 relative d-flex">
                         {{-- <h2 class="card-title mb-0 fs-4 text-dark fw-bolder me-2">كشف المواطنين</h2>
                         <span class="h-13px border-gray-200 border-start mx-2"></span> --}}
                         <!-- Search Input -->
-                        {{-- <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
+                        <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
                             <div class="flex items-center w-full mx-2 me-6">
-                                <input type="text" name="search" placeholder=" بحث عام..."
-                                    class="w-full me-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <div class="col-md-6">
+                                    <input type="text" id="search" name="search" class="form-control" placeholder="بحث عام...">
+                                </div>
+                                
                                 <button
                                     type="submit"class="px-3 py-1 fs-5 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">بحث</button>
 
                             </div>
-                        </form> --}}
+                        </form>
                     </div>
                 </div>
                 <div class="me-2 relative">
-                    {{-- <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
+                    <button id="filterButton" type="button" class="btn btn-outline-primary waves-effect">
                         فلترة
                         <span class="ti-xs ti ti-filter-off ms-1"></span>
                     </button>
@@ -197,7 +221,7 @@
                         class="btn btn-primary waves-effect waves-light text-white">
                         اضافة جديد
                         <span class="ti-xs ti ti-user-plus ms-1"></span>
-                    </a> --}}
+                    </a>
                     <!-- Filter Popup Menu -->
                     <div id="filterMenu"
                         class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -210,11 +234,11 @@
                             <!-- Prepositives -->
                             <div class="mb-4">
                                 <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                                <select id="regions" name="regions[]"
-                                    class="select2-multiple p-2 border border-gray-300 rounded-lg" style="width: 260px;"
+                                <select id="regions" name="regions[]" 
+                                    class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;"
                                     multiple>
                                     @foreach ($regions as $region)
-                                        <option value="{{ $region->id }}"
+                                        <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
                                             {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
 
                                             @if ($region->representatives->isNotEmpty())
@@ -227,6 +251,23 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ageRange" class="form-label">افراد الاسرة</label>
+                                <div class="input-group">
+                                    <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                    <span class="input-group-text">-</span>
+                                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ageRange" class="form-label">العمر</label>
+                                <div class="input-group">
+                                    <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                    <span class="input-group-text">-</span>
+                                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                                </div>
                             </div>
                             <!-- Living Status -->
                             <div class="mb-4">
@@ -288,6 +329,47 @@
         </div>
     </div>
 
+        <!-- Advanced Filter Modal 2 -->
+        <div class="modal fade" id="advancedFilterModal" tabindex="-1" aria-labelledby="advancedFilterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="advancedFilterModalLabel">Advanced Filter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="advancedFilterForm">
+                            <div class="mb-3">
+                                <label for="regions" class="form-label">Regions</label>
+                                <select id="regions" class="form-select" multiple="multiple">
+                                    <!-- Populate with region options -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="gender" class="form-label">Gender</label>
+                                <select id="gender" class="form-select">
+                                    <option value="">All</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="ageRange" class="form-label">Age Range</label>
+                                <div class="input-group">
+                                    <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                    <span class="input-group-text">-</span>
+                                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="applyFilter">Apply Filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 @endsection
 
 @push('scripts')

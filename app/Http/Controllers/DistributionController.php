@@ -45,7 +45,7 @@ class DistributionController extends Controller
             "note" => "nullable|string",
         ]);
 
-        Distribution::create($request->all());
+        Distribution::create($request->all());                                            
 
         return redirect()
             ->route("distributions.index")
@@ -126,20 +126,36 @@ class DistributionController extends Controller
         $distributions = Distribution::all();
         return response()->json(["distributions" => $distributions]);
     }
-    public function addCitizens(Request $request, $distributionId = null)
+    public function addCitizens(Request $request ,$distributionId =null)
     {
         
-        $citizenIds = $request->input("citizens");
-    //     dd([ "citizen_ids"=>$citizenIds,
-    //      "citizens"=>$request->input("citizens")
-    // ]);
-        $distributionId = $distributionId ?? $request->input("distributionId");
+        $citizenIds= $request->input("citizens");
+        Log::error("133:", ["distributionId before" => $distributionId]);
+        $distributionId =  $request->input("distributionId");
+        Log::error("135:", ["distributionId after" => $distributionId]);
+
+        if ($citizenIds == null) {
+            return redirect()
+                ->back()
+                ->with("danger", "لا يوجد مواطنين تم اختيارهم");
+        }elseif(count($citizenIds)==0 ){
+            return redirect()
+            ->back()
+            ->with("danger", "لا يوجد مواطنين تم اختيارهم");
+        }
+        if(!isset($distributionId) || $distributionId == null ){
+            redirect()
+            ->back()
+            ->with("danger", "لا يوجد كشف محدد ");
+            
+        }
         $truncatedCitizens = [];
         $existingCitizenNames = [];
         Log::error("--------------:", ["--------------" =>"--------------" ]);
-        Log::error("reqyest:", ["ids" => $request]);
+        // Log::error("reqUest:", ["ids" => $request]);
         Log::error("Citizen IDs:", ["ids" => $citizenIds]);
-        Log::error("sds IDs:", ["ids" => $distributionId]);
+        Log::error("sds IDs:", ["distributionId" => $distributionId]);
+        $addedCount = 0;
         DB::beginTransaction();
         try {
             Log::error("Citizen IDs:", ["ids" => $citizenIds]);
@@ -153,15 +169,18 @@ class DistributionController extends Controller
 
             // Filter out existing citizens
             $newCitizenIds = array_diff($citizenIds, $existingCitizens);
-
+            
             foreach ($newCitizenIds as $citizenId) {
                 Log::error("Citizen ID:", ["..." => $citizenId]);
                 try {
+                    Log::error("Citizen ID:", ["added" => $citizenId]);
                     DB::table("distribution_citizens")->insert([
                         "distribution_id" => $distributionId,
                         "citizen_id" => $citizenId,
                     ]);
+                    $addedCount = $addedCount + 1;
                 } catch (QueryException $e) {
+                    Log::error("Citizen ID:", ["erorr" => $citizenId]);
                     if (strpos($e->getMessage(), "Data truncated") !== false) {
                         $truncatedCitizens[] = $citizenId;
                     } else {
@@ -192,10 +211,9 @@ class DistributionController extends Controller
                     500
                 );
             } else {
-                return response()->json(
-                    ["error" => "An error occurred while adding citizens."],
-                    500
-                );
+                return redirect()
+                ->back()
+                ->with("danger", "حدث خطا في الاضافة");
             }
         }
 
@@ -206,10 +224,9 @@ class DistributionController extends Controller
                     400
                 );
             } else {
-                return response()->json(
-                    ["truncated_citizens" => $truncatedCitizens],
-                    400
-                );
+                return redirect()
+                ->back()
+                ->with("danger", " يوجد تكرر في الاسم ");
             }
         }
 
@@ -220,17 +237,15 @@ class DistributionController extends Controller
                     200
                 );
             } else {
-                return response()->json(
-                    ["existing_citizens" => $existingCitizenNames],
-                    200
-                );
+                return redirect()
+                ->back()
+                ->with("danger", " موجود مسبقا");
             }
-
-            return response()->json(
-                ["success" => "Citizens added successfully."],
-                200
-            );
+            
         }
+        return redirect()
+        ->back()
+        ->with("success", " تمت الاضافة بنجاح ل" . $addedCount . 'اسم' );
     }
 
     public function removeCitizenFromDistribution($id) //pivot table id
