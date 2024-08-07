@@ -203,6 +203,9 @@
                 </ul>
             </aside>
             <!-- / Menu -->
+            @if (session('addCitizensReportHtml'))
+                {!! session('addCitizensReportHtml') !!}
+            @endif
             <!-- Layout container -->
             <div class="layout-page">
                 <!-- Navbar -->
@@ -295,7 +298,7 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
 
                         {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
-                        <x-alert/>
+                        <x-alert />
                         @yield('content')
                         <!-- Snackbar container -->
                         <div id="snackbar" class="snackbar"></div>
@@ -310,10 +313,10 @@
 
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
-        
+
         <div class="drag-target"></div>
     </div>
-    
+
     <!-- / Layout wrapper -->
     <script>
         function showSnackbar(message, type) {
@@ -398,13 +401,18 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
-
     <!-- Page JS -->
     @stack('scripts')
 
-
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <!-- Page JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('addCitizensReportHtml'))
+                $('#addCitizensReportModal').modal('show');
+            @endif
+        });
+    </script>
     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>
 
