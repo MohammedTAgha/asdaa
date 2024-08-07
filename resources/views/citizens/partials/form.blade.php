@@ -38,7 +38,7 @@
              </div>
          </div>
          <div class="bs-stepper-content">
-             <form onSubmit="return false">
+             {{-- <form onSubmit="return false"> --}}
                  <!-- بيانات النازح -->
                  <div id="account-details" class="content">
                      <div class="content-header mb-3">
@@ -148,11 +148,11 @@
                          </div>
                      </div>
                      <div class="col-12 d-flex justify-content-between">
-                        <button class="btn btn-label-secondary btn-prev" disabled>
+                        <button type="button" class="btn btn-label-secondary btn-prev" disabled>
                           <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                           <span class="align-middle d-sm-inline-block d-none">Previous</span>
                         </button>
-                        <button class="btn btn-primary btn-next">
+                        <button type="button" class="btn btn-primary btn-next">
                           <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
                           <i class="ti ti-arrow-right"></i>
                         </button>
@@ -219,11 +219,11 @@
                          </div>
                      </div>
                      <div class="col-12 d-flex justify-content-between">
-                        <button class="btn btn-label-secondary btn-prev">
+                        <button type="button" class="btn btn-label-secondary btn-prev">
                           <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                           <span class="align-middle d-sm-inline-block d-none">Previous</span>
                         </button>
-                        <button class="btn btn-primary btn-next">
+                        <button type="button" class="btn btn-primary btn-next">
                           <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
                           <i class="ti ti-arrow-right"></i>
                         </button>
@@ -270,15 +270,15 @@
                               class="w-full border-gray-300 w-full px-4 py-2 border rounded-md"></textarea>
                                </div>
                          <div class="col-12 d-flex justify-content-between">
-                             <button class="btn btn-label-secondary btn-prev">
+                             <button type="button" class="btn btn-label-secondary btn-prev">
                                  <i class="ti ti-arrow-left me-sm-1 me-0"></i>
                                  <span class="align-middle d-sm-inline-block d-none">Previous</span>
                              </button>
-                             <button class="btn btn-success btn-submit">Submit</button>
+                             <button type="submit">Submit</button>
                          </div>
                      </div>
                  </div>
-             </form>
+             {{-- </form> --}}
          </div>
      </div>
  </div>

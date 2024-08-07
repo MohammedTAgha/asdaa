@@ -4,8 +4,10 @@
 @endsection
 
 @section('content')
+<form action="{{ route('citizens.store') }}" method="POST" class="space-y-4">
+    @csrf
     @include('citizens.partials.form')
-
+</form>
 
     {{-- <form action="{{ route('citizens.store') }}" method="POST" class="space-y-4">
                 @csrf
