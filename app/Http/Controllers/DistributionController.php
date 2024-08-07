@@ -139,38 +139,38 @@ class DistributionController extends Controller
         if (empty($distributionId)) {
             return redirect()->back()->with("danger", "لا يوجد كشف محدد");
         }
-    
+        $totalIds = count($citizenIds);
         DB::beginTransaction();
         try {
-            $existingCitizens = DB::table("distribution_citizens")
+            // Check which citizens already exist in the distribution
+            $existingInDistribution = DB::table("distribution_citizens")
                 ->where("distribution_id", $distributionId)
                 ->whereIn("citizen_id", $citizenIds)
                 ->pluck("citizen_id")
                 ->toArray();
     
-            $newCitizenIds = array_diff($citizenIds, $existingCitizens);
+            // Check which citizens exist in the citizens table
+            $existingCitizens = Citizen::whereIn("id", $citizenIds)->pluck("id")->toArray();
+    
+            // Identify non-existent citizens
+            $nonExistentCitizens = array_diff($citizenIds, $existingCitizens);
+    
+            // Identify citizens to be added (exist in citizens table but not in distribution)
+            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
+    
             $addedCount = 0;
-            $truncatedCitizens = [];
             $addedCitizens = [];
     
-            foreach ($newCitizenIds as $citizenId) {
-                try {
-                    DB::table("distribution_citizens")->insert([
-                        "distribution_id" => $distributionId,
-                        "citizen_id" => $citizenId,
-                    ]);
-                    $addedCount++;
-                    $addedCitizens[] = $citizenId;
-                } catch (QueryException $e) {
-                    if (strpos($e->getMessage(), "Data truncated") !== false) {
-                        $truncatedCitizens[] = $citizenId;
-                    } else {
-                        throw $e;
-                    }
-                }
+            foreach ($citizensToAdd as $citizenId) {
+                DB::table("distribution_citizens")->insert([
+                    "distribution_id" => $distributionId,
+                    "citizen_id" => $citizenId,
+                ]);
+                $addedCount++;
+                $addedCitizens[] = $citizenId;
             }
     
-            $existingCitizenData = Citizen::whereIn("id", $existingCitizens)
+            $existingCitizenData = Citizen::whereIn("id", $existingInDistribution)
                 ->select('id', 'firstname', 'lastname')
                 ->get()
                 ->toArray();
@@ -180,34 +180,31 @@ class DistributionController extends Controller
                 ->get()
                 ->toArray();
     
-            $truncatedCitizenData = Citizen::whereIn("id", $truncatedCitizens)
-                ->select('id', 'firstname', 'lastname')
-                ->get()
-                ->toArray();
-    
             DB::commit();
+            
             $report = [
                 'added' => [
                     'count' => $addedCount,
                     'citizens' => $addedCitizenData
                 ],
                 'existing' => [
-                    'count' => count($existingCitizens),
+                    'count' => count($existingInDistribution),
                     'citizens' => $existingCitizenData
                 ],
-                'truncated' => [
-                    'count' => count($truncatedCitizens),
-                    'citizens' => $truncatedCitizenData
-                ]
-            ];
-            
-    
-            $reportHtml = view('components.addctz2dist', ['report' => $report])->render();
-            
-            return redirect()->back()
-            ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
-            ->with('addCitizensReportHtml', $reportHtml);
+                'nonexistent' => [
+                    'count' => count($nonExistentCitizens),
+                    'citizens' => $nonExistentCitizens // This will be an array of IDs
+                ],
+                'totalIds' => $totalIds
 
+            ];
+    
+            $reportHtml = view('add_citizens_report_modal', ['report' => $report])->render();
+    
+            return redirect()->back()
+                ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+                ->with('addCitizensReportHtml', $reportHtml);
+    
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
