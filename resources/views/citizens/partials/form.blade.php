@@ -1,10 +1,9 @@
  <!-- Default Wizard -->
- <div class="container-xxl flex-grow-1 container-p-y">
  <div class="col-12 mb-4">
      <small class="text-light fw-semibold">بيانات النازح</small>
-     <div class="bs-stepper wizard-vertical vertical mt-2">
+     <div class="bs-stepper wizard-numbered mt-2">
          <div class="bs-stepper-header">
-             <div class="step" data-target="#account-details-1">
+             <div class="step" data-target="#account-details">
                  <button type="button" class="step-trigger">
                      <span class="bs-stepper-circle">1</span>
                      <span class="bs-stepper-label">
@@ -41,7 +40,7 @@
          <div class="bs-stepper-content">
              <form onSubmit="return false">
                  <!-- بيانات النازح -->
-                 <div id="account-details-1" class="content">
+                 <div id="account-details" class="content">
                      <div class="content-header mb-3">
                          <h5 class="mb-0 fs-3">بيانات النازح</h5>
                      </div>
@@ -283,6 +282,4 @@
          </div>
      </div>
  </div>
-
- </div> 
  <!-- /Default Wizard -->
