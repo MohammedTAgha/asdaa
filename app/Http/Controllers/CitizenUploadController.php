@@ -42,14 +42,24 @@ class CitizenUploadController extends Controller
                 ->toArray();
 
             $added = 0;
-            $updated = 0;
-            $nonexistent = 0;
+            $uploaded = 0;
+            // $addedCount = 0;
+            $addedCitizensIds = [];
+            $updatedCitizensIds = [];
 
+            $addedCitizens = [];
+            $updatedCitizens = [];
+            $nonExistentCitizensId= [];
+            $nonexistent = 0;
+          
             foreach ($citizensData as $row) {
                 $citizenId = $row['id'] ?? null;
 
                 if (!$citizenId || !in_array($citizenId, $existingCitizens)) {
                     $nonexistent++;
+                    if ($citizenId){
+                        $nonExistentCitizensId[] =$row;
+                    }
                     continue;
                 }
 
@@ -68,25 +78,50 @@ class CitizenUploadController extends Controller
                         ->where("distribution_id", $distributionId)
                         ->where("citizen_id", $citizenId)
                         ->update($pivotData);
-                    $updated++;
+                        $uploaded++;   
+                    $updatedCitizens[]=$citizenId;
                 } else {
                     DB::table("distribution_citizens")->insert($pivotData);
-                    $added++;
+                    $addedCitizens[]=$pivotData;
                 }
             }
 
             DB::commit();
 
+            // $report = [
+            //     'added' => $added,
+            //     'updated' => $updated,
+            //     // 'nonexistent' => $nonexistent,
+            //     'nonexistent' => [
+            //         'count' => count($nonExistentCitizensId),
+            //         'citizens' => $nonExistentCitizensId // This will be an array of IDs
+            //     ],
+            // ];
             $report = [
-                'added' => $added,
-                'updated' => $updated,
-                'nonexistent' => $nonexistent,
+                'added' => [
+                    'count' => count($addedCitizens),
+                    'citizens' => $addedCitizens
+                ],
+                'existing' => [
+                    'count' => $uploaded,
+                    'citizens' =>$updatedCitizens
+                ],
+                'nonexistent' => [
+                    'count' => count($nonExistentCitizensId),
+                    'citizens' => $nonExistentCitizensId // This will be an array of IDs
+                ],
+                // 'totalIds' => $totalIds
+
             ];
+            dd( $report);
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
 
             return redirect()->back()->with('status', [
                 'type' => 'success',
-                'message' => "تم رفع الملف بنجاح. تمت إضافة {$report['added']} مواطن، تم تحديث {$report['updated']} مواطن، و {$report['nonexistent']} غير موجود."
-            ]);
+                'message' => "تم رفع الملف بنجاح. تمت إضافة {$report['added']['count']} مواطن، تم تحديث {$report['existing']['count']} مواطن، و {$report['nonexistent']['count']} غير موجود."
+            ])
+            ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+            ->with('addCitizensReportHtml', $reportHtml);;
 
         } catch (\Exception $e) {
             DB::rollBack();
