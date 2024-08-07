@@ -248,7 +248,6 @@
                             <input type="hidden" name="regions[]" value="{{ $region }}">
                         @endforeach
                          @else
-                         @dd(request('regions'))
                             <input type="hidden" name="regions" value="{{ request('regions') }}">
                         @endif                        <button type="submit" class=" mx-1 btn btn-success waves-effect waves-light">
                             تصدير
