@@ -3,7 +3,8 @@
 @section('content')
     <div class="container mx-auto px-4">
         <h1 class="text-2xl font-bold my-4">Edit Citizen</h1>
-        <form action="{{ route('citizens.update', $citizen->id) }}" method="POST">
+        @include('citizens.partials.form')
+        {{-- <form action="{{ route('citizens.update', $citizen->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div>
@@ -51,6 +52,6 @@
             </div>
             <!-- Add other citizen fields as needed -->
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">تحديث البيانات</button>
-        </form>
+        </form> --}}
     </div>
 @endsection
