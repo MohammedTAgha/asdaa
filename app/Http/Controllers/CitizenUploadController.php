@@ -20,50 +20,48 @@ class CitizenUploadController extends Controller
 
     public function uploadCitizens(Request $request)
     {
+        // Validate the request to ensure required fields are provided
         $request->validate([
             'distribution_id' => 'required|exists:distributions,id',
             'citizens_file' => 'required|file|mimes:xlsx,xls',
         ]);
-
+    
         $distributionId = $request->input('distribution_id');
         $file = $request->file('citizens_file');
-
+    
         try {
+            // Read the uploaded Excel file and get the first collection of data
             $citizensData = Excel::toCollection(new CitizensImport, $file)->first();
-
+    
             DB::beginTransaction();
-
+    
+            // Get existing citizen IDs already linked to the distribution
             $existingInDistribution = DB::table("distribution_citizens")
                 ->where("distribution_id", $distributionId)
                 ->pluck("citizen_id")
                 ->toArray();
-
-            $existingCitizens = DB::table("citizens")
-                ->pluck("id")
-                ->toArray();
-
+    
+            // Get all existing citizen IDs from the citizens table
+            $existingCitizens = Citizen::pluck("id")->toArray();
+    
+            // Initialize counters and arrays for report
             $added = 0;
-            $uploaded = 0;
-            // $addedCount = 0;
-            $addedCitizensIds = [];
-            $updatedCitizensIds = [];
-
+            $updated = 0;
+            $nonexistentCitizens = [];
             $addedCitizens = [];
             $updatedCitizens = [];
-            $nonExistentCitizensId= [];
-            $nonexistent = 0;
-          
+    
+            // Process each row of citizen data from the file
             foreach ($citizensData as $row) {
                 $citizenId = $row['id'] ?? null;
-
+    
+                // Check if the citizen exists in the database
                 if (!$citizenId || !in_array($citizenId, $existingCitizens)) {
-                    $nonexistent++;
-                    if ($citizenId){
-                        $nonExistentCitizensId[] =$row;
-                    }
+                    $nonexistentCitizens[] = $citizenId;
                     continue;
                 }
-
+    
+                // Prepare data for insertion or update
                 $pivotData = [
                     'distribution_id' => $distributionId,
                     'citizen_id' => $citizenId,
@@ -73,74 +71,64 @@ class CitizenUploadController extends Controller
                     'done' => isset($row['done']) ? filter_var($row['done'], FILTER_VALIDATE_BOOLEAN) : false,
                     'date' => isset($row['date']) ? Carbon::parse($row['date'])->format('Y-m-d') : null,
                 ];
-
+    
+                // Update if citizen is already in the distribution; otherwise, add
                 if (in_array($citizenId, $existingInDistribution)) {
                     DB::table("distribution_citizens")
                         ->where("distribution_id", $distributionId)
                         ->where("citizen_id", $citizenId)
                         ->update($pivotData);
-                        $uploaded++;   
-                    $updatedCitizensIds[]=$citizenId;
+                    $updated++;
+                    $updatedCitizens[] = $citizenId;
                 } else {
                     DB::table("distribution_citizens")->insert($pivotData);
-                    $addedCitizensIds[]=$pivotData;
+                    $added++;
+                    $addedCitizens[] = $citizenId;
                 }
             }
-
-            DB::commit();
-
-            $existingCitizenData = Citizen::whereIn("id", $updatedCitizensIds)
+    
+            // Fetch detailed information for added citizens
+            $addedCitizenData = Citizen::whereIn("id", $addedCitizens)
                 ->select('id', 'firstname', 'lastname')
                 ->get()
                 ->toArray();
-
-            $addedCitizenData = Citizen::whereIn("id", $addedCitizensIds)
-            ->select('id', 'firstname', 'lastname')
-            ->get()
-            ->toArray();
-
-
-            // $report = [
-            //     'added' => $added,
-            //     'updated' => $updated,
-            //     // 'nonexistent' => $nonexistent,
-            //     'nonexistent' => [
-            //         'count' => count($nonExistentCitizensId),
-            //         'citizens' => $nonExistentCitizensId // This will be an array of IDs
-            //     ],
-            // ];
+    
+            // Fetch detailed information for updated citizens
+            $existingCitizenData = Citizen::whereIn("id", $updatedCitizens)
+                ->select('id', 'firstname', 'lastname')
+                ->get()
+                ->toArray();
+    
+            DB::commit();
+    
+            // Prepare a report with data about added, updated, and nonexistent citizens
             $report = [
                 'added' => [
-                    'count' => count($addedCitizens),
+                    'count' => $added,
                     'citizens' => $addedCitizenData
                 ],
-                'existing' => [
-                    'count' => $uploaded,
-                    'citizens' =>$existingCitizenData
+                'updated' => [
+                    'count' => $updated,
+                    'citizens' => $existingCitizenData
                 ],
                 'nonexistent' => [
-                    'count' => count($nonExistentCitizensId),
-                    'citizens' => $nonExistentCitizensId // This will be an array of IDs
-                ],
-                // 'totalIds' => $totalIds
-
+                    'count' => count($nonexistentCitizens),
+                    'citizens' => $nonexistentCitizens
+                ]
             ];
             dd( $report);
-            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
-
-            return redirect()->back()->with('status', [
-                'type' => 'success',
-                'message' => "تم رفع الملف بنجاح. تمت إضافة {$report['added']['count']} مواطن، تم تحديث {$report['existing']['count']} مواطن، و {$report['nonexistent']['count']} غير موجود."
-            ])
-            ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
-            ->with('addCitizensReportHtml', $reportHtml);;
-
+            // Render the report into an HTML view
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
+    
+            // Redirect back with a success message and the report
+            return redirect()->back()
+                ->with('success', 'تم رفع الملف بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+                ->with('addCitizensReportHtml', $reportHtml);
+    
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('status', [
-                'type' => 'danger',
-                'message' => 'حدث خطأ أثناء معالجة الملف: ' . $e->getMessage()
-            ]);
+            // Handle any exceptions by rolling back the transaction and showing an error message
+            return redirect()->back()->with('danger', 'حدث خطأ أثناء معالجة الملف: ' . $e->getMessage());
         }
     }
 }
