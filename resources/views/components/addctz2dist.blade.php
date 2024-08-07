@@ -1,4 +1,3 @@
-<!-- resources/views/add_citizens_report_modal.blade.php -->
 <div id="addCitizensReportModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -23,10 +22,10 @@
                     @endforeach
                 </ul>
                 
-                <h6>{{ $report['truncated']['count'] }} مواطن لم تتم إضافتهم بسبب تكرار الاسم:</h6>
+                <h6>{{ $report['nonexistent']['count'] }} مواطن غير موجود في قاعدة البيانات:</h6>
                 <ul>
-                    @foreach($report['truncated']['citizens'] as $citizen)
-                        <li>{{ $citizen['firstname'] }} {{ $citizen['lastname'] }}</li>
+                    @foreach($report['nonexistent']['citizens'] as $citizenId)
+                        <li>معرف المواطن: {{ $citizenId }}</li>
                     @endforeach
                 </ul>
             </div>
