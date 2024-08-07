@@ -41,10 +41,34 @@
              <form onSubmit="return false">
                  <!-- بيانات النازح -->
                  <div id="account-details" class="content">
-                     <div class="content-header mb-3">  
+                     <div class="content-header mb-3">
                          <h5 class="mb-0 fs-3">بيانات النازح</h5>
                      </div>
+                     <div class="row g-2 my-4">
+                        {{-- id --}}
+                        <div class="col-sm-3">
+                            <label for="id" class="block font-medium text-gray-700">الهوية</label>
+                            <input type="text" id="id" name="id"
+                                class="w-full border-gray-300 w-full px-4 py-2 border rounded-md" required>
+                        </div>
+                        <div class="col-sm-3">
+                           <label for="phone" class="block font-medium text-gray-700">رقم الهاتف</label>
+                           <input type="text" id="phone" name="phone"
+                               class="w-full border-gray-300 w-full px-4 py-2 border rounded-md" >
+                       </div>
+                        {{-- region --}}
+                        <div class="col-sm-3">
+                            <label for="region_id" class="block font-medium text-gray-700">المنطقة</label>
+                            <select id="region_id" name="region_id"
+                                class="w-full border-gray-300 w-full px-4 py-2 border rounded-md" required>
+                                <option value="">اختر المنطقة</option>
+                                @foreach ($regions as $region)
+                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
+                    </div>
                      <div class="row g-3 my-4 ">
                          {{-- first name --}}
                          <div class="col-sm-3">
@@ -69,34 +93,41 @@
                                  class="w-full px-4 py-2 border rounded-md" required>
                          </div>
                      </div>
-                     <div class="row g-2">
+
+
+                     <div class="row g-2 my-4">
+
                          {{-- id --}}
                          <div class="col-sm-3">
-                             <label for="id" class="block font-medium text-gray-700">الهوية</label>
-                             <input type="text" id="id" name="id"
-                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md" required>
+                             <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
+                             <select id="social_status" name="social_status"
+                                 class="w-full p-2 border border-gray-300 rounded-lg">
+                                 <option value="">غير محدد</option>
+                                 <option value="0">اعزب</option>
+                                 <option value="1">متزوج</option>
+                                 <option value="2">ارمل</option>
+                                 <option value="3">متعدد</option>
+                                 <option value="4">مطلق</option>
+                                 <option value="5">زوجة 1</option>
+                                 <option value="6">زوجة 2</option>
+                                 <option value="7">زوجة 3</option>
+                                 <option value="8">زوجة 4</option>
+
+                             </select>
                          </div>
 
-                          {{-- id --}}
-                          <div class="col-sm-3">
-                            <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
-                            <select id="social_status" name="social_status"
-                                class="w-full p-2 border border-gray-300 rounded-lg">
-                                <option value="">غير محدد</option>
-                                <option value="0">اعزب</option>
-                                <option value="1">متزوج</option>
-                                <option value="2">ارمل</option>
-                                <option value="3">متعدد</option>
-                                <option value="4">مطلق</option>
-                                <option value="5">زوجة 1</option>
-                                <option value="6">زوجة 2</option>
-                                <option value="7">زوجة 3</option>
-                                <option value="8">زوجة 4</option>
-
-                            </select>
-                          </div>
-
                          {{-- gender --}}
+                         {{-- <div class="col-sm-3">
+                            <label for="gender" class="block font-medium text-gray-700">الجنس</label>
+                            <div class="form-check mb-2">
+                              <input type="radio" id="basic-default-radio-male" name="basic-default-radio" class="form-check-input" required="">
+                              <label class="form-check-label" for="basic-default-radio-male">Male</label>
+                            </div>
+                            <div class="form-check">
+                              <input type="radio" id="basic-default-radio-female" name="basic-default-radio" class="form-check-input" required="">
+                              <label class="form-check-label" for="basic-default-radio-female">Female</label>
+                            </div>
+                          </div> --}}
                          <div class="col-sm-3">
                              <label for="gender" class="block font-medium text-gray-700">الجنس</label>
                              <select id="gender" name="gender"
@@ -108,13 +139,24 @@
 
                          {{-- dop --}}
                          <div class="col-sm-3">
-                          <div>
-                            <label for="date_of_birth" class="block font-medium text-gray-700">تاريخ الميلاد</label>
-                            <input type="date" id="date_of_birth" name="date_of_birth"
-                                class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
-                        </div>
-                      </div>
+                             <div>
+                                 <label for="date_of_birth" class="block font-medium text-gray-700">تاريخ
+                                     الميلاد</label>
+                                 <input type="date" id="date_of_birth" name="date_of_birth"
+                                     class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                             </div>
+                         </div>
                      </div>
+                     <div class="col-12 d-flex justify-content-between">
+                        <button class="btn btn-label-secondary btn-prev" disabled>
+                          <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                          <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                          <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                          <i class="ti ti-arrow-right"></i>
+                        </button>
+                      </div>
                  </div>
                  <!-- بيانات الاسرة -->
                  <div id="personal-info" class="content">
@@ -123,74 +165,110 @@
                          <small>ادخل بيانات الاسرة.</small>
                      </div>
                      <div class="row g-3">
-                         <div class="col-sm-6">
-                             <label class="form-label" for="first-name">First Name</label>
-                             <input type="text" id="first-name" class="form-control" placeholder="John" />
+                         <div class="col-sm-4">
+                             <label for="wife_id" class="block font-medium text-gray-700">هوية الزوجة</label>
+                             <input type="text" id="wife_id" name="wife_id"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
                          </div>
                          <div class="col-sm-6">
-                             <label class="form-label" for="last-name">Last Name</label>
-                             <input type="text" id="last-name" class="form-control" placeholder="Doe" />
-                         </div>
-                         <div class="col-sm-6">
-                             <label class="form-label" for="country">Country</label>
-                             <select class="select2" id="country">
-                                 <option label=" "></option>
-                                 <option>UK</option>
-                                 <option>USA</option>
-                                 <option>Spain</option>
-                                 <option>France</option>
-                                 <option>Italy</option>
-                                 <option>Australia</option>
-                             </select>
-                         </div>
-                         <div class="col-sm-6">
-                             <label class="form-label" for="language">Language</label>
-                             <select class="selectpicker w-auto" id="language" data-style="btn-transparent"
-                                 data-icon-base="ti" data-tick-icon="ti-check text-white" multiple>
-                                 <option>English</option>
-                                 <option>French</option>
-                                 <option>Spanish</option>
-                             </select>
-                         </div>
-                         <div class="col-12 d-flex justify-content-between">
-                             <button class="btn btn-label-secondary btn-prev">
-                                 <i class="ti ti-arrow-left me-sm-1 me-0"></i>
-                                 <span class="align-middle d-sm-inline-block d-none">Previous</span>
-                             </button>
-                             <button class="btn btn-primary btn-next">
-                                 <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
-                                 <i class="ti ti-arrow-right"></i>
-                             </button>
+                             <label for="wife_name" class="block font-medium text-gray-700">اسم الزوجة</label>
+                             <input type="text" id="wife_name" name="wife_name"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
                          </div>
                      </div>
+                     <div class="row g-3">
+                         <div class="col-sm-2">
+                             <label for="family_members" class="block font-medium text-gray-700"> عدد الافراد </label>
+                             <input type="number" id="family_members" name="family_members"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                         <div class="col-sm-2">
+                             <label for="elderly_count" class="block font-medium text-gray-700">عدد المسنين</label>
+                             <input type="number" id="elderly_count" name="elderly_count"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                     </div>
+                     {{-- desises  --}}
+                     <div class="row g-3">
+                         <div class="col-sm-2">
+                             <label for="disease" class="block font-medium text-gray-700"> عدد الامراض المزمنة
+                             </label>
+                             <input type="number" id="disease" name="disease"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                         <div class="col-sm-6">
+                             <label for="disease_description" class="block font-medium text-gray-700">تفاصيل الامراض
+                                 المزمنة</label>
+                             <input type="text" id="disease_description" name="disease_description"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                     </div>
+
+                     {{-- desises  --}}
+                     <div class="row g-3">
+                         <div class="col-sm-2">
+                             <label for="obstruction" class="block font-medium text-gray-700"> عدد الاعاقات</label>
+                             <input type="number" id="obstruction" name="obstruction"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                         <div class="col-sm-6">
+                             <label for="obstruction_description" class="block font-medium text-gray-700">تفاصيل
+                             </label>
+                             <input type="text" id="obstruction_description" name="obstruction_description"
+                                 class="w-full border-gray-300 w-full px-4 py-2 border rounded-md">
+                         </div>
+                     </div>
+                     <div class="col-12 d-flex justify-content-between">
+                        <button class="btn btn-label-secondary btn-prev">
+                          <i class="ti ti-arrow-left me-sm-1 me-0"></i>
+                          <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                        </button>
+                        <button class="btn btn-primary btn-next">
+                          <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                          <i class="ti ti-arrow-right"></i>
+                        </button>
+                      </div> 
                  </div>
+
+
+
+
                  <!-- Social Links -->
                  <div id="social-links" class="content">
                      <div class="content-header mb-3">
-                         <h6 class="mb-0">Social Links</h6>
-                         <small>Enter Your Social Links.</small>
+                         <h6 class="mb-0">معومات اخرى</h6>
+
                      </div>
                      <div class="row g-3">
-                         <div class="col-sm-6">
-                             <label class="form-label" for="twitter">Twitter</label>
-                             <input type="text" id="twitter" class="form-control"
-                                 placeholder="https://twitter.com/abc" />
+                         <div class="col-sm-3">
+                             <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
+                             <select id="living_status" name="living_status"
+                                 class="w-full p-2 border border-gray-300 rounded-lg">
+                                 <option value="">غير محدد</option>
+                                 <option value="1">سيئ</option>
+                                 <option value="2">جيد</option>
+                                 <option value="3">ممتاز</option>
+                             </select>
                          </div>
-                         <div class="col-sm-6">
-                             <label class="form-label" for="facebook">Facebook</label>
-                             <input type="text" id="facebook" class="form-control"
-                                 placeholder="https://facebook.com/abc" />
-                         </div>
-                         <div class="col-sm-6">
-                             <label class="form-label" for="google">Google+</label>
-                             <input type="text" id="google" class="form-control"
+                         <div class="col-sm-3">
+                          <label class="block mb-1 font-medium text-gray-700">العمل:</label>
+                          <select id="job" name="job"
+                              class="w-full p-2 border border-gray-300 rounded-lg">
+                              <option value="">غير محدد</option>
+                              <option value="1">لا يعمل</option>
+                              <option value="2">عامل</option>
+                              <option value="3">موظف</option>
+                          </select>                         </div>
+                         <div class="col-sm-8">
+                             <label class="form-label" for="original_address">عنوان السكن الاصلي</label>
+                             <input type="text" id="original_address" class="form-control"
                                  placeholder="https://plus.google.com/abc" />
                          </div>
-                         <div class="col-sm-6">
-                             <label class="form-label" for="linkedin">LinkedIn</label>
-                             <input type="text" id="linkedin" class="form-control"
-                                 placeholder="https://linkedin.com/abc" />
-                         </div>
+                         <div class="col-sm-8">
+                          <label for="note" class="block font-medium text-gray-700">ملاحظة</label>
+                          <textarea id="note" name="note" rows="3"
+                              class="w-full border-gray-300 w-full px-4 py-2 border rounded-md"></textarea>
+                               </div>
                          <div class="col-12 d-flex justify-content-between">
                              <button class="btn btn-label-secondary btn-prev">
                                  <i class="ti ti-arrow-left me-sm-1 me-0"></i>
