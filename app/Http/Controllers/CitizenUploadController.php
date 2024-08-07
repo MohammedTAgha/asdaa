@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Distribution;
 use App\Imports\CitizensImport;
+use App\Models\Citizen;
 use Carbon\Carbon;
 
 class CitizenUploadController extends Controller
@@ -79,14 +80,25 @@ class CitizenUploadController extends Controller
                         ->where("citizen_id", $citizenId)
                         ->update($pivotData);
                         $uploaded++;   
-                    $updatedCitizens[]=$citizenId;
+                    $updatedCitizensIds[]=$citizenId;
                 } else {
                     DB::table("distribution_citizens")->insert($pivotData);
-                    $addedCitizens[]=$pivotData;
+                    $addedCitizensIds[]=$pivotData;
                 }
             }
 
             DB::commit();
+
+            $existingCitizenData = Citizen::whereIn("id", $updatedCitizensIds)
+                ->select('id', 'firstname', 'lastname')
+                ->get()
+                ->toArray();
+
+            $addedCitizenData = Citizen::whereIn("id", $addedCitizensIds)
+            ->select('id', 'firstname', 'lastname')
+            ->get()
+            ->toArray();
+
 
             // $report = [
             //     'added' => $added,
@@ -100,11 +112,11 @@ class CitizenUploadController extends Controller
             $report = [
                 'added' => [
                     'count' => count($addedCitizens),
-                    'citizens' => $addedCitizens
+                    'citizens' => $addedCitizenData
                 ],
                 'existing' => [
                     'count' => $uploaded,
-                    'citizens' =>$updatedCitizens
+                    'citizens' =>$existingCitizenData
                 ],
                 'nonexistent' => [
                     'count' => count($nonExistentCitizensId),
