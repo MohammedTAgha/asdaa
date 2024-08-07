@@ -243,8 +243,14 @@
                         <input type="hidden" name="last_name" value="{{ request('last_name') }}">
                         <input type="hidden" name="search" value="{{ request('search') }}">
                         <input type="hidden" name="gender" value="{{ request('gender') }}">
-                        <input type="hidden" name="regions" value="{{ request('regions') }}">
-                        <button type="submit" class=" mx-1 btn btn-success waves-effect waves-light">
+                        @if(is_array(request('regions')))   
+                        @foreach(request('regions') as $region)
+                            <input type="hidden" name="regions[]" value="{{ $region }}">
+                        @endforeach
+                         @else
+                         @dd(request('regions'))
+                            <input type="hidden" name="regions" value="{{ request('regions') }}">
+                        @endif                        <button type="submit" class=" mx-1 btn btn-success waves-effect waves-light">
                             تصدير
                             <span class="ti-xs ti ti-table-export ms-1"></span>
                         </button>
