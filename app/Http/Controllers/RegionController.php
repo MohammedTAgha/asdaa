@@ -13,6 +13,11 @@ class RegionController extends Controller
         return view('regions.index', compact('regions'));
    }
 
+   public function create()
+   {
+     
+       return view("regions.create");
+   }
     /**
      * Show the form for creating a new resource.
      *
