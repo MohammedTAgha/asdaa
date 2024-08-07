@@ -199,8 +199,7 @@ class DistributionController extends Controller
 
             ];
     
-            $reportHtml = view('add_citizens_report_modal', ['report' => $report])->render();
-    
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
             return redirect()->back()
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);

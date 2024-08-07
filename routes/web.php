@@ -20,6 +20,9 @@ use App\Http\Controllers\DistributionCategoryController;
 use App\Http\Controllers\DistributionCitizenController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChildController;
+use App\Http\Controllers\CitizenUploadController;
+use App\Imports\CitizenDistributionImport;
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/test', [HomeController::class, 'test'])->name('test'); 
 
@@ -40,6 +43,10 @@ Route::post('/distributions/add-citizens', [DistributionController::class, 'addC
 Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
 Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot');// Route::get('/citizens', [CitizenController::class, 'index']);
+
+Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
+Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
+
 // Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 // Route::post('/citizens', [CitizenController::class, 'store']);
 // Route::put('/citizens/{id}', [CitizenController::class, 'update']);
