@@ -1,18 +1,13 @@
 @extends('dashboard')
 
 @section('styles')
-
 @endsection
 
 @section('content')
-    <div class="bg-gray-100 py-6 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md mx-auto">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">اضافة مواطن جديد</h2>
-
-            @include('citizens.partials.form')
+    @include('citizens.partials.form')
 
 
-            {{-- <form action="{{ route('citizens.store') }}" method="POST" class="space-y-4">
+    {{-- <form action="{{ route('citizens.store') }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
                     <label for="id" class="block font-medium text-gray-700">الهوية</label>
@@ -125,6 +120,11 @@
 
                 </div>
             </form> --}}
-        </div>
-    </div>
 @endsection
+
+@push('scripts')
+
+    {{-- <!-- Page JS --> --}}
+    <script src="../../assets/js/form-wizard-numbered.js"></script>
+    <script src="../../assets/js/form-wizard-validation.js"></script>
+@endpush

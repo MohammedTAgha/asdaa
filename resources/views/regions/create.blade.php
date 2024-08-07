@@ -7,7 +7,7 @@
             @csrf
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">اسم المنطقة:</label>
-                <input type="text" name="name" id="name" class="w-full px-4 py-2 border rounded-md" required>
+                <input type="text" name="name" id="name" class=" w-full px-4 py-2 border rounded-md" required>
             </div>
             <div class="mb-4">
                 <label for="position" class="block text-gray-700">موقع المنطقة:</label>
