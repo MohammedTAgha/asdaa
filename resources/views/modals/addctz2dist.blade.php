@@ -41,13 +41,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach(optional($report['existing'])['citizens'] ?? [] as $citizenId)
+                        {{-- @dd($report['existing']) --}}
+                        @foreach( $report['existing']['citizens']  as $citizen)
                         <tr>
-                            <td>{{ $citizenId ?? 'N/A' }}</td>
-                            <td>غير محدد</td>
+                            <td>{{ $citizen['id'] ?? 'N/A' }}</td>
+                            <td>{{ $citizen['firstname'] ?? 'N/A' }} {{ $citizen['lastname'] ?? 'N/A' }}</td>
                             <td>موجود مسبقاً</td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 @if ($report['updated'] || $report['updated']['count'] ==0 )
@@ -60,12 +61,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- @foreach($report['updated']['citizens'] as $citizenId)
+                        @foreach($report['updated']['citizens'] as $citizen)
                         <tr>
-                            <td>{{ $citizenId }}</td>
-                            <td>غير موجود</td>
+                            <td>{{ $citizen['id'] ?? 'N/A' }}</td>
+                            <td>{{ $citizen['firstname'] ?? 'N/A' }} {{ $citizen['lastname'] ?? 'N/A' }}</td>
                         </tr>
-                        @endforeach --}}
+                        @endforeach
                     </tbody>
                 </table>
                 @endif
