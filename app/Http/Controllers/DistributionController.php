@@ -130,6 +130,7 @@ class DistributionController extends Controller
 
     public function addCitizens(Request $request, $distributionId = null)
     {
+        Log::debug('test');
         $citizenIds = $request->input("citizens");
         $distributionId = $request->input("distributionId", $distributionId);
     
@@ -211,6 +212,7 @@ class DistributionController extends Controller
     
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::debug('xxxxx');
             Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
             Log::error("Error adding citizen: ", ["xxxx" =>$report ]);
             return redirect()->back()->with("danger", "حدث خطأ في الإضافة");

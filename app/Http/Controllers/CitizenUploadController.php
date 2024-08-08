@@ -124,7 +124,8 @@ class CitizenUploadController extends Controller // upload to a distributin exel
                 ->select('id', 'firstname', 'lastname')
                 ->get()
                 ->toArray();
-    
+            
+                // array_diff($existingInDistribution, $updatedCitizens)
             DB::commit();
     
             // Prepare a report with data about added, updated, and nonexistent citizens
@@ -134,8 +135,11 @@ class CitizenUploadController extends Controller // upload to a distributin exel
                     'citizens' => $addedCitizenData
                 ],
                 'existing' => [
-                    'count' => count($existingInDistribution) - $updated, // Citizens linked but not updated
-                    'citizens' => array_diff($existingInDistribution, $updatedCitizens)
+                    // 'count' => count($existingInDistribution) - $updated, // Citizens linked but not updated
+                    // 'citizens' => array_diff($existingInDistribution, $updatedCitizens)
+                    'count' => count($existingCitizenData), // Citizens linked but not updated
+                     'citizens' => $existingCitizenData,
+
                 ],
                 'updated' => [
                     'count' => $updated,
@@ -148,7 +152,7 @@ class CitizenUploadController extends Controller // upload to a distributin exel
                 ]
             ];
             $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
-    
+            
             return redirect()->back()->with('status', [
                 'type' => 'success',
                 'message' => "تم رفع الملف بنجاح. تمت إضافة {$report['added']['count']} مواطن، تم تحديث {$report['updated']['count']} مواطن، و {$report['nonexistent']['count']} غير موجود."
@@ -167,8 +171,9 @@ class CitizenUploadController extends Controller // upload to a distributin exel
     }
     public function exportReport(Request $request)
     {
+        
         $report = unserialize(base64_decode($request->query('report')));
-    
+        
         return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
     }
 
