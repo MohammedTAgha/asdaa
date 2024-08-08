@@ -46,7 +46,7 @@ Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->na
 
 Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
 Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
-
+Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
 // Route::get('/citizens/{id}', [CitizenController::class, 'show']);
 // Route::post('/citizens', [CitizenController::class, 'store']);
 // Route::put('/citizens/{id}', [CitizenController::class, 'update']);

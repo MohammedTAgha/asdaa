@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CitizensdDistReportExport;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
 use App\Models\DistributionCitizen;
@@ -9,7 +10,7 @@ use App\Models\Citizen;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
-
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class DistributionController extends Controller
@@ -191,6 +192,10 @@ class DistributionController extends Controller
                     'count' => count($existingInDistribution),
                     'citizens' => $existingCitizenData
                 ],
+                'updated' => [
+                    'count' => count($nonExistentCitizens),
+                    'citizens' => $nonExistentCitizens // This will be an array of IDs
+                ],
                 'nonexistent' => [
                     'count' => count($nonExistentCitizens),
                     'citizens' => $nonExistentCitizens // This will be an array of IDs
@@ -207,7 +212,7 @@ class DistributionController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
-    
+            Log::error("Error adding citizen: ", ["xxxx" =>$report ]);
             return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
         }
     }
@@ -232,6 +237,10 @@ class DistributionController extends Controller
         }
     }
 
+    public function exportReport($report)
+{
+    return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
+}
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();

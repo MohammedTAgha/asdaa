@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\CitizensdDistReportExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -10,8 +11,15 @@ use App\Imports\CitizensImport;
 use App\Models\Citizen;
 use Carbon\Carbon;
 
-class CitizenUploadController extends Controller
+class CitizenUploadController extends Controller // upload to a distributin exel 
 {
+    // protected $report;
+
+    // public function __construct()
+    // {
+    //     $this->report = $this->generateReport(); // Or set it later
+    // }
+    
     public function showUploadForm()
     {
         $distributions = Distribution::all();
@@ -50,6 +58,7 @@ class CitizenUploadController extends Controller
             $nonexistentCitizens = [];
             $addedCitizens = [];
             $updatedCitizens = [];
+            $updatedDetails = [];
     
             // Process each row of citizen data from the file
             foreach ($citizensData as $row) {
@@ -74,13 +83,30 @@ class CitizenUploadController extends Controller
     
                 // Update if citizen is already in the distribution; otherwise, add
                 if (in_array($citizenId, $existingInDistribution)) {
+                    // Fetch existing details for comparison
+                    $existingDetails = DB::table("distribution_citizens")
+                        ->where("distribution_id", $distributionId)
+                        ->where("citizen_id", $citizenId)
+                        ->first();
+    
+                    // Update the record
                     DB::table("distribution_citizens")
                         ->where("distribution_id", $distributionId)
                         ->where("citizen_id", $citizenId)
                         ->update($pivotData);
                     $updated++;
                     $updatedCitizens[] = $citizenId;
+    
+                    // Track changes for the report
+                    $changes = [];
+                    foreach ($pivotData as $key => $value) {
+                        if ($value != $existingDetails->$key) {
+                            $changes[$key] = ['old' => $existingDetails->$key, 'new' => $value];
+                        }
+                    }
+                    $updatedDetails[$citizenId] = $changes;
                 } else {
+                    // Insert new record
                     DB::table("distribution_citizens")->insert($pivotData);
                     $added++;
                     $addedCitizens[] = $citizenId;
@@ -107,28 +133,44 @@ class CitizenUploadController extends Controller
                     'count' => $added,
                     'citizens' => $addedCitizenData
                 ],
+                'existing' => [
+                    'count' => count($existingInDistribution) - $updated, // Citizens linked but not updated
+                    'citizens' => array_diff($existingInDistribution, $updatedCitizens)
+                ],
                 'updated' => [
                     'count' => $updated,
-                    'citizens' => $existingCitizenData
+                    'citizens' => $existingCitizenData,
+                    'details' => $updatedDetails
                 ],
                 'nonexistent' => [
                     'count' => count($nonexistentCitizens),
                     'citizens' => $nonexistentCitizens
                 ]
             ];
-            dd( $report);
-            // Render the report into an HTML view
-            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
     
-            // Redirect back with a success message and the report
-            return redirect()->back()
-                ->with('success', 'تم رفع الملف بنجاح. يرجى مراجعة التقرير للتفاصيل.')
-                ->with('addCitizensReportHtml', $reportHtml);
-    
+            return redirect()->back()->with('status', [
+                'type' => 'success',
+                'message' => "تم رفع الملف بنجاح. تمت إضافة {$report['added']['count']} مواطن، تم تحديث {$report['updated']['count']} مواطن، و {$report['nonexistent']['count']} غير موجود."
+            ])
+            ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+            ->with('addCitizensReportHtml', $reportHtml);
+
+
+            
+     
         } catch (\Exception $e) {
             DB::rollBack();
             // Handle any exceptions by rolling back the transaction and showing an error message
             return redirect()->back()->with('danger', 'حدث خطأ أثناء معالجة الملف: ' . $e->getMessage());
         }
     }
-}
+    public function exportReport(Request $request)
+    {
+        $report = unserialize(base64_decode($request->query('report')));
+    
+        return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
+    }
+
+
+    }

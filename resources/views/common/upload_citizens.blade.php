@@ -7,7 +7,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">إضافة مواطنين عن طريق ملف Excel</div>
-
+                                     
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-{{ session('status')['type'] }}">
