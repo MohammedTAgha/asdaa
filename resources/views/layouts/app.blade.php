@@ -70,60 +70,10 @@
 <link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
-<!--end::Global Stylesheets Bundle-->
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
-<!-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> -->
-<!-- custum styles  -->
+{{-- custom styles --}}
+<link href="{{ asset('custom/snakbar.css') }}" rel="stylesheet" type="text/css" />
 
-<!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
 
-<style>
-    /* Snackbar styles */
-    .snackbar {
-        visibility: hidden;
-        min-width: 250px;
-        margin-left: -125px;
-        background-color: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 2px;
-        padding: 16px;
-        position: fixed;
-        z-index: 1;
-        left: 50%;
-        bottom: 30px;
-        font-size: 17px;
-    }
-
-    .snackbar.show {
-        visibility: visible;
-        animation: fadein 0.5s, fadeout 0.5s 2.5s;
-    }
-
-    @keyframes fadein {
-        from {
-            bottom: 0;
-            opacity: 0;
-        }
-
-        to {
-            bottom: 30px;
-            opacity: 1;
-        }
-    }
-
-    @keyframes fadeout {
-        from {
-            bottom: 30px;
-            opacity: 1;
-        }
-
-        to {
-            bottom: 0;
-            opacity: 0;
-        }
-    }
-</style>
 </head>
 
 <body>
@@ -298,7 +248,7 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
 
                         {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
-                        
+
                         @yield('content')
                         <!-- Snackbar container -->
                         <x-alert />
@@ -408,11 +358,13 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <!-- Page JS -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            @if (session('addCitizensReportHtml'))
+        @if (session('addCitizensReportHtml'))
+            document.addEventListener('DOMContentLoaded', function() {
+
                 $('#addCitizensReportModal').modal('show');
-            @endif
-        });
+
+            });
+        @endif
     </script>
     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>
