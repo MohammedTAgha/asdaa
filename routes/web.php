@@ -49,6 +49,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
         Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
+        Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
+        Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
+
     });
 
     // Admin routes
