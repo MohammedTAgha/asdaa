@@ -47,16 +47,6 @@ Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->na
 Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
 Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
 Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
-// Route::get('/citizens/{id}', [CitizenController::class, 'show']);
-// Route::post('/citizens', [CitizenController::class, 'store']);
-// Route::put('/citizens/{id}', [CitizenController::class, 'update']);
-// Route::delete('/citizens/{id}', [CitizenController::class, 'delete']);
-
-// Route::get('/regions', [RegionController::class, 'index']);
-// Route::get('/regions/{id}', [RegionController::class, 'show']);
-// Route::post('/regions', [RegionController::class, 'store']);
-// Route::put('/regions/{id}', [RegionController::class, 'update']);
-// Route::delete('/regions/{id}', [RegionController::class, 'delete']);
 
 Route::get('/logout', function () {
     // Implement logout functionality
