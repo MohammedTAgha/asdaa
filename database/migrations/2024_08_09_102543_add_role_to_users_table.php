@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('committees', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->foreign('staff_id')->references('id')->on('staff');
-            $table->string('description')->nullable();
-            $table->string('note')->nullable();
-            $table->timestamps();
-        });
+        Schema::table('users', function (Blueprint $table) {
+    $table->foreignId('role_id')->constrained()->onDelete('cascade');
+    });
     }
 
     /**
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('committees');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };
