@@ -7,10 +7,10 @@
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Phone</th>
+                <th>الاسم</th>
+                <th>الهاتف</th>
                 <th>Image</th>
-                <th>Committee</th>
+                <th>اللجنة</th>
                 <th>Actions</th>
             </tr>
         </thead>

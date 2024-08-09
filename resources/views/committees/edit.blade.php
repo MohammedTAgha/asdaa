@@ -1,7 +1,7 @@
 @extends('dashboard')
 @section('content')
 <div class="container">
-    <h1>{{ isset($committee) ? 'Edit' : 'Create' }} Committee</h1>
+    <h1>{{ isset($committee) ? 'تحرير' : 'انشاء' }} لجنة</h1>
 
     <form action="{{ isset($committee) ? route('committees.update', $committee->id) : route('committees.store') }}" method="POST">
         @csrf
@@ -10,14 +10,14 @@
         @endif
 
         <div class="form-group">
-            <label for="name">Committee Name</label>
+            <label for="name">اسم اللجنة</label>
             <input type="text" name="name" class="form-control" value="{{ $committee->name ?? old('name') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="manager_id">Manager</label>
+            <label for="manager_id">المدير</label>
             <select name="manager_id" class="form-control">
-                <option value="">None</option>
+                <option value="">بلا</option>
                 @foreach($managers as $manager)
                     <option value="{{ $manager->id }}" {{ isset($committee) && $committee->manager_id == $manager->id ? 'selected' : '' }}>
                         {{ $manager->name }}
@@ -27,12 +27,12 @@
         </div>
 
         <div class="form-group">
-            <label for="description">Description</label>
+            <label for="description">الوصف و المهام</label>
             <textarea name="description" class="form-control">{{ $committee->description ?? old('description') }}</textarea>
         </div>
 
         <div class="form-group">
-            <label for="note">Note</label>
+            <label for="note">ملاحظات</label>
             <textarea name="note" class="form-control">{{ $committee->note ?? old('note') }}</textarea>
         </div>
 

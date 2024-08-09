@@ -4,11 +4,11 @@
 <div class="container">
     <div class="row justify-content-between align-items-center mb-4">
         <div class="col-auto">
-            <h1 class="mb-0">Committees</h1>
+            <h1 class="mb-0">اللجان</h1>
         </div>
         <div class="col-auto">
             <a href="{{ route('committees.create') }}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Create Committee
+                <i class="bi bi-plus-circle"></i> انشاء لجنة
             </a>
         </div>
     </div>
@@ -18,9 +18,9 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Manager</th>
-                    <th>Description</th>
+                    <th>الاسم</th>
+                    <th>المسؤول</th>
+                    <th>الوصف</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -34,18 +34,20 @@
                     <td>
                         <div class="btn-group">
                             <a href="{{ route('committees.show', $committee) }}" class="btn btn-sm btn-primary">
-                                <i class="bi bi-eye"></i>
+                                <i class="tf-icons ti ti-eye"></i>
                             </a>
-                            <a href="{{ route('committees.edit', $committee) }}" class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil"></i>
+                            <a href="{{ route('committees.edit', $committee->id) }}" class="btn btn-warning">
+                                <i class="tf-icons ti ti-edit"></i>
                             </a>
-                            <form action="{{ route('committees.destroy', $committee) }}" method="POST" style="display: inline-block;">
+                            <form action="{{ route('committees.destroy', $committee->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    <i class="bi bi-trash"></i>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="tf-icons ti ti-trash-x"></i>
                                 </button>
                             </form>
+        
+                        
                         </div>
                     </td>
                 </tr>
