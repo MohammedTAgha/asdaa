@@ -298,9 +298,10 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
 
                         {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
-                        <x-alert />
+                        
                         @yield('content')
                         <!-- Snackbar container -->
+                        <x-alert />
                         <div id="snackbar" class="snackbar"></div>
                     </div>
                     <!-- / Content -->
