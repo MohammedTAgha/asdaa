@@ -7,5 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Staff extends Model
 {
-    // Staff model can have more relationships if necessary
+    protected $table = 'staff';
+    protected $fillable = ['name', 'phone', 'image', 'committee_id'];
+
+    public function committee()
+    {
+        return $this->belongsTo(Committee::class);
+    }
+
+    public function isManager()
+    {
+        return $this->hasOne(Committee::class, 'manager_id');
+    }
 }

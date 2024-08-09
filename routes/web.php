@@ -12,6 +12,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChildController;
 use App\Http\Controllers\CitizenUploadController;
 use App\Imports\CitizenDistributionImport;
+use App\Http\Controllers\CommitteeController;
+use App\Http\Controllers\StaffController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +30,6 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Super Manager'])->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
-
         Route::resource('regions', RegionController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
@@ -39,8 +40,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('distributions', DistributionController::class);
         Route::resource('distribution_categories', DistributionCategoryController::class);
         Route::resource('children', ChildController::class);
-
-
+        Route::resource('committees', CommitteeController::class);
+        Route::resource('staff', StaffController::class);
         Route::resource('distribution_citizens', DistributionCitizenController::class);
         Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
         Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
