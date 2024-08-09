@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Staff;
-
+use Illuminate\Support\Facades\Log;
 
 class StaffController extends Controller
 {
@@ -25,17 +25,19 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
-            // 'image' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'committee_id' => 'nullable|exists:committees,id',
         ]);
+        
         $staff = new Staff($request->all());
-
+    
         if ($request->hasFile('image')) {
+            Log::info('has image ');
             $imagePath = $request->file('image')->store('staff_images', 'public');
+            Log::info('usl ');
+            Log::info($imagePath);
             $staff->image = $imagePath;
         }
     

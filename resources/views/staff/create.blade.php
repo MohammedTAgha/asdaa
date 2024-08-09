@@ -3,7 +3,15 @@
 @section('content')
 <div class="container">
     <h1>{{ isset($staff) ? 'Edit' : 'Create' }} Staff</h1>
-
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form action="{{ isset($staff) ? route('staff.update', $staff->id) : route('staff.store') }}" method="POST">
         @csrf
         @if(isset($staff))
