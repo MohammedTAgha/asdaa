@@ -2,7 +2,16 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CitizenController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\RegionRepresentativeController;
+use App\Http\Controllers\DistributionController;
+use App\Http\Controllers\DistributionCategoryController;
+use App\Http\Controllers\DistributionCitizenController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ChildController;
+use App\Http\Controllers\CitizenUploadController;
+use App\Imports\CitizenDistributionImport;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,10 +22,66 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+// Public routes
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/test', [HomeController::class, 'test'])->name('test');
+// Routes for authenticated users
+Route::middleware(['auth'])->group(function () {
+    // Super Manager routes
+    Route::middleware(['role:Super Manager'])->group(function () {
+        Route::resource('regions', RegionController::class);
+        Route::resource('representatives', RegionRepresentativeController::class);
+        // Additional routes for Super Manager...
+    });
 
-Route::get('/', function () {
-    return view('welcome');
+    // Admin routes
+    Route::middleware(['role:Admin,Super Manager'])->group(function () {
+        Route::resource('citizens', CitizenController::class);
+        Route::resource('distributions', DistributionController::class);
+        Route::resource('distribution_categories', DistributionCategoryController::class);
+        // Additional routes for Admin and Super Manager...
+    });
+
+    // Region Manager routes
+    Route::middleware(['role:Region Manager,Admin,Super Manager'])->group(function () {
+        Route::resource('regions', RegionController::class);
+        Route::resource('representatives', RegionRepresentativeController ::class);
+        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+        Route::resource('citizens', CitizenController::class);
+        Route::resource('distributions', DistributionController::class);
+        Route::resource('distribution_categories', DistributionCategoryController::class);
+        Route::resource('children', ChildController::class);
+    });
+
+    // Guest routes
+    Route::middleware(['role:Guest'])->group(function () {
+        Route::resource('regions', RegionController::class);
+        Route::resource('representatives', RegionRepresentativeController ::class);
+        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+        Route::resource('citizens', CitizenController::class);
+        Route::resource('distributions', DistributionController::class);
+        Route::resource('distribution_categories', DistributionCategoryController::class);
+        Route::resource('children', ChildController::class);
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::get('/test', [HomeController::class, 'test'])->name('test');
+    });
 });
+
+// Logout route
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect()->route('home');
+})->name('logout');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('/dashboard', function () {
     return view('dashboard');
