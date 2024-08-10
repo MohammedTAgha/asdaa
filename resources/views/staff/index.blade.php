@@ -19,7 +19,10 @@
             <tr>
                 <td>{{ $member->name }}</td>
                 <td>{{ $member->phone }}</td>
-                <td><img src="{{ asset('storage/images/' . $member->image) }}" alt="Image" width="50" height="50"></td>
+                <td  class="avatar avatar-lg me-2">
+                    <img src="{{ asset('storage/' . $member->image) }}" alt="member" class="rounded-circle" width="50" height="50">
+                    
+                </td>
                 <td>{{ $member->committee ? $member->committee->name : 'N/A' }}</td>
                 <td>
                     <a href="{{ route('staff.edit', $member->id) }}" class="btn btn-warning">Edit</a>

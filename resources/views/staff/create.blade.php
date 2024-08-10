@@ -14,15 +14,15 @@
     @endif
 
     
-    <form action="{{ isset($staff) ? route('staff.update', $staff->id) : route('staff.store') }}" method="POST">
+    <form action="{{ isset($staff) ? route('staff.update', $staff->id) : route('staff.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if(isset($staff))
             @method('PUT')
         @endif
-        <div class="form-group">
+        {{-- <div class="form-group">
             <label for="id">الاسم</label>
             <input type="text" name="id" class="form-control" value="{{ $staff->id ?? old('id') }}" required>
-        </div>
+        </div> --}}
         <div class="form-group">
             <label for="name">الاسم</label>
             <input type="text" name="name" class="form-control" value="{{ $staff->name ?? old('name') }}" required>

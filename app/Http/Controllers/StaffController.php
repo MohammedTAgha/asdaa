@@ -25,23 +25,27 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
+        Log::info('xxxxxxxxxxxxxxxxxx');
         $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         
-        $staff = new Staff($request->all());
-    
+        $data = $request->all();
+        // dd(['data'=>$data]);
+        // Handle the image upload
         if ($request->hasFile('image')) {
             Log::info('has image ');
             $imagePath = $request->file('image')->store('staff_images', 'public');
-            Log::info('usl ');
+            Log::info('has image ');
             Log::info($imagePath);
-            $staff->image = $imagePath;
+            $data['image'] = $imagePath;
+        }else {
+            Log::info('No image uploaded.');
         }
     
-        $staff->save();
+        Staff::create($data);
     
         return redirect()->route('staff.index')->with('success', 'Staff created successfully.');
     
@@ -68,18 +72,25 @@ class StaffController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'committee_id' => 'nullable|exists:committees,id',
         ]);
-
+        Log::info( '-----');
         $staff = Staff::findOrFail($id);
+        Log::info( '-----');
+
+        Log::info( $staff);
         $staff->fill($request->all());
-    
+        Log::info( 'staff updated');
+        
         if ($request->hasFile('image')) {
+            Log::info(' image uploaded.');
             // Delete the old image if exists
             if ($staff->image) {
                 Storage::disk('public')->delete($staff->image);
             }
-    
+            
             $imagePath = $request->file('image')->store('staff_images', 'public');
             $staff->image = $imagePath;
+            Log::info(' image pa.');
+            Log::info($imagePath);
         }
     
         $staff->save();

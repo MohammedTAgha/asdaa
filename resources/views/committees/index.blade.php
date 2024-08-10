@@ -20,6 +20,7 @@
                     <th>ID</th>
                     <th>الاسم</th>
                     <th>المسؤول</th>
+                    <th>الاعضاء</th>
                     <th>الوصف</th>
                     <th>Actions</th>
                 </tr>
@@ -30,6 +31,20 @@
                     <td>{{ $committee->id }}</td>
                     <td>{{ $committee->name }}</td>
                     <td>{{ $committee->manager->name ?? 'N/A' }}</td>
+                    <td>
+                        <div class="d-flex align-items-center avatar-group my-3">
+                            @foreach($committee->staff->take(3) as $staff)
+                                <div class="avatar">
+                                    <img src="{{ asset('storage/' . $staff->image) }}" alt="{{ $staff->name }}" class="rounded-circle pull-up">
+                                </div>
+                            @endforeach
+                            @if($committee->staff->count() > 3)
+                                <div class="avatar">
+                                    <span class="avatar-initial rounded-circle pull-up" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="{{ $committee->staff->count() - 3 }} more">+{{ $committee->staff->count() - 3 }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </td>
                     <td>{{ $committee->description }}</td>
                     <td>
                         <div class="btn-group">
