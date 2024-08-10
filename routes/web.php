@@ -14,6 +14,8 @@ use App\Http\Controllers\CitizenUploadController;
 use App\Imports\CitizenDistributionImport;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:Super Manager'])->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
+
+        Route::resource('users', UserController::class);
         Route::resource('regions', RegionController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
@@ -65,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Region Manager routes
     Route::middleware(['role:Region Manager,Admin,Super Manager'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::resource('regions', RegionController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
