@@ -15,6 +15,11 @@ class Staff extends Model
         return $this->belongsTo(Committee::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     public function isManager()
     {
         return $this->hasOne(Committee::class, 'manager_id');
