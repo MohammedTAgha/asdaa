@@ -166,8 +166,15 @@
                     </li>
                     <li class="menu-item {{ request()->routeIs('users.index') ? 'active' : '' }}">
                         <a href="{{ route('users.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-flag-3"></i>
+                            <i class="menu-icon tf-icons ti ti-users"></i>
                             <div>المستخدمين</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('files.index') ? 'active' : '' }}">
+                        <a href="{{ route('files.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons ti ti-folder-plus"></i>
+                            <div>مدير الملفات</div>
                         </a>
                     </li>
                 </ul>

@@ -11,7 +11,7 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:10240', // Example validation
+            'file' => 'required|file|max:100240', // Example validation
         ]);
 
         $filePath = $request->file('file')->store('uploads', 'public');
