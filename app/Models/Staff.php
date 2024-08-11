@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Staff extends Model
 {
     protected $table = 'staff';
+
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+
     protected $fillable = ['name', 'phone', 'image', 'committee_id'];
 
     public function committee()

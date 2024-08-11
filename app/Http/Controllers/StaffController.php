@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Committee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Committee;
 
 use App\Models\Staff;
 use Illuminate\Support\Facades\Log;
@@ -30,6 +30,7 @@ class StaffController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:15',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'committee_id' => 'nullable|exists:committees,id',
         ]);
         
         $data = $request->all();

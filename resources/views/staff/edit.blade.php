@@ -20,8 +20,8 @@
             @method('PUT')
         @endif
         <div class="form-group">
-            <label for="id">الاسم</label>
-            <input type="text" name="id" class="form-control" value="{{ $staff->id ?? old('id') }}" required>
+            <label for="id">المعرف</label>
+            <input type="text" name="id" class="form-control" value="{{ $staff->id ?? old('id') }}" disabled required>
         </div>
         <div class="form-group">
             <label for="name">الاسم</label>

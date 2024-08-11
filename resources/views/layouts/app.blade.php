@@ -77,7 +77,7 @@
 </head>
 
 <body>
-
+{{-- @dd(auth()->user()) --}}
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
@@ -200,7 +200,7 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="{{ asset('storage/' . auth()->user()->staff->image) }}" alt="Profile" class="h-auto rounded-circle" />
+                                        <img src="{{   asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg')  }}" alt="Profile" class="h-auto rounded-circle" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -209,7 +209,7 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="{{ asset('storage/' . auth()->user()->staff->image) }}" alt="Profile"
+                                                        <img src="{{ asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg') }}" alt="Profile"
                                                             class="h-auto rounded-circle" />
                                                     </div>
                                                 </div>
