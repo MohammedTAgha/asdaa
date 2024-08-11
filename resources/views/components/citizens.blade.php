@@ -4,114 +4,134 @@
     display: none;
 }
 </style>
-<form id="citizens-form" method="POST"
-     action="{{  route('distributions.addCitizens', $distributionId)  }}">
-    @csrf
-    {{-- <input type="hidden" name="distributionId" value="{{ old('distributionId', $distributionId ?? '') }}"> --}}
-    <input type="hidden" name="citizen_ids" id="citizen-ids">
-    
-   
-    <div class="mt-4 w-full ">
-        @if ($distributionId)
-             <input type="hidden" name="distributionId" value="{{$distributionId}}" >
-            <button type="submit" class=" flex-end px-4 py-2 bg-green-600 text-white rounded-md">
-                اضافة التحديد لكشف
-                {{ $distributionId }} </button>
-        @else
-            <button type="button" class="flex-end px-4 py-2 bg-green-600 text-white rounded-md" id="open-modal">
-                اضافة التحديد لكشف
-                </button>
-        @endif
-    </div>
-    <input type="text" id="searchbar"  class="form-control" placeholder='بحث فوري ...'>
-    <div class="table-container
-    overflow-x-auto mb-4">
-    <table id="citizens-table" class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr class="text-start text-gray-400 fw-bolder  text-uppercase gs-0">
-                <th class="w-8px p-0">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                        <input class="form-check-input" type="checkbox" id="select-all" value="1"
-                            data-kt-check="true" data-kt-check-target="#kt_customers_table .form-check-input" />
-                    </div>
-                </th>
-                <th class="min-w-90px">الهوية</th>
-                <th class="min-w-280px">............الاسم.........</th>
-                <th class="min-w-90px">تاريخ الميلاد</th>
-                <th class="min-w-40px">الجنس</th>
-                <th class="min-w-100px ">اسم الزوجة</th>
-                <th class="min-w-50px ">الحالة الاجتماعية</th>
-                <th class="min-w-50px ">المنطقة</th>
-                <th class="min-w-50px ">ملاحظة</th>
-                <th class="min-w-50px "> - </th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach ($citizens as $citizen)
-                <tr
-                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <!--begin::Checkbox-->
-                    <td class=" w-8px p-0g">
-                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                            <input class="form-check-input" type="checkbox" name="citizens[]"
-                                value="{{ $citizen->id }}" />
-                        </div>
-                    </td>
-                    <!--begin::Checkbox-->
-                    <td class="px-2 py-1 bg-gray-50">
-                        <a href="{{ route('citizens.show', $citizen->id) }}"
-                            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
-                            {{ $citizen->id }}
-                        </a>
-                    </td>
-                    <td class="px-2 py-1">
-                        <a href="{{ route('citizens.show', $citizen->id) }}"
-                            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white">
-                            {{ $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname }}
-                        </a>
-                    </td>
-                    <td class="px-2 py-1 bg-gray-50">{{ $citizen->date_of_birth }}</td>
-                    <td class="px-2 py-1">{{ $citizen->gender }}</td>
-                    <td class="px-2 py-1 bg-gray-50">{{ $citizen->wife_name }}</td>
-                    <td class="px-2 py-1">{{ $citizen->social_status }}</td>
-                    <td class="px-2 py-1 bg-gray-50">{{ $citizen->region->name ?? 'N/A' }}</td>
-                    <td class="px-2 py-1">{{ $citizen->note }}</td>
-                    <td class="px-2 py-1 bg-gray-50">
-                        <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    </div>
-    @if (!$distributionId)
-<div id="distribution-modal"
-    class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75 hidden">
-        <div class="bg-white p-6 rounded-md shadow-md w-1/3">
-            <h2 class="text-lg font-semibold mb-4">Select Distribution</h2>
-            
-                
-                <select name="distributionId" class="form-select mt-1 block w-full mb-4">
-                    <option value="">Select Distribution</option>
+
+<!-- Modal -->
+<div class="modal fade" id="distributionModal" tabindex="-1" aria-labelledby="distributionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="distributionModalLabel">Select Distribution</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select id="selectedDistributionId" class="form-control">
+                    <!-- Populate with distribution options from your database -->
                     @foreach ($distributions as $distribution)
                         <option value="{{ $distribution->id }}">{{ $distribution->name }}</option>
                     @endforeach
                 </select>
-                <div class="flex justify-end">
-                    <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-md mr-2"
-                    id="close-modal">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Confirm</button>
-                </div>
-            
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="select-distribution-btn" class="btn btn-primary">Select</button>
+            </div>
         </div>
     </div>
-@endif
-</form> 
+</div>
 
+<form id="add-citizens-form" action="{{ route('distributions.addCitizens') }}" method="POST">
+    @csrf
+    <input type="hidden" id="distributionId" name="distributionId" value="{{ $distributionId ?? '' }}">
+    <input type="hidden" name="citizens" value="{{ implode(',', $citizenIds ?? []) }}">
+    
+    <button type="button" id="add-citizens-btn" class="btn btn-primary">Add Citizens</button>
+</form>
+
+<table id="citizens-table" class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+        <tr class="text-start text-gray-400 fw-bolder text-uppercase gs-0">
+            <th class="w-8px p-0">
+                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                    <input class="form-check-input" type="checkbox" id="select-all" value="1"/>
+                </div>
+            </th>
+            <th class="min-w-90px">الهوية</th>
+            <th class="min-w-280px">الاسم</th>
+            <th class="min-w-90px">تاريخ الميلاد</th>
+            <th class="min-w-40px">الجنس</th>
+            <th class="min-w-100px ">اسم الزوجة</th>
+            <th class="min-w-50px ">الحالة الاجتماعية</th>
+            <th class="min-w-50px ">المنطقة</th>
+            <th class="min-w-50px ">ملاحظة</th>
+            <th class="min-w-50px "> - </th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be populated by DataTables -->
+    </tbody>
+</table>
 
 
 @push('scripts')
-    <script>
+<script>
+$(document).ready(function() {
+    console.log('load')
+    var table = $('#citizens-table').DataTable({
+        processing: false,
+        serverSide: true,
+        ajax: "{{ route('citizens.data') }}",
+        columns: [
+            { data: 'checkbox', name: 'checkbox', orderable: false, searchable: false },
+            { data: 'id', name: 'id' },
+            { data: 'name', name: 'name' },
+            { data: 'date_of_birth', name: 'date_of_birth' },
+            { data: 'gender', name: 'gender' },
+            { data: 'wife_name', name: 'wife_name' },
+            { data: 'social_status', name: 'social_status' },
+            { data: 'region', name: 'region.name' },
+            { data: 'note', name: 'note' },
+            { data: 'action', name: 'action', orderable: false, searchable: false }
+        ],
+        'order': [[1, 'asc']],
+    });
+
+    // Handle select-all checkbox
+    $('#select-all').on('click', function() {
+        var rows = table.rows({ 'search': 'applied' }).nodes();
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
+    });
+
+    $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
+        console.log('clicked')
+        if (!this.checked) {
+            var el = $('#select-all').get(0);
+            if (el && el.checked && ('indeterminate' in el)) {
+                el.indeterminate = true;
+            }
+        }
+    });
+
+    //
+   
+
+    // When the user selects a distribution from the modal
+    $('#select-distribution-btn').click(function() {
+        var distributionId = $('#selectedDistributionId').val();
+        $('#distributionId').val(distributionId);
+        $('#add-citizens-form').submit();
+    });
+});
+$('#add-citizens-btn').click(function(e) {
+        e.preventDefault();
+
+        var selectedCitizens = $('input[name="citizens[]"]:checked').map(function() {
+            return $(this).val();
+        }).get();
+        console.log(selectedCitizens)
+        if (selectedCitizens.length === 0) {
+            alert('Please select at least one citizen.');
+            return;
+        }
+        $('input[name="citizens"]').val(selectedCitizens.join(','));
+        // Check if the distributionId is provided
+        if ($('#distributionId').val()) {
+            $('#add-citizens-form').submit();
+        } else {
+            $('#distributionModal').modal('show');
+        }
+    });
+</script>
+    {{-- <script>
         $(document).ready(function() {
             oTable = $('#citizens-table').DataTable({
                 responsive: true,
@@ -151,5 +171,5 @@
                 $('#distribution-modal').addClass('hidden');
             });
         });
-    </script>
+    </script> --}}
 @endpush

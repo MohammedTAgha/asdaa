@@ -27,12 +27,14 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
     Route::middleware(['role:Super Manager'])->group(function () {
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
+        Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
 
         Route::resource('users', UserController::class);
         Route::resource('regions', RegionController::class);
@@ -76,7 +78,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/files', [FileController::class, 'index'])->name('files.index');
         Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
         Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-    
+
         Route::resource('regions', RegionController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');

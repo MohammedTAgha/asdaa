@@ -131,9 +131,12 @@ class DistributionController extends Controller
     public function addCitizens(Request $request, $distributionId = null)
     {
         Log::debug('test');
-        $citizenIds = $request->input("citizens");
+        
+        $citizenIds = explode(',', $request->input('citizens'));
+        // dd($citizenIds);
+
         $distributionId = $request->input("distributionId", $distributionId);
-    
+        Log::debug($citizenIds);
         if (empty($citizenIds)) {
             return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم");
         }

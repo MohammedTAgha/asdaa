@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
 use Illuminate\Support\Facades\Storage;
-
+use Yajra\DataTables\Facades\DataTables;
 class CitizenController extends Controller
 {
     public function index(Request $request)
@@ -86,6 +86,28 @@ class CitizenController extends Controller
             return response()->json($citizens);
         }
     return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions','distributionId'));
+    }
+
+    public function getData()
+    {
+        $citizens = Citizen::with('region')
+            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'gender', 'wife_name', 'social_status', 'region_id', 'note']);
+
+        return DataTables::of($citizens)
+            ->addColumn('region', function ($citizen) {
+                return $citizen->region->name ?? 'N/A';
+            })
+            ->addColumn('name', function ($citizen) {
+                return $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname;
+            })
+            ->addColumn('action', function ($citizen) {
+                return '<a href="'.route('citizens.edit', $citizen->id).'" class="btn btn-sm btn-primary">Edit</a>';
+            })
+            ->addColumn('checkbox', function ($citizen) {
+                return '<input type="checkbox" name="citizens[]" value="'.$citizen->id.'">';
+            })
+            ->rawColumns(['action', 'checkbox'])
+            ->make(true);
     }
 
     public function query(Request $request)
