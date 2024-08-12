@@ -27,28 +27,26 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
     Route::middleware(['role:Super Manager'])->group(function () {
+      
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
         Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
-
-        Route::resource('users', UserController::class);
-        Route::resource('regions', RegionController::class);
-        Route::resource('representatives', RegionRepresentativeController::class);
-        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
-        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
-        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
         Route::resource('citizens', CitizenController::class);
         Route::resource('distributions', DistributionController::class);
         Route::resource('distribution_categories', DistributionCategoryController::class);
         Route::resource('children', ChildController::class);
-        Route::resource('committees', CommitteeController::class);
-        Route::resource('staff', StaffController::class);
+        Route::resource('representatives', RegionRepresentativeController::class);
+        Route::resource('regions', RegionController::class);
+
+        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+       
         Route::resource('distribution_citizens', DistributionCitizenController::class);
         Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
         Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
@@ -60,13 +58,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
         Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
 
+        Route::resource('users', UserController::class);
+        Route::resource('committees', CommitteeController::class);
+        Route::resource('staff', StaffController::class);
+
     });
 
     // Admin routes
     Route::middleware(['role:Admin,Super Manager'])->group(function () {
-        Route::resource('citizens', CitizenController::class);
-        Route::resource('distributions', DistributionController::class);
-        Route::resource('distribution_categories', DistributionCategoryController::class);
+        
         // Additional routes for Admin and Super Manager...
     });
 
