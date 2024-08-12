@@ -185,34 +185,9 @@
         @endif
         <div class="card px-4">
             <div class="card-header d-flex justify-content-between">
-
                 <div>
-                    {{-- <div class="row mb-3">
-                        <div class="col-md-6">
-                            <input type="text" id="search" class="form-control" placeholder="Search citizens...">
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#advancedFilterModal">
-                                Advanced Filter
-                            </button>
-                        </div>
-                        <div class="col-md-2">
-                            <select id="orderBy" class="form-select">
-                                <option value="id">Order by ID</option>
-                                <option value="firstname">Order by First Name</option>
-                                <option value="lastname">Order by Last Name</option>
-                                <option value="date_of_birth">Order by Date of Birth</option>
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button id="exportBtn" class="btn btn-success">Export to Excel</button>
-                        </div>
-                    </div> --}}
+  
                     <div class="ml-4 relative d-flex">
-                        {{-- <h2 class="card-title mb-0 fs-4 text-dark fw-bolder me-2">كشف المواطنين</h2>
-                        <span class="h-13px border-gray-200 border-start mx-2"></span> --}}
-                        <!-- Search Input -->
                         <form method="GET" action="{{ route('citizens.index') }}" class="me-4">
                             <div class="flex items-center w-full mx-2 me-6">
                                 <div class="col-md-6">

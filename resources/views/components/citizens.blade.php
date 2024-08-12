@@ -37,9 +37,9 @@
     <button type="button" id="add-citizens-btn" class="btn btn-primary">Add Citizens</button>
 </form>
 
-<table id="citizens-table" class="min-w-full divide-y divide-gray-200">
+<table id="citizens-table"   class="table table-bordered table-condensed table-striped">
     <thead class="bg-gray-50">
-        <tr class="text-start text-gray-400 fw-bolder text-uppercase gs-0">
+        <tr class="text-start ">
             <th class="w-8px p-0">
                 <div class="form-check form-check-sm form-check-custom form-check-solid">
                     <input class="form-check-input" type="checkbox" id="select-all" value="1"/>
@@ -173,3 +173,5 @@ $('#add-citizens-btn').click(function(e) {
         });
     </script> --}}
 @endpush
+
+
