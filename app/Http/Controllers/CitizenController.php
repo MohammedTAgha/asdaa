@@ -14,6 +14,7 @@ use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+
 class CitizenController extends Controller
 {
     public function index(Request $request)
@@ -22,14 +23,14 @@ class CitizenController extends Controller
         $query = Citizen::query();
         $regions = Region::all();
         $distributions = Distribution::all();
-        $distribution=null;
-        $distributionId=$request->input('distributionId');
-        if($request->has('distributionId') && !empty($request->input('distributionId'))){
-            $distribution=Distribution::find($request->input('distributionId'));
+        $distribution = null;
+        $distributionId = $request->input('distributionId');
+        if ($request->has('distributionId') && !empty($request->input('distributionId'))) {
+            $distribution = Distribution::find($request->input('distributionId'));
         }
 
-         // Apply filters based on query parameters
-         if ($request->has('id') && !empty($request->input('id'))) {
+        // Apply filters based on query parameters
+        if ($request->has('id') && !empty($request->input('id'))) {
             $query->where('id', $request->input('id'));
         }
         if ($request->has('first_name') && !empty($request->input('first_name'))) {
@@ -49,17 +50,17 @@ class CitizenController extends Controller
         if ($request->has('search') && !empty($request->input('search'))) {
 
             $query->where('firstname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('id', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+                ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+                ->orWhere('note', 'like', '%' . $request->input('search') . '%');
         }
 
 
         // Apply age filter
-        if ($request->has('age') ) {
+        if ($request->has('age')) {
             $query->where('age', $request->input('age'));
         }
 
@@ -78,22 +79,61 @@ class CitizenController extends Controller
 
 
         $perPage = $request->input('per_page', 10);
-       // $citizens = Citizen::all();
+        // $citizens = Citizen::all();
 
         $citizens = $query->get();
-        if($request->has('returnjson') && $request->input('returnjson')==1){
+        if ($request->has('returnjson') && $request->input('returnjson') == 1) {
 
             return response()->json($citizens);
         }
-    return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage','regions','distributions','distributionId'));
+        return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage', 'regions', 'distributions', 'distributionId'));
     }
 
-    public function getData()
+    public function getData(Request $request)
     {
-        $citizens = Citizen::with('region')
+        Log::alert('search --');
+        Log::alert($request->search);
+        $query = Citizen::with('region')
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'gender', 'wife_name', 'social_status', 'region_id', 'note']);
-
-        return DataTables::of($citizens)
+    
+        if ($request->has('search') && !empty($request->search)) {
+            $query->where(function($q) use ($request) {
+                $q->where('firstname', 'like', '%' . $request->search . '%')
+                  ->orWhere('secondname', 'like', '%' . $request->search . '%')
+                  ->orWhere('thirdname', 'like', '%' . $request->search . '%')
+                  ->orWhere('lastname', 'like', '%' . $request->search . '%')
+                  ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+                  ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+            });
+        }
+    
+        if ($request->has('regions') && !empty($request->regions)) {
+            $query->whereIn('region_id', $request->regions);
+        }
+    
+        if ($request->has('minAge') && $request->minAge != null) {
+            // Add your age filtering logic
+        }
+    
+        if ($request->has('maxAge') && $request->maxAge != null) {
+            // Add your age filtering logic
+        }
+    
+        if ($request->has('living_status') && $request->living_status != null) {
+            $query->where('living_status', $request->living_status);
+        }
+    
+        if ($request->has('social_status') && $request->social_status != null) {
+            $query->where('social_status', $request->social_status);
+        }
+    
+        if ($request->has('gender') && $request->gender != null) {
+            $query->where('gender', $request->gender);
+        }
+    
+        return DataTables::of($query)
             ->addColumn('region', function ($citizen) {
                 return $citizen->region->name ?? 'N/A';
             })
@@ -114,7 +154,7 @@ class CitizenController extends Controller
     {
         $query = Citizen::query();
 
-       
+
 
         // Execute query and get results
         $citizens = $query->get();
@@ -125,15 +165,15 @@ class CitizenController extends Controller
 
     public function show($id)
     {
-        $citizens=Citizen::all();
+        $citizens = Citizen::all();
         $citizen = Citizen::with('children')->findOrFail($id);
-        return view('citizens.show', compact('citizen','citizens'));
+        return view('citizens.show', compact('citizen', 'citizens'));
     }
 
     public function create()
     {
         $regions = Region::all();
-        return view('citizens.create',compact('regions'));
+        return view('citizens.create', compact('regions'));
     }
 
     public function store(Request $request)
@@ -161,7 +201,7 @@ class CitizenController extends Controller
         ];
 
         Citizen::create($data);
-       return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
+        return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
 
     public function edit($id)
@@ -173,7 +213,7 @@ class CitizenController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-        
+
             'id' => 'required|string|max:255',
             'firstname' => 'required|string',
             'secondname' => 'nullable|string',
@@ -196,23 +236,24 @@ class CitizenController extends Controller
 
         $citizen = Citizen::findOrFail($id);
         $citizen->update($request->all());
-        return redirect()->route('citizens.index')->with('success', 'تم تحديث بيانات '. $citizen->firstname.' '.$citizen->lasttname);
+        return redirect()->route('citizens.index')->with('success', 'تم تحديث بيانات ' . $citizen->firstname . ' ' . $citizen->lasttname);
     }
 
     public function downloadTemplate()
     {
         return Excel::download(new CitizensTemplateExport, 'الترويسة.xlsx');
     }
-    
+
     public function import()
     {
-        return(view('citizens.import'));
+        return (view('citizens.import'));
     }
 
     public function export(Request $request)
     {
+        dd('export');
         $query = Citizen::query();
-        
+
         // Apply the same filters as in the index method
         if ($request->has('id') && !empty($request->input('id'))) {
             $query->where('id', $request->input('id'));
@@ -230,14 +271,14 @@ class CitizenController extends Controller
             $query->where('lastname', 'like', '%' . $request->input('last_name') . '%');
         }
         if ($request->has('search') && !empty($request->input('search'))) {
-            $query->where(function($q) use ($request) {
+            $query->where(function ($q) use ($request) {
                 $q->where('firstname', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('id', 'like', '%' . $request->input('search') . '%')
-                  ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+                    ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+                    ->orWhere('note', 'like', '%' . $request->input('search') . '%');
             });
         }
         if ($request->has('age')) {
@@ -249,9 +290,9 @@ class CitizenController extends Controller
         if ($request->has('regions') && !empty($request->input('regions'))) {
             $query->whereIn('region_id', $request->regions);
         }
-    
+
         $citizens = $query->get();
-    
+
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
 
@@ -261,10 +302,10 @@ class CitizenController extends Controller
         $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
-    
+
         $file = $request->file('excel_file');
         $import = new CitizensImport;
-    
+
         try {
             $initialCount = Citizen::count(); // Count before import
             Excel::import($import, $file);
@@ -275,9 +316,9 @@ class CitizenController extends Controller
             Log::error("catch error:", ["-->>" => $e->failures()]);
             return back()->withErrors($e->failures());
         }
-    
+
         $failedRows = $import->failedRows;
-    
+
         // Generate Excel file with failed rows
         $failedExcelPath = null;
         if (!empty($failedRows)) {
@@ -293,11 +334,11 @@ class CitizenController extends Controller
             'failedRows' => $import->failedRows,
             'failedExcelPath' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
         ];
-    // Flash the result data to the session
-    session()->flash('import_result', $result);
+        // Flash the result data to the session
+        session()->flash('import_result', $result);
 
-    // Redirect to the index page
-    return redirect()->route('citizens.index');
+        // Redirect to the index page
+        return redirect()->route('citizens.index');
     }
     public function destroy($id)
     {
@@ -306,4 +347,3 @@ class CitizenController extends Controller
         return redirect()->route('citizens.index')->with('success', 'Citizen deleted successfully.');
     }
 }
-
