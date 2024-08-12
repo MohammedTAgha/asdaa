@@ -27,6 +27,26 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/files', [FileController::class, 'index'])->name('files.index');
+Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
+Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
+// Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
+
+Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+
+Route::resource('distribution_citizens', DistributionCitizenController::class);
+Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
+Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
+Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
+Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
+
+Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
+Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
+Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
+Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
@@ -41,23 +61,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('children', ChildController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::resource('regions', RegionController::class);
-
-        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
-        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
-        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
-       
-        Route::resource('distribution_citizens', DistributionCitizenController::class);
-        Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
-        Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
-        Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
-        Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
-
-        Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
-        Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
-        Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
-        Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
-
+     
         Route::resource('users', UserController::class);
         Route::resource('committees', CommitteeController::class);
         Route::resource('staff', StaffController::class);
@@ -72,23 +76,23 @@ Route::middleware(['auth'])->group(function () {
 
     // Region Manager routes
     Route::middleware(['role:Region Manager,Admin,Super Manager'])->group(function () {
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::get('/files', [FileController::class, 'index'])->name('files.index');
-        Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
-        Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-
-        Route::resource('regions', RegionController::class);
-        Route::resource('representatives', RegionRepresentativeController::class);
-        Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
-        Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
-        Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-        Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
-        Route::resource('citizens', CitizenController::class);
-        Route::resource('distributions', DistributionController::class);
-        Route::resource('distribution_categories', DistributionCategoryController::class);
-        Route::resource('children', ChildController::class);
+        // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // Route::get('/files', [FileController::class, 'index'])->name('files.index');
+        // Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
+        // Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
+        // Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
+        // Route::resource('regions', RegionController::class);
+        // Route::resource('representatives', RegionRepresentativeController::class);
+        // Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+        // Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
+        // Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+        // Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+        // Route::resource('citizens', CitizenController::class);
+        // Route::resource('distributions', DistributionController::class);
+        // Route::resource('distribution_categories', DistributionCategoryController::class);
+        // Route::resource('children', ChildController::class);
     });
 
     // Guest routes
