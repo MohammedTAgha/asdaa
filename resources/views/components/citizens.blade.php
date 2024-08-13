@@ -33,7 +33,7 @@
     <div>
 
         <div class="ml-4 relative d-flex">
-            <form method="GET"  class="me-4">
+            <form method="GET" class="me-4">
                 <div class="flex items-center w-full mx-2 me-6">
                     <div class="col-md-6">
                         <input type="text" id="searchctz" name="search" class="form-control"
@@ -54,7 +54,7 @@
             <span class="ti-xs ti ti-filter-off ms-1"></span>
         </button>
         {{-- form  --}}
-        <form  method="GET"> 
+        <form method="GET">
             <!-- Add hidden inputs for each filter parameter -->
             <input type="hidden" name="id" value="{{ request('id') }}">
             <input type="hidden" name="first_name" value="{{ request('first_name') }}">
@@ -185,31 +185,31 @@
 
     <button type="button" id="add-citizens-btn" class="btn btn-primary">Add Citizens</button>
 </form>
-
-<table id="citizens-table" class="table table-bordered table-condensed table-striped">
-    <thead class="bg-gray-50">
-        <tr class="text-start ">
-            <th class="w-8px p-0">
-                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                    <input class="form-check-input" type="checkbox" id="select-all" value="1" />
-                </div>
-            </th>
-            <th class="min-w-90px">الهوية</th>
-            <th class="min-w-280px">الاسم</th>
-            <th class="min-w-90px">تاريخ الميلاد</th>
-            <th class="min-w-40px">الجنس</th>
-            <th class="min-w-100px ">اسم الزوجة</th>
-            <th class="min-w-50px ">الحالة الاجتماعية</th>
-            <th class="min-w-50px ">المنطقة</th>
-            <th class="min-w-50px ">ملاحظة</th>
-            <th class="min-w-50px "> - </th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Data will be populated by DataTables -->
-    </tbody>
-</table>
-
+<div class="table-responsive">
+    <table id="citizens-table" class="table  table-bordered table-hover table-condensed table-striped">
+        <thead class="bg-gray-50">
+            <tr class="text-start ">
+                <th class="w-8px p-0">
+                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                        <input class="form-check-input" type="checkbox" id="select-all" value="1" />
+                    </div>
+                </th>
+                <th class="min-w-90px">الهوية</th>
+                <th class="min-w-280px">الاسم</th>
+                <th class="min-w-90px">تاريخ الميلاد</th>
+                <th class="min-w-40px">الجنس</th>
+                <th class="min-w-100px ">اسم الزوجة</th>
+                <th class="min-w-50px ">الحالة الاجتماعية</th>
+                <th class="min-w-50px ">المنطقة</th>
+                <th class="min-w-50px ">ملاحظة</th>
+                <th class="min-w-50px "> - </th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated by DataTables -->
+        </tbody>
+    </table>
+</div>
 
 @push('scripts')
     <script>
@@ -280,22 +280,22 @@
                 ],
             });
 
-            $('#filterButton').on('click', function () {
+            $('#filterButton').on('click', function() {
                 $('#filterMenu').toggle();
             });
 
-            $('#applyFilters').on('click', function (e) {
-                
+            $('#applyFilters').on('click', function(e) {
+
                 table.draw();
                 $('#filterMenu').hide();
             });
-            
-            $('#searchbtn').on('click', function (e) {
-                 
+
+            $('#searchbtn').on('click', function(e) {
+
                 table.draw();
-               
+
             });
-            $('#close').on('click', function () {
+            $('#close').on('click', function() {
                 $('#filterMenu').hide();
             });
 

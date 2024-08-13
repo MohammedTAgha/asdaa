@@ -385,7 +385,7 @@
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <!-- Page JS -->
-    @stack('scripts')
+    @stack('scripts')d
 
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <!-- Page JS -->
@@ -397,7 +397,12 @@
                 
         });
 
+        $('#closereport').click(function() {
+        // Hide the modal by adding the 'hidden' class
+        $('#addCitizensReportModal').addClass('hidden');
+    });
         @endif
+        
     </script>
     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>

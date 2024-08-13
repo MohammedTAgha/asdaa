@@ -15,14 +15,14 @@
 
     <div class="table-responsive">
         <table class="table table-hover">
-            <thead>
+            <thead class="bg-gray-800 text-white">
                 <tr>
-                    <th>ID</th>
-                    <th>الاسم</th>
-                    <th>المسؤول</th>
-                    <th>الاعضاء</th>
-                    <th>الوصف</th>
-                    <th>Actions</th>
+                    <th class="text-white">ID</th>
+                    <th class="text-white">الاسم</th>
+                    <th class="text-white">المسؤول</th>
+                    <th class="text-white">الاعضاء</th>
+                    <th class="text-white">الوصف</th>
+                    <th class="text-white">Actions</th>
                 </tr>
             </thead>
             <tbody>

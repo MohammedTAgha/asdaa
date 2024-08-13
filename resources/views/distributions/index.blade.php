@@ -1,11 +1,11 @@
 @extends('dashboard')
 @section('content')
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-1">
         <h1 class="text-2xl font-bold my-4">الكشوفات</h1>
         <a href="{{ route('distributions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">اضافة كشف</a>
         <ul class="mt-4">
-            <div class="mt-6">
-                <table class="min-w-full bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover" >
                     <thead class="bg-gray-800 text-white">
                         <tr>
                             <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">رقم</th>

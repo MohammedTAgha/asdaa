@@ -38,7 +38,8 @@ class RegionRepresentativeController extends Controller
     public function show($id)
     {
         $representative = RegionRepresentative::with('region')->findOrFail($id);
-        return view('representatives.show', compact('representative'));
+        $regions = Region::all();
+        return view('representatives.show', compact('representative' , 'regions'));
     }
 
     public function edit($id)

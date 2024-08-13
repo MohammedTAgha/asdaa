@@ -1,14 +1,14 @@
 @extends('dashboard')
 
 @section('content')
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-1">
         <!-- Modal -->
        
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
             <div class="bg-white p-6 rounded-md shadow-md w-1/3">
                 <h2 class="text-lg font-semibold mb-4">اختر الكشف</h2>
               
-                    <input type="hidden" name="citizen_ids" id="citizen-ids">
+                    <input type="hidden" name="citizens" id="citizen-ids">
 
                     <select id="distributionSelect" class="form-select mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <!-- Options will be populated dynamically -->
@@ -95,7 +95,7 @@
         </div>
 
   <!-- show.blade.php -->
-    @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-8'])
+    @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-2'])
             @slot('side')
                 <div class="mt-6">
                     <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
@@ -177,62 +177,64 @@
           
     @endcomponent
 
-    @component('components.box',['title'=>'الكشوفات','styles'=>'mt-4'])
+    @component('components.box',['title'=>'الكشوفات','styles'=>'mt-2'])
     @slot('side')
-            <button class="px-4 py-4 bg-blue-600 text-white rounded-md" onclick="showModal()">اضافة</button>
+            <button class="px-4 py-2 btn btn-primary waves-effect waves-light" onclick="showModal()">اضافة</button>
     @endslot
     @php
     $distributions = $citizen->distributions
     @endphp
     @if (!$distributions->isEmpty())
-    <table class="min-w-full bg-white">
+    <div class="table-responsive">
+    <table class=" table table-hover min-w-full bg-white">
+
             <thead class="bg-gray-800 text-white">
                 <tr>
-                    <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                    <th class="w-140px py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
-                    <th class="w-90px py-3 px-4 uppercase font-semibold text-sm">المزود</th>
-                    <th class="w-40px py-3 px-4 uppercase font-semibold text-sm">الكمية المستلمة</th>
-                    <th class="w-50px py-3 px-4 uppercase font-semibold text-sm">استلم</th>
-                    <th class="w-100px py-3 px-4 uppercase font-semibold text-sm">اسم المستلم</th>
-                    <th class="w-120px py-3 px-4 uppercase font-semibold text-sm">تاريخ الاستلام</th>
-                    <th class="w-150px py-3 px-4 uppercase font-semibold text-sm">ملاحظة </th>
-                    <th class="w-100px py-3 px-4 uppercase font-semibold text-sm"> - </th>
+                    <th class="w-40px  text-white py-3 px-1 uppercase font-semibold text-sm">رقم</th>
+                    <th class="w-140px text-white  py-3 px-1 uppercase font-semibold text-sm">الوصف</th>
+                    <th class="w-90px  text-white py-3 px-1 uppercase font-semibold text-sm">المزود</th>
+                    <th class="w-40px  text-white py-3 px-1 uppercase font-semibold text-sm">الكمية المستلمة</th>
+                    <th class="w-50px  text-white py-3 px-1 uppercase font-semibold text-sm">استلم</th>
+                    <th class="w-100px text-white  py-3 px-1 uppercase font-semibold text-sm">اسم المستلم</th>
+                    <th class="w-120px text-white  py-3 px-1 uppercase font-semibold text-sm">تاريخ الاستلام</th>
+                    <th class="w-150px text-white  py-3 px-1 uppercase font-semibold text-sm">ملاحظة </th>
+                    <th class="w-100px text-white  py-3 px-1 uppercase font-semibold text-sm"> - </th>
 
                 </tr>
             </thead>
             <tbody class="text-gray-700">  
             @foreach($distributions as $distribution)
                 <tr>
-                    <td class=" py-3 px-4">
+                    <td class=" py-3 px-1">
                         <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
                         {{ $distribution->pivot->id }}
                         </a> 
                     </td> 
                  
-                    <td class=" py-3 px-4">
+                    <td class=" py-3 px-1">
                     <a href="{{ route('distributions.show', $distribution->id) }}" class="text-blue-600 hover:underline">
                     {{ $distribution->name }}
                     </a>
                 </td>
                  
-                    <td class=" py-3 px-4">{{ $distribution->source }}</td>
-                    <td class=" py-3 px-4">
-                        <input type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity">
+                    <td class=" py-3 px-1">{{ $distribution->source }}</td>
+                    <td class=" py-3 px-1">
+                        <input class="form-control  " id="html5-number-input"  type="number" name="quantity" value="{{ $distribution->pivot->quantity }}" id="quantity" style="width: 80px;">
                     </td>
-                    <td class="w-90px py-3 px-4">
-                    <input type="checkbox" name="done" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
+                    <td class="w-90px py-3 px-1">
+                    <input type="checkbox" name="done" class="form-check-input" value="{{ $distribution->pivot->done }}" {{ $distribution->pivot->done ? 'checked' : '' }}>
                     </td>
-                    <td class=" py-3 px-4">
-                    <input  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient">
+                    <td class=" py-3 px-1">
+                    <input class="form-control "  name="recipient" value="{{ $distribution->pivot->recipient }}" id="recipient" style="width: 160px;">
                     </td>
-                    <td class=" py-3 px-4">
-                        <input type="date" name="date" value="{{ $distribution->pivot->date }}">
+                    <td class=" py-3 px-1">
+                        <input class="form-control " type="date" name="date" value="{{ $distribution->pivot->date }} " style="width: 160px;">
                     </td>
-                    <td class=" py-3 px-4"> 
-                        <input  name="note" id="note" value="{{ $distribution->pivot->note }}">
+                    <td class=" py-3 px-1"> 
+                        <input class="form-control "  name="note" id="note" value="{{ $distribution->pivot->note }}" style="width: 190px;">
 
                     </td>
-                    <td class="flex-1  py-3 px-4" >
+                    <td class="flex-1  py-3 px-1" >
                         <button class="update-button" data-id="{{ $distribution->pivot->id }}" style="color: blue;">
                         <i class="fas fa-upload" style="color: green;"></i>
                         </button>
@@ -248,8 +250,9 @@
         @else
         <h2>لم يستلم يعد</h2>
         @endif
+    </div>
 
-@endcomponent
+        @endcomponent
 
     @component('components.box',['title'=>'الابناء','styles'=>'mt-4'])
         @slot('side')
@@ -390,7 +393,7 @@ function addCitizenToDistribution() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: JSON.stringify({
-            citizen_ids: [citizenId].join(','),
+            citizens: [citizenId].join(','),
             distributionId: distributionId
         })
     })

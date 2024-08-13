@@ -90,7 +90,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                <button id="closereport" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
                 <a href="{{ route('report.export', ['report' => base64_encode(serialize($report))]) }}" class="btn btn-success">تصدير إلى Excel</a>
             </div>
         </div>

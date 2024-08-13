@@ -45,16 +45,21 @@
                 </div>
             </div>
 
-            <!-- Modal -->
-            <div id="modal" class="  fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-75">
-                <div class="w-full h-500px overflow-y-auto max-w-2xl p-6 bg-white rounded-lg shadow-lg">
-                    <h2 class="mb-4 text-2xl font-bold text-center text-gray-700">Found Citizens</h2>
-                    <div id="cardsContainer" class="space-y-4">
-                        <!-- Cards will be appended here -->
-                    </div>
-                    <div class="flex justify-end mt-6">
-                        <button id="closeModalButton"
-                            class="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600">Close</button>
+            <div class="modal fade" id="citizenModal" tabindex="-1" aria-labelledby="citizenModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header ">
+                            <h5 class="modal-title" id="citizenModalLabel">Found Citizens</h5>
+                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="cardsContainer" class="row g-4">
+                                <!-- Cards will be appended here -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,6 +68,7 @@
     </div>
     @push('scripts')
         <script>
+            const modal = new bootstrap.Modal(document.getElementById('citizenModal'));
             console.log('ccc');
             $(document).ready(function() {
                 $('#submitButton').click(function() {
@@ -86,7 +92,8 @@
                         },
                         success: function(response) {
                             // Handle the response data here
-                            document.getElementById('modal').classList.remove('hidden');
+                            //document.getElementById('modal').classList.remove('hidden');
+                            modal.show();
                             console.log(response);
                             const cardsContainer = document.getElementById('cardsContainer');
                             cardsContainer.innerHTML = ''; // Clear previous content
