@@ -39,7 +39,7 @@
     @endcomponent
     @if ($representative->region)
         @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $representative->region->name ?? 'N/A'])
-            @component('components.citizens' ,['citizens'=>$representative->region->citizens , 'regions'=>$regions] )
+            @component('components.citizens' ,['citizens'=>$representative->region->citizens , 'regions'=>$regions ,'regionId'=>$representative->region->id] )
                 
             @endcomponent
             {{-- <x-citizens :citizens="$representative->region->citizens" /> --}}

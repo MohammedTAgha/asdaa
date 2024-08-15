@@ -44,12 +44,12 @@
             </div>
 
 
-    @endcomponent
+    @endcomponent 
 @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $region->name , 'styles'=> 'mb-8'])
 
-           @component('components.citizens' ,['citizens'=>$region->citizens , 'regions'=>$regions] )
+           @component('components.citizens' ,['citizens'=>$region->citizens , 'regions'=>$regions , 'regionId'=>$region->id] )
                 
             @endcomponent
 @endcomponent
-
+{{$region->id}}
 @endsection

@@ -1,4 +1,4 @@
-@props(['citizens', 'distributionId' => null, 'distributions' => []])
+@props(['citizens', 'distributionId' => null, 'distributions' => []  , 'regions'=>[], 'regionId' =>null])
 <style>
     .dataTables_filter {
         display: none;
@@ -210,11 +210,25 @@
         </tbody>
     </table>
 </div>
-
+{{-- ctz data
+{{$region}} --}}
+id
+{{$regionId}}
+{{-- @dd($region) --}}
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        
+// console.log({{$regionId}});
+// console.log('xxxxxx');
+
+$(document).ready(function() {
             console.log('load')
+            @if ($regionId !== null)
+                var regionids  = [ {{$regionId}} ]
+            @else
+            var regionids =$('#regions').val();
+            @endif
+            console.log('new id ' ,regionids )
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -222,7 +236,7 @@
                     url: "{{ route('citizens.data') }}",
                     data: function(d) {
                         d.search = $('#searchctz').val();
-                        d.regions = $('#regions').val();
+                        d.regions =  regionids ;
                         d.minAge = $('#minAge').val();
                         d.maxAge = $('#maxAge').val();
                         d.living_status = $('#living_status').val();

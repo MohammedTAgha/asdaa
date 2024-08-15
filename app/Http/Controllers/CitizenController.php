@@ -91,8 +91,11 @@ class CitizenController extends Controller
 
     public function getData(Request $request)
     {
-        Log::alert('search --');
-        Log::alert($request->search);
+        Log::alert('requist --');
+        Log::alert($request);
+        Log::info('request->regions');
+        Log::info($request->regions);
+
         $query = Citizen::with('region')
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'gender', 'wife_name', 'social_status', 'region_id', 'note']);
     
