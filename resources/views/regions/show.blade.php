@@ -46,7 +46,10 @@
 
     @endcomponent
 @component('components.box', ['title' => ' المواطنين في منطقة' . ' ' . $region->name , 'styles'=> 'mb-8'])
-            <x-citizens :citizens="$region->citizens" />
+
+           @component('components.citizens' ,['citizens'=>$region->citizens , 'regions'=>$regions] )
+                
+            @endcomponent
 @endcomponent
 
 @endsection

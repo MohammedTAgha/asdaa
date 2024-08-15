@@ -37,8 +37,9 @@ class RegionController extends Controller
 
     public function show($id)
     {
+        $regions = Region::all();
         $region = Region::findOrFail($id);
-        return view('regions.show', compact('region'));
+        return view('regions.show', compact('region','regions'));
     }
 
     public function edit($id)
