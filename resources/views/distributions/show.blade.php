@@ -74,61 +74,61 @@
                 <table class="min-w-full bg-white">
                     <thead class="bg-gray-800 text-white">
                         <tr>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">الهوية</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">الاسم</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">المنطقة</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">افراد </th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">الحالة الاجتماعية</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">الكمية <br>المستلمة</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">استلم</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">تاريخ الاستلام</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">اسم المستلم</th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm">ملاحظة </th>
-                            <th class=" py-3 px-2 uppercase font-semibold text-sm"> </th>
+                            <th class=" py-3  uppercase font-semibold text-sm">الهوية</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">الاسم</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">المنطقة</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">افراد </th>
+                            {{-- <th class=" py-3  uppercase font-semibold text-sm">الحالة الاجتماعية</th> --}}
+                            <th class=" py-3  uppercase font-semibold text-sm">الكمية <br>المستلمة</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">استلم</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">تاريخ الاستلام</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">اسم المستلم</th>
+                            <th class=" py-3  uppercase font-semibold text-sm">ملاحظة </th>
+                            <th class=" py-3  uppercase font-semibold text-sm"> </th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
                         @foreach ($citizens as $citizen)
                             <tr>
-                                <td class=" py-3 px-1">
+                                <td class=" py-3 ">
                                     <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
                                         {{ $citizen->id }}
                                     </a>
                                 </td>
-                                <td class=" py-3 px-1">
+                                <td class=" py-3 ">
                                     <a href="{{ route('citizens.show', $citizen->id) }}" class="text-blue-600 hover:underline">
                                         {{ $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname }}
                                     </a>
                                 </td>
-                                <td class=" py-3 px-1">
+                                <td class=" py-3 ">
                                     <a href="{{ route('regions.show', $citizen->region->id) }}" class="text-blue-600 hover:underline">
                                         {{ $citizen->region->name }}
                                     </a>
                                 </td>
-                                <td class=" py-3 px-1">
-                                    افراد
+                                <td class=" py-3 ">
+                                    {{$citizen->family_members}}    
                                 </td>
-                                <td class=" py-3 px-1">الحالة </td>
-                                <td class=" py-3 px-1">
-                                    <input type="number" name="quantity" value="{{ $citizen->pivot->quantity }}"
-                                        id="quantity" style="width: 48px">
+                                {{-- <td class=" py-3 ">{{$citizen->social_status}} </td> --}}
+                                <td class=" py-3 ">
+                                    <input class="form-control" type="number" name="quantity" value="{{ $citizen->pivot->quantity }}"
+                                        id="quantity" style="width: 65px">
                                 </td>
-                                <td class=" py-3 px-1">
-                                    <input type="checkbox" name="done" value="{{ $citizen->pivot->done }}"
+                                <td class=" py-3 ">
+                                    <input class="form-check-input" type="checkbox" name="done" value="{{ $citizen->pivot->done }}"
                                         {{ $citizen->pivot->done ? 'checked' : '' }}>
                                 </td>
                               
-                                <td class=" py-3 px-1">
-                                    <input type="date" name="date" value="{{ $citizen->pivot->date }}">
+                                <td class=" py-3 ">
+                                    <input class="form-control" type="date" name="date" value="{{ $citizen->pivot->date }}" style="width: 160px">
                                 </td>
-                                <td class=" py-3 px-1">
-                                    <input name="recipient" value="{{ $citizen->pivot->recipient }}" id="recipient" style="width: 90px">
+                                <td class=" py-3 ">
+                                    <input class="form-control" name="recipient" value="{{ $citizen->pivot->recipient }}" id="recipient" style="width: 155px">
                                 </td>
-                                <td class=" py-3 px-1">
-                                    <input name="note" id="note" value="{{ $citizen->pivot->note }}" style="width: 90px">
+                                <td class=" py-3 ">
+                                    <input class="form-control" name="note" id="note" value="{{ $citizen->pivot->note }}" style="width: 90px">
 
                                 </td>
-                                <td class=" py-3 px-1">
+                                <td class=" py-3 ">
                                     <button
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded update-button"
                                         data-id="{{ $citizen->pivot->id }}">

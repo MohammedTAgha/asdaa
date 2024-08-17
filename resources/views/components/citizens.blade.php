@@ -183,7 +183,7 @@
     <input type="hidden" id="distributionId" name="distributionId" value="{{ $distributionId ?? '' }}">
     <input type="hidden" name="citizens" value="{{ implode(',', $citizenIds ?? []) }}">
 
-    <button type="button" id="add-citizens-btn" class="btn btn-primary">Add Citizens</button>
+    <button type="button" id="add-citizens-btn" class="btn btn-primary">اضافة مستفيدين</button>
 </form>
 <div class="table-responsive">
     <table id="citizens-table" class="table  table-bordered table-hover table-condensed table-striped">
