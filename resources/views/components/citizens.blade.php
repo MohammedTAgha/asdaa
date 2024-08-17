@@ -296,7 +296,6 @@ id
                 console.log('change');
                 console.log( $('#regions').val());
                 regionids=$('#regions').val()
-                // $('#filterMenu').toggle();
             });
 
             $('#filterButton').on('click', function() {
