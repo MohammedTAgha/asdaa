@@ -210,7 +210,8 @@ class CitizenController extends Controller
     public function edit($id)
     {
         $citizen = Citizen::findOrFail($id);
-        return view('citizens.edit', compact('citizen'));
+        $regions = Region::all();
+        return view('citizens.edit', compact('citizen','regions'));
     }
 
     public function update(Request $request, $id)

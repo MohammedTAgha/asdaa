@@ -17,6 +17,7 @@ class Citizen extends Model
         'lastname',
         'phone',
         'phone2',
+        'family_members',
         'wife_id',
         'wife_name',
         'mails_count',

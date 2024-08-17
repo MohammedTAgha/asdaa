@@ -52,22 +52,30 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'thirdname' => $row['thirdname'],
             'lastname' => $row['lastname'],
             'phone' => $row['phone'],
+            'phone2' => $row['phone2'],
             'family_members' => $row['family_members'],
             'wife_id' => $row['wife_id'],
             'wife_name' => $row['wife_name'],
-            'date_of_birth' => $row['date_of_birth'],
-            'gender' => $row['gender'],
-            'elderly_count' => $row['elderly_count'],
+            'mails_count' => $row['mails_count'],
+            'femails_count' => $row['femails_count'],
+            'leesthan3' => $row['leesthan3'],
             'obstruction' => $row['obstruction'],
             'obstruction_description' => $row['obstruction_description'],
             'disease' => $row['disease'],
             'disease_description' => $row['disease_description'],
             'job' => $row['job'],
             'living_status' => $row['living_status'],
-            'social_status' => $row['social_status'],
             'original_address' => $row['original_address'],
-            'region_id' => $row['region_id'],
             'note' => $row['note'],
+            'region_id' => $row['region_id'],
+
+            //
+            'social_status' => $row['social_status'],
+            // 'date_of_birth' => $row['date_of_birth'],
+            // 'gender' => $row['gender'],
+            // 'elderly_count' => $row['elderly_count'],
+
+
         ]);
     }
 
