@@ -221,9 +221,12 @@ id
             console.log('load')
             @if ($regionId !== null)
                 var regionids = [{{ $regionId }}]
+                console.log('true ', regionids)
             @else
                 var regionids = $('#regions').val();
+                console.log('false ', regionids)
             @endif
+
             console.log('new id ', regionids)
             var table = $('#citizens-table').DataTable({
                 processing: true,
@@ -289,13 +292,20 @@ id
                     [1, 'asc']
                 ],
             });
+            $('#regions').on('change', function() {
+                console.log('change');
+                console.log( $('#regions').val());
+                regionids=$('#regions').val()
+                // $('#filterMenu').toggle();
+            });
 
             $('#filterButton').on('click', function() {
                 $('#filterMenu').toggle();
             });
 
             $('#applyFilters').on('click', function(e) {
-
+                console.log('new id ', regionids)
+                
                 table.draw();
                 $('#filterMenu').hide();
             });

@@ -91,10 +91,7 @@ class CitizenController extends Controller
 
     public function getData(Request $request)
     {
-        Log::alert('requist --');
-        Log::alert($request);
-        Log::info('request->regions');
-        Log::info($request->regions);
+
 
         $query = Citizen::with('region')
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'gender', 'wife_name', 'social_status', 'region_id', 'note']);
@@ -113,6 +110,8 @@ class CitizenController extends Controller
         }
     
         if ($request->has('regions') && !empty($request->regions)) {
+            Log::info('has->regions');
+            Log::info($request->regions);
             $query->whereIn('region_id', $request->regions);
         }
     
