@@ -1,12 +1,34 @@
- citizen search bar 
+STAGE 3 NEW TASKS
+
+-- convart all to arabic
+--add delete functionalty to all methods
+--edit al formas and make it organized
+--edit tabels and make it nice style
+--add bulk delete and more advance filltring for projects
+--use term project
+--update the font
+--upload file to a spasific region manager
+--in distributions table add more actions in the end of it like (add region to project )
+--add ctz list table thats contains a spacific names and cases (  )
+
+
+-- what if we need to have all eldaries , we have a list of them ides
+    -- have a list table that have id and its case (oldman , shaheed , presonars , have babies  )
+
+
+
+
+
+
+ citizen search bar
 -region and respositive redesighn OK
 -create a table with select ok
 -edit ctz IN-P:
 -show Ctz DONE
 -add childs to CTZ NOT DONE
-	- ADD many childs to ctz 
+	- ADD many childs to ctz
 	- chiled more info OK
-	- ADD CHILDS STATUS TO CITIZEN MODULE 
+	- ADD CHILDS STATUS TO CITIZEN MODULE
 -add distriputions to ctz = DONE
 -distripution crud views = DONE
 -resp crud views = DONE
@@ -17,22 +39,22 @@
 
 
 -fix all codes and make it done  inproress
--in distribution add form to add bulk citizens 
+-in distribution add form to add bulk citizens
 -add filters to te searc layout OK
 -create te export to excel
 -import bulk file //done
 -create user auth
 -desin the query for users ok
 - redesin  te layouts // 70%
--ADD STAF AND COMMIIES CRUD 
+-ADD STAF AND COMMIIES CRUD
 -------------------------
 
-*ADD BULK CTZ FROM EXEL FILE TO A distribution > DISTRIBUTION PAGE 
+*ADD BULK CTZ FROM EXEL FILE TO A distribution > DISTRIBUTION PAGE
 	EACH USER MUST BE IN THE SYSTEM
 	EACH USE MUST NOT BE IN THE SAME DISTRIBUTION
-	RETURN A REBORT OF THE ADDING AND GIVE THE IDS THATS HAVE AN ISSUS 
+	RETURN A REBORT OF THE ADDING AND GIVE THE IDS THATS HAVE AN ISSUS
 
-*ADD BULK CTZINTS TO A RESBOSITIVE FROM EXEL  // done 
+*ADD BULK CTZINTS TO A RESBOSITIVE FROM EXEL  // done
 	CHECK IF EXIST BEFORE IN THE SYSTEM //done
 	RETURN A REBORT OF THATS HAVE AN ISSUS //done
 
@@ -42,8 +64,8 @@
 ----------- CODE REVIEW --------
 
 **** HOME ****
--ENHANCE MODEL LAYOUT 
--CARD DATA MUST AVE A TEXT NOT NUMBERS 
+-ENHANCE MODEL LAYOUT
+-CARD DATA MUST AVE A TEXT NOT NUMBERS
 
 **** /citizens ****
 /index
@@ -65,7 +87,7 @@
 composer require maatwebsite/excel
 
 
-how to customize the table component to be used in many views also if Iam in a distribution show page add the selected citizents to its id else show a model to select a distribution and conferm adding  them 
+how to customize the table component to be used in many views also if Iam in a distribution show page add the selected citizents to its id else show a model to select a distribution and conferm adding  them
 
 the pagination and sorting not working in responsitive page
 @component('components.citizens',['citizens'=>$representative->region->citizens])
