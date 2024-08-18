@@ -7,11 +7,11 @@ use App\Models\Distribution;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller{
-    
+
     public function index(){
-        $citizens = Citizen::all();
-        $distributions = Distribution::with('category')->get();
-        return view('home.index',compact('citizens','distributions'));
+//        $citizens = Citizen::all();
+//        $distributions = Distribution::with('category')->get();
+        return view('home.index');
     }
 
     public function test(){

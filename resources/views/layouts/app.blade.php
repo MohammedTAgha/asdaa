@@ -84,8 +84,20 @@
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <h1>ادارة مدينة اصدء</h1>
+                    <a href="index.html" class="app-brand-link">
+              <span class="app-brand-logo demo">
+                <img src="{{asset('assets/img/asdaa.jpg')}}" />
+              </span>
+                        <span class="app-brand-text demo menu-text fw-bold">ادارة مدينة اصدء</span>
+                    </a>
+
+                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+                        <i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
+                        <i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
+                    </a>
                 </div>
+
+
 
                 <div class="menu-inner-shadow"></div>
 
@@ -280,7 +292,7 @@
                     <div class="container-xxl flex-grow-1 container-p-y">
 
                         {{-- <h4 class="fw-bold py-3 mb-4">Page title</h4> --}}
-                        
+
                         @yield('content')
                         <!-- Snackbar container -->
                         <x-alert />
@@ -392,9 +404,9 @@
     <script>
         @if (session('addCitizensReportHtml'))
         document.addEventListener('DOMContentLoaded', function() {
-            
+
                 $('#addCitizensReportModal').modal('show');
-                
+
         });
 
         $('#closereport').click(function() {
@@ -402,7 +414,7 @@
         $('#addCitizensReportModal').addClass('hidden');
     });
         @endif
-        
+
     </script>
     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 </body>
