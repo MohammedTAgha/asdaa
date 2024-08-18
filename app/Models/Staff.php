@@ -12,7 +12,7 @@ class Staff extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['name', 'phone', 'image', 'committee_id'];
+    protected $fillable = ['name', 'phone', 'image', 'committee_id','user_id'];
 
     public function committee()
     {
@@ -23,7 +23,7 @@ class Staff extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function isManager()
     {
         return $this->hasOne(Committee::class, 'manager_id');

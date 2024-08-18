@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    
+
     <form action="{{ isset($staff) ? route('staff.update', $staff->id) : route('staff.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if(isset($staff))
@@ -50,7 +50,19 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">{{ isset($staff) ? 'تحديق' : 'انشاء' }}</button>
+        <div class="form-group">
+            <label for="user_id">اختر المستخدم</label>
+            <select name="user_id" class="form-control">
+                <option value="">بلا</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ isset($staff) && $staff->user_id == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">{{ isset($staff) ? 'تحديث' : 'انشاء' }}</button>
     </form>
 </div>
 @endsection

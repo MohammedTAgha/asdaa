@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Committee;
@@ -20,7 +21,8 @@ class StaffController extends Controller
     public function create()
     {
         $committees = Committee::all();
-        return view('staff.create', compact('committees'));
+        $users = User::all();
+        return view('staff.create', compact('committees','users'));
     }
 
     public function store(Request $request)
@@ -32,7 +34,7 @@ class StaffController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'committee_id' => 'nullable|exists:committees,id',
         ]);
-        
+
         $data = $request->all();
         // dd(['data'=>$data]);
         // Handle the image upload
@@ -45,11 +47,11 @@ class StaffController extends Controller
         }else {
             Log::info('No image uploaded.');
         }
-    
+
         Staff::create($data);
-    
+
         return redirect()->route('staff.index')->with('success', 'Staff created successfully.');
-    
+
         // Staff::create($data);
         // return redirect()->route('staff.index')->with('success', 'Staff created successfully.');
     }
@@ -62,7 +64,9 @@ class StaffController extends Controller
     public function edit(Staff $staff)
     {
         $committees = Committee::all();
-        return view('staff.edit', compact('staff', 'committees'));
+        $users = User::all();
+
+        return view('staff.edit', compact('staff', 'committees','users'));
     }
 
     public function update(Request $request, $id)
@@ -80,22 +84,22 @@ class StaffController extends Controller
         Log::info( $staff);
         $staff->fill($request->all());
         Log::info( 'staff updated');
-        
+
         if ($request->hasFile('image')) {
             Log::info(' image uploaded.');
             // Delete the old image if exists
             if ($staff->image) {
                 Storage::disk('public')->delete($staff->image);
             }
-            
+
             $imagePath = $request->file('image')->store('staff_images', 'public');
             $staff->image = $imagePath;
             Log::info(' image pa.');
             Log::info($imagePath);
         }
-    
+
         $staff->save();
-    
+
         return redirect()->route('staff.index')->with('success', 'Staff updated successfully.');
         }
 
