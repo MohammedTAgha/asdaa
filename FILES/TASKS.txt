@@ -15,7 +15,10 @@ STAGE 3 NEW TASKS
 -- what if we need to have all eldaries , we have a list of them ides
     -- have a list table that have id and its case (oldman , shaheed , presonars , have babies  )
 
-
+- each layout enhancments
+-- add validation to main
+-- on finishing 9 digets
+--
 
 
 
