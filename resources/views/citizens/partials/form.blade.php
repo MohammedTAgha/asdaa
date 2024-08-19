@@ -45,7 +45,7 @@
                 <label class="col-sm-3 col-form-label text-sm-end">الحالة </label>
                 <div class="col-sm-3">
                     <label for="social_status" class="form-label">الحالة الاجتماعية</label>
-                    <select id="social_status" name="social_status" class="select2 form-select" data-allow-clear="true">
+                    <select id="social_status" name="social_status" class="form-select" data-allow-clear="true">
                         <option value="">غير محدد</option>
                         <option value="0">اعزب</option>
                         <option value="1">متزوج</option>
@@ -212,14 +212,9 @@
 
             <!-- Note -->
             <div class="row mb-3">
-                <label for="original_address" class="col-sm-3 col-form-label text-sm-end">عنوان السكن الأصلي</label>
+                <label for="note" class="col-sm-3 col-form-label text-sm-end"> ملاحظة</label>
+
                 <div class="col-sm-9">
-                    <input type="text" id="original_address" name="original_address" class="form-control">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-sm-9">
-                    <label for="note" class="col-sm-3 col-form-label text-sm-end"> ملاحظة</label>
                     <textarea id="note" name="note" rows="3" class="form-control"></textarea>
                 </div>
             </div>
