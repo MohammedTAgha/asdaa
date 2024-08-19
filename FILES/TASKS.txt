@@ -1,5 +1,5 @@
 STAGE 3 NEW TASKS
-
+-- add export project data and statistics 
 -- convart all to arabic
 --add delete functionalty to all methods
 --edit al formas and make it organized
@@ -10,7 +10,8 @@ STAGE 3 NEW TASKS
 --upload file to a spasific region manager
 --in distributions table add more actions in the end of it like (add region to project )
 --add ctz list table thats contains a spacific names and cases (  )
-
+--progect sttistic 
+-- option to inert new or update when uploadin ctz excel file 
 
 -- what if we need to have all eldaries , we have a list of them ides
     -- have a list table that have id and its case (oldman , shaheed , presonars , have babies  )
@@ -20,7 +21,11 @@ STAGE 3 NEW TASKS
 -- on finishing 9 digets
 --
 
-
+filter 
+1 basic from ctz 
+2 hoe have a name in a spasific project 
+3 how have not reveved any project
+4////
 
 
  citizen search bar
