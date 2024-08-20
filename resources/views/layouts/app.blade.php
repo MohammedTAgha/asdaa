@@ -41,14 +41,16 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" />
-
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
+
 {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" /> --}}
 {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" /> --}}
+
 <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
 
 <!-- Page CSS and customozed 00 -->
 @yield('styles')
+
 <!-- Helpers -->
 <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
@@ -58,13 +60,7 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="../../assets/js/config.js"></script>
 
-<!--begin::Global Stylesheets Bundle(used by all pages)-->
-
-{{-- <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
-    <link href="{{ asset('assets/css/fas/all.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-
-{{-- <link href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('assets/css/style.bundle.rtl.css') }}" rel="stylesheet" type="text/css" /> --}}
+{{-- for vuexy --}}
 <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
@@ -73,7 +69,7 @@
 
 {{-- custom styles --}}
 <link href="{{ asset('custom/snakbar.css') }}" rel="stylesheet" type="text/css" />
-
+@stack('custom_styles')
 
 </head>
 
