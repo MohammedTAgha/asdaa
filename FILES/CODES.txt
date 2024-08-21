@@ -24,3 +24,9 @@
                     <span class="ti-xs ti ti-file-download me-1"></span>
 -  class="btn btn-label-primary waves-effect" header >> 
 
+-
+
+<!-- Check if variable is set -->
+@isset($user)
+    <p>{{ $user->name }}</p>
+@endisset
