@@ -3,87 +3,145 @@
 @section('content')
 
 
-    <div class="container mx-auto" style="max-width: 100%; overflow-x: hidden;">
+    <div>
 
-        <div class=" bg-white shadow-md rounded-lg p-6 card accordion-item">
+        <div class=" bg-white shadow-md rounded-lg py-6 card accordion-item">
             <h2 class="accordion-header d-flex align-items-center">
-              <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionWithIcon-1" aria-expanded="false">
-                <i class="ti ti-list-details ti-xs me-2"></i>
-                <h1 class="text-2xl font-bold mb-6">
-                    تفاصيل المشروع
-                </h1>
-              </button>
+                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
+                    data-bs-target="#accordionWithIcon-1" aria-expanded="false">
+                    <i class="ti ti-list-details ti-xs me-2"></i>
+                    <h1 class="text-2xl font-bold mb-6">
+                        تفاصيل المشروع
+                    </h1>
+                </button>
             </h2>
 
             <div id="accordionWithIcon-1" class="accordion-collapse collapse" style="">
-              <div class="accordion-body">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">رقم</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->id }}</p>
+                <div class="accordion-body">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">رقم</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->id }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">الوصف</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->name }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">تاريخ الوصول</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->arrive_date }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">الكمية</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->quantity }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">الفئة المستهدفة</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->target }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">المصدر</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->source }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">اكتمل</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->done ? 'مكتمل' : 'غير مكتمل' }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">عدد المستفيدين</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->target_count }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">المتوقعين</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->expectation }}</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">عدد الافراد</label>
+                            <p class="mt-1 text-gray-900">من : {{ $distribution->min_count }}
+                                {{ $distribution->max_count }}
+                                الى:</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
+                            <p class="mt-1 text-gray-900">{{ $distribution->note }}</p>
+                        </div>
+
                     </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">الوصف</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->name }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">تاريخ الوصول</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->arrive_date }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">الكمية</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->quantity }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">الفئة المستهدفة</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->target }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">المصدر</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->source }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">اكتمل</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->done ? 'مكتمل' : 'غير مكتمل' }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">عدد المستفيدين</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->target_count }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">المتوقعين</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->expectation }}</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">عدد الافراد</label>
-                        <p class="mt-1 text-gray-900">من : {{ $distribution->min_count }} {{ $distribution->max_count }}
-                            الى:</p>
-                    </div>
-    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->note }}</p>
-                    </div>
-    
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
         {{-- @component('components.box', ['title' => 'بيانات التوزيع'])
 
         @endcomponent --}}
 
         @component('components.box', ['title' => 'المستفيدين', 'styles' => 'mt-3'])
             @slot('side')
+                <!-- Advanced Filter Modal 2 -->
+                <div class="modal fade" id="advancedFilterModal"  aria-labelledby="advancedFilterModalLabel" style="z-index: 1160"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="advancedFilterModalLabel">Advanced Filter</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="advancedFilterForm">
+                                    <!-- Prepositives -->
+                                    <div class="mb-4" style="z-index: 99999">
+                                        <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                                        <select id="regions" name="regions[]" 
+                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg" style="width: 260px; z-index: 99999" 
+                                            multiple>
+                                            @foreach ($regions as $region)
+                                                <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
+                                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+
+                                                    @if ($region->representatives->isNotEmpty())
+                                                        {{ $region->name }} </br> :
+                                                        {{ $region->representatives->first()->name }}
+                                                    @else
+                                                        {{ $region->name }}
+                                                    @endif
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select id="gender" class="form-select">
+                                            <option value="">All</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ageRange" class="form-label">Age Range</label>
+                                        <div class="input-group">
+                                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                            <span class="input-group-text">-</span>
+                                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="applyFilter">Apply Filter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Modal -->
                 <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -113,17 +171,19 @@
                 </div>
                 <div class="demo-inline-spacing">
                     {{-- go to main ctz list  --}}
-                    <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button" class="btn btn-label-primary waves-effect">
+                    <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button"
+                        class="btn btn-label-primary waves-effect">
                         <i class="tf-icons ti ti-list-details ti-xs me-1"></i> اضافة من الكشف
                     </a>
                     {{-- show filter for citizents and spasific roules  --}}
-                    <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal"
+                        data-bs-target="#advancedFilterModal">
                         <i class="tf-icons ti ti-arrows-sort ti-xs me-1"></i>اضافة حسب فلتر
                     </button>
                     {{-- <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#regionsSelectModal">
                         <i class="tf-icons ti ti-map ti-xs me-1"></i> اضافة مناطق
                     </button> --}}
-                    <a href="{{route('upload.citizens')}}" type="button" class="btn btn-label-primary waves-effect">
+                    <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-label-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
 
@@ -133,79 +193,77 @@
                 {{--                اضافة مستفيدين --}}
                 {{--            </button> --}}
             @endslot
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="">
 
                 <div class="table-responsive">
                     @php
                         $citizens = $distribution->citizens;
                     @endphp
                     @if (!$citizens->isEmpty())
-                        <table class="min-w-full bg-white">
-                            <thead class="bg-gray-800 text-white">
+                        <table class="table table-striped table-hover mt-2">
+                            <thead class="table-light">
                                 <tr>
-                                    <th class=" py-3  uppercase font-semibold text-sm">الهوية</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">الاسم</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">المنطقة</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">افراد</th>
-                                    {{-- <th class=" py-3  uppercase font-semibold text-sm">الحالة الاجتماعية</th> --}}
-                                    <th class=" py-3  uppercase font-semibold text-sm">الكمية <br>المستلمة</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">استلم</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">تاريخ الاستلام</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">اسم المستلم</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm">ملاحظة</th>
-                                    <th class=" py-3  uppercase font-semibold text-sm"></th>
+                                    <th class=" py-3 px-2 font-semibold ">الهوية</th>
+                                    <th class=" py-3 px-2 font-semibold ">الاسم</th>
+                                    <th class=" py-3 px-2 font-semibold ">المنطقة</th>
+                                    <th class=" py-3 px-2 font-semibold ">افراد</th>
+                                    {{-- <th class=" py-3 px-2 font-semibold ">الحالة الاجتماعية</th> --}}
+                                    <th class=" py-3 px-2 font-semibold ">الكمية <br>المستلمة</th>
+                                    <th class=" py-3 px-2 font-semibold ">استلم</th>
+                                    <th class=" py-3 px-2 font-semibold ">تاريخ الاستلام</th>
+                                    <th class=" py-3 px-2 font-semibold ">اسم المستلم</th>
+                                    <th class=" py-3 px-2 font-semibold ">ملاحظة</th>
+                                    <th class=" py-3 px-2 font-semibold "></th>
                                 </tr>
                             </thead>
-                            <tbody class="text-gray-700">
+                            <tbody class="table-border-bottom-0">
                                 @foreach ($citizens as $citizen)
                                     <tr>
-                                        <td class=" py-3 ">
-                                            <a href="{{ route('citizens.show', $citizen->id) }}"
-                                                class="text-blue-600 hover:underline">
+                                        <td class=" py-3 px-2">
+                                            <a href="{{ route('citizens.show', $citizen->id) }}">
                                                 {{ $citizen->id }}
                                             </a>
                                         </td>
-                                        <td class=" py-3 ">
-                                            <a href="{{ route('citizens.show', $citizen->id) }}"
-                                                class="text-blue-600 hover:underline">
+                                        <td class=" py-3 px-2">
+                                            <a href="{{ route('citizens.show', $citizen->id) }}">
                                                 {{ $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname }}
                                             </a>
                                         </td>
-                                        <td class=" py-3 ">
-                                            <a href="{{ route('regions.show', $citizen->region->id) }}"
-                                                class="text-blue-600 hover:underline">
+                                        <td class=" py-3 px-2">
+                                            <a id='name' href="{{ route('regions.show', $citizen->region->id) }}">
+                                                <input type="hidden"  name="name" value="{{ $citizen->firstname . ' ' . $citizen->lastname }}" >
                                                 {{ $citizen->region->name }}
                                             </a>
                                         </td>
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             {{ $citizen->family_members }}
                                         </td>
-                                        {{-- <td class=" py-3 ">{{$citizen->social_status}} </td> --}}
-                                        <td class=" py-3 ">
+                                        {{-- <td class=" py-3 px-2">{{$citizen->social_status}} </td> --}}
+                                        <td class=" py-3 px-2">
                                             <input class="form-control" type="number" name="quantity"
                                                 value="{{ $citizen->pivot->quantity }}" id="quantity" style="width: 65px">
                                         </td>
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             <input class="form-check-input" type="checkbox" name="done"
                                                 value="{{ $citizen->pivot->done }}"
                                                 {{ $citizen->pivot->done ? 'checked' : '' }}>
                                         </td>
 
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             <input class="form-control" type="date" name="date"
                                                 value="{{ $citizen->pivot->date }}" style="width: 160px">
                                         </td>
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             <input class="form-control" name="recipient"
                                                 value="{{ $citizen->pivot->recipient }}" id="recipient"
                                                 style="width: 155px">
                                         </td>
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             <input class="form-control" name="note" id="note"
                                                 value="{{ $citizen->pivot->note }}" style="width: 90px">
 
                                         </td>
-                                        <td class=" py-3 ">
+                                        <td class=" py-3 px-2">
                                             <button
                                                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded update-button"
                                                 data-id="{{ $citizen->pivot->id }}">
@@ -268,21 +326,25 @@
                 });
 
                 $('.update-button').click(function() {
+                console.log('cl');
+                
                     var pivotId = $(this).data('id');
                     var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
                     var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
                     var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
                     var note = $(this).closest('tr').find('input[name="note"]').val();
-
+                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
                     var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
-                    var data = isChecked ? 1 : 0;
-                    console.log(data)
+                    var status = isChecked ? 1 : 0;
+                    console.log();
+                    
+                    console.log($(this).closest('tr').find('a[id="name"]'))
                     $.ajax({
                         url: '/update-pivot',
                         method: 'POST',
                         data: {
                             pivotId: pivotId,
-                            isChecked: data,
+                            isChecked: status,
                             selectedDate: selectedDate,
                             quantity: quantity,
                             recipient: recipient,
@@ -291,7 +353,11 @@
                         success: function(response) {
                             // Handle success response
                             console.log(response);
-                            alert('تم تحديث');
+                            if (status){
+                                alert(' تم تسليم  '  + ctzName + ' {{$distribution->name}} ');
+                            }else{
+                                alert(' تم الغاء تسليم  '  + ctzName + ' {{$distribution->name}} ');
+                            }
                         },
                         error: function(xhr, status, error) {
                             // Handle error response
