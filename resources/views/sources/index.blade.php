@@ -35,7 +35,10 @@
                 <tbody>
                     @foreach ($sources as $source)
                         <tr>
-                            <td>{{ $source->name }}</td>
+                            <td>
+                                <a href="{{route('sources.show',$source->id)}}"></a>
+                                {{ $source->name }}
+                            </td>
                             <td>{{ $source->phone }}</td>
                             <td>{{ $source->email }}</td>
                             <td>{{ $source->distributions->count() }}</td>
