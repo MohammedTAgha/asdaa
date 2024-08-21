@@ -33,8 +33,7 @@ class DistributionController extends Controller
         $request->validate([
             "name" => "required",
             "date" => "nullable|date",
-            "distribution_category_id" =>
-            "nullable|exists:distribution_categories,id",
+            "distribution_category_id" => "nullable|exists:distribution_categories,id",
             "arrive_date" => "nullable|date",
             "quantity" => "nullable|integer",
             "target" => "nullable",
@@ -46,14 +45,21 @@ class DistributionController extends Controller
             "max_count" => "nullable|integer",
             "note" => "nullable|string",
         ]);
-
+    
+        // Check if a new category is being added
+        if ($request->distribution_category_id === 'add_new' && $request->filled('new_category_name')) {
+            Log::alert(['new' => $request->distribution_category_id ]);
+            $newCategory = DistributionCategory::create(['name' => $request->new_category_name]);
+            $request->merge(['distribution_category_id' => $newCategory->id]);
+        }
+    
         Distribution::create($request->all());
-
+    
         return redirect()
             ->route("distributions.index")
             ->with("success", "Distribution created successfully.");
     }
-
+    
     public function show($id)
     {
         $distributions = Distribution::all();

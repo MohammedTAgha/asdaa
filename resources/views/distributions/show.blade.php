@@ -5,19 +5,19 @@
 
     <div>
 
-        <div class=" bg-white shadow-md rounded-lg py-6 card accordion-item">
+        <div class=" bg-white shadow-md rounded-lg p-4 card accordion-item">
             <h2 class="accordion-header d-flex align-items-center">
                 <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
                     data-bs-target="#accordionWithIcon-1" aria-expanded="false">
                     <i class="ti ti-list-details ti-xs me-2"></i>
-                    <h1 class="text-2xl font-bold mb-6">
+                    <h1 class="text-2xl font-bold mb-2">
                         تفاصيل المشروع
                     </h1>
                 </button>
             </h2>
 
             <div id="accordionWithIcon-1" class="accordion-collapse collapse" style="">
-                <div class="accordion-body">
+                <div class="accordion-body px-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">رقم</label>

@@ -50,7 +50,7 @@
 
 <!-- Page CSS and customozed 00 -->
 @yield('styles')
-
+@livewireStyles
 <!-- Helpers -->
 <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
@@ -308,7 +308,7 @@
 
         <div class="drag-target"></div>
     </div>
-
+    @livewireScripts
     <!-- / Layout wrapper -->
     <script>
         function showSnackbar(message, type) {
