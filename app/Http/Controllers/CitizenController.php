@@ -86,7 +86,7 @@ class CitizenController extends Controller
 
             return response()->json($citizens);
         }
-        return view('citizens.index', compact('citizens', 'sortField', 'sortDirection', 'perPage', 'regions', 'distributions', 'distributionId'));
+        return view('citizens.index', compact('regions', 'distributions', 'distributionId'));
     }
 
     public function getData(Request $request)

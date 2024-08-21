@@ -2,7 +2,7 @@ STAGE 3 NEW TASKS
 -- add export project data and statistics 
 -- convart all to arabic
 --add delete functionalty to all methods
---edit al formas and make it organized in progress 
+--edit al formas and make it organized (in progress) >> do it in metronic
 --edit tabels and make it nice style
 --add bulk delete and more advance filltring for projects
 --use term project

@@ -174,7 +174,7 @@
         <div class="card px-4">
 
             @component('components.citizens', [
-                'citizens' => $citizens,
+                'citizens' => null,
                 'distributions' => $distributions,
                 'distributionId' => $distributionId ? $distributionId : null,
                 'regions'=>$regions,
