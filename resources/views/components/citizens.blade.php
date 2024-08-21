@@ -196,8 +196,8 @@
                 </th>
                 <th class="min-w-90px">الهوية</th>
                 <th class="min-w-280px">الاسم</th>
-                <th class="min-w-90px">تاريخ الميلاد</th>
-                <th class="min-w-40px">الجنس</th>
+                {{-- <th class="min-w-90px">تاريخ الميلاد</th>
+                <th class="min-w-40px">الجنس</th> --}}
                 <th class="min-w-100px ">اسم الزوجة</th>
                 <th class="min-w-50px ">الحالة الاجتماعية</th>
                 <th class="min-w-50px ">المنطقة</th>
@@ -257,14 +257,14 @@ id
                         data: 'name',
                         name: 'name'
                     },
-                    {
-                        data: 'date_of_birth',
-                        name: 'DOB'
-                    },
-                    {
-                        data: 'gender',
-                        name: 'gender'
-                    },
+                    // {
+                    //     data: 'date_of_birth',
+                    //     name: 'DOB'
+                    // },
+                    // {
+                    //     data: 'gender',
+                    //     name: 'gender'
+                    // },
                     {
                         data: 'wife_name',
                         name: 'wife_name'
