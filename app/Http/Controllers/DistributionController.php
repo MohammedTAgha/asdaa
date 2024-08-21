@@ -7,6 +7,7 @@ use App\Models\Distribution;
 use App\Models\DistributionCategory;
 use App\Models\DistributionCitizen;
 use App\Models\Citizen;
+use App\Models\Region;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
@@ -58,7 +59,8 @@ class DistributionController extends Controller
         $distributions = Distribution::all();
         $citizens = Citizen::all();
         $distribution = Distribution::findOrFail($id);
-        return view("distributions.show", compact("distribution", "citizens", "distributions"));
+        $regions = Region::all();
+        return view("distributions.show", compact("distribution", "citizens", "distributions" , 'regions'));
     }
 
     public function edit(Distribution $distribution)
