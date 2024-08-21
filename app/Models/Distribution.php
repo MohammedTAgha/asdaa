@@ -18,6 +18,7 @@ class Distribution extends Model
         'quantity',
         'target',
         'source',
+        'source_id',
         'done',
         'target_count',
         'expectation',
@@ -35,5 +36,10 @@ class Distribution extends Model
         return $this->belongsToMany(Citizen::class, 'distribution_citizens')
         ->withPivot('id','quantity','recipient','note','done','date');
         
+    }
+    // Define the relationship with Source
+    public function source()
+    {
+        return $this->belongsTo(Source::class);
     }
 }

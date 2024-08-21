@@ -18,7 +18,7 @@ class DistributionController extends Controller
 {
     public function index()
     {
-        $distributions = Distribution::with("category")->get();
+        $distributions = Distribution::with("category" , 'source')->get();
         return view("distributions.index", compact("distributions"));
     }
 
@@ -102,6 +102,7 @@ class DistributionController extends Controller
             "arrive_date" => "nullable|date",
             "quantity" => "nullable|integer",
             "target" => "nullable",
+            "source_id" => "nullable|exists:sources,id",
             "source" => "nullable",
             "done" => "nullable|boolean",
             "target_count" => "nullable|integer",
