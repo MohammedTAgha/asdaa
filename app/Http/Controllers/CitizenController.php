@@ -94,7 +94,7 @@ class CitizenController extends Controller
 
 
         $query = Citizen::with('region')
-            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'gender', 'wife_name', 'social_status', 'region_id', 'note']);
+            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'social_status', 'region_id', 'note']);
     
         if ($request->has('search') && !empty($request->search)) {
             $query->where(function($q) use ($request) {
@@ -140,7 +140,8 @@ class CitizenController extends Controller
                 return $citizen->region->name ?? 'N/A';
             })
             ->addColumn('name', function ($citizen) {
-                return $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname;
+                return '<a href="'.route('citizens.show', $citizen->id).'"> '.$citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname. '</a>';
+                
             })
             ->addColumn('action', function ($citizen) {
                 return '<a href="'.route('citizens.edit', $citizen->id).'" class="btn btn-sm btn-primary">Edit</a>';
@@ -148,7 +149,7 @@ class CitizenController extends Controller
             ->addColumn('checkbox', function ($citizen) {
                 return '<input type="checkbox" name="citizens[]" value="'.$citizen->id.'">';
             })
-            ->rawColumns(['action', 'checkbox'])
+            ->rawColumns(['action', 'checkbox','name'])
             ->make(true);
     }
 
