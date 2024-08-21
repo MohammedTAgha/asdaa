@@ -1,22 +1,29 @@
 <?php
-
-namespace App\Http\Livewire;
 namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\DistributionCategory;
+use App\Models\Source;
 
 class CategoryDropdown extends Component
 {
     public $categories;
+    public $sources;
     public $selectedCategory;
+    public $selectedSource;
     public $newCategory;
+    public $newSourceName;
+    public $newSourcePhone;
+    public $newSourceEmail;
     public $showNewCategoryInput = false;
+    public $showNewSourceInput = false;
 
-    public function mount($selectedCategory = null)
+    public function mount($selectedCategory = null, $selectedSource = null)
     {
         $this->categories = DistributionCategory::all();
+        $this->sources = Source::all();
         $this->selectedCategory = $selectedCategory;
+        $this->selectedSource = $selectedSource;
     }
 
     public function updatedSelectedCategory($value)
@@ -28,6 +35,15 @@ class CategoryDropdown extends Component
         }
     }
 
+    public function updatedSelectedSource($value)
+    {
+        if ($value === 'add_new_source') {
+            $this->showNewSourceInput = true;
+        } else {
+            $this->showNewSourceInput = false;
+        }
+    }
+
     public function addCategory()
     {
         $this->validate([
@@ -36,15 +52,32 @@ class CategoryDropdown extends Component
 
         $category = DistributionCategory::create(['name' => $this->newCategory]);
 
-        // Update categories list
         $this->categories = DistributionCategory::all();
-
-        // Select the newly created category
         $this->selectedCategory = $category->id;
-
-        // Hide the input and clear the new category field
         $this->showNewCategoryInput = false;
         $this->newCategory = '';
+    }
+
+    public function addSource()
+    {
+        $this->validate([
+            'newSourceName' => 'required|string|max:255',
+            'newSourcePhone' => 'nullable|string|max:15',
+            'newSourceEmail' => 'nullable|email',
+        ]);
+
+        $source = Source::create([
+            'name' => $this->newSourceName,
+            'phone' => $this->newSourcePhone,
+            'email' => $this->newSourceEmail,
+        ]);
+
+        $this->sources = Source::all();
+        $this->selectedSource = $source->id;
+        $this->showNewSourceInput = false;
+        $this->newSourceName = '';
+        $this->newSourcePhone = '';
+        $this->newSourceEmail = '';
     }
 
     public function render()

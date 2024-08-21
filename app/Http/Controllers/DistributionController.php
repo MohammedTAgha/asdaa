@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
-
+use App\Models\Source;
 class DistributionController extends Controller
 {
     public function index()
@@ -33,11 +33,11 @@ class DistributionController extends Controller
         $request->validate([
             "name" => "required",
             "date" => "nullable|date",
-            "distribution_category_id" => "nullable|exists:distribution_categories,id",
+            "distribution_category_id" => "nullable",
             "arrive_date" => "nullable|date",
             "quantity" => "nullable|integer",
             "target" => "nullable",
-            "source" => "nullable",
+            "source_id" => "nullable|exists:sources,id",
             "done" => "nullable|boolean",
             "target_count" => "nullable|integer",
             "expectation" => "nullable",
@@ -45,14 +45,28 @@ class DistributionController extends Controller
             "max_count" => "nullable|integer",
             "note" => "nullable|string",
         ]);
+        Log::info(['req id ' => $request->distribution_category_id ]);
     
         // Check if a new category is being added
         if ($request->distribution_category_id === 'add_new' && $request->filled('new_category_name')) {
-            Log::alert(['new' => $request->distribution_category_id ]);
+            Log::info(['new' => $request->distribution_category_id ]);
+            
             $newCategory = DistributionCategory::create(['name' => $request->new_category_name]);
             $request->merge(['distribution_category_id' => $newCategory->id]);
+            Log::info(['new id' => $newCategory->id ]);
+            Log::info(['new request' =>  $request ]);
         }
     
+         // Handle new source creation
+    if ($request->source_id === 'add_new_source' && $request->filled(['new_source_name', 'new_source_phone', 'new_source_email'])) {
+        $newSource = Source::create([
+            'name' => $request->new_source_name,
+            'phone' => $request->new_source_phone,
+            'email' => $request->new_source_email,
+        ]);
+        $request->merge(['source_id' => $newSource->id]);
+    }
+
         Distribution::create($request->all());
     
         return redirect()
