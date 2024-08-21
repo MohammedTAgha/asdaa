@@ -1,17 +1,17 @@
 STAGE 3 NEW TASKS
 -- add export project data and statistics 
--- convart all to arabic
+-- convart all to arabic done
 --add delete functionalty to all methods
 --edit al formas and make it organized (in progress) >> do it in metronic
---edit tabels and make it nice style
---add bulk delete and more advance filltring for projects
---use term project
+--edit tabels and make it nice style >> do it in metronic
+--add bulk delete and more advance filltring for projects >> do it in metronic
+--use term project done
 --update the font
 --upload file to a spasific region manager
 --in distributions table add more actions in the end of it like (add region to project )
 --add ctz list table thats contains a spacific names and cases (  )
 --progect sttistic 
--- option to inert new or update when uploadin ctz excel file 
+-- option to inert new or update when uploadin ctz excel file in progress
 
 -- what if we need to have all eldaries , we have a list of them ides
     -- have a list table that have id and its case (oldman , shaheed , presonars , have babies  )
