@@ -22,7 +22,7 @@
             @csrf
             @method('PUT')
             @include('distributions.partials.form')
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update Distribution</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">تعديل المشروع</button>
         </form>
     </div>
 @endsection

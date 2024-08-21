@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+  
     <div class="card">
         <div class="card-header">
             <h2>{{ isset($source) ? 'تحرير' : 'جديد' }}</h2>
@@ -30,11 +31,13 @@
                         <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $source->email ?? '') }}"  >
                     </div>
                 </div>
-
+                
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('sources.index') }}" class="btn btn-secondary">رجوع</a>
-                    <button type="submit" class="btn btn-primary">{{ isset($source) ? 'تحديث' : 'اضافة' }} مصدر</button>
-                </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="ti-xs ti me-1 {{ isset($source) ? ' ti-pin ' : ' ti-plus ' }}"></span> {{ isset($source) ? 'تحديث' : 'جديد' }}
+                    </button>
+                 </div>
             </form>
         </div>
     </div>
