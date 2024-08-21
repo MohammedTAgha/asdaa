@@ -106,6 +106,7 @@
 @endsection
 
 @section('styles')
+
 @endsection
 @section('content')
     <div>
@@ -242,12 +243,7 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $('.select2-multiple').select2({
-                width: 'resolve', // or 'style' or 'element'..
-                dropdownAutoWidth: true,
-            });
-        });
+       
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle filter menu
             // const filterButton = document.getElementById('filterButton');

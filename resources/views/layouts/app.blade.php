@@ -399,6 +399,12 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <!-- Page JS -->
     <script>
+         $(document).ready(function() {
+            $('.select2-multiple').select2({
+                width: 'resolve', // or 'style' or 'element'..
+                dropdownAutoWidth: true,
+            });
+        });
         @if (session('addCitizensReportHtml'))
         document.addEventListener('DOMContentLoaded', function() {
 
