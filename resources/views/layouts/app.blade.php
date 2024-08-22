@@ -38,44 +38,45 @@
 <link rel="stylesheet" href="{{ asset('assets/css/style.bundle.rtl.css') }}" />
 
 
+
 {{-- end code for metronic --}}
 
 
 
 {{-- for vuexy --}}
 <!-- Core CSS -->
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}"
-    class="template-customizer-theme-css" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" /> --}}
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}"
+    class="template-customizer-theme-css" />
+<link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
 
 <!-- Vendors CSS -->
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css') }}" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" /> --}}
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/node-waves/node-waves.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/typeahead-js/typeahead.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.css') }}" />
 
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" /> --}}
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 
-{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" /> --}}
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
 
 
 <!-- Helpers -->
-{{-- <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script> --}}
+<script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
 <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
 <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-{{-- <script src="../../assets/vendor/js/template-customizer.js"></script> --}}
+<script src="../../assets/vendor/js/template-customizer.js"></script>
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-{{-- <script src="../../assets/js/config.js"></script> --}}
+<script src="../../assets/js/config.js"></script>
 
 
-{{-- <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" /> --}}
-{{-- <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-{{-- <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" /> --}}
-{{-- <link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" /> --}}
-{{-- <link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" /> --}}
+<link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 
 <!-- Page CSS and customozed 00 -->
 @yield('styles')
@@ -530,7 +531,7 @@
         @endif
     </script>
 
-    @stack('scripts')
+    {{-- @stack('scripts') --}}
     {{-- vuexy scripts --}}
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <!-- Page JS -->
@@ -556,19 +557,83 @@
     </script>
     <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script>
 
+       <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
+    <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/node-waves/node-waves.js') }}"></script>
+
+    <script src="{{ asset('assets/vendor/libs/hammer/hammer.js') }}"></script>
+    {{-- <script src="{{ asset('assets/vendor/libs/i18n/i18n.js') }}"></script> --}}
+    <script src="{{ asset('assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
+
+    <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="{{ asset('assets/vendor/libs/bs-stepper/bs-stepper.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/bootstrap-select/bootstrap-select.js') }}"></script>
+    {{-- <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script> --}}
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+
+    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    <!-- Flat Picker -->
+    {{-- <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/flatpickr/flatpickr.js') }}"></script> --}}
+    <!-- Form Validation -->
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
+
+    <!-- Main JS -->
+    <script src="{{ asset('assets/js/main.js') }}"></script>
+    <!-- Page JS -->
+
+   
+
+     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+     <!-- Page JS -->
+     <script>
+          $(document).ready(function() {
+             $('.select2-multiple').select2({
+                 width: 'resolve', // or 'style' or 'element'..
+                 dropdownAutoWidth: true,
+             });
+         });
+         @if (session('addCitizensReportHtml'))
+             document.addEventListener('DOMContentLoaded', function() {
+ 
+                     $('#addCitizensReportModal').modal('show');
+ 
+             });
+ 
+             $('#closereport').click(function() {
+             // Hide the modal by adding the 'hidden' class
+             $('#addCitizensReportModal').addClass('hidden');
+             });
+         @endif
+ 
+     </script>
+     {{-- <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script> --}}
+     @stack('scripts')
+ 
 
     <script>
         var hostUrl = "assets/";
     </script>
     <!--begin::Javascript-->
     <!--begin::Global Javascript Bundle(used by all pages)-->
-    <script src="assets/plugins/global/plugins.bundle.js"></script>
-    <script src="assets/js/scripts.bundle.js"></script>
+    {{-- <script src="assets/plugins/global/plugins.bundle.js"></script> --}}
+    {{-- <script src="assets/js/scripts.bundle.js"></script> --}}
     <!--end::Global Javascript Bundle-->
     <!--begin::Page Vendors Javascript(used by this page)-->
     <!--end::Page Vendors Javascript-->
     <!--begin::Page Custom Javascript(used by this page)-->
-    <script src="assets/js/custom/widgets.js"></script>
+    {{-- <script src="assets/js/custom/widgets.js"></script> --}}
     {{-- <script src="assets/js/custom/apps/chat/chat.js"></script>
     <script src="assets/js/custom/modals/create-app.js"></script>
     <script src="assets/js/custom/modals/upgrade-plan.js"></script> --}}

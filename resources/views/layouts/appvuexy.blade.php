@@ -406,16 +406,16 @@
             });
         });
         @if (session('addCitizensReportHtml'))
-        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
 
-                $('#addCitizensReportModal').modal('show');
+                    $('#addCitizensReportModal').modal('show');
 
-        });
+            });
 
-        $('#closereport').click(function() {
-        // Hide the modal by adding the 'hidden' class
-        $('#addCitizensReportModal').addClass('hidden');
-    });
+            $('#closereport').click(function() {
+            // Hide the modal by adding the 'hidden' class
+            $('#addCitizensReportModal').addClass('hidden');
+            });
         @endif
 
     </script>
