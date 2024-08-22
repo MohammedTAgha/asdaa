@@ -15,7 +15,9 @@
 <!-- Favicon -->
 <link rel="icon" href="{{ asset('assets/img/asdaa.jpg') }}" />
 
-
+<style>
+ 
+</style>
 
 <!-- Fonts -->
 
@@ -31,8 +33,8 @@
 {{-- template code for metronic --}}
 <!--begin::Page Vendor Stylesheets(used by this page)-->
 
-<link rel="stylesheet" href="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.rtl.css') }}" />
-<link rel="stylesheet" href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" />
+{{-- <link rel="stylesheet" href="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.rtl.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" /> --}}
 <!--end::Page Vendor Stylesheets-->
 <!--begin::Global Stylesheets Bundle(used by all pages)-->
 <link rel="stylesheet" href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" />
@@ -46,10 +48,10 @@
 
 {{-- for vuexy --}}
 <!-- Core CSS -->
-<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
+{{-- <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
 <link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/theme-default.css') }}"
     class="template-customizer-theme-css" />
-<link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" /> --}}
 
 <!-- Vendors CSS -->
 {{--<link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />--}}
@@ -74,16 +76,14 @@
 
 
 {{--<link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />--}}
-<link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
+{{-- <link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" /> --}}
 {{--<link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />--}}
 {{--<link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />--}}
 {{--<link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" />--}}
 
 <!-- Page CSS and customozed 00 -->
 @yield('styles')
-@livewireStyles
-<link href="{{ asset('custom/snakbar.css') }}" rel="stylesheet" type="text/css" />
-@stack('custom_styles')
+ 
 
 </head>
 
