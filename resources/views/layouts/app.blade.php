@@ -12,7 +12,7 @@
 <meta property="og:locale" content="en_US" />
 <meta property="og:type" content="article" />
 <!-- Favicon -->
-<link rel="icon"   href="{{asset('assets/img/asdaa.jpg')}}" />
+<link rel="icon" href="{{ asset('assets/img/asdaa.jpg') }}" />
 
 
 
@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/tabler-icons.css') }}" />
 {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/flag-icons.css') }}" /> --}}
 
-{{-- template code for metronic--}}
+{{-- template code for metronic --}}
 <!--begin::Page Vendor Stylesheets(used by this page)-->
 
 <link rel="stylesheet" href="{{ asset('assets/plugins/custom/prismjs/prismjs.bundle.rtl.css') }}" />
@@ -37,8 +37,8 @@
 <link rel="stylesheet" href="{{ asset('assets/plugins/global/plugins.bundle.rtl.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/css/style.bundle.rtl.css') }}" />
 
- 
-{{-- end code for metronic--}}
+
+{{-- end code for metronic --}}
 
 
 
@@ -86,17 +86,91 @@
 </head>
 
 <body>
-{{-- @dd(auth()->user()) --}}
+    {{-- @dd(auth()->user()) --}}
     <!-- Layout wrapper -->
+
+    <div class="d-flex flex-column flex-root">
+        <!--begin::Page-->
+        <div class="page d-flex flex-row flex-column-fluid">
+
+            <!--begin::Aside-->
+            <div id="kt_aside" class="aside aside-dark aside-hoverable" data-kt-drawer="true"
+                data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}"
+                data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}"
+                data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+                <!--begin::Brand-->
+                <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+                    <!--begin::Logo-->
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('assets/img/asdaa.jpg') }}" /> </a>
+                    <!--end::Logo-->
+                    <!--begin::Aside toggler-->
+                    <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
+                        data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
+                        data-kt-toggle-name="aside-minimize">
+                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr079.svg-->
+                        <span class="svg-icon svg-icon-1 rotate-180">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none">
+                                <path opacity="0.5"
+                                    d="M14.2657 11.4343L18.45 7.25C18.8642 6.83579 18.8642 6.16421 18.45 5.75C18.0358 5.33579 17.3642 5.33579 16.95 5.75L11.4071 11.2929C11.0166 11.6834 11.0166 12.3166 11.4071 12.7071L16.95 18.25C17.3642 18.6642 18.0358 18.6642 18.45 18.25C18.8642 17.8358 18.8642 17.1642 18.45 16.75L14.2657 12.5657C13.9533 12.2533 13.9533 11.7467 14.2657 11.4343Z"
+                                    fill="black" />
+                                <path
+                                    d="M8.2657 11.4343L12.45 7.25C12.8642 6.83579 12.8642 6.16421 12.45 5.75C12.0358 5.33579 11.3642 5.33579 10.95 5.75L5.40712 11.2929C5.01659 11.6834 5.01659 12.3166 5.40712 12.7071L10.95 18.25C11.3642 18.6642 12.0358 18.6642 12.45 18.25C12.8642 17.8358 12.8642 17.1642 12.45 16.75L8.2657 12.5657C7.95328 12.2533 7.95328 11.7467 8.2657 11.4343Z"
+                                    fill="black" />
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                    </div>
+                    <!--end::Aside toggler-->
+                </div>
+                <!--end::Brand-->
+                <!--begin::Aside menu-->
+                <div class="aside-menu flex-column-fluid">
+                    <!--begin::Aside Menu-->
+                    <div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true"
+                        data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto"
+                        data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer"
+                        data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="0">
+                        <!--begin::Menu-->
+                        <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
+                            id="#kt_aside_menu" data-kt-menu="true">
+                            <!-- lable -->
+                            <div class="menu-item">
+                                <div class="menu-content pb-2">
+                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">ادارة المناطق</span>
+                                </div>
+                            </div>
+                            <!-- menue item -->
+                            <div class="menu-item">
+                                <a class="menu-link active" href="../../demo1/dist/index.html">
+                                    <span class="menu-icon">
+                                        <!--begin::Icon -->
+                                        <span class="svg-icon svg-icon-2">
+                                        </span>
+                                        <!--end::Svg Icon-->
+                                    </span>
+                                    <span class="menu-title">Default</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Aside-->
+        </div>
+
+    </div>
+
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="index.html" class="app-brand-link">
-              <span class="app-brand-logo demo">
-                <img src="{{asset('assets/img/asdaa.jpg')}}" />
-              </span>
+                        <span class="app-brand-logo demo">
+                            <img src="{{ asset('assets/img/asdaa.jpg') }}" />
+                        </span>
                         <span class="app-brand-text demo menu-text fw-bold">اصدء</span>
                     </a>
 
@@ -228,7 +302,8 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="{{   asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg')  }}" alt="Profile" class="h-auto rounded-circle" />
+                                        <img src="{{ asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg') }}"
+                                            alt="Profile" class="h-auto rounded-circle" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -237,13 +312,14 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="{{ asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg') }}" alt="Profile"
-                                                            class="h-auto rounded-circle" />
+                                                        <img src="{{ asset('storage/' . auth()->user()->staff->image ?? 'asdaa.jpg') }}"
+                                                            alt="Profile" class="h-auto rounded-circle" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">{{ auth()->user()->staff->name}}</span>
-                                                    <small class="text-muted">{{ auth()->user()->role->name}}</small>
+                                                    <span
+                                                        class="fw-semibold d-block">{{ auth()->user()->staff->name }}</span>
+                                                    <small class="text-muted">{{ auth()->user()->role->name }}</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -252,7 +328,7 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item"  href="{{ route('profile.edit') }}">
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
                                             <i class="ti ti-user-check me-2 ti-sm"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>
@@ -278,12 +354,13 @@
                                     </li>
                                     <li>
                                         <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 
                                             <i class="ti ti-logout me-2 ti-sm"></i>
                                             <span class="align-middle">Log Out</span>
                                         </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
                                             @csrf
                                         </form>
                                     </li>
@@ -372,9 +449,11 @@
         @endif
     </script>
 
-    <script>var hostUrl = "assets/";</script>
+    <script>
+        var hostUrl = "assets/";
+    </script>
     {{-- metronic scripts --}}
-	<!--begin::Global Javascript Bundle(used by all pages)-->
+    <!--begin::Global Javascript Bundle(used by all pages)-->
 
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
@@ -427,25 +506,24 @@
 
     <!-- Page JS -->
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('.select2-multiple').select2({
                 width: 'resolve', // or 'style' or 'element'..
                 dropdownAutoWidth: true,
             });
         });
         @if (session('addCitizensReportHtml'))
-        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
 
                 $('#addCitizensReportModal').modal('show');
 
-        });
+            });
 
-        $('#closereport').click(function() {
-        // Hide the modal by adding the 'hidden' class
-        $('#addCitizensReportModal').addClass('hidden');
-    });
+            $('#closereport').click(function() {
+                // Hide the modal by adding the 'hidden' class
+                $('#addCitizensReportModal').addClass('hidden');
+            });
         @endif
-
     </script>
 </body>
 
