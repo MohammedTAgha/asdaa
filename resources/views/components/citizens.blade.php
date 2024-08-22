@@ -30,23 +30,21 @@
 </div>
 
 <div class="row align-items-center">
+    <!-- Elements aligned at the start -->
     <div class="col d-flex align-items-center">
-        <!-- Elements aligned at the start -->
-        <div class="d-flex">
-            <form method="GET" class="d-flex me-3">
-                <div class="input-group">
-                    <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
-                    <button type="submit" id="searchbtn" class="btn btn-primary ms-2">
-                        بحث
-                        <span class="ti-xs ti ti-user-search ms-1"></span>
-                    </button>
-                </div>
-            </form>
-            <!-- Other elements at the start can go here -->
-        </div>
+        <form method="GET" class="d-flex me-3">
+            <div class="input-group">
+                <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
+                <button type="submit" id="searchbtn" class="btn btn-primary ms-2">
+                    بحث
+                    <span class="ti-xs ti ti-user-search ms-1"></span>
+                </button>
+            </div>
+        </form>
     </div>
-    <div class="col-auto d-flex align-items-center">
-        <!-- Elements aligned at the end -->
+
+    <!-- Elements aligned at the end -->
+    <div class="col-auto d-flex align-items-center position-relative">
         <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
             اضافة جديد
             <span class="ti-xs ti ti-user-plus ms-1"></span>
@@ -57,12 +55,97 @@
                 <span class="ti-xs ti ti-table-export ms-1"></span>
             </button>
         </form>
-        <button id="filterButton" type="button" class="btn btn-light-primary mx-1">
-            فلترة
-            <span class="ti-xs ti ti-filter-off ms-1"></span>
-        </button>
+        
+        <!-- Filter Button with Dropdown Menu -->
+        <div class="me-2 d-flex position-relative">
+            <button id="filterButton" type="button" class="btn btn-light-primary">
+                فلترة
+                <span class="ti-xs ti ti-filter-off ms-1"></span>
+            </button>
+            <div id="filterMenu" class="position-absolute end-0 z-10 d-none w-80 p-2 pt-1 mt-12 bg-white border border-secondary rounded shadow-lg" style="max-height: 430px; overflow-y: auto;">
+                <div class="pb-1 mb-1 border-bottom border-secondary">
+                    <div class="h5 font-weight-semibold text-secondary">خيارات التصنيف</div>
+                </div>
+                <form action="{{ route('citizens.index') }}" method="GET">
+                    <!-- Filter Form Elements -->
+                    <div class="mb-4">
+                        <label class="d-block mb-1 font-weight-medium text-secondary">اختر المناديب:</label>
+                        <select id="regions" name="regions[]" class="form-select select2-multiple p-2 border border-secondary rounded" style="width: 260px;" multiple>
+                            @foreach ($regions as $region)
+                                <option class="w-120px" value="{{ $region->id }}" style="width: 260px;"
+                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                                    @if ($region->representatives->isNotEmpty())
+                                        {{ $region->name }} </br> :
+                                        {{ $region->representatives->first()->name }}
+                                    @else
+                                        {{ $region->name }}
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ageRange" class="form-label">افراد الاسرة</label>
+                        <div class="input-group">
+                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                            <span class="input-group-text">-</span>
+                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ageRange" class="form-label">العمر</label>
+                        <div class="input-group">
+                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                            <span class="input-group-text">-</span>
+                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="d-block mb-1 font-weight-medium text-secondary">حالة السكن ل:</label>
+                        <select id="living_status" name="living_status" class="form-select w-100 p-2 border border-secondary rounded">
+                            <option value="">غير محدد</option>
+                            <option value="1">سيئ</option>
+                            <option value="2">جيد</option>
+                            <option value="3">ممتاز</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="d-block mb-1 font-weight-medium text-secondary">الحالة الاجنماعية :</label>
+                        <select id="social_status" name="social_status" class="form-select w-100 p-2 border border-secondary rounded">
+                            <option value="">غير محدد</option>
+                            <option value="0">اعزب</option>
+                            <option value="1">متزوج</option>
+                            <option value="2">ارمل</option>
+                            <option value="3">متعدد</option>
+                            <option value="4">مطلق</option>
+                            <option value="5">زوجة 1</option>
+                            <option value="6">زوجة 2</option>
+                            <option value="7">زوجة 3</option>
+                            <option value="8">زوجة 4</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="d-block mb-1 font-weight-medium text-secondary">الجنس:</label>
+                        <select id="gender" name="gender" class="form-select w-100 p-2 border border-secondary rounded">
+                            <option value="">غير محدد</option>
+                            <option value="0">ذكر</option>
+                            <option value="1">انثى</option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button id="close" type="button" class="btn btn-secondary me-2">
+                            اغلاق
+                        </button>
+                        <button id="applyFilters" type="button" class="btn btn-primary">
+                            تطبيق
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
 <form id="add-citizens-form" action="{{ route('distributions.addCitizens') }}" method="POST">
     @csrf
     <input type="hidden" id="distributionId" name="distributionId" value="{{ $distributionId ?? '' }}">
@@ -102,6 +185,28 @@ id
 {{ $regionId }}
 {{-- @dd($region) --}}
 @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const filterButton = document.getElementById('filterButton');
+    const filterMenu = document.getElementById('filterMenu');
+    const closeButton = document.getElementById('close');
+
+    filterButton.addEventListener('click', function() {
+        filterMenu.classList.toggle('d-none');
+    });
+
+    closeButton.addEventListener('click', function() {
+        filterMenu.classList.add('d-none');
+    });
+
+    // Optionally close the dropdown if clicked outside
+    document.addEventListener('click', function(event) {
+        if (!filterButton.contains(event.target) && !filterMenu.contains(event.target)) {
+            filterMenu.classList.add('d-none');
+        }
+    });
+});
+</script>
     <script>
         $(document).ready(function() {
             console.log('load')
@@ -185,6 +290,8 @@ id
             });
 
             $('#filterButton').on('click', function() {
+                console.log('filter');
+                
                 $('#filterMenu').toggle();
             });
 

@@ -171,7 +171,7 @@
                 });
             </script>
         @endif
-        <div class="card px-4">
+        <div class="card py-6 px-4">
 
             @component('components.citizens', [
                 'citizens' => null,

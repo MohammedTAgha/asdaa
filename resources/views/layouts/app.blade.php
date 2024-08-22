@@ -5,7 +5,7 @@
     data-assets-path="../../assets/" data-template="vertical-menu-template">
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9" />
 {{--<meta name="viewport"--}}
 {{--    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />--}}
 <title>ادارة مخيم اصداء</title>
@@ -464,7 +464,7 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Content-->
-                <div class="content pt-18 d-flex flex-column flex-column-fluid" id="kt_content">
+                <div class="content pt-18 px-8 d-flex flex-column flex-column-fluid" id="kt_content" style="padding-top: 260px">
                     @yield('content')
                     <!-- Snackbar container -->
                     <x-alert />
@@ -483,56 +483,8 @@
     @livewireScripts
     <!-- / Layout wrapper -->
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script>
-        function showSnackbar(message, type) {
-            var snackbar = document.getElementById("snackbar");
-
-            // Clear existing classes
-            snackbar.className = snackbar.className.replace(/\b(alert-|bg-|border-|text-)\S+/g, '');
-
-            // Add appropriate classes based on type
-            switch (type) {
-                case 'success':
-                    snackbar.classList.add('text-green-800', 'border-t-4', 'border-green-300', 'bg-green-50');
-                    break;
-                case 'danger':
-                    snackbar.classList.add('text-red-800', 'border-t-4', 'border-red-300', 'bg-red-50');
-                    break;
-                case 'info':
-                    snackbar.classList.add('text-blue-800', 'border-t-4', 'border-blue-300', 'bg-blue-50');
-                    break;
-                case 'warning':
-                    snackbar.classList.add('text-yellow-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
-                    break;
-                case 'erorr':
-                    snackbar.classList.add('text-red-800', 'border-t-4', 'border-yellow-300', 'bg-yellow-50');
-                    break;
-                default:
-                    snackbar.classList.add('text-gray-800', 'border-t-4', 'border-gray-300', 'bg-gray-50');
-                    break;
-            }
-
-            snackbar.innerHTML = message;
-            snackbar.classList.add('show');
-            setTimeout(function() {
-                snackbar.classList.remove('show');
-            }, 3000);
-        }
-
-        // Check for flash messages
-        @if (session('success'))
-            showSnackbar("{{ session('success') }}", 'success');
-        @elseif (session('danger'))
-            showSnackbar("{{ session('danger') }}", 'danger');
-        @elseif (session('error'))
-            showSnackbar("{{ session('error') }}", 'warning');
-        @elseif (session('info'))
-            showSnackbar("{{ session('info') }}", 'info');
-        @elseif (session('warning'))
-            showSnackbar("{{ session('warning') }}", 'warning');
-        @endif
-    </script>
-
+    @stack('scripts')
+ 
     {{-- @stack('scripts') --}}
     {{-- vuexy scripts --}}
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
@@ -620,9 +572,8 @@
 
 {{--     </script>--}}
      {{-- <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script> --}}
-     @stack('scripts')
 
-
+     {{-- <script src="{{ asset('assets/js/tables-datatables-basic.js') }}"></script> --}}
     <script>
         var hostUrl = "assets/";
     </script>
