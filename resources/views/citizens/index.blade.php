@@ -131,30 +131,30 @@
                                 <div class="table-responsive">
                                     <table class="table table-striped table-hover">
                                         <thead>
-                                            <tr>
-                                                <th>الهوية</th>
-                                                <th>الاسم</th>
-                                                <th>errors</th>
-                                                <th>الخلل</th>
-                                            </tr>
+                                        <tr>
+                                            <th>الهوية</th>
+                                            <th>الاسم</th>
+                                            <th>errors</th>
+                                            <th>الخلل</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (session('import_result.failedRows') as $row)
-                                                <tr>
-                                                    <td>{{ $row['id'] }}</td>
-                                                    <td>{{ $row['firstname'] }} {{ $row['lastname'] }}</td>
-                                                    <td>{{ $row['errors'] }}</td>
-                                                    <td>{{ $row['values'] }}</td>
+                                        @foreach (session('import_result.failedRows') as $row)
+                                            <tr>
+                                                <td>{{ $row['id'] }}</td>
+                                                <td>{{ $row['firstname'] }} {{ $row['lastname'] }}</td>
+                                                <td>{{ $row['errors'] }}</td>
+                                                <td>{{ $row['values'] }}</td>
 
 
-                                                </tr>
-                                            @endforeach
+                                            </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                                 @if (session('import_result.failedExcelPath'))
                                     <a href="{{ session('import_result.failedExcelPath') }}" class="btn btn-secondary"
-                                        download>تحميل الكشف</a>
+                                       download>تحميل الكشف</a>
                                 @endif
                             @endif
                         </div>
@@ -165,7 +165,7 @@
                 </div>
             </div>
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('DOMContentLoaded', function () {
                     var myModal = new bootstrap.Modal(document.getElementById('importResultModal'));
                     myModal.show();
                 });
@@ -186,7 +186,7 @@
 
     <!-- Advanced Filter Modal 2 -->
     <div class="modal fade" id="advancedFilterModal" tabindex="-1" aria-labelledby="advancedFilterModalLabel"
-        aria-hidden="true">
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -243,8 +243,8 @@
         });
     </script>
     <script>
-       
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             // Toggle filter menu
             // const filterButton = document.getElementById('filterButton');
             // const closeButton = document.getElementById('close');

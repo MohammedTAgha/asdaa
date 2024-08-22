@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="me-2 relative flex">
-        <button id="filterButton" type="button" class=" mx-1 btn btn-outline-primary waves-effect">
+        <button id="filterButton" type="button" class="btn btn-light-primary">
             فلترة
             <span class="ti-xs ti ti-filter-off ms-1"></span>
         </button>
@@ -304,7 +304,7 @@ id
 
             $('#applyFilters').on('click', function(e) {
                 console.log('new id ', regionids)
-                
+
                 table.draw();
                 $('#filterMenu').hide();
             });
@@ -380,7 +380,7 @@ id
                 }
             });
             $('#searchbar').keyup(function() {
-            
+
                 oTable.search($(this).val()).draw();
         });
 
