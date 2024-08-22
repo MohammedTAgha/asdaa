@@ -5,8 +5,9 @@
     data-assets-path="../../assets/" data-template="vertical-menu-template">
 
 <meta charset="UTF-8">
-<meta name="viewport"
-    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+{{--<meta name="viewport"--}}
+{{--    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />--}}
 <title>ادارة مخيم اصداء</title>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta property="og:locale" content="en_US" />
@@ -73,7 +74,7 @@
 
 
 {{--<link href="{{ asset('assets/css/app.css') }}" rel="stylesheet" type="text/css" />--}}
-{{--<link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />--}}
+<link href="{{ asset('assets/css/tailwind.min.css') }}" rel="stylesheet" type="text/css" />
 {{--<link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css" />--}}
 {{--<link href="{{ asset('assets/css/dataTables.tailwindcss.css') }}" rel="stylesheet" type="text/css" />--}}
 {{--<link href="{{ asset('assets/css/select2.min.css') }}" rel="stylesheet" type="text/css" />--}}
@@ -463,7 +464,7 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Content-->
-                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                <div class="content pt-18 d-flex flex-column flex-column-fluid" id="kt_content">
                     @yield('content')
                     <!-- Snackbar container -->
                     <x-alert />
@@ -638,7 +639,7 @@
     <script src="{{ asset('assets/js/custom/modals/create-app.js') }}"></script>
     <script src="{{ asset('"assets/js/custom/modals/upgrade-plan.jss') }}"></script>
 
-    
+
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 </body>
