@@ -510,12 +510,15 @@
                 </div>
                 <!--end::Header-->
                 <!--begin::Content-->
+                @if (session('addCitizensReportHtml'))
+                    {!! session('addCitizensReportHtml') !!}
+                @endif
                 <div class="content pt-18 px-8 d-flex flex-column flex-column-fluid" id="kt_content"
                     style="padding-top: 260px">
                     @yield('content')
                     <!-- Snackbar container -->
                     <x-alert />
-                    <div id="snackbar" class="snackbar"></div>
+                    {{-- <div id="snackbar" class="snackbar"></div> --}}
                 </div>
                 <!--end::Content-->
 
@@ -588,27 +591,7 @@
     {{-- @stack('scripts') --}}
     {{-- vuexy scripts --}}
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <!-- Page JS -->
-    <script>
-        $(document).ready(function() {
-            $('.select2-multiple').select2({
-                width: 'resolve', // or 'style' or 'element'..
-                dropdownAutoWidth: true,
-            });
-        });
-        @if (session('addCitizensReportHtml'))
-            document.addEventListener('DOMContentLoaded', function() {
 
-                $('#addCitizensReportModal').modal('show');
-
-            });
-
-            $('#closereport').click(function() {
-                // Hide the modal by adding the 'hidden' class
-                $('#addCitizensReportModal').addClass('hidden');
-            });
-        @endif
-    </script>
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
