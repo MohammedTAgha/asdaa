@@ -160,11 +160,11 @@ class DistributionController extends Controller
         $distributionId = $request->input("distributionId", $distributionId);
 
         if (empty($citizenIds)) {
-            return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم");
+            return redirect()->back()->with("warning", "لا يوجد مواطنين تم اختيارهم");
         }
 
         if (empty($distributionId)) {
-            return redirect()->back()->with("danger", "لا يوجد كشف محدد");
+            return redirect()->back()->with("warning", "لا يوجد كشف محدد");
         }
 
         try {
@@ -175,21 +175,24 @@ class DistributionController extends Controller
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);
         } catch (\Exception $e) {
-            return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
+            return redirect()->back()->with("warning", "حدث خطأ في الإضافة");
         }
     }
 
     public function addCitizensFilter(Request $request, DistributionService $distributionService, $distributionId = null)
     {
-
+        // dd('fff');
         // Retrieve the filter parameters from the request
         $regions = $request->input('regions', []);
         $minFamilyMembers = $request->input('min_row_distribution', 0);
         $maxFamilyMembers = $request->input('max_row_distribution', PHP_INT_MAX);
         $distributionId = $request->input("distributionId", $distributionId);
-
+        Log::alert('req1 ');
+        Log::alert($request);
         // Query citizens based on the filter criteria
+
         $query = Citizen::query();
+       
 
         if (!empty($regions)) {
             $query->whereIn('region_id', $regions);
@@ -200,26 +203,31 @@ class DistributionController extends Controller
         }
 
         $citizenIds = $query->pluck('id')->toArray();
+        $totalIds = count($citizenIds);
+        Log::alert($totalIds);
+        Log::alert('ids',$citizenIds);
 
-        if (empty($citizenIds)) {
-            return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم بناءً على الفلاتر المقدمة");
+         if (empty($citizenIds)) {
+            Log::error("لا يوجد مواطنين تم اختيارهم بناءً على الفلاتر المقدمة");
+            return redirect()->back()->with("warning", "لا يوجد مواطنين تم اختيارهم بناءً على الفلاتر المقدمة");
         }
 
         if (empty($distributionId)) {
-            return redirect()->back()->with("danger", "لا يوجد كشف محدد");
+            Log::error("لا يوجد كشف محدد");
+            return redirect()->back()->with("warning", "لا يوجد كشف محدد");
         }
 
-        $totalIds = count($citizenIds);
-
+     
         try {
             $report = $distributionService->addCitizensToDistribution($citizenIds, $distributionId);
-
+            Log::alert('re',$report);
             $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
             return redirect()->back()
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);
         } catch (\Exception $e) {
-            return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
+            Log::alert($e);
+            return redirect()->back()->with("warning", "حدث خطأ في الإضافة");
         }
     }
     public function removeCitizenFromDistribution($id) //pivot table id
