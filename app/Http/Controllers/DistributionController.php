@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\DistributionService;
+
 use App\Exports\CitizensdDistReportExport;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
@@ -14,11 +16,12 @@ use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Models\Source;
+
 class DistributionController extends Controller
 {
     public function index()
     {
-        $distributions = Distribution::with("category" , 'source')->get();
+        $distributions = Distribution::with("category", 'source')->get();
         return view("distributions.index", compact("distributions"));
     }
 
@@ -45,42 +48,42 @@ class DistributionController extends Controller
             "max_count" => "nullable|integer",
             "note" => "nullable|string",
         ]);
-        Log::info(['req id ' => $request->distribution_category_id ]);
-    
+        Log::info(['req id ' => $request->distribution_category_id]);
+
         // Check if a new category is being added
         if ($request->distribution_category_id === 'add_new' && $request->filled('new_category_name')) {
-            Log::info(['new' => $request->distribution_category_id ]);
-            
+            Log::info(['new' => $request->distribution_category_id]);
+
             $newCategory = DistributionCategory::create(['name' => $request->new_category_name]);
             $request->merge(['distribution_category_id' => $newCategory->id]);
-            Log::info(['new id' => $newCategory->id ]);
-            Log::info(['new request' =>  $request ]);
+            Log::info(['new id' => $newCategory->id]);
+            Log::info(['new request' =>  $request]);
         }
-    
-         // Handle new source creation
-    if ($request->source_id === 'add_new_source' && $request->filled(['new_source_name', 'new_source_phone', 'new_source_email'])) {
-        $newSource = Source::create([
-            'name' => $request->new_source_name,
-            'phone' => $request->new_source_phone,
-            'email' => $request->new_source_email,
-        ]);
-        $request->merge(['source_id' => $newSource->id]);
-    }
+
+        // Handle new source creation
+        if ($request->source_id === 'add_new_source' && $request->filled(['new_source_name', 'new_source_phone', 'new_source_email'])) {
+            $newSource = Source::create([
+                'name' => $request->new_source_name,
+                'phone' => $request->new_source_phone,
+                'email' => $request->new_source_email,
+            ]);
+            $request->merge(['source_id' => $newSource->id]);
+        }
 
         Distribution::create($request->all());
-    
+
         return redirect()
             ->route("distributions.index")
             ->with("success", "Distribution created successfully.");
     }
-    
+
     public function show($id)
     {
         $distributions = Distribution::all();
         $citizens = Citizen::all();
         $distribution = Distribution::findOrFail($id);
         $regions = Region::all();
-        return view("distributions.show", compact("distribution", "citizens", "distributions" , 'regions'));
+        return view("distributions.show", compact("distribution", "citizens", "distributions", 'regions'));
     }
 
     public function edit(Distribution $distribution)
@@ -151,188 +154,71 @@ class DistributionController extends Controller
         return response()->json(["distributions" => $distributions]);
     }
 
-    public function addCitizens(Request $request, $distributionId = null)
+    public function addCitizens(Request $request, DistributionService $distributionService, $distributionId = null)
     {
-        Log::debug('test');
         $citizenIds = explode(',', $request->input('citizens'));
-        // dd($citizenIds);
-
         $distributionId = $request->input("distributionId", $distributionId);
-        Log::debug($citizenIds);
+
         if (empty($citizenIds)) {
             return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم");
         }
-    
+
         if (empty($distributionId)) {
             return redirect()->back()->with("danger", "لا يوجد كشف محدد");
         }
-        $totalIds = count($citizenIds);
-        DB::beginTransaction();
-        try {
-            // Check which citizens already exist in the distribution
-            $existingInDistribution = DB::table("distribution_citizens")
-                ->where("distribution_id", $distributionId)
-                ->whereIn("citizen_id", $citizenIds)
-                ->pluck("citizen_id")
-                ->toArray();
-    
-            // Check which citizens exist in the citizens table
-            $existingCitizens = Citizen::whereIn("id", $citizenIds)->pluck("id")->toArray();
-    
-            // Identify non-existent citizens
-            $nonExistentCitizens = array_diff($citizenIds, $existingCitizens);
-    
-            // Identify citizens to be added (exist in citizens table but not in distribution)
-            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
-    
-            $addedCount = 0;
-            $addedCitizens = [];
-    
-            foreach ($citizensToAdd as $citizenId) {
-                DB::table("distribution_citizens")->insert([
-                    "distribution_id" => $distributionId,
-                    "citizen_id" => $citizenId,
-                ]);
-                $addedCount++;
-                $addedCitizens[] = $citizenId;
-            }
-    
-            $existingCitizenData = Citizen::whereIn("id", $existingInDistribution)
-                ->select('id', 'firstname', 'lastname')
-                ->get()
-                ->toArray();
-    
-            $addedCitizenData = Citizen::whereIn("id", $addedCitizens)
-                ->select('id', 'firstname', 'lastname')
-                ->get()
-                ->toArray();
-    
-            DB::commit();
-            
-            $report = [
-                'added' => [
-                    'count' => $addedCount,
-                    'citizens' => $addedCitizenData
-                ],
-                'existing' => [
-                    'count' => count($existingInDistribution),
-                    'citizens' => $existingCitizenData
-                ],
-                'updated' => [
-                    'count' => count($nonExistentCitizens),
-                    'citizens' => $nonExistentCitizens // This will be an array of IDs
-                ],
-                'nonexistent' => [
-                    'count' => count($nonExistentCitizens),
-                    'citizens' => $nonExistentCitizens // This will be an array of IDs
-                ],
-                'totalIds' => $totalIds
 
-            ];
-    
-            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
+        try {
+            $report = $distributionService->addCitizensToDistribution($citizenIds, $distributionId);
+
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
             return redirect()->back()
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);
-    
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::debug('xxxxx');
-            Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
-            Log::error("Error adding citizen: ", ["xxxx" =>$report ]);
             return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
         }
     }
 
-    public function addCitizensFilter(Request $request, $distributionId = null)
+    public function addCitizensFilter(Request $request, DistributionService $distributionService, $distributionId = null)
     {
-        Log::debug('test');
-        $citizenIds = explode(',', $request->input('citizens'));
-        // dd($citizenIds);
 
+        // Retrieve the filter parameters from the request
+        $regions = $request->input('regions', []);
+        $minFamilyMembers = $request->input('min_row_distribution', 0);
+        $maxFamilyMembers = $request->input('max_row_distribution', PHP_INT_MAX);
         $distributionId = $request->input("distributionId", $distributionId);
-        Log::debug($citizenIds);
-        if (empty($citizenIds)) {
-            return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم");
+
+        // Query citizens based on the filter criteria
+        $query = Citizen::query();
+
+        if (!empty($regions)) {
+            $query->whereIn('region_id', $regions);
         }
-    
+
+        if ($minFamilyMembers || $maxFamilyMembers) {
+            $query->whereBetween('family_members', [$minFamilyMembers, $maxFamilyMembers]);
+        }
+
+        $citizenIds = $query->pluck('id')->toArray();
+
+        if (empty($citizenIds)) {
+            return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم بناءً على الفلاتر المقدمة");
+        }
+
         if (empty($distributionId)) {
             return redirect()->back()->with("danger", "لا يوجد كشف محدد");
         }
-        $totalIds = count($citizenIds);
-        DB::beginTransaction();
-        try {
-            // Check which citizens already exist in the distribution
-            $existingInDistribution = DB::table("distribution_citizens")
-                ->where("distribution_id", $distributionId)
-                ->whereIn("citizen_id", $citizenIds)
-                ->pluck("citizen_id")
-                ->toArray();
-    
-            // Check which citizens exist in the citizens table
-            $existingCitizens = Citizen::whereIn("id", $citizenIds)->pluck("id")->toArray();
-    
-            // Identify non-existent citizens
-            $nonExistentCitizens = array_diff($citizenIds, $existingCitizens);
-    
-            // Identify citizens to be added (exist in citizens table but not in distribution)
-            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
-    
-            $addedCount = 0;
-            $addedCitizens = [];
-    
-            foreach ($citizensToAdd as $citizenId) {
-                DB::table("distribution_citizens")->insert([
-                    "distribution_id" => $distributionId,
-                    "citizen_id" => $citizenId,
-                ]);
-                $addedCount++;
-                $addedCitizens[] = $citizenId;
-            }
-    
-            $existingCitizenData = Citizen::whereIn("id", $existingInDistribution)
-                ->select('id', 'firstname', 'lastname')
-                ->get()
-                ->toArray();
-    
-            $addedCitizenData = Citizen::whereIn("id", $addedCitizens)
-                ->select('id', 'firstname', 'lastname')
-                ->get()
-                ->toArray();
-    
-            DB::commit();
-            
-            $report = [
-                'added' => [
-                    'count' => $addedCount,
-                    'citizens' => $addedCitizenData
-                ],
-                'existing' => [
-                    'count' => count($existingInDistribution),
-                    'citizens' => $existingCitizenData
-                ],
-                'updated' => [
-                    'count' => count($nonExistentCitizens),
-                    'citizens' => $nonExistentCitizens // This will be an array of IDs
-                ],
-                'nonexistent' => [
-                    'count' => count($nonExistentCitizens),
-                    'citizens' => $nonExistentCitizens // This will be an array of IDs
-                ],
-                'totalIds' => $totalIds
 
-            ];
-    
-            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
+        $totalIds = count($citizenIds);
+
+        try {
+            $report = $distributionService->addCitizensToDistribution($citizenIds, $distributionId);
+
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
             return redirect()->back()
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);
-    
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::debug('xxxxx');
-            Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
-            Log::error("Error adding citizen: ", ["xxxx" =>$report ]);
             return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
         }
     }
@@ -357,9 +243,9 @@ class DistributionController extends Controller
     }
 
     public function exportReport($report)
-{
-    return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
-}
+    {
+        return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
+    }
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();
