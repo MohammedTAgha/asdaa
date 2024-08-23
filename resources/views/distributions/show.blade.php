@@ -87,21 +87,21 @@
         @component('components.box', ['title' => 'المستفيدين', 'styles' => 'mt-3'])
             @slot('side')
                 <!-- Advanced Filter Modal 2 -->
-                <div class="modal fade" id="advancedFilterModal"  aria-labelledby="advancedFilterModalLabel" style="z-index: 1160"
-                    aria-hidden="true">
+                <div class="modal fade" id="advancedFilterModal"  aria-labelledby="advancedFilterModalLabel" 
+                    >
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="advancedFilterModalLabel">Advanced Filter</h5>
+                                <h5 class="modal-title" id="advancedFilterModalLabel">فلترةالاسماء المراد اضافتها</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <form id="advancedFilterForm">
                                     <!-- Prepositives -->
                                     <div class="mb-4" style="z-index: 99999">
-                                        <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                                        <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
                                         <select id="regions" name="regions[]" 
-                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg" style="width: 260px; z-index: 99999" 
+                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg" style="width: 100%; z-index: 99999" 
                                             multiple>
                                             @foreach ($regions as $region)
                                                 <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
@@ -117,16 +117,16 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="gender" class="form-label">Gender</label>
+                                    {{-- <div class="mb-3">
+                                        <label for="gender" class="form-label">الحالة الاجتماعية</label>
                                         <select id="gender" class="form-select">
                                             <option value="">All</option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                         </select>
-                                    </div>
+                                    </div> --}}
                                     <div class="mb-3">
-                                        <label for="ageRange" class="form-label">Age Range</label>
+                                        <label for="ageRange" class="form-label">افراد الاسرة</label>
                                         <div class="input-group">
                                             <input type="number" id="minAge" class="form-control" placeholder="Min">
                                             <span class="input-group-text">-</span>
