@@ -62,86 +62,101 @@
                 فلترة
                 <span class="ti-xs ti ti-filter-off ms-1"></span>
             </button>
-            <div id="filterMenu" class="position-absolute end-0 z-10 d-none w-80 p-2 pt-1 mt-12 bg-white border border-secondary rounded shadow-lg" style="max-height: 430px; overflow-y: auto;">
-                <div class="pb-1 mb-1 border-bottom border-secondary">
-                    <div class="h5 font-weight-semibold text-secondary">خيارات التصنيف</div>
-                </div>
-                <form action="{{ route('citizens.index') }}" method="GET">
-                    <!-- Filter Form Elements -->
-                    <div class="mb-4">
-                        <label class="d-block mb-1 font-weight-medium text-secondary">اختر المناديب:</label>
-                        <select id="regions" name="regions[]" class="form-select select2-multiple p-2 border border-secondary rounded" style="width: 260px;" multiple>
-                            @foreach ($regions as $region)
-                                <option class="w-120px" value="{{ $region->id }}" style="width: 260px;"
-                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
-                                    @if ($region->representatives->isNotEmpty())
-                                        {{ $region->name }} </br> :
-                                        {{ $region->representatives->first()->name }}
-                                    @else
-                                        {{ $region->name }}
-                                    @endif
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ageRange" class="form-label">افراد الاسرة</label>
-                        <div class="input-group">
-                            <input type="number" id="minAge" class="form-control" placeholder="Min">
-                            <span class="input-group-text">-</span>
-                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ageRange" class="form-label">العمر</label>
-                        <div class="input-group">
-                            <input type="number" id="minAge" class="form-control" placeholder="Min">
-                            <span class="input-group-text">-</span>
-                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
-                        </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="d-block mb-1 font-weight-medium text-secondary">حالة السكن ل:</label>
-                        <select id="living_status" name="living_status" class="form-select w-100 p-2 border border-secondary rounded">
-                            <option value="">غير محدد</option>
-                            <option value="1">سيئ</option>
-                            <option value="2">جيد</option>
-                            <option value="3">ممتاز</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="d-block mb-1 font-weight-medium text-secondary">الحالة الاجنماعية :</label>
-                        <select id="social_status" name="social_status" class="form-select w-100 p-2 border border-secondary rounded">
-                            <option value="">غير محدد</option>
-                            <option value="0">اعزب</option>
-                            <option value="1">متزوج</option>
-                            <option value="2">ارمل</option>
-                            <option value="3">متعدد</option>
-                            <option value="4">مطلق</option>
-                            <option value="5">زوجة 1</option>
-                            <option value="6">زوجة 2</option>
-                            <option value="7">زوجة 3</option>
-                            <option value="8">زوجة 4</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="d-block mb-1 font-weight-medium text-secondary">الجنس:</label>
-                        <select id="gender" name="gender" class="form-select w-100 p-2 border border-secondary rounded">
-                            <option value="">غير محدد</option>
-                            <option value="0">ذكر</option>
-                            <option value="1">انثى</option>
-                        </select>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button id="close" type="button" class="btn btn-secondary me-2">
-                            اغلاق
-                        </button>
-                        <button id="applyFilters" type="button" class="btn btn-primary">
-                            تطبيق
-                        </button>
-                    </div>
-                </form>
+
+            <!-- Filter Popup Menu -->
+        <div id="filterMenu"
+        class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+        <!-- Header -->
+        <div class="pb-1 mb-1 border-b border-gray-200">
+            <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
+        </div>
+        <!-- Filter Form -->
+        <form action="{{ route('citizens.index') }}" method="GET">
+            <!-- Prepositives -->
+            <div class="mb-4">
+                <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                <select id="regions" name="regions[]"
+                    class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;" multiple>
+                    @foreach ($regions as $region)
+                        <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
+                            {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+
+                            @if ($region->representatives->isNotEmpty())
+                                {{ $region->name }} </br> :
+                                {{ $region->representatives->first()->name }}
+                            @else
+                                {{ $region->name }}
+                            @endif
+
+                        </option>
+                    @endforeach
+                </select>
             </div>
+
+            <div class="mb-3">
+                <label for="ageRange" class="form-label">افراد الاسرة</label>
+                <div class="input-group">
+                    <input type="number" id="minAge" class="form-control" placeholder="Min">
+                    <span class="input-group-text">-</span>
+                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="ageRange" class="form-label">العمر</label>
+                <div class="input-group">
+                    <input type="number" id="minAge" class="form-control" placeholder="Min">
+                    <span class="input-group-text">-</span>
+                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                </div>
+            </div>
+            <!-- Living Status -->
+            <div class="mb-4">
+                <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
+                <select id="living_status" name="living_status"
+                    class="w-full p-2 border border-gray-300 rounded-lg">
+                    <option value="">غير محدد</option>
+                    <option value="1">سيئ</option>
+                    <option value="2">جيد</option>
+                    <option value="3">ممتاز</option>
+                </select>
+            </div>
+            <!-- Social Status -->
+            <div class="mb-4">
+                <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
+                <select id="social_status" name="social_status"
+                    class="w-full p-2 border border-gray-300 rounded-lg">
+                    <option value="">غير محدد</option>
+                    <option value="0">اعزب</option>
+                    <option value="1">متزوج</option>
+                    <option value="2">ارمل</option>
+                    <option value="3">متعدد</option>
+                    <option value="4">مطلق</option>
+                    <option value="5">زوجة 1</option>
+                    <option value="6">زوجة 2</option>
+                    <option value="7">زوجة 3</option>
+                    <option value="8">زوجة 4</option>
+
+                </select>
+            </div>
+            <!-- Gender -->
+            <div class="mb-4">
+                <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
+                <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
+                    <option value="">غير محدد</option>
+                    <option value="0">ذكر</option>
+                    <option value="1">انثى</option>
+                </select>
+            </div>
+            <!-- Actions -->
+            <div class="flex justify-end">
+                <button id="close" type="button"
+                    class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    اغلاق</button>
+                <button id="applyFilters" type="button"
+                    class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">تطبيق</button>
+            </div>
+        </form>
+    </div>
         </div>
     </div>
 </div>
