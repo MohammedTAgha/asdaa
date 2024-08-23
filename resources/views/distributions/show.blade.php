@@ -4,7 +4,21 @@
 
 
     <div>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
+    @if (session('status'))
+        <div class="alert alert-{{ session('status')['type'] }}">
+            {{ session('status')['message'] }}
+        </div>
+    @endif
         <div class=" bg-white shadow-md rounded-lg p-4 card accordion-item">
             <h2 class="accordion-header d-flex align-items-center">
                 <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
@@ -95,8 +109,9 @@
                                 <h5 class="modal-title" id="advancedFilterModalLabel">فلترةالاسماء المراد اضافتها</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <form id="advancedFilterForm" action="{{ route('distributions.addCitizensFilter') }}" method="POST">
+                                @csrf
                             <div class="modal-body">
-                                <form id="advancedFilterForm">
                                     <!-- regions  -->
                                     <div class="mb-4" style="z-index: 99999">
                                         <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
@@ -120,7 +135,7 @@
                                     <!-- distribution  -->
                                     <div class="mb-4" style="z-index: 99999">
                                         <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
-                                        <select id="regions" name="regions[]" 
+                                        <select id="regions" name="distributionId" 
                                             class="select2  p-2  border border-gray-300 rounded-lg" style="width: 100%; z-index: 99999" >
                                             @foreach ($distributions as $row_distribution)
                                                 <option  value="{{ $distribution->id }}"
@@ -141,17 +156,18 @@
                                     <div class="mb-3">
                                         <label for="ageRange" class="form-label">افراد الاسرة</label>
                                         <div class="input-group">
-                                            <input type="number" id="min_row_distribution" class="form-control" placeholder="من">
+                                            <input type="number" id="min_row_distribution" name="min_row_distribution" class="form-control" placeholder="من">
                                             <span class="input-group-text">-</span>
-                                            <input type="number" id="max_row_distribution" class="form-control" placeholder="الى">
+                                            <input type="number" id="max_row_distribution" name="max_row_distribution" class="form-control" placeholder="الى">
                                         </div>
                                     </div>
-                                </form>
+                                
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
-                                <button type="button" class="btn btn-primary" id="applyFilter">اضافة الفرز الى مشروع {{$distribution->name}}</button>
+                                <button type="submit" class="btn btn-primary"  >اضافة الفرز الى مشروع {{$distribution->name}}</button>
                             </div>
+                        </form>
                         </div>
                     </div>
                 </div>
