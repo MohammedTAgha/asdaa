@@ -97,7 +97,7 @@
                             </div>
                             <div class="modal-body">
                                 <form id="advancedFilterForm">
-                                    <!-- Prepositives -->
+                                    <!-- regions  -->
                                     <div class="mb-4" style="z-index: 99999">
                                         <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
                                         <select id="regions" name="regions[]" 
@@ -117,6 +117,19 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <!-- distribution  -->
+                                    <div class="mb-4" style="z-index: 99999">
+                                        <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
+                                        <select id="regions" name="regions[]" 
+                                            class="select2  p-2  border border-gray-300 rounded-lg" style="width: 100%; z-index: 99999" >
+                                            @foreach ($distributions as $row_distribution)
+                                                <option  value="{{ $distribution->id }}"
+                                                    {{ $distribution->id == $row_distribution->id ? 'selected' : '' }}>
+                                                    {{$row_distribution->name}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     {{-- <div class="mb-3">
                                         <label for="gender" class="form-label">الحالة الاجتماعية</label>
                                         <select id="gender" class="form-select">
@@ -128,16 +141,16 @@
                                     <div class="mb-3">
                                         <label for="ageRange" class="form-label">افراد الاسرة</label>
                                         <div class="input-group">
-                                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                                            <input type="number" id="min_row_distribution" class="form-control" placeholder="من">
                                             <span class="input-group-text">-</span>
-                                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                                            <input type="number" id="max_row_distribution" class="form-control" placeholder="الى">
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" id="applyFilter">Apply Filter</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
+                                <button type="button" class="btn btn-primary" id="applyFilter">اضافة الفرز الى مشروع {{$distribution->name}}</button>
                             </div>
                         </div>
                     </div>

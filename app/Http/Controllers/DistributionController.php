@@ -154,7 +154,6 @@ class DistributionController extends Controller
     public function addCitizens(Request $request, $distributionId = null)
     {
         Log::debug('test');
-        
         $citizenIds = explode(',', $request->input('citizens'));
         // dd($citizenIds);
 
@@ -245,6 +244,98 @@ class DistributionController extends Controller
         }
     }
 
+    public function addCitizensFilter(Request $request, $distributionId = null)
+    {
+        Log::debug('test');
+        $citizenIds = explode(',', $request->input('citizens'));
+        // dd($citizenIds);
+
+        $distributionId = $request->input("distributionId", $distributionId);
+        Log::debug($citizenIds);
+        if (empty($citizenIds)) {
+            return redirect()->back()->with("danger", "لا يوجد مواطنين تم اختيارهم");
+        }
+    
+        if (empty($distributionId)) {
+            return redirect()->back()->with("danger", "لا يوجد كشف محدد");
+        }
+        $totalIds = count($citizenIds);
+        DB::beginTransaction();
+        try {
+            // Check which citizens already exist in the distribution
+            $existingInDistribution = DB::table("distribution_citizens")
+                ->where("distribution_id", $distributionId)
+                ->whereIn("citizen_id", $citizenIds)
+                ->pluck("citizen_id")
+                ->toArray();
+    
+            // Check which citizens exist in the citizens table
+            $existingCitizens = Citizen::whereIn("id", $citizenIds)->pluck("id")->toArray();
+    
+            // Identify non-existent citizens
+            $nonExistentCitizens = array_diff($citizenIds, $existingCitizens);
+    
+            // Identify citizens to be added (exist in citizens table but not in distribution)
+            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
+    
+            $addedCount = 0;
+            $addedCitizens = [];
+    
+            foreach ($citizensToAdd as $citizenId) {
+                DB::table("distribution_citizens")->insert([
+                    "distribution_id" => $distributionId,
+                    "citizen_id" => $citizenId,
+                ]);
+                $addedCount++;
+                $addedCitizens[] = $citizenId;
+            }
+    
+            $existingCitizenData = Citizen::whereIn("id", $existingInDistribution)
+                ->select('id', 'firstname', 'lastname')
+                ->get()
+                ->toArray();
+    
+            $addedCitizenData = Citizen::whereIn("id", $addedCitizens)
+                ->select('id', 'firstname', 'lastname')
+                ->get()
+                ->toArray();
+    
+            DB::commit();
+            
+            $report = [
+                'added' => [
+                    'count' => $addedCount,
+                    'citizens' => $addedCitizenData
+                ],
+                'existing' => [
+                    'count' => count($existingInDistribution),
+                    'citizens' => $existingCitizenData
+                ],
+                'updated' => [
+                    'count' => count($nonExistentCitizens),
+                    'citizens' => $nonExistentCitizens // This will be an array of IDs
+                ],
+                'nonexistent' => [
+                    'count' => count($nonExistentCitizens),
+                    'citizens' => $nonExistentCitizens // This will be an array of IDs
+                ],
+                'totalIds' => $totalIds
+
+            ];
+    
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();    
+            return redirect()->back()
+                ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+                ->with('addCitizensReportHtml', $reportHtml);
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::debug('xxxxx');
+            Log::error("Error adding citizens: ", ["error" => $e->getMessage()]);
+            Log::error("Error adding citizen: ", ["xxxx" =>$report ]);
+            return redirect()->back()->with("danger", "حدث خطأ في الإضافة");
+        }
+    }
     public function removeCitizenFromDistribution($id) //pivot table id
     {
 
