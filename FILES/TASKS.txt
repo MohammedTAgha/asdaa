@@ -1,3 +1,10 @@
+finish side bar layout ✔✔
+add to a distribution from filter 
+when clicking checkbox update 
+add link to ctz in report
+fix styles and add logos
+add min and max filters 
+
 STAGE 3 NEW TASKS
 -- add export project data and statistics 
 -- convart all to arabic done
@@ -12,7 +19,7 @@ STAGE 3 NEW TASKS
 --add ctz list table thats contains a spacific names and cases (  )
 --progect sttistic 
 -- option to inert new or update when uploadin ctz excel file in progress
-
+-- use servises 
 -- what if we need to have all eldaries , we have a list of them ides
     -- have a list table that have id and its case (oldman , shaheed , presonars , have babies  )
 
