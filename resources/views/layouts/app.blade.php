@@ -105,10 +105,12 @@
                 data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}"
                 data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
                 <!--begin::Brand-->
+
                 <div class="aside-logo flex-column-auto" id="kt_aside_logo">
                     <!--begin::Logo-->
-                    <a href="../../demo1/dist/index.html">
-                        <img alt="Logo" src="assets/media/logos/logo-1-dark.svg" class="h-25px logo" />
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset('assets/img/asdaa.jpg') }}" alt="Logo" class="h-30px" />
+                        <span class="menu-title">اصداء</span>
                     </a>
                     <!--end::Logo-->
                     <!--begin::Aside toggler-->
@@ -142,110 +144,167 @@
                         <!--begin::Menu-->
                         <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
                             id="#kt_aside_menu" data-kt-menu="true">
-                            <!-- lable -->
+                            <!-- Brand -->
+
+
+                            <!-- Home -->
                             <div class="menu-item">
-                                <div class="menu-content pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">ادارة المناطق</span>
-                                </div>
-                            </div>
-                            <!-- menue item -->
-                            <div class="menu-item">
-                                <a class="menu-link active" href="../../demo1/dist/index.html">
+                                <a class="menu-link {{ request()->routeIs('home') ? 'active' : '' }}"
+                                    href="{{ route('home') }}">
                                     <span class="menu-icon">
-                                        <!--begin::Icon -->
                                         <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-smart-home"></i>
                                         </span>
-                                        <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">Default</span>
+                                    <span class="menu-title">الرئيسية</span>
                                 </a>
                             </div>
 
-                            <!-- lable 2 -->
+                            <!-- Test -->
                             <div class="menu-item">
-                                <div class="menu-content pt-8 pb-2">
-                                    <span class="menu-section text-muted text-uppercase fs-8 ls-1">Crafted</span>
+                                <a class="menu-link {{ request()->routeIs('test') ? 'active' : '' }}"
+                                    href="{{ route('test') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-smart-home"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">test</span>
+                                </a>
+                            </div>
+
+                            <!-- Citizens -->
+                            <div data-kt-menu-trigger="click"
+                                class="menu-item menu-accordion {{ request()->routeIs('citizens.*') ? 'here show' : '' }}">
+                                <span class="menu-link">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-users"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">النازحين</span>
+                                    <span class="menu-arrow"></span>
+                                </span>
+                                <div class="menu-sub menu-sub-accordion">
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ request()->routeIs('citizens.index') ? 'active' : '' }}"
+                                            href="{{ route('citizens.index') }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">عرض الكل</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ request()->routeIs('citizens.create') ? 'active' : '' }}"
+                                            href="{{ route('citizens.create') }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">اضافة جديد</span>
+                                        </a>
+                                    </div>
+                                    <div class="menu-item">
+                                        <a class="menu-link {{ request()->routeIs('citizens.import') ? 'active' : '' }}"
+                                            href="{{ route('citizens.import') }}">
+                                            <span class="menu-bullet">
+                                                <span class="bullet bullet-dot"></span>
+                                            </span>
+                                            <span class="menu-title">رفع كشف</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- menue accordion -->
-                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                                <span class="menu-link">
+                            <!-- Distributions -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('distributions.index') ? 'active' : '' }}"
+                                    href="{{ route('distributions.index') }}">
                                     <span class="menu-icon">
-                                        <!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
                                         <span class="svg-icon svg-icon-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none">
-                                                <path
-                                                    d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z"
-                                                    fill="black" />
-                                                <rect opacity="0.3" x="8" y="3" width="8" height="8"
-                                                    rx="4" fill="black" />
-                                            </svg>
+                                            <i class="ti ti-list"></i>
                                         </span>
-                                        <!--end::Svg Icon-->
                                     </span>
-                                    <span class="menu-title">Account</span>
-                                    <span class="menu-arrow"></span>
-                                </span>
-                                <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/overview.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Overview</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/settings.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Settings</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/security.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Security</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/billing.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Billing</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/statements.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Statements</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/referrals.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Referrals</span>
-                                        </a>
-                                    </div>
-                                    <div class="menu-item">
-                                        <a class="menu-link" href="../../demo1/dist/account/api-keys.html">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">API Keys</span>
-                                        </a>
-                                    </div>
-                                </div>
+                                    <span class="menu-title">كل الكشوفات</span>
+                                </a>
+                            </div>
+
+                            <!-- Representatives -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('representatives.index') ? 'active' : '' }}"
+                                    href="{{ route('representatives.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-man"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">المناديب</span>
+                                </a>
+                            </div>
+
+                            <!-- Regions -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('regions.index') ? 'active' : '' }}"
+                                    href="{{ route('regions.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-map"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">المناطق</span>
+                                </a>
+                            </div>
+
+                            <!-- Staff -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('staff.index') ? 'active' : '' }}"
+                                    href="{{ route('staff.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-users"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">الاعضاء</span>
+                                </a>
+                            </div>
+
+                            <!-- Committees -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('committees.index') ? 'active' : '' }}"
+                                    href="{{ route('committees.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-flag-3"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">اللجان</span>
+                                </a>
+                            </div>
+
+                            <!-- Users -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('users.index') ? 'active' : '' }}"
+                                    href="{{ route('users.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-users"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">المستخدمين</span>
+                                </a>
+                            </div>
+
+                            <!-- Files -->
+                            <div class="menu-item">
+                                <a class="menu-link {{ request()->routeIs('files.index') ? 'active' : '' }}"
+                                    href="{{ route('files.index') }}">
+                                    <span class="menu-icon">
+                                        <span class="svg-icon svg-icon-2">
+                                            <i class="ti ti-folder-plus"></i>
+                                        </span>
+                                    </span>
+                                    <span class="menu-title">مدير الملفات</span>
+                                </a>
                             </div>
 
                         </div>
@@ -253,27 +312,9 @@
                     </div>
                     <!--end::Aside Menu-->
                 </div>
+                <!--end::Aside menu-->
 
-                <!--begin::Footer-->
-                <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-                    <a href="../../demo1/dist/documentation/getting-started.html"
-                        class="btn btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover"
-                        data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
-                        <span class="btn-label">Docs &amp; Components</span>
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
-                        <span class="svg-icon btn-icon svg-icon-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.3"
-                                    d="M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22ZM15 17C15 16.4 14.6 16 14 16H8C7.4 16 7 16.4 7 17C7 17.6 7.4 18 8 18H14C14.6 18 15 17.6 15 17ZM17 12C17 11.4 16.6 11 16 11H8C7.4 11 7 11.4 7 12C7 12.6 7.4 13 8 13H16C16.6 13 17 12.6 17 12ZM17 7C17 6.4 16.6 6 16 6H8C7.4 6 7 6.4 7 7C7 7.6 7.4 8 8 8H16C16.6 8 17 7.6 17 7Z"
-                                    fill="black" />
-                                <path d="M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z" fill="black" />
-                            </svg>
-                        </span>
-                        <!--end::Svg Icon-->
-                    </a>
-                </div>
-                <!--end::Footer-->
+
             </div>
             <!--end::Aside-->
             <!--begin::Wrapper-->
@@ -542,7 +583,7 @@
             showSnackbar("{{ session('warning') }}", 'warning');
         @endif
     </script>
-     
+
 
     {{-- @stack('scripts') --}}
     {{-- vuexy scripts --}}
