@@ -185,28 +185,7 @@ id
 {{ $regionId }}
 {{-- @dd($region) --}}
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-    const filterButton = document.getElementById('filterButton');
-    const filterMenu = document.getElementById('filterMenu');
-    const closeButton = document.getElementById('close');
-
-    filterButton.addEventListener('click', function() {
-        filterMenu.classList.toggle('d-none');
-    });
-
-    closeButton.addEventListener('click', function() {
-        filterMenu.classList.add('d-none');
-    });
-
-    // Optionally close the dropdown if clicked outside
-    document.addEventListener('click', function(event) {
-        if (!filterButton.contains(event.target) && !filterMenu.contains(event.target)) {
-            filterMenu.classList.add('d-none');
-        }
-    });
-});
-</script>
+ 
     <script>
         $(document).ready(function() {
             console.log('load')
