@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', "رفع ملف")
 
 @section('content')
 

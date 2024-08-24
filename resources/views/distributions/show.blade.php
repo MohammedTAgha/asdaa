@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', "مشروع".' '.$distribution->name)
 
 @section('content')
 
@@ -201,18 +202,18 @@
                 <div class="demo-inline-spacing">
                     {{-- go to main ctz list  --}}
                     <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button"
-                        class="btn btn-label-primary waves-effect">
+                        class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-list-details ti-xs me-1"></i> اضافة من الكشف
                     </a>
                     {{-- show filter for citizents and spasific roules  --}}
-                    <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-light-primary waves-effect" data-bs-toggle="modal"
                         data-bs-target="#advancedFilterModal">
                         <i class="tf-icons ti ti-arrows-sort ti-xs me-1"></i>اضافة حسب فلتر
                     </button>
                     {{-- <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#regionsSelectModal">
                         <i class="tf-icons ti ti-map ti-xs me-1"></i> اضافة مناطق
                     </button> --}}
-                    <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-label-primary waves-effect">
+                    <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
 

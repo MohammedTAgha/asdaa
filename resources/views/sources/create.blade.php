@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', "انشاء مصدر")
 
 @section('content')
 <div class="container">

@@ -1,5 +1,6 @@
 @extends('dashboard')
 @section('content')
+@section('title', "اضافة لجنة")
 <div class="container">
     <h1>{{ isset($committee) ? 'تحرير' : 'انشاء' }} لجنة</h1>
 

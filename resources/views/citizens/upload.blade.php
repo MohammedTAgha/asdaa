@@ -1,5 +1,5 @@
 @extends('dashboard')
-
+@section('title', "رفع كشف")
 @section('content')
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h1 class="mb-6 text-2xl font-bold text-center text-gray-700">Upload Excel File</h1>

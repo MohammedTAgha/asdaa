@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', "عرض الملفات")
 
 @section('content')
 <div class="container mx-auto py-8">

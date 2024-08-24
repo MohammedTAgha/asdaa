@@ -2,7 +2,7 @@
 
 @section('styles')
 @endsection
-
+@section('title','اضافة نازح جديد')
 @section('content')
 <form action="{{ route('citizens.store') }}" method="POST" class="space-y-4">
     @csrf

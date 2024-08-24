@@ -1,5 +1,7 @@
 @extends('dashboard')
 
+@section('title', "المناطق")
+
 @section('content')
     <div class="container mx-auto py-6">
         <div class="card mb-4">

@@ -1,4 +1,8 @@
 @extends('dashboard')
+@php
+    $title = 'المستفيد'. " " .$citizen->firstname . " " .  $citizen->secondname .  ' ' .$citizen->lastname 
+@endphp
+@section('title', $title)
 
 @section('content')
     <div class="container mx-auto px-1">

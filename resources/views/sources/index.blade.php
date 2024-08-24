@@ -2,6 +2,7 @@
 
 @push('custom_styles')
 @endpush
+@section('title', "المصادر")
 
 @section('content')
 

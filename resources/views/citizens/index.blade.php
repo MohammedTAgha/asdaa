@@ -106,6 +106,7 @@
 @endsection
 
 @section('styles')
+@section('title','المستفيدين')
 
 @endsection
 @section('content')

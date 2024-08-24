@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', "مشروع جديد")
 
 @section('content')
     <div class="container mx-auto px-4">

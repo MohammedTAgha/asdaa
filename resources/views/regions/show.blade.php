@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', $region->name)
 
 @section('content')
 @component('components.box', ['title' => 'منطقة' . ' ' . $region->name . ' ' , 'styles'=> 'mb-4'])

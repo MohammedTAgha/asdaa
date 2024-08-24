@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', $committee->name)
 
 @section('content')
     <div class="container">

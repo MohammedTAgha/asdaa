@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title', $representative->name)
 
 @section('content')
     @component('components.box', ['title' => 'المندوب' . ' ' . $representative->name . ' ', 'styles' => 'mb-4'])

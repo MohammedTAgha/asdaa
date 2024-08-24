@@ -1,4 +1,5 @@
 @extends('dashboard')
+@section('title',' رفع كشف الى قاعدة البيانات ')
 
 @section('content')
 
@@ -25,7 +26,7 @@
                 </div>
             @endif
             <div class="mb-4 text-center">
-                <a href="{{ route('citizens.template') }}" class="btn btn-label-primary waves-effect">
+                <a href="{{ route('citizens.template') }}" class="btn btn-outline btn-outline btn-outline-primary btn-active-light-primary waves-effect">
                     تحميل الترويسة
                     <span class="ti-xs ti ti-file-download me-1"></span>
                 </a>
