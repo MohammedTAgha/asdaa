@@ -12,70 +12,55 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Validators\Failure;
+
 class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithEvents
 {
     use SkipsFailures;
+
     public $failedRows = [];
     private $errors = [];
+    private $regionId;
+
+    public function __construct($regionId = null)
+    {
+        $this->regionId = $regionId;
+    }
 
     public function model(array $row)
     {
-        // Skip rows with empty or duplicate IDs
+        // Handle Arabic headers by translating them to your column names
+        $row = $this->translateHeaders($row);
 
-        // if (!isset($row['id']) || empty($row['id'])) {
-        //     $this->failedRows[] = ['row' => $row, 'reason' => 'Empty ID'];
-        //     return null;
-        // }
-
-        // if (Citizen::where('id', $row['id'])->exists()) {
-        //     $this->failedRows[] = ['row' => $row, 'reason' => 'تكرر رقم الهوية'];
-        //     return null;
-        // }
-
-        // if (empty($row['id']) || Citizen::where('id', $row['id'])->exists()) {
-        //     $this->failedRows[] = [
-        //         'row' => $row['id'] ?? 'no id ',
-        //         'id' => $row['id'] ?? 'no id ',
-        //         'firstname' => $row['firstname'] ?? '', // Adjust this based on your actual column name
-        //         'lastname' => $row['lastname'] ?? '',
-        //         'attribute' => 'الهوية',
-        //         'errors' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',
-        //         'values' => empty($row['id']) ? 'Empty ID' : 'تكرر رقم الهوية',  
-        //         ];
-        //     return null;
-        // }
+        // Assign region_id from file or default to the one passed to the constructor
+        $regionId = $this->regionId ?? $row['region_id'] ?? null;
 
         return new Citizen([
-            'id' => $row['id'],
-            'firstname' => $row['firstname'],
-            'secondname' => $row['secondname'],
-            'thirdname' => $row['thirdname'],
-            'lastname' => $row['lastname'],
-            'phone' => $row['phone'],
-            'phone2' => $row['phone2'],
-            'family_members' => $row['family_members'],
-            'wife_id' => $row['wife_id'],
-            'wife_name' => $row['wife_name'],
-            'mails_count' => $row['mails_count'],
-            'femails_count' => $row['femails_count'],
-            'leesthan3' => $row['leesthan3'],
-            'obstruction' => $row['obstruction'],
-            'obstruction_description' => $row['obstruction_description'],
-            'disease' => $row['disease'],
-            'disease_description' => $row['disease_description'],
-            'job' => $row['job'],
-            'living_status' => $row['living_status'],
-            'original_address' => $row['original_address'],
-            'note' => $row['note'],
-            'region_id' => $row['region_id'],
-
-            //
-            'social_status' => $row['social_status'],
-            // 'date_of_birth' => $row['date_of_birth'],
-            // 'gender' => $row['gender'],
-            // 'elderly_count' => $row['elderly_count'],
-
-
+            'id' => $row['id'] ?? null,
+            'firstname' => $row['firstname'] ?? null,
+            'secondname' => $row['secondname'] ?? null,
+            'thirdname' => $row['thirdname'] ?? null,
+            'lastname' => $row['lastname'] ?? null,
+            'phone' => $row['phone'] ?? null,
+            'phone2' => $row['phone2'] ?? null,
+            'family_members' => $row['family_members'] ?? null,
+            'wife_id' => $row['wife_id'] ?? null,
+            'wife_name' => $row['wife_name'] ?? null,
+            'mails_count' => $row['mails_count'] ?? null,
+            'femails_count' => $row['femails_count'] ?? null,
+            'leesthan3' => $row['leesthan3'] ?? null,
+            'obstruction' => $row['obstruction'] ?? null,
+            'obstruction_description' => $row['obstruction_description'] ?? null,
+            'disease' => $row['disease'] ?? null,
+            'disease_description' => $row['disease_description'] ?? null,
+            'job' => $row['job'] ?? null,
+            'living_status' => $row['living_status'] ?? null,
+            'original_address' => $row['original_address'] ?? null,
+            'note' => $row['note'] ?? null,
+            'region_id' => $regionId,
+            'social_status' => $row['social_status'] ?? null,
+            // 'date_of_birth' => $row['date_of_birth'] ?? null,
+            // 'gender' => $row['gender'] ?? null,
+            // 'elderly_count' => $row['elderly_count'] ?? null,
         ]);
     }
 
@@ -88,7 +73,6 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'region_id' => 'required|exists:regions,id',
         ];
     }
-
 
     public function customValidationMessages()
     {
@@ -109,7 +93,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             $this->failedRows[] = [
                 'row' => $failure->row(),
                 'id' => $failure->values()['id'] ?? '',
-                'firstname' => $failure->values()['firstname'] ?? '', // Adjust this based on your actual column name
+                'firstname' => $failure->values()['firstname'] ?? '',
                 'lastname' => $failure->values()['lastname'] ?? '',
                 'attribute' => $failure->attribute(),
                 'errors' => implode(', ', $failure->errors()),
@@ -124,6 +108,34 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             BeforeImport::class => function(BeforeImport $event) {
                 $this->errors = [];
             },
+        ];
+    }
+
+    private function translateHeaders(array $row): array
+    {
+        return [
+            'id' => $row['رقم الهوية'],
+            'firstname' => $row['الاسم الاول'],
+            'secondname' => $row[' اسم الاب'],
+            'thirdname' => $row['اسم الجد'],
+            'lastname' => $row['اسم العائلة'],
+            'phone' => $row['رقم الجوال'] ?? null,
+            'phone2' => $row['رقم الجوال البديل'] ?? null,
+            'family_members' => $row['عدد الأفراد'] ?? null,
+            'wife_id' => $row['هوية الزوجة'] ?? null,
+            'wife_name' => $row['اسم الزوجة رباعي'] ?? null,
+            'mails_count' => $row['عدد الذكور'] ?? null,
+            'femails_count' => $row['عدد الاناث'] ?? null,
+            'leesthan3' => $row['عدد الافراد اقل من 3 سنوات'] ?? null,
+            'obstruction' => $row['عدد الافراد ذوي الاحتياجات الخاصة'] ?? null,
+            'obstruction_description' => $row['وصف الاحتياجات الخاصة'] ?? null,
+            'disease' => $row['عدد الافراد ذوي الامراض المزمنة'] ?? null,
+            'disease_description' => $row['وصف الامراض المزمنة'] ?? null,
+            'job' => $row['العمل'] ?? null,
+            'living_status' => $row['حالة السكن'] ?? null,
+            'original_address' => $row['العنوان الأصلي'] ?? null,
+            'note' => $row['ملاحظات'] ?? null,
+            'region_id' => $row['رقم المنطقة'],
         ];
     }
 }
