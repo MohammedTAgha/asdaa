@@ -17,12 +17,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     use SkipsFailures;
     public $failedRows = [];
     private $errors = [];
-    public $regionId =null ;
-    public function __construct($regionId=null)
-    {
-        $this->regionId = $regionId;
-    }
-    
+
     public function model(array $row)
     {
         // Skip rows with empty or duplicate IDs
@@ -49,38 +44,33 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         //         ];
         //     return null;
         // }
-        $regionId =null;
-        if($this->regionId ==null){
-            $regionId ==null;
-        }else{
-            $regionId =$this->regionId;
-        }
+
         return new Citizen([
-            'id' => $row['رقم الهوية'],
-            'firstname' => $row['الاسم الاول'],
-            'secondname' => $row[' اسم الاب'],
-            'thirdname' => $row['اسم الجد'],
-            'lastname' => $row['اسم العائلة'],
-            'phone' => $row['رقم الجوال'] ?? null,
-            'phone2' => $row['رقم الجوال البديل']?? null,
-            'family_members' => $row['عدد الأفراد']?? null,
-            'wife_id' => $row['هوية الزوجة']?? null,
-            'wife_name' => $row['اسم الزوجة رباعي']?? null,
-            'mails_count' => $row['عدد الذكور']?? null,
-            'femails_count' => $row['عدد الاناث']?? null,
-            'leesthan3' => $row['عدد الافراد اقل من 3 سنوات']?? null,
-            'obstruction' => $row['عدد الافراد ذوي الاحتياجات الخاصة']?? null,
-            'obstruction_description' => $row['وصف الاحتياجات الخاصة']?? null,
-            'disease' => $row['عدد الافراد ذوي الامراض المزمنة']?? null,
-            'disease_description' => $row['وصف الامراض المزمنة']?? null,
-            'job' => $row['العمل']?? null,
-            'living_status' => $row['حالة السكن']?? null,
-            'original_address' => $row['original_address']?? null,
-            'note' => $row['note']?? null,
-            'region_id' => $row['رقم المنطقة'],
+            'id' => $row['id'],
+            'firstname' => $row['firstname'],
+            'secondname' => $row['secondname'],
+            'thirdname' => $row['thirdname'],
+            'lastname' => $row['lastname'],
+            'phone' => $row['phone'],
+            'phone2' => $row['phone2'],
+            'family_members' => $row['family_members'],
+            'wife_id' => $row['wife_id'],
+            'wife_name' => $row['wife_name'],
+            'mails_count' => $row['mails_count'],
+            'femails_count' => $row['femails_count'],
+            'leesthan3' => $row['leesthan3'],
+            'obstruction' => $row['obstruction'],
+            'obstruction_description' => $row['obstruction_description'],
+            'disease' => $row['disease'],
+            'disease_description' => $row['disease_description'],
+            'job' => $row['job'],
+            'living_status' => $row['living_status'],
+            'original_address' => $row['original_address'],
+            'note' => $row['note'],
+            'region_id' => $row['region_id'],
 
             //
-            'social_status' => $row['الحالة الاجتماعية'],
+            'social_status' => $row['social_status'],
             // 'date_of_birth' => $row['date_of_birth'],
             // 'gender' => $row['gender'],
             // 'elderly_count' => $row['elderly_count'],
