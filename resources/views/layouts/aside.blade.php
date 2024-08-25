@@ -7,10 +7,12 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 
 <div class="aside-logo flex-column-auto" id="kt_aside_logo">
 	<!--begin::Logo-->
-	<a href="{{ route('home') }}">
-		<img src="{{ asset('assets/img/asdaa.jpg') }}" alt="Logo" class="h-30px" />
-		<span class="menu-title">اصداء</span>
-	</a>
+	<span>
+		<a href="{{ route('home') }}">
+			<img src="{{ asset('assets/img/asdaa.jpg') }}" alt="Logo" class="h-30px" />
+		</a>
+		{{-- <span class="menu-title">اصداء</span> --}}
+	</span>
 	<!--end::Logo-->
 	<!--begin::Aside toggler-->
 	<div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle"
@@ -113,6 +115,47 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 				</div>
 			</div>
 
+						<!-- Citizens -->
+						<div data-kt-menu-trigger="click"
+						class="menu-item menu-accordion {{ request()->routeIs('distributions.*') ? 'here show' : '' }}">
+						<span class="menu-link">
+							<span class="menu-icon">
+								<i class="icon-xl fas fa-dice-d6"></i>
+							</span>
+							<span class="menu-title">المشاريع</span>
+							<span class="menu-arrow"></span>
+						</span>
+						<div class="menu-sub menu-sub-accordion">
+							<div class="menu-item">
+								<a class="menu-link {{ request()->routeIs('distributions.index') ? 'active' : '' }}"
+									href="{{ route('distributions.index') }}">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">عرض المشاريع</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a class="menu-link {{ request()->routeIs('distributions.create') ? 'active' : '' }}"
+									href="{{ route('distributions.create') }}">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">اضافة جديد</span>
+								</a>
+							</div>
+							<div class="menu-item">
+								<a class="menu-link {{ request()->routeIs('upload.citizens') ? 'active' : '' }}"
+									href="{{ route('upload.citizens') }}">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">مستفيدين Excel</span>
+								</a>
+							</div>
+						</div>
+					</div>
+		
 			<!-- Distributions -->
 			<div class="menu-item">
 				<a class="menu-link {{ request()->routeIs('distributions.index') ? 'active' : '' }}"

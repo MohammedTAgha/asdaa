@@ -94,7 +94,7 @@ class CitizenController extends Controller
 
 
         $query = Citizen::with('region')
-            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'social_status', 'region_id', 'note']);
+            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
     
         if ($request->has('search') && !empty($request->search)) {
             $query->where(function($q) use ($request) {
@@ -147,7 +147,7 @@ class CitizenController extends Controller
                 return '<a href="'.route('citizens.edit', $citizen->id).'" class="btn btn-sm btn-primary">Edit</a>';
             })
             ->addColumn('checkbox', function ($citizen) {
-                return '<input type="checkbox" name="citizens[]" value="'.$citizen->id.'">';
+                return '<input class="form-check-input w-18px" type="checkbox" name="citizens[]" value="'.$citizen->id.'">';
             })
             ->rawColumns(['action', 'checkbox','name'])
             ->make(true);
@@ -200,6 +200,15 @@ class CitizenController extends Controller
             'original_address' => $request->input('original_address'),
             'elderly_count' => $request->input('elderly_count'),
             'note' => $request->input('note'),
+            'family_members' => $request->input('family_members'),
+            'mails_count' => $request->input('mails_count'),
+            'femails_count' => $request->input('femails_count'),
+            'mails_count' => $request->input('mails_count'),
+            'leesthan3' => $request->input('leesthan3'),
+            'disease' => $request->input('disease'),
+            'disease_description' => $request->input('disease_description'),
+            'obstruction' => $request->input('obstruction'),
+            'obstruction_description' => $request->input('obstruction_description'),
 
         ];
 

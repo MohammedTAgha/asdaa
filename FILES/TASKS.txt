@@ -1,21 +1,21 @@
 finish side bar layout ✔✔
-add to a distribution from filter 
-when clicking checkbox update 
-add link to ctz in report
+add to a distribution from filter ✔✔
+when clicking checkbox update ✔✔
+add link to ctz in report 
 fix styles and add logos
-add min and max filters 
+add min and max filters ✔✔
 
 STAGE 3 NEW TASKS
 -- add export project data and statistics 
--- convart all to arabic done
+-- convart all to arabic ✔✔
 --add delete functionalty to all methods
 --edit al formas and make it organized (in progress) >> do it in metronic
 --edit tabels and make it nice style >> do it in metronic
 --add bulk delete and more advance filltring for projects >> do it in metronic
---use term project done
+--use term project ✔✔
 --update the font
 --upload file to a spasific region manager
---in distributions table add more actions in the end of it like (add region to project )
+--in distributions table add more actions in the end of it like (add region to project ) ✔✔
 --add ctz list table thats contains a spacific names and cases (  )
 --progect sttistic 
 -- option to inert new or update when uploadin ctz excel file in progress

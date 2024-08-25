@@ -32,15 +32,15 @@
 <div class="row align-items-center">
     <!-- Elements aligned at the start -->
     <div class="col d-flex align-items-center">
-        <form method="GET" class="d-flex me-3">
+        <div  class="d-flex me-3">
             <div class="input-group">
                 <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
-                <button type="submit" id="searchbtn" class="btn btn-primary ms-2">
+                <button type="submit" id="searchbtn" class="btn btn-primary ">
                     بحث
                     <span class="ti-xs ti ti-user-search ms-1"></span>
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 
     <!-- Elements aligned at the end -->
@@ -183,7 +183,7 @@
                 {{-- <th class="min-w-90px">تاريخ الميلاد</th>
                 <th class="min-w-40px">الجنس</th> --}}
                 <th class="min-w-100px">اسم الزوجة</th>
-                <th class="min-w-50px">الحالة الاجتماعية</th>
+                <th class="min-w-50px"> الافراد</th>
                 <th class="min-w-50px">المنطقة</th>
                 <th class="min-w-50px">ملاحظة</th>
                 <th class="min-w-50px"> - </th>
@@ -255,8 +255,8 @@ id
                         name: 'wife_name'
                     },
                     {
-                        data: 'social_status',
-                        name: 'social_status'
+                        data: 'family_members',
+                        name: 'family_members'
                     },
                     {
                         data: 'region',

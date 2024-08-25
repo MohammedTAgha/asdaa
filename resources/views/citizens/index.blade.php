@@ -172,6 +172,9 @@
                 });
             </script>
         @endif
+        <div class="row">
+            
+        </div>
         <div class="card py-6 px-4">
 
             @component('components.citizens', [

@@ -1,25 +1,25 @@
 @extends('dashboard')
-@section('title', "مشروع".' '.$distribution->name)
+@section('title', 'مشروع' . ' ' . $distribution->name)
 
 @section('content')
 
 
     <div>
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-    @if (session('status'))
-        <div class="alert alert-{{ session('status')['type'] }}">
-            {{ session('status')['message'] }}
-        </div>
-    @endif
+        @if (session('status'))
+            <div class="alert alert-{{ session('status')['type'] }}">
+                {{ session('status')['message'] }}
+            </div>
+        @endif
         <div class=" bg-white shadow-md rounded-lg p-4 card accordion-item">
             <h2 class="accordion-header d-flex align-items-center">
                 <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
@@ -102,8 +102,7 @@
         @component('components.box', ['title' => 'المستفيدين', 'styles' => 'mt-3'])
             @slot('side')
                 <!-- Advanced Filter Modal 2 -->
-                <div class="modal fade" id="advancedFilterModal"  aria-labelledby="advancedFilterModalLabel" 
-                    >
+                <div class="modal fade" id="advancedFilterModal" aria-labelledby="advancedFilterModalLabel">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -112,13 +111,13 @@
                             </div>
                             <form id="advancedFilterForm" action="{{ route('distributions.addCitizensFilter') }}" method="POST">
                                 @csrf
-                            <div class="modal-body">
+                                <div class="modal-body">
                                     <!-- regions  -->
                                     <div class="mb-4" style="z-index: 99999">
                                         <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
-                                        <select id="regions" name="regions[]" 
-                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg" style="width: 100%; z-index: 99999" 
-                                            multiple>
+                                        <select id="regions" name="regions[]"
+                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg"
+                                            style="width: 100%; z-index: 99999" multiple>
                                             @foreach ($regions as $region)
                                                 <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
                                                     {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
@@ -135,13 +134,14 @@
                                     </div>
                                     <!-- distribution  -->
                                     <div class="mb-4" style="z-index: 99999">
-                                        <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
-                                        <select id="regions" name="distributionId" 
-                                            class="select2  p-2  border border-gray-300 rounded-lg" style="width: 100%; z-index: 99999" >
+                                        <label class="block mb-1 font-medium text-gray-700">اختر المشروع:</label>
+                                        <select id="regions" name="distributionId"
+                                            class="select2  p-2  border border-gray-300 rounded-lg"
+                                            style="width: 100%; z-index: 99999">
                                             @foreach ($distributions as $row_distribution)
-                                                <option  value="{{ $distribution->id }}"
+                                                <option value="{{ $distribution->id }}"
                                                     {{ $distribution->id == $row_distribution->id ? 'selected' : '' }}>
-                                                    {{$row_distribution->name}}
+                                                    {{ $row_distribution->name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -157,18 +157,21 @@
                                     <div class="mb-3">
                                         <label for="ageRange" class="form-label">افراد الاسرة</label>
                                         <div class="input-group">
-                                            <input type="number" id="min_row_distribution" name="min_row_distribution" class="form-control" placeholder="من">
+                                            <input type="number" id="min_row_distribution" name="min_row_distribution"
+                                                class="form-control" placeholder="من">
                                             <span class="input-group-text">-</span>
-                                            <input type="number" id="max_row_distribution" name="max_row_distribution" class="form-control" placeholder="الى">
+                                            <input type="number" id="max_row_distribution" name="max_row_distribution"
+                                                class="form-control" placeholder="الى">
                                         </div>
                                     </div>
-                                
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
-                                <button type="submit" class="btn btn-primary"  >اضافة الفرز الى مشروع {{$distribution->name}}</button>
-                            </div>
-                        </form>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
+                                    <button type="submit" class="btn btn-primary">اضافة الفرز الى مشروع
+                                        {{ $distribution->name }}</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -199,6 +202,8 @@
                         </div>
                     </div>
                 </div>
+                
+
                 <div class="demo-inline-spacing">
                     {{-- go to main ctz list  --}}
                     <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button"
@@ -230,7 +235,9 @@
                         $citizens = $distribution->citizens;
                     @endphp
                     @if (!$citizens->isEmpty())
-                        <table class="table table-striped table-hover mt-2">
+                         <input type="text" id="searchbar"  class="form-control" placeholder='بحث فوري ...'>
+
+                        <table id="ctzlist" class="table table table-row-bordered gy-2">
                             <thead class="table-light">
                                 <tr>
                                     <th class=" py-3 px-2 font-semibold ">الهوية</th>
@@ -261,7 +268,8 @@
                                         </td>
                                         <td class=" py-3 px-2">
                                             <a id='name' href="{{ route('regions.show', $citizen->region->id) }}">
-                                                <input type="hidden"  name="name" value="{{ $citizen->firstname . ' ' . $citizen->lastname }}" >
+                                                <input type="hidden" name="name"
+                                                    value="{{ $citizen->firstname . ' ' . $citizen->lastname }}">
                                                 {{ $citizen->region->name }}
                                             </a>
                                         </td>
@@ -275,7 +283,7 @@
                                         </td>
                                         <td class=" py-3 px-2">
                                             <input class="form-check-input" type="checkbox" name="done"
-                                                value="{{ $citizen->pivot->done }}"
+                                                value="{{ $citizen->pivot->done }}" data-id="{{ $citizen->pivot->id }}"
                                                 {{ $citizen->pivot->done ? 'checked' : '' }}>
                                         </td>
 
@@ -349,15 +357,23 @@
         <script>
             $(document).ready(function() {
                 // Set CSRF token for AJAX requests
+                oTable = $("#ctzlist").DataTable({
+                    "scrollX": true,
+                    responsive: true,
+                   
+                });
+                
+                $('#searchbar').keyup(function() {
+                        console.log('serc');
+                        
+                    oTable.search($(this).val()).draw();
+                });
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-
-                $('.update-button').click(function() {
-                console.log('cl');
-                
+                $('#ctzlist tbody').on('change', 'input[type="checkbox"]', function() {
                     var pivotId = $(this).data('id');
                     var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
                     var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
@@ -367,7 +383,51 @@
                     var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
                     var status = isChecked ? 1 : 0;
                     console.log();
-                    
+                    console.log('clicked')
+                    console.log(pivotId)
+                    console.log('clicked')
+                    console.log(ctzName)
+                    $.ajax({
+                        url: '/update-pivot',
+                        method: 'POST',
+                        data: {
+                            pivotId: pivotId,
+                            isChecked: status,
+                            selectedDate: selectedDate,
+                            quantity: quantity,
+                            recipient: recipient,
+                            note: note,
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            console.log(response);
+                            if (status) {
+                                alert(' تم تسليم  ' + ctzName + ' {{ $distribution->name }} ');
+                            } else {
+                                alert(' تم الغاء تسليم  ' + ctzName +
+                                    ' {{ $distribution->name }} ');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error response
+                            console.error(xhr.responseText);
+                            alert('Failed to update pivot');
+                        }
+                    });
+                });
+                $('.update-button').click(function() {
+                    console.log('cl');
+
+                    var pivotId = $(this).data('id');
+                    var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
+                    var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
+                    var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
+                    var note = $(this).closest('tr').find('input[name="note"]').val();
+                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
+                    var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
+                    var status = isChecked ? 1 : 0;
+                    console.log();
+
                     console.log($(this).closest('tr').find('a[id="name"]'))
                     $.ajax({
                         url: '/update-pivot',
@@ -383,11 +443,8 @@
                         success: function(response) {
                             // Handle success response
                             console.log(response);
-                            if (status){
-                                alert(' تم تسليم  '  + ctzName + ' {{$distribution->name}} ');
-                            }else{
-                                alert(' تم الغاء تسليم  '  + ctzName + ' {{$distribution->name}} ');
-                            }
+                            alert(' تم تحديث  ' + ctzName);
+
                         },
                         error: function(xhr, status, error) {
                             // Handle error response

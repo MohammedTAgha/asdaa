@@ -10,6 +10,7 @@ use App\Models\Distribution;
 use App\Imports\CitizensImport;
 use App\Models\Citizen;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class CitizenUploadController extends Controller // upload to a distributin exel 
 {
@@ -26,7 +27,7 @@ class CitizenUploadController extends Controller // upload to a distributin exel
         return view('common.upload_citizens', compact('distributions'));
     }
 
-    public function uploadCitizens(Request $request)
+    public function uploadCitizens(Request $request)  // add to distribution
     {
         // Validate the request to ensure required fields are provided
         $request->validate([
@@ -40,7 +41,9 @@ class CitizenUploadController extends Controller // upload to a distributin exel
         try {
             // Read the uploaded Excel file and get the first collection of data
             $citizensData = Excel::toCollection(new CitizensImport, $file)->first();
-    
+            Log::alert('file');
+            Log::alert($citizensData);
+
             DB::beginTransaction();
     
             // Get existing citizen IDs already linked to the distribution
