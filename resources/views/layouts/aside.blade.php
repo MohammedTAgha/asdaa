@@ -153,6 +153,15 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 									<span class="menu-title">مستفيدين Excel</span>
 								</a>
 							</div>
+							<div class="menu-item">
+								<a class="menu-link {{ request()->routeIs('distributions.exportDistributionStatistics') ? 'active' : '' }}"
+									href="{{ route('distributions.exportDistributionStatistics') }}">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title"> نصدير المشاريع</span>
+								</a>
+							</div>
 						</div>
 					</div>
 		

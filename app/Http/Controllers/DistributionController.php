@@ -16,9 +16,17 @@ use Illuminate\Database\QueryException;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Models\Source;
+use App\Services\DistributionReportService;
 
 class DistributionController extends Controller
 {
+    protected $reportService;
+
+    public function __construct(DistributionReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+
     public function index()
     {
         $distributions = Distribution::with("category", 'source')->get();
@@ -254,6 +262,12 @@ class DistributionController extends Controller
     {
         return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');
     }
+
+    public function exportDistributionStatistics()
+    {
+        return $this->reportService->export();
+    }
+
     public function destroy(Distribution $distribution)
     {
         $distribution->delete();

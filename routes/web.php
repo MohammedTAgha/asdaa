@@ -44,6 +44,7 @@ Route::post('/distributions/add-citizens-filter', [DistributionController::class
 Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
 Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
+Route::get('/projects-report-export', [DistributionController::class, 'exportDistributionStatistics'])->name('distributions.exportDistributionStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
 
 
 Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
