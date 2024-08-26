@@ -68,3 +68,12 @@ $('#applyFilter').on('click', function () {
         }
     });
 });
+
+use service in contrller
+protected $reportService;
+
+    public function __construct(DistributionReportService $reportService)
+    {
+        $this->reportService = $reportService;
+    }
+

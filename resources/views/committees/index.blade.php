@@ -1,4 +1,12 @@
 @extends('dashboard')
+
+
+@push('custom_styles')
+<link rel="stylesheet" href="{{ asset('assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
+    
+@endpush
+
+
 @section('title', "اللجان")
 
 @section('content')
