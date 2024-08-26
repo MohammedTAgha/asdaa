@@ -40,7 +40,27 @@
                 </div>
                 {{-- select it --}}
 
-                <div class="flex justify-center mb-2">
+                <div class="mb-4">
+                    <label for="regionId" class="block mb-1 font-medium text-gray-700">اختر المنطقة:</label>
+                    <select id="regionId" name="regionId"
+                        class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 100%;" >
+                        @foreach ($regions as $region)
+                         <option value=""></option>
+                            <option   value="{{ $region->id }}" 
+                                {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+    
+                                @if ($region->representatives->isNotEmpty())
+                                    {{ $region->name }} </br> :
+                                    {{ $region->representatives->first()->name }}
+                                @else
+                                    {{ $region->name }}
+                                @endif
+    
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                {{-- <div class="flex justify-center mb-2">
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" checked="">
                         <label class="btn btn-outline-primary waves-effect" for="btnradio1">انشاء جديد</label>
@@ -52,7 +72,7 @@
                         <label class="btn btn-outline-primary waves-effect" for="btnradio3">فحص</label>
                     </div>
 
-                </div>
+                </div> --}}
                 <div class="flex justify-center">
                     <button type="submit" class="btn btn-xl btn-primary waves-effect waves-light">
                         رفع الكشف

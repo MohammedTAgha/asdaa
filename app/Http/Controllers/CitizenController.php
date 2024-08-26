@@ -259,7 +259,8 @@ class CitizenController extends Controller
 
     public function import()
     {
-        return (view('citizens.import'));
+        $regions = Region::all();
+        return (view('citizens.import',compact('regions')));
     }
 
     public function export(Request $request)
@@ -315,9 +316,15 @@ class CitizenController extends Controller
         $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
+        $region=null;
+        if ($request->has('regionId') && !empty($request->regionId)) {
+            $region=$request->regionId;
+            Log::info('$region');
+            Log::info($region);
+        }
 
         $file = $request->file('excel_file');
-        $import = new CitizensImport;
+        $import = new CitizensImport($region);
 
         try {
             $initialCount = Citizen::count(); // Count before import

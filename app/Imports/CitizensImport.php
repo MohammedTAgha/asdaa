@@ -17,33 +17,44 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     use SkipsFailures;
     public $failedRows = [];
     private $errors = [];
+    private $regionId;
+    private $regionRule;
 
+    public function __construct($regionId = null)
+    {
+        $this->regionId = $regionId;
+        if ($regionId==null || $regionId=='' ){
+            $this->regionRule = 'required|exists:regions,id';
+        }else{
+            $this->regionRule='nullable';
+        }
+    }
     public function model(array $row)
     {
-
+        $regionId = $this->regionId ?? $row['region_id'] ?? 0;
         return new Citizen([
             'id' => $row['id'],
             'firstname' => $row['firstname'],
-            'secondname' => $row['secondname'],
-            'thirdname' => $row['thirdname'],
+            'secondname' => $row['secondname']??null,
+            'thirdname' => $row['thirdname']??null,
             'lastname' => $row['lastname'],
-            'phone' => $row['phone'],
-            'phone2' => $row['phone2'],
-            'family_members' => $row['family_members'],
-            'wife_id' => $row['wife_id'],
-            'wife_name' => $row['wife_name'],
-            'mails_count' => $row['mails_count'],
-            'femails_count' => $row['femails_count'],
-            'leesthan3' => $row['leesthan3'],
-            'obstruction' => $row['obstruction'],
-            'obstruction_description' => $row['obstruction_description'],
-            'disease' => $row['disease'],
-            'disease_description' => $row['disease_description'],
-            'job' => $row['job'],
-            'living_status' => $row['living_status'],
-            'original_address' => $row['original_address'],
-            'note' => $row['note'],
-            'region_id' => $row['region_id'],
+            'phone' => $row['phone']??null,
+            'phone2' => $row['phone2']??null,
+            'family_members' => $row['family_members']??null,
+            'wife_id' => $row['wife_id']??null,
+            'wife_name' => $row['wife_name']??null,
+            'mails_count' => $row['mails_count']??null,
+            'femails_count' => $row['femails_count']??null,
+            'leesthan3' => $row['leesthan3']??null,
+            'obstruction' => $row['obstruction']??null,
+            'obstruction_description' => $row['obstruction_description']??null,
+            'disease' => $row['disease']??null,
+            'disease_description' => $row['disease_description']??null,
+            'job' => $row['job']??null,
+            'living_status' => $row['living_status']??null,
+            'original_address' => $row['original_address']??null,
+            'note' => $row['note']??null,
+            'region_id' =>  $regionId,
 
             //
             'social_status' => $row['social_status']??null,
@@ -61,7 +72,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'id' => 'required|unique:citizens,id',
             'firstname' => 'required',
             'lastname' => 'required',
-            'region_id' => 'required|exists:regions,id',
+            'region_id' => $this->regionRule,
         ];
     }
 
