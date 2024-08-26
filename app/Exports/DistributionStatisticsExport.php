@@ -39,4 +39,17 @@ class DistributionStatisticsExport implements FromCollection, WithHeadings
             ->groupBy('regions.name', 'distributions.name')
             ->get();
     }
+
+    private function getprojectsData()
+{
+    return DB::table('distributions')
+        ->leftJoin('distribution_citizens', 'distributions.id', '=', 'distribution_citizens.distribution_id')
+        ->select(
+            'distributions.name as project_name',
+            DB::raw('count(distribution_citizens.citizen_id) as total_citizens'),
+            DB::raw('sum(case when distribution_citizens.done = true then 1 else 0 end) as benefited_citizens')
+        )
+        ->groupBy('distributions.name')
+        ->get();
+}
 }
