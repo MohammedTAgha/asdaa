@@ -221,25 +221,10 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-light-primary dropdown-toggle waves-effect show dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="true">
-                          Primary
-                        </button>
-                        <ul class="dropdown-menu show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 40px);" data-popper-placement="bottom-end">
-                          <li><a class="dropdown-item" href="javascript:void(0);">حذف الكل</a></li>
-                          <li><a class="dropdown-item" href="javascript:void(0);">حذف مجموعة ارقام</a></li>
-                          <li><a class="dropdown-item" href="javascript:void(0);">فحص مجمووعة ارقام</a></li>
-                          <li><a class="dropdown-item" href="javascript:void(0);"> حذف حسب معايير </a></li>
-                          <li><a class="dropdown-item" href="javascript:void(0);"> تسليم الكل</a></li>
-                          <li><a class="dropdown-item" href="javascript:void(0);"> الغاء تسليم الكل</a></li>
-                          
-                          <li>
-                            <hr class="dropdown-divider">
-                          </li>
-                          <li><a class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
-                        </ul>
-                      </div>
-                </div>
+                    <button @click="open = true" class="btn btn-light-primary">Add Citizens</button>
+                    <!-- Include the Livewire modal component -->
+                    <livewire:citizen-add-to-distribution :distribution-id="$distribution->id" />
+                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
                 {{--                اضافة مستفيدين --}}

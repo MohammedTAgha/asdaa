@@ -14,7 +14,7 @@
 <meta property="og:type" content="article" />
 <!-- Favicon -->
 <link rel="icon" href="{{ asset('assets/img/asdaa.jpg') }}" />
-
+@livewireStyles
 <style>
 
 </style>
@@ -315,7 +315,7 @@
     <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/plugins/global/popper.min.js') }}"></script>
-
+    @livewireScripts
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
 </body>
