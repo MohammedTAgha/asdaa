@@ -221,7 +221,24 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light-primary dropdown-toggle waves-effect show dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="true">
+                          Primary
+                        </button>
+                        <ul class="dropdown-menu show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate(0px, 40px);" data-popper-placement="bottom-end">
+                          <li><a class="dropdown-item" href="javascript:void(0);">حذف الكل</a></li>
+                          <li><a class="dropdown-item" href="javascript:void(0);">حذف مجموعة ارقام</a></li>
+                          <li><a class="dropdown-item" href="javascript:void(0);">فحص مجمووعة ارقام</a></li>
+                          <li><a class="dropdown-item" href="javascript:void(0);"> حذف حسب معايير </a></li>
+                          <li><a class="dropdown-item" href="javascript:void(0);"> تسليم الكل</a></li>
+                          <li><a class="dropdown-item" href="javascript:void(0);"> الغاء تسليم الكل</a></li>
+                          
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
+                          <li><a class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+                        </ul>
+                      </div>
                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
@@ -303,7 +320,8 @@
                                         </td>
                                         <td class=" py-3 px-2">
                                             <button
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded update-button"
+                                                id="update-button"
+                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded "
                                                 data-id="{{ $citizen->pivot->id }}">
                                                 تحديث
                                             </button>
@@ -360,7 +378,7 @@
                 oTable = $("#ctzlist").DataTable({
                     "scrollX": true,
                     responsive: true,
-                   
+                    lengthMenu: [ 25, 50, 100,300,600,1200,3000,6000,1000,12000],
                 });
                 
                 $('#searchbar').keyup(function() {
@@ -415,7 +433,7 @@
                         }
                     });
                 });
-                $('.update-button').click(function() {
+                $('#update-button').click(function() {
                     console.log('cl');
 
                     var pivotId = $(this).data('id');

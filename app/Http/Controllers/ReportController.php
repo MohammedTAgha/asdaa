@@ -7,22 +7,44 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\DistributionReportService;
 class ReportController extends Controller
 {
-    // Method for generating and displaying the general distribution statistics
-    public function distributionStatistics()
+
+    protected $distributionReportService;
+
+    public function __construct(DistributionReportService $distributionReportService)
     {
-        $data = $this->generateStatistics();
-        return view('reports.distribution-statistics', compact('data'));
+        $this->distributionReportService = $distributionReportService;
     }
 
-    // Method for generating and exporting the distribution report
-    public function exportDistributionReport()
+    public function export()
     {
-        return Excel::download(new ProjectStatisticsExport, 'تقرير المشاريع.xlsx');
+        return $this->distributionReportService->export();
     }
 
-    // Add other report methods as needed
-    private function generateStatistics()
+    public function showStatistics()
     {
-        // Logic to generate statistics (similar to what you provided earlier)
+        $statistics = $this->distributionReportService->generateStatistics();
+
+        return view('reports.distribution-statistics', [
+            'withRegions' => $statistics['withRegions'],
+            'withoutRegions' => $statistics['withoutRegions']
+        ]);
     }
+    // // Method for generating and displaying the general distribution statistics
+    // public function distributionStatistics()
+    // {
+    //     $data = $this->generateStatistics();
+    //     return view('reports.distribution-statistics', compact('data'));
+    // }
+
+    // // Method for generating and exporting the distribution report
+    // public function exportDistributionReport()
+    // {
+    //     return Excel::download(new ProjectStatisticsExport, 'تقرير المشاريع.xlsx');
+    // }
+
+    // // Add other report methods as needed
+    // private function generateStatistics()
+    // {
+    //     // Logic to generate statistics (similar to what you provided earlier)
+    // }
 }
