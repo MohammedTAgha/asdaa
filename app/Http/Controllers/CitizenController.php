@@ -48,15 +48,38 @@ class CitizenController extends Controller
 
         // Apply search filter
         if ($request->has('search') && !empty($request->input('search'))) {
-
-            $query->where('firstname', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('id', 'like', '%' . $request->input('search') . '%')
-                ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+            $search = $request->input('search');
+            $searchTerms = explode(' ', $search);
+        
+            $query->where(function ($q) use ($searchTerms, $search) {
+                // Full name search across name columns
+                $q->where(function ($nameQ) use ($searchTerms) {
+                    foreach ($searchTerms as $term) {
+                        $nameQ->where(function ($termQ) use ($term) {
+                            $termQ->where('firstname', 'like', '%' . $term . '%')
+                                  ->orWhere('secondname', 'like', '%' . $term . '%')
+                                  ->orWhere('thirdname', 'like', '%' . $term . '%')
+                                  ->orWhere('lastname', 'like', '%' . $term . '%');
+                        });
+                    }
+                });
+        
+                // Original single-term searches for other columns
+                $q->orWhere('wife_name', 'like', '%' . $search . '%')
+                  ->orWhere('id', 'like', '%' . $search . '%')
+                  ->orWhere('note', 'like', '%' . $search . '%');
+            });
         }
+        // if ($request->has('search') && !empty($request->input('search'))) {
+
+        //     $query->where('firstname', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('id', 'like', '%' . $request->input('search') . '%')
+        //         ->orWhere('note', 'like', '%' . $request->input('search') . '%');
+        // }
 
 
         // Apply age filter
