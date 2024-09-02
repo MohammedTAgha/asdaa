@@ -221,10 +221,7 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-                    <button @click="open = true" class="btn btn-light-primary">Add Citizens</button>
-                    <!-- Include the Livewire modal component -->
-                    <livewire:citizen-add-to-distribution :distribution-id="$distribution->id" />
-                 </div>
+                    <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
                 {{--                اضافة مستفيدين --}}

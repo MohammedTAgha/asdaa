@@ -11,7 +11,9 @@
 <body class="bg-gray-100 flex justify-center items-center min-h-screen">
 
     <div class="w-full max-w-md">
+        
         <div class="bg-white shadow-lg rounded-lg px-8 py-10">
+            <img src="{{ asset('assets/img/asdaa.jpg') }}" alt="Logo"   />
             <!-- Session Status -->
             @if(session('status'))
                 <div class="mb-4 font-medium text-sm text-green-600">
