@@ -1,53 +1,76 @@
 <div>
-    <div class="mb-4">
-        <input type="text" class="form-input" placeholder="Search by ID or Name" wire:model.debounce.1000ms="searchTerm">
-    </div>
+    <!-- Modal Trigger Button -->
+    <button class="btn btn-light-primary" onclick="openModal()">
+        Add Citizens to Distribution
+    </button>
 
-    <div wire:loading class="mb-4">
-        <p>Loading...</p>
-    </div>
+    <!-- Modal Background -->
+    <div id="citizenModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-lg">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between px-4 py-2 border-b">
+                    <h3 class="text-lg font-semibold text-gray-700">Add Citizens to Distribution</h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+                </div>
 
-    @if(session()->has('error'))
-        <div class="bg-red-100 text-red-700 p-2 mb-4">
-            {{ session('error') }}
+                <!-- Modal Body -->
+                <div class="p-4">
+                    <!-- Search Bar -->
+                    <input type="text" class="form-input w-full mb-4 p-2 border rounded" placeholder="Search by ID or Name" wire:model="searchTerm">
+
+                    <!-- Search Results -->
+                    @if(!empty($searchResults))
+                        <div class="mb-4">
+                            <h4 class="font-medium text-gray-600 mb-2">Search Results</h4>
+                            <ul class="space-y-2">
+                                @foreach($searchResults as $citizen)
+                                    <li>
+                                      
+                                        <button wire:click="addCitizen({{ $citizen->id }})" class="w-full text-left bg-blue-100 hover:bg-blue-200 p-2 rounded">
+                                            {{ $citizen->firstname }}
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- Selected Citizens -->
+                    @if($selectedCitizens)
+                        <div class="mb-4">
+                            <h4 class="font-medium text-gray-600 mb-2">Selected Citizens</h4>
+                            <ul class="space-y-2">
+                                @foreach($selectedCitizens as $index => $citizen)
+                                    <li class="flex items-center justify-between">
+                                        <div>
+                                            <input type="checkbox" wire:click="toggleDone({{ $index }})" {{ $citizen['done'] ? 'checked' : '' }} class="mr-2">
+                                            {{ $citizen['firstname'] }}
+                                        </div>
+                                        <button wire:click="removeCitizen({{ $index }})" class="text-red-500 hover:text-red-700">Remove</button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-4 py-2 border-t flex justify-end">
+                    <button wire:click="submit" class="bg-green-500 text-white py-2 px-4 rounded">Submit</button>
+                </div>
+            </div>
         </div>
-    @endif
-
-    <div>
-        <h3 class="text-lg font-semibold mb-2">Search Results</h3>
-        <ul>
-            @foreach($searchResults as $citizen)
-                <li class="mb-2">
-                    <button wire:click="addCitizen({{ $citizen->id }})" class="bg-blue-500 text-white p-2 rounded">
-                        Add {{ $citizen->firstname }}
-                    </button>
-                </li>
-            @endforeach
-        </ul>
     </div>
-
-    <div class="mt-4">
-        <h3 class="text-lg font-semibold mb-2">Selected Citizens</h3>
-        <ul>
-            @foreach($selectedCitizens as $index => $citizen)
-                <li class="mb-2">
-                    <input type="checkbox" wire:click="toggleDone({{ $index }})" {{ $citizen['done'] ? 'checked' : '' }}>
-                    {{ $citizen['firstname'] }}
-                    <button wire:click="removeCitizen({{ $index }})" class="bg-red-500 text-white p-2 rounded">
-                        Remove
-                    </button>
-                </li>
-            @endforeach
-        </ul>
-    </div>
-
-    <div class="mt-4">
-        <button wire:click="submit" class="bg-green-500 text-white p-2 rounded">Submit</button>
-    </div>
-
-    @if(session()->has('success'))
-        <div class="bg-green-100 text-green-700 p-2 mt-4">
-            {{ session('success') }}
-        </div>
-    @endif
 </div>
+
+<!-- Modal Scripts -->
+<script>
+    function openModal() {
+        document.getElementById('citizenModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('citizenModal').classList.add('hidden');
+    }
+</script>

@@ -17,8 +17,9 @@ class AddCitizensToDistribution extends Component
     {
         $this->searchResults = Citizen::where('firstname', 'like', '%' . $this->searchTerm . '%')
             ->orWhere('id', 'like', '%' . $this->searchTerm . '%')
-            ->get();
+            ->get(); // This ensures it's treated as an array
     }
+
 
     public function addCitizen($citizenId)
     {
