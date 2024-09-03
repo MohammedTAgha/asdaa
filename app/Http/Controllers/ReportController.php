@@ -24,7 +24,7 @@ class ReportController extends Controller
     {
         $statistics = $this->distributionReportService->generateStatistics();
 
-        return view('reports.distribution-statistics', [
+        return view('reports.project_statistics', [
             'withRegions' => $statistics['withRegions'],
             'withoutRegions' => $statistics['withoutRegions']
         ]);

@@ -162,6 +162,15 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 									<span class="menu-title"> نصدير المشاريع</span>
 								</a>
 							</div>
+							<div class="menu-item">
+								<a class="menu-link {{ request()->routeIs('reports.showStatistics') ? 'active' : '' }}"
+									href="{{ route('reports.showStatistics') }}">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">تقارير المشاريع</span>
+								</a>
+							</div>
 						</div>
 					</div>
 		

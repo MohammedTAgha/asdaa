@@ -14,6 +14,7 @@ use App\Http\Controllers\CitizenUploadController;
 use App\Imports\CitizenDistributionImport;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
@@ -45,11 +46,13 @@ Route::get('/get-distributions', [DistributionController::class, 'getDistributio
 Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
 Route::get('/projects-report-export', [DistributionController::class, 'exportDistributionStatistics'])->name('distributions.exportDistributionStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
+Route::get('/projects-reports', [ReportController::class, 'showStatistics'])->name('reports.showStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
 
 
 Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
 Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
 Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
+Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
