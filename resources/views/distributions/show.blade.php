@@ -202,9 +202,10 @@
                         </div>
                     </div>
                 </div>
-                
 
-                <div class="demo-inline-spacing">
+
+                <div class="d-flex">
+                    <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />
                     {{-- go to main ctz list  --}}
                     <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button"
                         class="btn btn-light-primary waves-effect">
@@ -221,7 +222,8 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-                   <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />                </div>
+                    
+                </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
                 {{--                اضافة مستفيدين --}}
@@ -234,7 +236,7 @@
                         $citizens = $distribution->citizens;
                     @endphp
                     @if (!$citizens->isEmpty())
-                         <input type="text" id="searchbar"  class="form-control" placeholder='بحث فوري ...'>
+                        <input type="text" id="searchbar" class="form-control" placeholder='بحث فوري ...'>
 
                         <table id="ctzlist" class="table table table-row-bordered gy-2">
                             <thead class="table-light">
@@ -253,63 +255,7 @@
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
-                                @foreach ($citizens as $citizen)
-                                    <tr>
-                                        <td class=" py-3 px-2">
-                                            <a href="{{ route('citizens.show', $citizen->id) }}">
-                                                {{ $citizen->id }}
-                                            </a>
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <a href="{{ route('citizens.show', $citizen->id) }}">
-                                                {{ $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname }}
-                                            </a>
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <a id='name' href="{{ route('regions.show', $citizen->region->id) }}">
-                                                <input type="hidden" name="name"
-                                                    value="{{ $citizen->firstname . ' ' . $citizen->lastname }}">
-                                                {{ $citizen->region->name }}
-                                            </a>
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            {{ $citizen->family_members }}
-                                        </td>
-                                        {{-- <td class=" py-3 px-2">{{$citizen->social_status}} </td> --}}
-                                        <td class=" py-3 px-2">
-                                            <input class="form-control" type="number" name="quantity"
-                                                value="{{ $citizen->pivot->quantity }}" id="quantity" style="width: 65px">
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <input class="form-check-input" type="checkbox" name="done"
-                                                value="{{ $citizen->pivot->done }}" data-id="{{ $citizen->pivot->id }}"
-                                                {{ $citizen->pivot->done ? 'checked' : '' }}>
-                                        </td>
-
-                                        <td class=" py-3 px-2">
-                                            <input class="form-control" type="date" name="date"
-                                                value="{{ $citizen->pivot->date }}" style="width: 160px">
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <input class="form-control" name="recipient"
-                                                value="{{ $citizen->pivot->recipient }}" id="recipient"
-                                                style="width: 155px">
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <input class="form-control" name="note" id="note"
-                                                value="{{ $citizen->pivot->note }}" style="width: 90px">
-
-                                        </td>
-                                        <td class=" py-3 px-2">
-                                            <button
-                                                id="update-button"
-                                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded "
-                                                data-id="{{ $citizen->pivot->id }}">
-                                                تحديث
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                <!-- DataTables will populate this area -->
                             </tbody>
                         </table>
                     @else
@@ -356,18 +302,76 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function() {
-                // Set CSRF token for AJAX requests
-                oTable = $("#ctzlist").DataTable({
-                    "scrollX": true,
-                    responsive: true,
-                    lengthMenu: [ 25, 50, 100,300,600,1200,3000,6000,1000,12000],
+                // Set CSRF token for AJAX requests     // Set CSRF token for AJAX requests
+                var oTable = $('#ctzlist').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
+                    ajax: '{{ route('distributions.citizens', $distribution->id) }}',
+                    columns: [
+                        // { data: 'citizens.id', name: 'id' , orderable: false,
+                        // searchable: false },
+                        {
+                            data: 'citizen_id',
+                            name: 'citizen_id'
+                        },
+                        {
+                            data: 'fullname',
+                            name: 'fullname'
+                        },
+                        {
+                            data: 'region',
+                            name: 'region'
+                        },
+                        {
+                            data: 'family_members',
+                            name: 'family_members'
+                        },
+                        {
+                            data: 'quantity',
+                            name: 'quantity'
+                        },
+                        {
+                            data: 'done',
+                            name: 'done'
+                        },
+                        {
+                            data: 'date',
+                            name: 'date'
+                        },
+                        {
+                            data: 'recipient',
+                            name: 'recipient'
+                        },
+                        {
+                            data: 'note',
+                            name: 'note'
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
                 });
-                
+                // Refresh DataTable when a new citizen is added
+                window.addEventListener('citizenAdded', () => {
+                    console.log('addddd');
+                    
+                    oTable.ajax.reload();
+                });
+
+                // oTable = $("#ctzlist").DataTable({
+                //     "scrollX": true,
+                //     responsive: true,
+                //     lengthMenu: [ 25, 50, 100,300,600,1200,3000,6000,1000,12000],
+                // });
+
                 $('#searchbar').keyup(function() {
-                        console.log('serc');
-                        
                     oTable.search($(this).val()).draw();
                 });
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

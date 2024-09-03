@@ -66,10 +66,12 @@ class AddCitizensToDistribution extends Component
                     'done' => false,
                 ];
             } else {
-                $this->dispatchBrowserEvent('citizen-already-selected');
+                $this->dispatchBrowserEvent('citizenAdded');
+                
             }
         } else {
-            $this->dispatchBrowserEvent('citizen-already-in-distribution');
+            $this->dispatchBrowserEvent('citizenAdded');
+
         }
     }
 
@@ -105,7 +107,9 @@ class AddCitizensToDistribution extends Component
                 $distribution->citizens()->attach($citizen['id'], ['done' => $citizen['done']]);
             }
             $this->closeModal();
-            $this->dispatchBrowserEvent('citizens-added-successfully');
+            $this->dispatchBrowserEvent('citizenAdded');
+
+            // $this->dispatchBrowserEvent('citizens-added-successfully');
         }
     }
 

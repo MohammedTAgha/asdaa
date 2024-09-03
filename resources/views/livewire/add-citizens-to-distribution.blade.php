@@ -2,7 +2,8 @@
 
     <!-- Modal Trigger Button -->
     <button class="btn btn-light-primary" wire:click="openModal">
-        Add Citizens to Distribution
+        <i class="tf-icons ti ti-plus ti-xs me-1"></i>
+        اضافة مستفيدين
     </button>
 
     <!-- Modal Background -->
@@ -12,7 +13,7 @@
             <div class="relative w-full max-w-2xl bg-white rounded-lg shadow-lg">
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between px-4 py-2 border-b">
-                    <h3 class="text-lg font-semibold text-gray-700">Add Citizens to Distribution</h3>
+                    <h3 class="text-lg font-semibold text-gray-700">اضافة مستفيدين</h3>
                     <button wire:click="closeModal" class="text-gray-500 hover:text-gray-700">&times;</button>
                 </div>
 

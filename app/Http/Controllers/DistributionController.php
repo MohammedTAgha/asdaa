@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\DistributionService;
-
+use Illuminate\Database\Eloquent\Model;
 use App\Exports\CitizensdDistReportExport;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Models\Source;
 use App\Services\DistributionReportService;
+use Yajra\DataTables\DataTables;
 
 class DistributionController extends Controller
 {
@@ -257,6 +258,37 @@ class DistributionController extends Controller
             return response()->json(['error' => 'An error occurred while removing the citizen.'], 500);
         }
     }
+
+    public function getDistributionCitizens($distributionId)
+{
+    $citizens = Citizen::select([
+        'citizens.id as citizen_id',
+        'citizens.firstname',
+        'citizens.secondname',
+        'citizens.thirdname',
+        'citizens.lastname',
+        'citizens.family_members',
+        'regions.name as region',
+        'distribution_citizens.quantity',
+        'distribution_citizens.done',
+        'distribution_citizens.date',
+        'distribution_citizens.recipient',
+        'distribution_citizens.note',
+        'distribution_citizens.id as pivot_id'
+    ])
+    ->join('distribution_citizens', 'citizens.id', '=', 'distribution_citizens.citizen_id')
+    ->join('regions', 'citizens.region_id', '=', 'regions.id')
+    ->where('distribution_citizens.distribution_id', $distributionId);
+    return DataTables::of($citizens)
+ 
+    ->addColumn('fullname', function ($citizen) {
+        return $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname;
+    })
+    ->addColumn('action', function ($citizen) {
+        return '<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="' . $citizen->pivot_id . '">تحديث</button>';
+    })
+        ->toJson();
+}
 
     public function exportReport($report)
     {
