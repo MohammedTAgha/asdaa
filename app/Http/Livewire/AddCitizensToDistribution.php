@@ -37,13 +37,32 @@ class AddCitizensToDistribution extends Component
     // Search for citizens based on the search term
     public function searchCitizens()
     {
+        
         $cacheKey = 'citizens_search_' . md5($this->searchTerm);
-    
+        
         $this->searchResults = Cache::remember($cacheKey, 60, function () {
             return Citizen::query()
                 ->where(function ($query) {
-                    $query->where('firstname', 'like', '%' . $this->searchTerm . '%')
-                          ->orWhere('id', 'like', '%' . $this->searchTerm . '%');
+                    $search = $this->searchTerm;
+                    $searchTerms = explode(' ', $search);
+                    $query->where(function ($q) use ($searchTerms, $search) {
+                        // Full name search across name columns
+                        $q->where(function ($nameQ) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $nameQ->where(function ($termQ) use ($term) {
+                                    $termQ->where('firstname', 'like', '%' . $term . '%')
+                                        ->orWhere('secondname', 'like', '%' . $term . '%')
+                                        ->orWhere('thirdname', 'like', '%' . $term . '%')
+                                        ->orWhere('lastname', 'like', '%' . $term . '%');
+                                });
+                            }
+                        });
+                        // Original single-term searches for other columns
+                        $q->orWhere('wife_name', 'like', '%' . $search . '%')
+                            ->orWhere('id', 'like', '%' . $search . '%')
+                            ->orWhere('note', 'like', '%' . $search . '%');
+                    });
+                    
                 })
                 ->limit(10)
                 ->get()
