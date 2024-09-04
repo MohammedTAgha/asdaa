@@ -260,7 +260,7 @@ id
                     },
                     {
                         data: 'region',
-                        name: 'region.name'
+                        name: 'region'
                     },
                     {
                         data: 'note',

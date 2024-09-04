@@ -175,7 +175,7 @@ class CitizenController extends Controller
                 return $citizen->region->name ?? 'N/A';
             })
             ->addColumn('name', function ($citizen) {
-                return '<a href="'.route('citizens.show', $citizen->id).'"> '.$citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname. '</a>';
+                return '<a href="'.route('citizens.show', $citizen->id).'">'.$citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname. '</a>';
                 
             })
             ->addColumn('action', function ($citizen) {
