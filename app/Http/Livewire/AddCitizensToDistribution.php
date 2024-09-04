@@ -63,6 +63,8 @@ class AddCitizensToDistribution extends Component
                 $this->selectedCitizens[] = [
                     'id' => $citizen->id,
                     'firstname' => $citizen->firstname,
+                    'secondname' => $citizen->secondname,
+                    'lastname' => $citizen->lastname,
                     'done' => false,
                 ];
             } else {
@@ -103,9 +105,12 @@ class AddCitizensToDistribution extends Component
         $distribution = Distribution::find($this->distributionId);
 
         if ($distribution) {
-            foreach ($this->selectedCitizens as $citizen) {
+            foreach ($this->selectedCitizens as $citizen) { // nd t chck ach 
+                if ($citizen && !$this->isCitizenInDistribution($citizen['id'])) {
                 $distribution->citizens()->attach($citizen['id'], ['done' => $citizen['done']]);
+                }
             }
+            $this->selectedCitizens=[];
             $this->closeModal();
             $this->dispatchBrowserEvent('citizenAdded');
 
