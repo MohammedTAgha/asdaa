@@ -182,7 +182,7 @@ class CitizenController extends Controller
                 return '<a href="'.route('citizens.edit', $citizen->id).'" class="btn btn-sm btn-primary">Edit</a>';
             })
             ->addColumn('checkbox', function ($citizen) {
-                return '<div class="form-check px-2 form-check-sm form-check-custom form-check-solid"><input class="form-check-input w-18px" type="checkbox" name="citizens[]" value="'.$citizen->id.'"></div>';
+                return '<div class="form-check px form-check-sm form-check-custom form-check-solid"><input class="form-check-input w-18px" type="checkbox" name="citizens[]" value="'.$citizen->id.'"></div>';
             })
             ->rawColumns(['action', 'checkbox','name'])
             ->make(true);
