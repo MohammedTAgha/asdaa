@@ -5,6 +5,17 @@
     }
 </style>
 
+@push('custom_styles')
+    <style>
+         td{
+            /* background-color: #f4f9fd !important; */
+            align-items: center;
+            
+        }
+
+    </style>
+
+@endpush
 <!-- Modal -->
 <div class="modal fade" id="distributionModal" tabindex="-1" aria-labelledby="distributionModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -170,26 +181,26 @@
 </form>
 
 <div class="table-responsive">
-    <table id="citizens-table" class="table table-bordered table-hover table-condensed table-striped">
-        <thead class="bg-light">
+    <table id="citizens-table" class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
+        <thead class="table-light">
             <tr>
                 <th class="w-8px p-0">
                     <div class="form-check form-check-sm form-check-custom form-check-solid">
                         <input class="form-check-input" type="checkbox" id="select-all" value="1" />
                     </div>
                 </th>
-                <th class="min-w-90px">الهوية</th>
-                <th class="min-w-280px">الاسم</th>
-                {{-- <th class="min-w-90px">تاريخ الميلاد</th>
-                <th class="min-w-40px">الجنس</th> --}}
-                <th class="min-w-100px">اسم الزوجة</th>
-                <th class="min-w-50px"> الافراد</th>
-                <th class="min-w-50px">المنطقة</th>
-                <th class="min-w-50px">ملاحظة</th>
-                <th class="min-w-50px"> - </th>
+                <th class="py-3 px-2 min-w-90px">الهوية</th>
+                <th class="py-3 px-2 min-w-280px">الاسم</th>
+                {{-- <th class="py-3 px-2 min-w-90px">تاريخ الميلاد</th>
+                <th class="py-3 px-2 min-w-40px">الجنس</th> --}}
+                <th class="py-3 px-2 min-w-100px">اسم الزوجة</th>
+                <th class="py-3 px-2 min-w-50px"> الافراد</th>
+                <th class="py-3 px-2 min-w-50px">المنطقة</th>
+                <th class="py-3 px-2 min-w-50px">ملاحظة</th>
+                <th class="py-3 px-2 min-w-50px"> - </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-border-bottom-0">
             <!-- Data will be populated by DataTables -->
         </tbody>
     </table>
@@ -216,6 +227,7 @@ id
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
+                lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
                 ajax: {
                     url: "{{ route('citizens.data') }}",
                     data: function(d) {
@@ -235,7 +247,10 @@ id
                         searchable: false
                     },
                     {
-                        data: 'id',
+                        /*
+                        @fix seach bar 
+                        */
+                        data: 'id', 
                         name: 'id'
                     },
                     {

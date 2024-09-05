@@ -214,7 +214,7 @@
                     {{-- show filter for citizents and spasific roules  --}}
                     <button type="button" class="btn btn-light-primary waves-effect" data-bs-toggle="modal"
                         data-bs-target="#advancedFilterModal">
-                        <i class="tf-icons ti ti-arrows-sort ti-xs me-1"></i>اضافة حسب فلتر
+                        <i class="icon-xl fas fa-filter"></i>اضافة حسب فلتر
                     </button>
                     {{-- <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#regionsSelectModal">
                         <i class="tf-icons ti ti-map ti-xs me-1"></i> اضافة مناطق
@@ -222,9 +222,21 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-                    <div class="me-0">
-                        <button class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                            <i class="bi bi-three-dots fs-3"></i>
+                    <div class="card-toolbar">
+                        <!--begin::Menu-->
+                        <button type="button" class="btn btn-sm btn-icon btn-color-white btn-active-white btn-active-color- border-0 me-n3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
+                            <span class="svg-icon svg-icon-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
+                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                        <rect x="5" y="5" width="5" height="5" rx="1" fill="#000000"></rect>
+                                        <rect x="14" y="5" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
+                                        <rect x="5" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
+                                        <rect x="14" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
+                                    </g>
+                                </svg>
+                            </span>
+                            <!--end::Svg Icon-->
                         </button>
                         <!--begin::Menu 3-->
                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3" data-kt-menu="true" style="">
@@ -256,7 +268,7 @@
                                     <span class="menu-arrow"></span>
                                 </a>
                                 <!--begin::Menu sub-->
-                                <div class="menu-sub menu-sub-dropdown w-175px py-4" style="">
+                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
                                         <a href="#" class="menu-link px-3">Plans</a>
@@ -302,6 +314,7 @@
                             <!--end::Menu item-->
                         </div>
                         <!--end::Menu 3-->
+                        <!--end::Menu-->
                     </div>
                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
@@ -315,32 +328,30 @@
                     @php
                         $citizens = $distribution->citizens;
                     @endphp
-                    @if (!$citizens->isEmpty())
-                        <input type="text" id="searchbar" class="form-control" placeholder='بحث فوري ...'>
 
-                        <table id="ctzlist" class="table table table-row-bordered gy-2">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class=" py-3 px-2 font-semibold ">الهوية</th>
-                                    <th class=" py-3 px-2 font-semibold ">الاسم</th>
-                                    <th class=" py-3 px-2 font-semibold ">المنطقة</th>
-                                    <th class=" py-3 px-2 font-semibold ">افراد</th>
-                                    {{-- <th class=" py-3 px-2 font-semibold ">الحالة الاجتماعية</th> --}}
-                                    <th class=" py-3 px-2 font-semibold ">الكمية <br>المستلمة</th>
-                                    <th class=" py-3 px-2 font-semibold ">استلم</th>
-                                    <th class=" py-3 px-2 font-semibold ">تاريخ الاستلام</th>
-                                    <th class=" py-3 px-2 font-semibold ">اسم المستلم</th>
-                                    <th class=" py-3 px-2 font-semibold ">ملاحظة</th>
-                                    <th class=" py-3 px-2 font-semibold "></th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-border-bottom-0">
-                                <!-- DataTables will populate this area -->
-                            </tbody>
-                        </table>
-                    @else
-                        <h2> no citizns exist</h2>
-                    @endif
+                    <input type="text" id="searchbar" class="form-control" placeholder='بحث فوري ...'>
+
+                    <table id="ctzlist" class="table table table-row-bordered gy-2">
+                        <thead class="table-light">
+                            <tr>
+                                <th class=" py-3 px-2 font-semibold ">الهوية</th>
+                                <th class=" py-3 px-2 font-semibold ">الاسم</th>
+                                <th class=" py-3 px-2 font-semibold ">المنطقة</th>
+                                <th class=" py-3 px-2 font-semibold ">افراد</th>
+                                {{-- <th class=" py-3 px-2 font-semibold ">الحالة الاجتماعية</th> --}}
+                                <th class=" py-3 px-2 font-semibold ">الكمية <br>المستلمة</th>
+                                <th class=" py-3 px-2 font-semibold ">استلم</th>
+                                <th class=" py-3 px-2 font-semibold ">تاريخ الاستلام</th>
+                                <th class=" py-3 px-2 font-semibold ">اسم المستلم</th>
+                                <th class=" py-3 px-2 font-semibold ">ملاحظة</th>
+                                <th class=" py-3 px-2 font-semibold "></th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+                            <!-- DataTables will populate this area -->
+                        </tbody>
+                    </table>
+
 
                 </div>
             @endcomponent
@@ -381,6 +392,12 @@
         </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
+            // Refresh DataTable when a new citizen is added
+            window.addEventListener('citizenAdded', () => {
+                console.log('addddd');
+
+                oTable.ajax.reload();
+            });
             $(document).ready(function() {
                 // Set CSRF token for AJAX requests     // Set CSRF token for AJAX requests
                 var oTable = $('#ctzlist').DataTable({
@@ -388,20 +405,29 @@
                     serverSide: true,
                     lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
                     ajax: '{{ route('distributions.citizens', $distribution->id) }}',
-                    columns: [
-                        // { data: 'citizens.id', name: 'id' , orderable: false,
-                        // searchable: false },
-                        {
+                    columns: [{
                             data: 'citizen_id',
-                            name: 'citizen_id'
+                            name: 'citizen_id',
+                            render: function(data, type, row) {
+                                return `<a href="{{ route('citizens.show', '') }}/${data}">${data}</a>`;
+                            }
                         },
                         {
                             data: 'fullname',
-                            name: 'fullname'
+                            name: 'fullname',
+                            render: function(data, type, row) {
+                                return `<a href="{{ route('citizens.show', '') }}/${row.citizen_id}">${data}</a>`;
+                            }
                         },
                         {
                             data: 'region',
-                            name: 'region'
+                            name: 'region',
+                            render: function(data, type, row) {
+                                return `<a href="{{ route('regions.show', '') }}/${row.region_id}">
+                            <input type="hidden" name="name" value="${row.fullname}">
+                            ${data}
+                        </a>`;
+                            }
                         },
                         {
                             data: 'family_members',
@@ -409,38 +435,52 @@
                         },
                         {
                             data: 'quantity',
-                            name: 'quantity'
+                            name: 'quantity',
+                            render: function(data, type, row) {
+                                return `<input class="form-control" type="number" name="quantity" value="${data ? data : ''}" id="quantity" style="width: 65px">`;
+                            }
                         },
                         {
                             data: 'done',
-                            name: 'done'
+                            name: 'done',
+                            render: function(data, type, row) {
+                                let checked = data ? 'checked' : '';
+                                return `<input class="form-check-input" type="checkbox" name="done" value="${data}" data-id="${row.pivot_id}" ${checked}>`;
+                            }
                         },
                         {
                             data: 'date',
-                            name: 'date'
+                            name: 'date',
+                            render: function(data, type, row) {
+                                return `<input class="form-control" type="date" name="date" value="${data ? data : ''}" style="width: 160px">`;
+                            }
                         },
                         {
                             data: 'recipient',
-                            name: 'recipient'
+                            name: 'recipient',
+                            render: function(data, type, row) {
+                                return `<input class="form-control" name="recipient" value="${data ? data : ''}" id="recipient" style="width: 155px">`;
+                            }
                         },
                         {
                             data: 'note',
-                            name: 'note'
+                            name: 'note',
+                            render: function(data, type, row) {
+                                return `<input class="form-control" name="note" id="note" value="${data ? data : ''}" style="width: 90px">`;
+                            }
                         },
                         {
-                            data: 'action',
-                            name: 'action',
+                            data: 'pivot_id',
+                            name: 'pivot_id',
+                            render: function(data, type, row) {
+                                return `<button id='update-button' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="${data}">تحديث</button>`;
+                            },
                             orderable: false,
                             searchable: false
                         }
                     ]
                 });
-                // Refresh DataTable when a new citizen is added
-                window.addEventListener('citizenAdded', () => {
-                    console.log('addddd');
-                    
-                    oTable.ajax.reload();
-                });
+
 
                 // oTable = $("#ctzlist").DataTable({
                 //     "scrollX": true,
@@ -456,6 +496,44 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
+                });
+                $(document).on('click', '#update-button', function() {
+                    console.log('cl');
+
+                    var pivotId = $(this).data('id');
+                    var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
+                    var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
+                    var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
+                    var note = $(this).closest('tr').find('input[name="note"]').val();
+                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
+                    var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
+                    var status = isChecked ? 1 : 0;
+                    console.log();
+
+                    console.log($(this).closest('tr').find('a[id="name"]'))
+                    $.ajax({
+                        url: '/update-pivot',
+                        method: 'POST',
+                        data: {
+                            pivotId: pivotId,
+                            isChecked: status,
+                            selectedDate: selectedDate,
+                            quantity: quantity,
+                            recipient: recipient,
+                            note: note,
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            console.log(response);
+                            alert(' تم تحديث  ' + ctzName);
+
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle error response
+                            console.error(xhr.responseText);
+                            alert('Failed to update pivot');
+                        }
+                    });
                 });
                 $('#ctzlist tbody').on('change', 'input[type="checkbox"]', function() {
                     var pivotId = $(this).data('id');
@@ -499,44 +577,7 @@
                         }
                     });
                 });
-                $('#update-button').click(function() {
-                    console.log('cl');
 
-                    var pivotId = $(this).data('id');
-                    var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
-                    var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
-                    var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
-                    var note = $(this).closest('tr').find('input[name="note"]').val();
-                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
-                    var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
-                    var status = isChecked ? 1 : 0;
-                    console.log();
-
-                    console.log($(this).closest('tr').find('a[id="name"]'))
-                    $.ajax({
-                        url: '/update-pivot',
-                        method: 'POST',
-                        data: {
-                            pivotId: pivotId,
-                            isChecked: status,
-                            selectedDate: selectedDate,
-                            quantity: quantity,
-                            recipient: recipient,
-                            note: note,
-                        },
-                        success: function(response) {
-                            // Handle success response
-                            console.log(response);
-                            alert(' تم تحديث  ' + ctzName);
-
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.error(xhr.responseText);
-                            alert('Failed to update pivot');
-                        }
-                    });
-                });
             });
         </script>
         <script src="{{ asset('assets/js/ui-modals.js') }}"></script>

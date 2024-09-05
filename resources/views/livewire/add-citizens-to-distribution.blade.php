@@ -2,7 +2,7 @@
 
     <!-- Modal Trigger Button -->
     <button class="btn btn-light-primary" wire:click="openModal">
-        <i class="tf-icons ti ti-plus ti-xs me-1"></i>
+        <i class="icon-xl fas fa-user-plus"></i>
         اضافة مستفيدين
     </button>
 
