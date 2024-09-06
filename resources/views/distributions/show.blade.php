@@ -20,81 +20,79 @@
                 {{ session('status')['message'] }}
             </div>
         @endif
-        <div class=" bg-white shadow-md rounded-lg p-4 card accordion-item">
-            <h2 class="accordion-header d-flex align-items-center">
-                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse"
-                    data-bs-target="#accordionWithIcon-1" aria-expanded="false">
-                    <i class="ti ti-list-details ti-xs me-2"></i>
-                    <h1 class="text-2xl font-bold mb-2">
-                        تفاصيل المشروع
-                    </h1>
-                </button>
-            </h2>
-
-            <div id="accordionWithIcon-1" class="accordion-collapse collapse" style="">
-                <div class="accordion-body px-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">رقم</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->id }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">الوصف</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->name }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">تاريخ الوصول</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->arrive_date }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">الكمية</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->quantity }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">الفئة المستهدفة</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->target }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">المصدر</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->source }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">اكتمل</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->done ? 'مكتمل' : 'غير مكتمل' }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">عدد المستفيدين</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->target_count }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">المتوقعين</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->expectation }}</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">عدد الافراد</label>
-                            <p class="mt-1 text-gray-900">من : {{ $distribution->min_count }}
-                                {{ $distribution->max_count }}
-                                الى:</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
-                            <p class="mt-1 text-gray-900">{{ $distribution->note }}</p>
-                        </div>
-
+        <div class="container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">تفاصيل المشروع</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Target Count Card -->
+                <div class="stat-card bg-white rounded-xl   p-6  shadow-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">العدد المستهدف</h2>
+                        <i class="fas fa-bullseye text-2xl text-blue-500"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->target_count }}</p>
+                    <div class="mt-4 bg-gray-200 h-2 rounded-full">
+                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ (0.) * 100 }}%;"></div>
+                    </div>
+                </div>
+    
+                <!-- Benefited Count Card -->
+                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">عدد المستفيدين</h2>
+                        <i class="fas fa-users text-2xl text-green-500"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->expectation }}</p>
+                    <p class="text-sm text-gray-600 mt-2">المتوقع: {{ $distribution->expectation }}</p>
+                </div>
+    
+                <!-- Package Numbers Card -->
+                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">عدد الحزم</h2>
+                        <i class="fas fa-box text-2xl text-yellow-500"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->quantity }}</p>
+                </div>
+    
+                <!-- Time Period Card -->
+                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-gray-700">الفترة الزمنية</h2>
+                        <i class="fas fa-calendar-alt text-2xl text-purple-500"></i>
+                    </div>
+                    <p class="text-lg font-medium text-gray-800">{{ $distribution->arrive_date }}</p>
+                </div>
+            </div>
+    
+            <!-- Additional Project Details -->
+            <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">معلومات إضافية</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">الوصف</label>
+                        <p class="mt-1 text-gray-900">{{ $distribution->name }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">المصدر</label>
+                        <p class="mt-1 text-gray-900">{{ $distribution->source }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">الحالة</label>
+                        <p class="mt-1 text-gray-900">{{ $distribution->done ? 'مكتمل' : 'غير مكتمل' }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">عدد الأفراد</label>
+                        <p class="mt-1 text-gray-900">من {{ $distribution->min_count }} إلى {{ $distribution->max_count }}</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
+                        <p class="mt-1 text-gray-900">{{ $distribution->note }}</p>
                     </div>
                 </div>
             </div>
         </div>
+    
         {{-- @component('components.box', ['title' => 'بيانات التوزيع'])
 
         @endcomponent --}}
@@ -298,7 +296,16 @@
     @endif
 
     @push('scripts')
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.stat-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
         <script>
+
             $(document).ready(function() {
                 if ($('#snackbar').length) {
                     setTimeout(function() {
