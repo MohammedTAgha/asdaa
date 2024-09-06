@@ -330,7 +330,7 @@
                     {    data: 'checkbox',
                         name: 'checkbox',
                         render: function(data, type, row) {
-                            return `<div class="form-check px form-check-sm form-check-custom form-check-solid"><input type="checkbox" class="select-citizen" value="${row.pivot_id}" data-id="${row.pivot_id}" /></div>`;
+                            return `<div class="form-check px form-check-sm form-check-custom form-check-solid"><input type="checkbox" class="select-pivot" value="${row.pivot_id}" data-id="${row.pivot_id}" /></div>`;
                         },
                         orderable: false,
                         searchable: false,},
@@ -375,7 +375,7 @@
                             name: 'done',
                             render: function(data, type, row) {
                                 let checked = data ? 'checked' : '';
-                                return `<input class="form-check-input" type="checkbox" name="done" value="${data}" data-id="${row.pivot_id}" ${checked}>`;
+                                return `<input class="form-check-input" type="checkbox" id="done" name="done" value="${data}" data-id="${row.pivot_id}" ${checked}>`;
                             }
                         },
                         {
@@ -469,7 +469,7 @@
                         }
                     });
                 });
-                $('#ctzlist tbody').on('change', 'input[type="checkbox"]', function() {
+                $('#ctzlist tbody').on('change', 'input[id="done"]', function() {
                     var pivotId = $(this).data('id');
                     var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
                     var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
