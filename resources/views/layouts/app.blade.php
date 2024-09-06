@@ -316,7 +316,7 @@
     <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
     <script src="{{ asset('assets/plugins/global/popper.min.js') }}"></script>
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="{{ asset('assets/js/cdn.min.js') }}" defer></script>
     @livewireScripts
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->

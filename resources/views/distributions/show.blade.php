@@ -232,7 +232,26 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-
+                    <div x-data="{ open: false }" class="relative mb-3 z-50">
+                        <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                            اجراءات التحديد
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    
+                        <ul 
+                            x-show="open" 
+                            @click.away="open = false" 
+                            x-transition 
+                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50"
+                        >
+                            <li><a href="#" @click="markDone" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء المحددة</a></li>
+                            <li><a href="#" @click="markUndone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم المحدد</a></li>
+                            <li><a href="#" @click="deleteFromDistribution" class="block px-4 py-2 hover:bg-gray-200">حذف من االمشروع</a></li>
+                            <!-- Add more actions if needed -->
+                        </ul>
+                    </div>
                
                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
@@ -319,6 +338,12 @@
 
                 oTable.ajax.reload();
             });
+            // pivits selection action code
+            document.getElementById('select-all').addEventListener('click', function() {
+                let checkboxes = document.querySelectorAll('.select-citizen');
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+            });
+            
             $(document).ready(function() {
                 // Set CSRF token for AJAX requests     // Set CSRF token for AJAX requests
                 var oTable = $('#ctzlist').DataTable({
