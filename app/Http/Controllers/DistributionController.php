@@ -260,35 +260,67 @@ class DistributionController extends Controller
     }
 
     public function getDistributionCitizens($distributionId)
-{
-    $citizens = Citizen::select([
-        'citizens.id as citizen_id',
-        'citizens.firstname',
-        'citizens.secondname',
-        'citizens.thirdname',
-        'citizens.lastname',
-        'citizens.family_members',
-        'regions.name as region',
-        'distribution_citizens.quantity',
-        'distribution_citizens.done',
-        'distribution_citizens.date',
-        'distribution_citizens.recipient',
-        'distribution_citizens.note',
-        'distribution_citizens.id as pivot_id'
-    ])
-    ->join('distribution_citizens', 'citizens.id', '=', 'distribution_citizens.citizen_id')
-    ->join('regions', 'citizens.region_id', '=', 'regions.id')
-    ->where('distribution_citizens.distribution_id', $distributionId);
-    return DataTables::of($citizens)
- 
-    ->addColumn('fullname', function ($citizen) {
-        return $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname;
-    })
-    ->addColumn('action', function ($citizen) {
-        return '<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="' . $citizen->pivot_id . '">تحديث</button>';
-    })
-        ->toJson();
-}
+    {
+        $citizens = Citizen::select([
+            'citizens.id',
+            'citizens.firstname',
+            'citizens.secondname',
+            'citizens.thirdname',
+            'citizens.lastname',
+            'citizens.family_members',
+            'regions.name as region',
+            'distribution_citizens.quantity',  // From distribution_citizens table
+            'distribution_citizens.done',      // From distribution_citizens table
+            'distribution_citizens.date',      // From distribution_citizens table
+            'distribution_citizens.recipient', // From distribution_citizens table
+            'distribution_citizens.note',      // From distribution_citizens table
+            'distribution_citizens.id as pivot_id'
+        ])
+        ->join('distribution_citizens', 'citizens.id', '=', 'distribution_citizens.citizen_id')
+        ->join('regions', 'citizens.region_id', '=', 'regions.id')
+        ->where('distribution_citizens.distribution_id', $distributionId);
+        
+        return DataTables::of($citizens)
+            ->filterColumn('region', function($query, $keyword) {
+                $query->whereRaw("LOWER(regions.name) LIKE ?", ["%{$keyword}%"]);
+            })
+            ->filterColumn('quantity', function($query, $keyword) {
+                $query->whereRaw("distribution_citizens.quantity LIKE ?", ["%{$keyword}%"]);
+            })
+            ->filterColumn('done', function($query, $keyword) {
+                $query->whereRaw("distribution_citizens.done LIKE ?", ["%{$keyword}%"]);
+            })
+            ->addColumn('fullname', function ($citizen) {
+                return $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname;
+            })
+            ->filterColumn('fullname', function($query, $keyword) {
+                $query->whereRaw("LOWER(citizens.firstname) LIKE ?", ["%{$keyword}%"]);
+            })
+            ->filterColumn('fullname', function($query, $keyword) {
+                $searchTerms = explode(' ', $keyword);
+                $query->where(function ($q) use ($searchTerms, $keyword) {
+                    // Full name search across name columns
+                    $q->where(function ($nameQ) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $nameQ->where(function ($termQ) use ($term) {
+                                $termQ->where('citizens.firstname', 'like', '%' . $term . '%')
+                                      ->orWhere('citizens.secondname', 'like', '%' . $term . '%')
+                                      ->orWhere('citizens.thirdname', 'like', '%' . $term . '%')
+                                      ->orWhere('citizens.lastname', 'like', '%' . $term . '%');
+                            });
+                        }
+                    });
+            
+                    // Original single-term searches for other columns
+                    $q->orWhere('citizens.wife_name', 'like', '%' . $keyword . '%');
+                });
+                
+            })
+            ->addColumn('action', function ($citizen) {
+                return '<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="' . $citizen->pivot_id . '">تحديث</button>';
+            })
+            ->toJson();
+    }
 
     public function exportReport($report)
     {

@@ -406,8 +406,8 @@
                     lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
                     ajax: '{{ route('distributions.citizens', $distribution->id) }}',
                     columns: [{
-                            data: 'citizen_id',
-                            name: 'citizen_id',
+                            data: 'id',
+                            name: 'id',
                             render: function(data, type, row) {
                                 return `<a href="{{ route('citizens.show', '') }}/${data}">${data}</a>`;
                             }
@@ -451,6 +451,7 @@
                         {
                             data: 'date',
                             name: 'date',
+                            searchable: false,
                             render: function(data, type, row) {
                                 return `<input class="form-control" type="date" name="date" value="${data ? data : ''}" style="width: 160px">`;
                             }
@@ -458,6 +459,7 @@
                         {
                             data: 'recipient',
                             name: 'recipient',
+                            searchable: false,
                             render: function(data, type, row) {
                                 return `<input class="form-control" name="recipient" value="${data ? data : ''}" id="recipient" style="width: 155px">`;
                             }
@@ -465,6 +467,8 @@
                         {
                             data: 'note',
                             name: 'note',
+                            searchable: false,
+
                             render: function(data, type, row) {
                                 return `<input class="form-control" name="note" id="note" value="${data ? data : ''}" style="width: 90px">`;
                             }
@@ -476,7 +480,7 @@
                                 return `<button id='update-button' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="${data}">تحديث</button>`;
                             },
                             orderable: false,
-                            searchable: false
+                            searchable: false,
                         }
                     ]
                 });
