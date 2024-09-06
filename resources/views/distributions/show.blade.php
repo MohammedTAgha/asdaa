@@ -202,7 +202,17 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="dropdown mb-3">
+                    <button class=" dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="true">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                        <li><a class="dropdown-item" href="#" id="mark-done">Make them Done</a></li>
+                        <li><a class="dropdown-item" href="#" id="mark-undone">Make them Undone</a></li>
+                        <li><a class="dropdown-item" href="#" id="delete-from-distribution">Delete from Distribution</a></li>
+                        <!-- Add more actions as needed -->
+                    </ul>
+                </div>
 
                 <div class="d-flex">
                     <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />
@@ -222,100 +232,8 @@
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
-                    <div class="card-toolbar">
-                        <!--begin::Menu-->
-                        <button type="button" class="btn btn-sm btn-icon btn-color-white btn-active-white btn-active-color- border-0 me-n3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
-                            <span class="svg-icon svg-icon-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="5" y="5" width="5" height="5" rx="1" fill="#000000"></rect>
-                                        <rect x="14" y="5" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
-                                        <rect x="5" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
-                                        <rect x="14" y="14" width="5" height="5" rx="1" fill="#000000" opacity="0.3"></rect>
-                                    </g>
-                                </svg>
-                            </span>
-                            <!--end::Svg Icon-->
-                        </button>
-                        <!--begin::Menu 3-->
-                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-bold w-200px py-3" data-kt-menu="true" style="">
-                            <!--begin::Heading-->
-                            <div class="menu-item px-3">
-                                <div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">Payments</div>
-                            </div>
-                            <!--end::Heading-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">Create Invoice</a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link flex-stack px-3">Create Payment
-                                <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="" data-bs-original-title="Specify a target name for future usage and reference" aria-label="Specify a target name for future usage and reference"></i></a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3">
-                                <a href="#" class="menu-link px-3">Generate Bill</a>
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="right-end">
-                                <a href="#" class="menu-link px-3">
-                                    <span class="menu-title">Subscription</span>
-                                    <span class="menu-arrow"></span>
-                                </a>
-                                <!--begin::Menu sub-->
-                                <div class="menu-sub menu-sub-dropdown w-175px py-4">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Plans</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Billing</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3">Statements</a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu separator-->
-                                    <div class="separator my-2"></div>
-                                    <!--end::Menu separator-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <div class="menu-content px-3">
-                                            <!--begin::Switch-->
-                                            <label class="form-check form-switch form-check-custom form-check-solid">
-                                                <!--begin::Input-->
-                                                <input class="form-check-input w-30px h-20px" type="checkbox" value="1" checked="checked" name="notifications">
-                                                <!--end::Input-->
-                                                <!--end::Label-->
-                                                <span class="form-check-label text-muted fs-6">Recuring</span>
-                                                <!--end::Label-->
-                                            </label>
-                                            <!--end::Switch-->
-                                        </div>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--end::Menu sub-->
-                            </div>
-                            <!--end::Menu item-->
-                            <!--begin::Menu item-->
-                            <div class="menu-item px-3 my-1">
-                                <a href="#" class="menu-link px-3">Settings</a>
-                            </div>
-                            <!--end::Menu item-->
-                        </div>
-                        <!--end::Menu 3-->
-                        <!--end::Menu-->
-                    </div>
+
+               
                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
@@ -334,6 +252,9 @@
                     <table id="ctzlist" class="table table table-row-bordered gy-2">
                         <thead class="table-light">
                             <tr>
+                                <th class=" py-3 px-2 font-semibold ">
+                                    <input type="checkbox" id="select-all" />
+                                </th>
                                 <th class=" py-3 px-2 font-semibold ">الهوية</th>
                                 <th class=" py-3 px-2 font-semibold ">الاسم</th>
                                 <th class=" py-3 px-2 font-semibold ">المنطقة</th>
@@ -405,7 +326,16 @@
                     serverSide: true,
                     lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
                     ajax: '{{ route('distributions.citizens', $distribution->id) }}',
-                    columns: [{
+                    columns: [
+                    {    data: 'checkbox',
+                        name: 'checkbox',
+                        render: function(data, type, row) {
+                            return `<div class="form-check px form-check-sm form-check-custom form-check-solid"><input type="checkbox" class="select-citizen" value="${row.pivot_id}" data-id="${row.pivot_id}" /></div>`;
+                        },
+                        orderable: false,
+                        searchable: false,},
+                    
+                        {
                             data: 'id',
                             name: 'id',
                             render: function(data, type, row) {
