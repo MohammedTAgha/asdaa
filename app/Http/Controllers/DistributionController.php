@@ -324,6 +324,27 @@ class DistributionController extends Controller
             ->toJson();
     }
 
+    public function updateCitizens(Request $request, Distribution $distribution) {
+        $citizens = $request->input('citizens');
+        $field = $request->input('field');
+        $value = $request->input('value');
+    
+        foreach ($citizens as $pivotId) {
+            $distribution->citizens()->updateExistingPivot($pivotId, [$field => $value]);
+        }
+    
+        return response()->json(['success' => true]);
+    }
+    
+    public function deleteCitizens(Request $request, Distribution $distribution) {
+        $citizens = $request->input('citizens');
+    
+        foreach ($citizens as $pivotId) {
+            $distribution->citizens()->detach($pivotId);
+        }
+    
+        return response()->json(['success' => true]);
+    }
     public function exportReport($report)
     {
         return Excel::download(new CitizensdDistReportExport($report), 'citizens_report.xlsx');

@@ -202,17 +202,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="dropdown mb-3">
-                    <button class=" dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="true">
-                        Actions
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
-                        <li><a class="dropdown-item" href="#" id="mark-done">Make them Done</a></li>
-                        <li><a class="dropdown-item" href="#" id="mark-undone">Make them Undone</a></li>
-                        <li><a class="dropdown-item" href="#" id="delete-from-distribution">Delete from Distribution</a></li>
-                        <!-- Add more actions as needed -->
-                    </ul>
-                </div>
+                
 
                 <div class="d-flex">
                     <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />
@@ -235,24 +225,24 @@
                     <div x-data="{ open: false }" class="relative mb-3 z-50">
                         <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded-md">
                             اجراءات التحديد
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                    
-                        <ul 
-                            x-show="open" 
-                            @click.away="open = false" 
-                            x-transition 
-                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50"
-                        >
-                            <li><a href="#" @click="markDone" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء المحددة</a></li>
-                            <li><a href="#" @click="markUndone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم المحدد</a></li>
-                            <li><a href="#" @click="deleteFromDistribution" class="block px-4 py-2 hover:bg-gray-200">حذف من االمشروع</a></li>
+
+                        <ul x-show="open" @click.away="open = false" x-transition
+                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
+                            <li><button @click="markDone" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء
+                                    المحددة</button></li>
+                            <li><button @click="markUndone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم
+                                    المحدد</button></li>
+                            <li><button @click="deleteFromDistribution" class="block px-4 py-2 hover:bg-gray-200">حذف
+                                    من االمشروع</button></li>
                             <!-- Add more actions if needed -->
                         </ul>
                     </div>
-               
+
                 </div>
                 {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
                 {{--                    data-bs-target="#modalCenter"> --}}
@@ -343,23 +333,32 @@
                 let checkboxes = document.querySelectorAll('.select-citizen');
                 checkboxes.forEach(checkbox => checkbox.checked = this.checked);
             });
-            
+
             $(document).ready(function() {
+                let selectedRows = [];
                 // Set CSRF token for AJAX requests     // Set CSRF token for AJAX requests
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
                 var oTable = $('#ctzlist').DataTable({
                     processing: true,
                     serverSide: true,
                     lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
                     ajax: '{{ route('distributions.citizens', $distribution->id) }}',
-                    columns: [
-                    {    data: 'checkbox',
-                        name: 'checkbox',
-                        render: function(data, type, row) {
-                            return `<div class="form-check px form-check-sm form-check-custom form-check-solid"><input type="checkbox" class="select-pivot" value="${row.pivot_id}" data-id="${row.pivot_id}" /></div>`;
+                    columns: [{
+                            data: 'checkbox',
+                            name: 'checkbox',
+                            render: function(data, type, row) {
+                                let checked = selectedRows.includes(row.pivot_id) ? 'checked' : '';
+                    return `<div class="form-check px form-check-sm form-check-custom form-check-solid">
+                                <input type="checkbox" class="select-pivot" value="${row.pivot_id}" data-id="${row.pivot_id}" ${checked} />
+                            </div>`;                            },
+                            orderable: false,
+                            searchable: false,
                         },
-                        orderable: false,
-                        searchable: false,},
-                    
+
                         {
                             data: 'id',
                             name: 'id',
@@ -439,8 +438,114 @@
                         }
                     ]
                 });
+                
+    // Handle 'select-all' functionality
+    $('#select-all').on('change', function() {
+        let isChecked = $(this).is(':checked');
+        
+        // Select or deselect all visible rows
+        $('.select-pivot').each(function() {
+            let pivotId = $(this).data('id');
+            
+            if (isChecked) {
+                if (!selectedRows.includes(pivotId)) {
+                    selectedRows.push(pivotId); // Add to selected if not already selected
+                }
+                $(this).prop('checked', true);
+            } else {
+                selectedRows = selectedRows.filter(id => id !== pivotId); // Remove from selected
+                $(this).prop('checked', false);
+            }
+        });
+    });
+                // Handle row selection
+                $('#ctzlist').on('change', '.select-pivot', function() {
+                    let pivotId = $(this).data('id');
+                    if ($(this).is(':checked')) {
+                        selectedRows.push(pivotId); // Add to selected
+                        console.log('select one ', selectedRows);
 
+                    } else {
+                        selectedRows = selectedRows.filter(id => id !== pivotId); // Remove from selected
+                        console.log('removed one ', selectedRows);
 
+                    }
+                });
+
+                // Persist selected rows when changing pages
+                $('#ctzlist').on('page.dt', function() {
+                    console.log('changing', selectedRows)
+                    setTimeout(function() {
+                        // Rerender checkboxes based on selectedRows
+                        selectedRows.forEach(function(id) {
+                            $(`input[data-id="${id}"]`).prop('checked', true);
+                        });
+                    }, 0);
+                });
+                // js for actions 
+                // Action: Make them done
+                $('#make-done').click(function() {
+                    updateSelectedCitizens('done', 1);
+                });
+
+                // Action: Make them undone
+                $('#make-undone').click(function() {
+                    updateSelectedCitizens('done', 0);
+                });
+
+                // Action: Delete from distribution
+                $('#delete-from-distribution').click(function() {
+                    deleteSelectedCitizens();
+                });
+
+                // Function to update citizens
+                function updateSelectedCitizens(field, value) {
+                    if (selectedRows.length === 0) {
+                        alert("No rows selected!");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{{ route('distributions.updateCitizens', $distribution->id) }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            citizens: selectedRows,
+                            field: field,
+                            value: value,
+                        },
+                        success: function(response) {
+                            oTable.ajax.reload(); // Reload the table
+                        },
+                        error: function(err) {
+                            console.error("Error updating citizens:", err);
+                        }
+                    });
+                }
+
+                // Function to delete citizens from distribution
+                function deleteSelectedCitizens() {
+                    if (selectedRows.length === 0) {
+                        alert("No rows selected!");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '{{ route('distributions.deleteCitizens', $distribution->id) }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            citizens: selectedRows
+                        },
+                        success: function(response) {
+                            oTable.ajax.reload(); // Reload the table
+                            selectedRows = []; // Clear the selection
+                        },
+                        error: function(err) {
+                            console.error("Error deleting citizens:", err);
+                        }
+                    });
+                }
                 // oTable = $("#ctzlist").DataTable({
                 //     "scrollX": true,
                 //     responsive: true,
@@ -451,11 +556,7 @@
                     oTable.search($(this).val()).draw();
                 });
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+
                 $(document).on('click', '#update-button', function() {
                     console.log('cl');
 
