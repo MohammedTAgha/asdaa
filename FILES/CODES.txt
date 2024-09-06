@@ -77,3 +77,5 @@ protected $reportService;
         $this->reportService = $reportService;
     }
 
+// testing 
+    php artisan make:test CitizenTest
