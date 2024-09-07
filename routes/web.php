@@ -48,8 +48,8 @@ Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->na
 Route::get('/projects-report-export', [DistributionController::class, 'exportDistributionStatistics'])->name('distributions.exportDistributionStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
 Route::get('/projects-reports', [ReportController::class, 'showStatistics'])->name('reports.showStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
 
-Route::post('/distributions/{distribution}/update-citizens', 'DistributionController@updateCitizens')->name('distributions.updateCitizens');
-Route::post('/distributions/{distribution}/delete-citizens', 'DistributionController@deleteCitizens')->name('distributions.deleteCitizens');
+Route::post('/distributions/{distribution}/update-citizens', [DistributionController::class,'updateCitizens'])->name('distributions.updateCitizens');
+Route::post('/distributions/{distribution}/delete-citizens',  [DistributionController::class,'deleteCitizens'])->name('distributions.deleteCitizens');
 
 
 Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');

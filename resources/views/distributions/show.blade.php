@@ -22,20 +22,21 @@
         @endif
         <div class="container mx-auto px-4 py-8">
             <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">تفاصيل المشروع</h1>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Target Count Card -->
-                <div class="stat-card bg-white rounded-xl   p-6  shadow-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div
+                    class="stat-card bg-white rounded-xl   p-6  shadow-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-xl font-semibold text-gray-700">العدد المستهدف</h2>
                         <i class="fas fa-bullseye text-2xl text-blue-500"></i>
                     </div>
                     <p class="text-3xl font-bold text-gray-800">{{ $distribution->target_count }}</p>
                     <div class="mt-4 bg-gray-200 h-2 rounded-full">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ (0.) * 100 }}%;"></div>
+                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ 0. * 100 }}%;"></div>
                     </div>
                 </div>
-    
+
                 <!-- Benefited Count Card -->
                 <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-4">
@@ -45,7 +46,7 @@
                     <p class="text-3xl font-bold text-gray-800">{{ $distribution->expectation }}</p>
                     <p class="text-sm text-gray-600 mt-2">المتوقع: {{ $distribution->expectation }}</p>
                 </div>
-    
+
                 <!-- Package Numbers Card -->
                 <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-4">
@@ -54,7 +55,7 @@
                     </div>
                     <p class="text-3xl font-bold text-gray-800">{{ $distribution->quantity }}</p>
                 </div>
-    
+
                 <!-- Time Period Card -->
                 <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
                     <div class="flex items-center justify-between mb-4">
@@ -64,7 +65,7 @@
                     <p class="text-lg font-medium text-gray-800">{{ $distribution->arrive_date }}</p>
                 </div>
             </div>
-    
+
             <!-- Additional Project Details -->
             <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
                 <h2 class="text-2xl font-bold mb-4 text-gray-800">معلومات إضافية</h2>
@@ -83,7 +84,8 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700">عدد الأفراد</label>
-                        <p class="mt-1 text-gray-900">من {{ $distribution->min_count }} إلى {{ $distribution->max_count }}</p>
+                        <p class="mt-1 text-gray-900">من {{ $distribution->min_count }} إلى {{ $distribution->max_count }}
+                        </p>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
@@ -92,7 +94,7 @@
                 </div>
             </div>
         </div>
-    
+
         {{-- @component('components.box', ['title' => 'بيانات التوزيع'])
 
         @endcomponent --}}
@@ -200,8 +202,11 @@
                         </div>
                     </div>
                 </div>
-                
 
+                @include('modals.add_citizens_list_modal')
+                @component('modals.add_citizens_list_modal',['distributionId'=>$distribution->id,'distribution'=>$distribution])
+                    
+                @endcomponent
                 <div class="d-flex">
                     <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />
                     {{-- go to main ctz list  --}}
@@ -214,12 +219,17 @@
                         data-bs-target="#advancedFilterModal">
                         <i class="icon-xl fas fa-filter"></i>اضافة حسب فلتر
                     </button>
+                    <button type="button" class="btn btn-light-primary waves-effect" data-bs-toggle="modal"
+                        data-bs-target="#AddCitizensIdListModal">
+                        <i class="icon-xl fas fa-plus"></i>اضافة ارقام هوايا
+                    </button>
                     {{-- <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#regionsSelectModal">
                         <i class="tf-icons ti ti-map ti-xs me-1"></i> اضافة مناطق
                     </button> --}}
                     <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
                         <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
                     </a>
+
                     <div x-data="{ open: false }" class="relative mb-3 z-50">
                         <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded-md">
                             اجراءات التحديد
@@ -231,11 +241,11 @@
 
                         <ul x-show="open" @click.away="open = false" x-transition
                             class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
-                            <li><button @click="markDone" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء
+                            <li><button id="make-done" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء
                                     المحددة</button></li>
-                            <li><button @click="markUndone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم
+                            <li><button id="make-undone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم
                                     المحدد</button></li>
-                            <li><button @click="deleteFromDistribution" class="block px-4 py-2 hover:bg-gray-200">حذف
+                            <li><button id="delete-from-distribution" class="block px-4 py-2 hover:bg-gray-200">حذف
                                     من االمشروع</button></li>
                             <!-- Add more actions if needed -->
                         </ul>
@@ -247,7 +257,7 @@
                 {{--                اضافة مستفيدين --}}
                 {{--            </button> --}}
             @endslot
-            <div class="">
+            <div class="bg-white">
 
                 <div class="table-responsive">
                     @php
@@ -296,16 +306,15 @@
     @endif
 
     @push('scripts')
-    <script>
-         document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.stat-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
-        });
-    </script>
         <script>
-
+            document.addEventListener('DOMContentLoaded', function() {
+                const cards = document.querySelectorAll('.stat-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            });
+        </script>
+        <script>
             $(document).ready(function() {
                 if ($('#snackbar').length) {
                     setTimeout(function() {
@@ -359,9 +368,10 @@
                             name: 'checkbox',
                             render: function(data, type, row) {
                                 let checked = selectedRows.includes(row.pivot_id) ? 'checked' : '';
-                    return `<div class="form-check px form-check-sm form-check-custom form-check-solid">
+                                return `<div class="form-check px form-check-sm form-check-custom form-check-solid">
                                 <input type="checkbox" class="select-pivot" value="${row.pivot_id}" data-id="${row.pivot_id}" ${checked} />
-                            </div>`;                            },
+                            </div>`;
+                            },
                             orderable: false,
                             searchable: false,
                         },
@@ -445,26 +455,27 @@
                         }
                     ]
                 });
-                
-    // Handle 'select-all' functionality
-    $('#select-all').on('change', function() {
-        let isChecked = $(this).is(':checked');
-        
-        // Select or deselect all visible rows
-        $('.select-pivot').each(function() {
-            let pivotId = $(this).data('id');
-            
-            if (isChecked) {
-                if (!selectedRows.includes(pivotId)) {
-                    selectedRows.push(pivotId); // Add to selected if not already selected
-                }
-                $(this).prop('checked', true);
-            } else {
-                selectedRows = selectedRows.filter(id => id !== pivotId); // Remove from selected
-                $(this).prop('checked', false);
-            }
-        });
-    });
+
+                // Handle 'select-all' functionality
+                $('#select-all').on('change', function() {
+                    let isChecked = $(this).is(':checked');
+
+                    // Select or deselect all visible rows
+                    $('.select-pivot').each(function() {
+                        let pivotId = $(this).data('id');
+
+                        if (isChecked) {
+                            if (!selectedRows.includes(pivotId)) {
+                                selectedRows.push(pivotId); // Add to selected if not already selected
+                            }
+                            $(this).prop('checked', true);
+                        } else {
+                            selectedRows = selectedRows.filter(id => id !==
+                            pivotId); // Remove from selected
+                            $(this).prop('checked', false);
+                        }
+                    });
+                });
                 // Handle row selection
                 $('#ctzlist').on('change', '.select-pivot', function() {
                     let pivotId = $(this).data('id');

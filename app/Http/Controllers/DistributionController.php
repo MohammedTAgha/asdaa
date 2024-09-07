@@ -330,7 +330,13 @@ class DistributionController extends Controller
         $value = $request->input('value');
     
         foreach ($citizens as $pivotId) {
-            $distribution->citizens()->updateExistingPivot($pivotId, [$field => $value]);
+            Log::alert('updating this id'.$pivotId);
+            try {
+                $distribution->citizens()->updateExistingPivot($pivotId, [$field => $value]);
+
+            }catch (\Exception $e) {
+                //throw $th;
+            }
         }
     
         return response()->json(['success' => true]);
@@ -338,12 +344,24 @@ class DistributionController extends Controller
     
     public function deleteCitizens(Request $request, Distribution $distribution) {
         $citizens = $request->input('citizens');
-    
+        $deletedIds = [];
         foreach ($citizens as $pivotId) {
-            $distribution->citizens()->detach($pivotId);
+            // Delete the record from the pivot table
+          try{
+            DB::table('distribution_citizens')
+            ->where('id', $pivotId)
+            ->delete();
+            $deletedIds[]=$pivotId;
+          }catch (\Exception $e){
+                Log::error('eroor deleting id: '.$pivotId);
+          }
+          
+
         }
-    
-        return response()->json(['success' => true]);
+        session()->flash('message', 'deleted ok');
+
+        return response()->json(['success' => ' removed','removed'=>$deletedIds], 200);
+        // return response()->json(['success' => true]);
     }
     public function exportReport($report)
     {
