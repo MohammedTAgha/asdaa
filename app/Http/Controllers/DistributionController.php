@@ -331,12 +331,20 @@ class DistributionController extends Controller
     
         foreach ($citizens as $pivotId) {
             Log::alert('updating this id'.$pivotId);
-            try {
-                $distribution->citizens()->updateExistingPivot($pivotId, [$field => $value]);
+            try{
+                DB::table('distribution_citizens')
+                ->where('id', $pivotId)
+                ->update([$field.''=>$value]);
+                $deletedIds[]=$pivotId;
+              }catch (\Exception $e){
+                    Log::error('eroor updating id: '.$pivotId);
+              }
+            // try {
+            //     $distribution->citizens()->updateExistingPivot($pivotId, [$field => $value]);
 
-            }catch (\Exception $e) {
-                //throw $th;
-            }
+            // }catch (\Exception $e) {
+            //     //throw $th;
+            // }
         }
     
         return response()->json(['success' => true]);
