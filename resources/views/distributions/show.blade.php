@@ -231,7 +231,7 @@
                     </a>
 
                     <div x-data="{ open: false }" class="relative mb-3 z-50">
-                        <button @click="open = !open" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+                        <button @click="open = !open" class="btn btn-light-primary waves-effect">
                             اجراءات التحديد
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
