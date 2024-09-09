@@ -79,3 +79,41 @@ protected $reportService;
 
 // testing 
     php artisan make:test CitizenTest
+
+    //code to remove many ids 
+    if (empty($citizenIds)){
+        Log::alert('no citizens found');
+        return false;
+       }
+       try{
+        Citizen::whereIn('id', $citizenIds)->delete();
+        return true;
+       }catch(Exception $e){
+        Log::eroor('faild to remove: '.$e->getMessage());
+        return false;
+       }
+    
+    // code to update many ids region \
+    Citizen::whereIn('id', $citizenIds)->update(['region_id' => $regionId]);
+    code to do it but using transaction
+       /**
+     * Change region for selected citizens.
+     *
+     * @param array $citizenIds
+     * @param int $regionId
+     * @return bool
+     */
+    public function changeRegion(array $citizenIds, int $regionId): bool
+    {
+        try {
+            DB::transaction(function () use ($citizenIds, $regionId) {
+                // Update region for the selected citizens.
+                Citizen::whereIn('id', $citizenIds)->update(['region_id' => $regionId]);
+            });
+
+            return true;
+        } catch (Exception $e) {
+            Log::error('Failed to change citizen region: ' . $e->getMessage());
+            return false;
+        }
+    }
