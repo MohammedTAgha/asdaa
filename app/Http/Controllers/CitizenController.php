@@ -12,11 +12,18 @@ use App\Exports\CitizensExport;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
+use App\Services\CitizenService;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class CitizenController extends Controller
 {
+    protected $citizenService;
+
+    public function __construct(CitizenService $citizenService)
+    {
+        $this->citizenService = $citizenService;
+    }
     public function index(Request $request)
     {
 
@@ -383,6 +390,24 @@ class CitizenController extends Controller
 
         // Redirect to the index page
         return redirect()->route('citizens.index');
+    }
+    public function removeSeletidCitizens(Request $request){
+        $citizensIds=$request->input('citizeIds',[]);
+        $result = $this->citizenService->removeCitizens($citizensIds);
+        if(empty($citizensIds)){return response()->json(['erorr'=>'no citizens']);}
+        return $result ?  response()->json(['success'=>'romvid successfuly6']):
+         response()->json(['success'=>'romvid successfuly6']);
+    }
+
+    public function changeRegionForSelectedCitizens(Request $request){
+        $citizensIds=$request->input('citizeIds',[]);
+        $regionId = $request->input('regionId');
+        if (empty($citizenIds) || empty($regionId)) {
+            return response()->json(['error' => 'Citizens or region not selected'], 400);
+        }
+        $result = $this->citizenService->changeRegion($citizensIds , $regionId);
+        return $result ?response()->json(['success'=>'updated successfuly6']):
+        response()->json(['erorr'=>'erorr updating list']);
     }
     public function destroy($id)
     {

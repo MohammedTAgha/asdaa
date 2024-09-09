@@ -34,11 +34,15 @@ Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upl
 Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
 // Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
 
-Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
-Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
-Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
-
+Route::prefix('citizens')->group(function () {
+    Route::post('/remove', [CitizenController::class, 'removeSelectedCitizens'])->name('citizens.remove');
+    Route::post('/change-region', [CitizenController::class, 'changeRegionForSelectedCitizens'])->name('citizens.change-region');
+    Route::get('/import', [CitizenController::class, 'import'])->name('citizens.import');
+    Route::get('/export', [CitizenController::class, 'export'])->name('citizens.export');
+    Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+    Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+    Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
+});
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::post('/distributions/add-citizens-filter', [DistributionController::class, 'addCitizensFilter'])->name('distributions.addCitizensFilter');
@@ -63,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
       
         Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
-        Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
+       
         Route::resource('citizens', CitizenController::class);
         Route::resource('distributions', DistributionController::class);
         Route::resource('distribution_categories', DistributionCategoryController::class);
