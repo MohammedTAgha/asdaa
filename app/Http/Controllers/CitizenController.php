@@ -391,8 +391,8 @@ class CitizenController extends Controller
         // Redirect to the index page
         return redirect()->route('citizens.index');
     }
-    public function removeSeletidCitizens(Request $request){
-        $citizensIds=$request->input('citizeIds',[]);
+    public function removeSelectedCitizens(Request $request){
+        $citizensIds=$request->input('citizenIds',[]);
         $result = $this->citizenService->removeCitizens($citizensIds);
         if(empty($citizensIds)){return response()->json(['erorr'=>'no citizens']);}
         return $result ?  response()->json(['success'=>'romvid successfuly6']):

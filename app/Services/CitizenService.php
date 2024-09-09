@@ -19,9 +19,10 @@ class CitizenService
        }
        try{
         Citizen::whereIn('id', $citizenIds)->delete();
+        Log::info('deleted');
         return true;
        }catch(Exception $e){
-        Log::eroor('faild to remove: '.$e->getMessage());
+        Log::error('faild to remove: '.$e->getMessage());
         return false;
        }
        
