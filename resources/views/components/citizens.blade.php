@@ -7,14 +7,12 @@
 
 @push('custom_styles')
     <style>
-         td{
+        td {
             /* background-color: #f4f9fd !important; */
             align-items: center;
-            
+
         }
-
     </style>
-
 @endpush
 <!-- Modal -->
 <div class="modal fade" id="distributionModal" tabindex="-1" aria-labelledby="distributionModalLabel" aria-hidden="true">
@@ -43,7 +41,7 @@
 <div class="row align-items-center">
     <!-- Elements aligned at the start -->
     <div class="col d-flex align-items-center">
-        <div  class="d-flex me-3">
+        <div class="d-flex me-3">
             <div class="input-group">
                 <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
                 <button type="submit" id="searchbtn" class="btn btn-primary ">
@@ -66,7 +64,7 @@
                 <span class="ti-xs ti ti-table-export ms-1"></span>
             </button>
         </form>
-        
+
         <!-- Filter Button with Dropdown Menu -->
         <div class="me-2 d-flex position-relative">
             <button id="filterButton" type="button" class="btn btn-light-primary">
@@ -75,100 +73,132 @@
             </button>
 
             <!-- Filter Popup Menu -->
-        <div id="filterMenu"
-        class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
-        <!-- Header -->
-        <div class="pb-1 mb-1 border-b border-gray-200">
-            <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
-        </div>
-        <!-- Filter Form -->
-        <form action="{{ route('citizens.index') }}" method="GET">
-            <!-- Prepositives -->
-            <div class="mb-4">
-                <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                <select id="regions" name="regions[]"
-                    class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;" multiple>
-                    @foreach ($regions as $region)
-                        <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
-                            {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
-
-                            @if ($region->representatives->isNotEmpty())
-                                {{ $region->name }} </br> :
-                                {{ $region->representatives->first()->name }}
-                            @else
-                                {{ $region->name }}
-                            @endif
-
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="ageRange" class="form-label">افراد الاسرة</label>
-                <div class="input-group">
-                    <input type="number" id="minAge" class="form-control" placeholder="Min">
-                    <span class="input-group-text">-</span>
-                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
+            <div id="filterMenu"
+                class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <!-- Header -->
+                <div class="pb-1 mb-1 border-b border-gray-200">
+                    <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="ageRange" class="form-label">العمر</label>
-                <div class="input-group">
-                    <input type="number" id="minAge" class="form-control" placeholder="Min">
-                    <span class="input-group-text">-</span>
-                    <input type="number" id="maxAge" class="form-control" placeholder="Max">
-                </div>
-            </div>
-            <!-- Living Status -->
-            <div class="mb-4">
-                <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
-                <select id="living_status" name="living_status"
-                    class="w-full p-2 border border-gray-300 rounded-lg">
-                    <option value="">غير محدد</option>
-                    <option value="1">سيئ</option>
-                    <option value="2">جيد</option>
-                    <option value="3">ممتاز</option>
-                </select>
-            </div>
-            <!-- Social Status -->
-            <div class="mb-4">
-                <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
-                <select id="social_status" name="social_status"
-                    class="w-full p-2 border border-gray-300 rounded-lg">
-                    <option value="">غير محدد</option>
-                    <option value="0">اعزب</option>
-                    <option value="1">متزوج</option>
-                    <option value="2">ارمل</option>
-                    <option value="3">متعدد</option>
-                    <option value="4">مطلق</option>
-                    <option value="5">زوجة 1</option>
-                    <option value="6">زوجة 2</option>
-                    <option value="7">زوجة 3</option>
-                    <option value="8">زوجة 4</option>
+                <!-- Filter Form -->
+                <form action="{{ route('citizens.index') }}" method="GET">
+                    <!-- Prepositives -->
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                        <select id="regions" name="regions[]"
+                            class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;"
+                            multiple>
+                            @foreach ($regions as $region)
+                                <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
+                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
 
-                </select>
+                                    @if ($region->representatives->isNotEmpty())
+                                        {{ $region->name }} </br> :
+                                        {{ $region->representatives->first()->name }}
+                                    @else
+                                        {{ $region->name }}
+                                    @endif
+
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ageRange" class="form-label">افراد الاسرة</label>
+                        <div class="input-group">
+                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                            <span class="input-group-text">-</span>
+                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ageRange" class="form-label">العمر</label>
+                        <div class="input-group">
+                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                            <span class="input-group-text">-</span>
+                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                        </div>
+                    </div>
+                    <!-- Living Status -->
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
+                        <select id="living_status" name="living_status"
+                            class="w-full p-2 border border-gray-300 rounded-lg">
+                            <option value="">غير محدد</option>
+                            <option value="1">سيئ</option>
+                            <option value="2">جيد</option>
+                            <option value="3">ممتاز</option>
+                        </select>
+                    </div>
+                    <!-- Social Status -->
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
+                        <select id="social_status" name="social_status"
+                            class="w-full p-2 border border-gray-300 rounded-lg">
+                            <option value="">غير محدد</option>
+                            <option value="0">اعزب</option>
+                            <option value="1">متزوج</option>
+                            <option value="2">ارمل</option>
+                            <option value="3">متعدد</option>
+                            <option value="4">مطلق</option>
+                            <option value="5">زوجة 1</option>
+                            <option value="6">زوجة 2</option>
+                            <option value="7">زوجة 3</option>
+                            <option value="8">زوجة 4</option>
+
+                        </select>
+                    </div>
+                    <!-- Gender -->
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
+                        <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
+                            <option value="">غير محدد</option>
+                            <option value="0">ذكر</option>
+                            <option value="1">انثى</option>
+                        </select>
+                    </div>
+                    <!-- Actions -->
+                    <div class="flex justify-end">
+                        <button id="close" type="button"
+                            class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                            اغلاق</button>
+                        <button id="applyFilters" type="button"
+                            class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">تطبيق</button>
+                    </div>
+                </form>
             </div>
-            <!-- Gender -->
-            <div class="mb-4">
-                <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
-                <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
-                    <option value="">غير محدد</option>
-                    <option value="0">ذكر</option>
-                    <option value="1">انثى</option>
-                </select>
-            </div>
-            <!-- Actions -->
-            <div class="flex justify-end">
-                <button id="close" type="button"
-                    class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                    اغلاق</button>
-                <button id="applyFilters" type="button"
-                    class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">تطبيق</button>
-            </div>
-        </form>
-    </div>
         </div>
+        <div x-data="{ open: false }" class="relative mb-3 z-50">
+            <button @click="open = !open" class="btn btn-light-primary waves-effect">
+                اجراءات التحديد
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            <ul x-show="open" @click.away="open = false" x-transition
+                class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
+               
+                <li><button id="copy-selected-ids" class="block px-4 py-2 hover:bg-gray-200">
+                        نسخ التحديد
+                    </button>
+                </li>
+                <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">
+                        حذف التحديد
+                    </button>
+                </li>
+
+                <li><button id="change-region" class="block px-4 py-2 hover:bg-gray-200">
+                        تغيير المنطقة
+                    </button>
+                </li>
+
+               
+                <!-- Add more actions if needed -->
+            </ul>
+        </div>
+
     </div>
 </div>
 
@@ -179,9 +209,10 @@
 
     <button type="button" id="add-citizens-btn" class="btn btn-primary">اضافة مستفيدين</button>
 </form>
-
+@include('modals.confermation')
 <div class="table-responsive">
-    <table id="citizens-table" class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
+    <table id="citizens-table"
+        class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
         <thead class="table-light">
             <tr>
                 <th class="w-8px p-0">
@@ -211,7 +242,6 @@ id
 {{ $regionId }}
 {{-- @dd($region) --}}
 @push('scripts')
- 
     <script>
         $(document).ready(function() {
             console.log('load')
@@ -250,7 +280,7 @@ id
                         /*
                         @fix seach bar 
                         */
-                        data: 'id', 
+                        data: 'id',
                         name: 'id'
                     },
                     {
@@ -300,7 +330,7 @@ id
 
             $('#filterButton').on('click', function() {
                 console.log('filter');
-                
+
                 $('#filterMenu').toggle();
             });
 
@@ -320,26 +350,57 @@ id
                 $('#filterMenu').hide();
             });
 
+            let selectedCitizens = [];
+
             // Handle select-all checkbox
             $('#select-all').on('click', function() {
                 var rows = table.rows({
                     'search': 'applied'
                 }).nodes();
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            });
 
-            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
-                console.log('clicked')
-                if (!this.checked) {
-                    var el = $('#select-all').get(0);
-                    if (el && el.checked && ('indeterminate' in el)) {
-                        el.indeterminate = true;
-                    }
+                // Add or remove all citizens from selectedCitizens array
+                if (this.checked) {
+                    table.rows({
+                        'search': 'applied'
+                    }).data().each(function(row) {
+                        if (!selectedCitizens.includes(row.id)) {
+                            selectedCitizens.push(row.id);
+                        }
+                    });
+                } else {
+                    table.rows({
+                        'search': 'applied'
+                    }).data().each(function(row) {
+                        selectedCitizens = selectedCitizens.filter(id => id !== row.id);
+                    });
                 }
             });
 
-            //
 
+            // Handle individual row checkbox selection
+            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
+                const citizenId = $(this).val();
+                if (this.checked) {
+                    if (!selectedCitizens.includes(citizenId)) {
+                        selectedCitizens.push(citizenId);
+                    }
+                } else {
+                    selectedCitizens = selectedCitizens.filter(id => id !== citizenId);
+                }
+            });
+
+            // When the page changes, keep checkboxes selected for already selected rows
+            table.on('draw', function() {
+                table.rows().nodes().each(function(row) {
+                    const checkbox = $(row).find('input[type="checkbox"]');
+                    const citizenId = checkbox.val();
+                    if (selectedCitizens.includes(citizenId)) {
+                        checkbox.prop('checked', true);
+                    }
+                });
+            });
+            //
 
             // When the user selects a distribution from the modal
             $('#select-distribution-btn').click(function() {
@@ -347,33 +408,108 @@ id
                 $('#distributionId').val(distributionId);
                 $('#add-citizens-form').submit();
             });
-        });
-        $('#add-citizens-btn').click(function(e) {
-            e.preventDefault();
 
-            var selectedCitizens = $('input[name="citizens[]"]:checked').map(function() {
-                return $(this).val();
-            }).get();
-            console.log(selectedCitizens)
-            if (selectedCitizens.length === 0) {
-                alert('Please select at least one citizen.');
-                return;
-            }
-            $('input[name="citizens"]').val(selectedCitizens.join(','));
-            // Check if the distributionId is provided
-            if ($('#distributionId').val()) {
-                $('#add-citizens-form').submit();
-            } else {
-                $('#distributionModal').modal('show');
-            }
+            $('codeConfermationModal').click(function(){
+                $('#confirmationModal').modal('hide');
+            })
+            // Remove selected citizens
+            $('#remove-selected').click(function() {
+                if (selectedCitizens.length === 0) {
+                    alert("No citizens selected.");
+                    return;
+                }
+                $('#confirmationMessage').text("Are you sure you want to remove the selected citizens?");
+                $('#confirmationModal').modal('show');
 
+                $('#confirmAction').off('click').on('click', function() {
+                    // Send AJAX request to remove citizens
+                    $.ajax({
+                        url: '/citizens/remove',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            citizenIds: selectedCitizens
+                        },
+                        success: function(response) {
+                            table.ajax.reload();
+                            selectedCitizens = [];
+                            $('#confirmationModal').modal('hide');
+                            alert(response.message);
+                        }
+                    });
+                });
+            });
+
+            // Copy selected citizen IDs to clipboard
+            $('#copy-selected-ids').click(function() {
+                if (selectedCitizens.length === 0) {
+                    alert("No citizens selected.");
+                    return;
+                }
+                const ids = selectedCitizens.join(', ');
+                console.log(ids)
+                console.log(navigator.clipboard)
+                navigator.clipboard.writeText(ids).then(function() {
+                    alert("Citizen IDs copied to clipboard.");
+                });
+            });
+
+            // Change region for selected citizens
+            $('#change-region').click(function() {
+                if (selectedCitizens.length === 0) {
+                    alert("No citizens selected.");
+                    return;
+                }
+                $('#confirmationMessage').text("Select a new region for the selected citizens.");
+                $('#confirmationModal').modal('show');
+
+                $('#confirmAction').off('click').on('click', function() {
+                    // Handle region change
+                    const newRegionId = $('#regionSelect').val();
+                    $.ajax({
+                        url: '/citizens/change-region',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            citizenIds: selectedCitizens,
+                            regionId: newRegionId
+                        },
+                        success: function(response) {
+                            table.ajax.reload();
+                            selectedCitizens = [];
+                            $('#confirmationModal').modal('hide');
+                            alert(response.message);
+                        }
+                    });
+                });
+            });
+
+            $('#add-citizens-btn').click(function(e) {
+                e.preventDefault();
+
+                var selectedCitizens = $('input[name="citizens[]"]:checked').map(function() {
+                    return $(this).val();
+                }).get();
+                console.log(selectedCitizens)
+                if (selectedCitizens.length === 0) {
+                    alert('Please select at least one citizen.');
+                    return;
+                }
+                $('input[name="citizens"]').val(selectedCitizens.join(','));
+                // Check if the distributionId is provided
+                if ($('#distributionId').val()) {
+                    $('#add-citizens-form').submit();
+                } else {
+                    $('#distributionModal').modal('show');
+                }
+            });
         });
     </script>
     {{-- <script>
         $(document).ready(function() {
             oTable = $('#citizens-table').DataTable({
                 responsive: true,
-                "scrollY": "4000px",
+                "scrollY": "4000px", 
                 "scrollCollapse": true,
                 "paging": false,
                 language: {
