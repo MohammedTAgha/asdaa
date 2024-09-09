@@ -38,6 +38,7 @@ class Citizen extends Model
         'widowed',
         'social_status',
         'elderly_count',
+        'is_archived', // Archived flag
         ];
    
     protected $primaryKey='id';
@@ -57,5 +58,30 @@ class Citizen extends Model
     public function children()
     {
         return $this->hasMany(Child::class);
+    }
+
+    public function isArchived()
+    {
+        return $this->is_archived;
+    }
+
+    public static function findOrCreateById($id, $additionalData = [])
+    {
+        $citizen = self::withTrashed()->find($id);
+
+        if (!$citizen) {
+            $citizen = self::create([
+                'id' => $id,
+                'firstname' => $additionalData['firstname'] ?? 'Unknown',
+                'lastname' => $additionalData['lastname'] ?? 'Unknown',
+                'region_id' => 0,
+                'is_archived' => true,
+            ]);
+        } elseif ($citizen->trashed()) {
+            $citizen->restore();
+            $citizen->update(['is_archived' => true]);
+        }
+
+        return $citizen;
     }
 }
