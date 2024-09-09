@@ -1,74 +1,7 @@
 @extends('dashboard')
 
 @section('content')
-    <div class="bg-gray-100 flex items-center justify-center mt-18">
-        <div class="w-full max-w-lg py-6 px-8 bg-white rounded-lg shadow-md">
-            <h1 class="mb-6 text-2xl font-bold text-center text-gray-700">استعلام عن البيانات</h1>
-            <div>
-                <!-- ID Field -->
-                <div class="mb-4">
-                    <label for="id" class="block mb-2 font-medium text-gray-700">الهوية</label>
-                    <input type="number" id="id" maxlength="25"
-                           class=" form-control phone-number-mask w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                </div>
-                <!-- Name Fields Row -->
-                <div class="flex flex-wrap -mx-2 mb-4">
-                    <!-- First Name Field -->
-                    <div class="w-full sm:w-1/2 lg:w-1/3 px-2 mb-4 sm:mb-0">
-                        <label for="first_name" class="block mb-2 font-medium text-gray-700">الاسم الاول</label>
-                        <input type="text" id="first_name"
-                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <!-- Second Name Field -->
-                    <div class="w-full  sm:w-1/2 lg:w-1/3 px-2 mb-4 sm:mb-0">
-                        <label for="second_name" class="block mb-2 font-medium text-gray-700">الاب</label>
-                        <input type="text" id="second_name"
-                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <!-- Third Name Field -->
-                    <div class="w-full  sm:w-1/2 lg:w-1/3 mb-4 sm:mb-0">
-                        <label for="third_name" class="block mb-2 font-medium text-gray-700">الجد</label>
-                        <input type="text" id="third_name"
-                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <!-- Last Name Field -->
-                    <div class="w-full  sm:w-1/2 lg:w-1/3 px-2">
-                        <label for="last_name" class="block mb-2 font-medium text-gray-700">العائلة</label>
-                        <input type="text" id="last_name"
-                            class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                </div>
-                <!-- Submit Button -->
-                <div class="flex justify-center">
-                    <button id="submitButton" class="btn btn-primary btn-lg waves-effect waves-light" type="button">استعلام</button>
-{{--                    <button type="button" id="submitButton"--}}
-{{--                        class="px-10 py-4 text-xl font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>--}}
-                </div>
-            </div>
-
-            <div class="modal fade" id="citizenModal" tabindex="-1" aria-labelledby="citizenModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header ">
-                            <h5 class="modal-title" id="citizenModalLabel">Found Citizens</h5>
-                            <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div id="cardsContainer" class="row g-4">
-                                <!-- Cards will be appended here -->
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
+    <livewire:citizen-search />
     @push('scripts')
         <script>
             const modal = new bootstrap.Modal(document.getElementById('citizenModal'));
