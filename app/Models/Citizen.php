@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Citizen extends Model
 {
+    use SoftDeletes;
     protected $table='citizens';
     protected $fillable = [
         'id',
@@ -74,8 +75,8 @@ class Citizen extends Model
             Log::info('non exist citizen adding , id: '.$id);
             $citizen = self::create([
                 'id' => $id,
-                'firstname' => $additionalData['firstname'] ?? 'Unknown',
-                'lastname' => $additionalData['lastname'] ?? 'Unknown',
+                'firstname' => $additionalData['firstname'] ?? 'بلا اسم',
+                'lastname' => $additionalData['lastname'] ?? 'مجهول',
                 'region_id' => 0,
                 'is_archived' => true,
             ]);
