@@ -3,8 +3,13 @@
 
 @section('content')
     <div class="container mx-auto px-4">
-        <h1 class="text-2xl font-bold my-4">Edit Citizen</h1>
-        @include('citizens.partials.form')
+        <h1 class="text-2xl font-bold my-4"> تحرير بيانات النازح </h1>
+        <form action="{{ route('citizens.update', $citizen->id) }}" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+            @include('citizens.partials.form',['citizen'=>$citizen])
+        </form>
+        {{-- @include('citizens.partials.form',['citizen'=>$citizen]) --}}
         {{-- <form action="{{ route('citizens.update', $citizen->id) }}" method="POST">
             @csrf
             @method('PUT')

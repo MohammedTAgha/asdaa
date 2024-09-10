@@ -5,14 +5,15 @@
 
 
 <div class="col-xxl">
+   
     <div class="card mb-4">
-        <h5 class="card-header">اضافة نازح جديد</h5>
-        <div class="card-body mx-8">
+        <h5 class="card-header mt-2 text-xl"> {{isset($citizen) ? 'تعديل موجود' : 'جديد'}} </h5>
+        <div class="card-body mx-4">
             <h6 class="mb-b fw-semibold">1. بيانات النازح</h6>
             <div class="row mb-3">
                 <label for="id" class="col-sm-3 col-form-label text-sm-end">الهوية</label>
                 <div class="col-sm-9">
-                    <input type="text" id="id" name="id" class="form-control" required>
+                    <input type="text" id="id" name="id" class="form-control" value="{{ $citizen->id ?? old('id','') }}" required>
                     <div class="invalid-feedback">رقم غير صحيح: الطول يجب ان يكون 9 ارقام</div>
                     <div class="valid-feedback">الهوية صحيحة</div>
                 </div>
@@ -22,22 +23,22 @@
                 <label class="col-sm-3 col-form-label text-sm-end">الاسم </label>
                 <div class="col-sm-2">
                     <label for="firstname" class="form-label">الاسم الاول</label>
-                    <input type="text" name="firstname" id="firstname" class="form-control" required>
+                    <input type="text" value="{{ $citizen->firstname ?? old('firstname','') }}" name="firstname" id="firstname" class="form-control" value="{{ $citizen->id ?? old('id','') }}"  required>
                 </div>
                 <!-- Second Name -->
                 <div class="col-sm-2">
                     <label for="secondname" class="form-label">الاب</label>
-                    <input type="text" name="secondname" id="secondname" class="form-control">
+                    <input type="text" value="{{ $citizen->secondname ?? old('secondname','') }}" name="secondname" id="secondname" class="form-control">
                 </div>
                 <!-- Third Name -->
                 <div class="col-sm-2">
                     <label for="thirdname" class="form-label">الجد</label>
-                    <input type="text" name="thirdname" id="thirdname" class="form-control">
+                    <input type="text" value="{{ $citizen->thirdname ?? old('thirdname','') }}" name="thirdname" id="thirdname" class="form-control">
                 </div>
                 <!-- Last Name -->
                 <div class="col-sm-2">
                     <label for="lastname" class="form-label">العائلة</label>
-                    <input type="text" name="lastname" id="lastname" class="form-control" required>
+                    <input type="text" value="{{ $citizen->lastname ?? old('lastname','') }}" name="lastname" id="lastname" class="form-control" required>
                 </div>
             </div>
             {{-- 3 --}}
@@ -46,30 +47,30 @@
                 <div class="col-sm-3">
                     <label for="social_status" class="form-label">الحالة الاجتماعية</label>
                     <select id="social_status" name="social_status" class="form-select" data-allow-clear="true">
-                        <option value="">غير محدد</option>
-                        <option value="0">اعزب</option>
-                        <option value="1">متزوج</option>
-                        <option value="2">ارمل</option>
-                        <option value="3">متعدد</option>
-                        <option value="4">مطلق</option>
-                        <option value="5">زوجة 1</option>
-                        <option value="6">زوجة 2</option>
-                        <option value="7">زوجة 3</option>
-                        <option value="8">زوجة 4</option>
+                        <option value="" >غير محدد</option>
+                        <option value="اعزب" {{ isset($citizen) && $citizen->social_status == 'اعزب'? 'selected' : '' }}>اعزب</option>
+                        <option value="متزوج" {{ isset($citizen) && $citizen->social_status == 'متزوج'? 'selected' : '' }}>متزوج</option>
+                        <option value="ارمل" {{ isset($citizen) && $citizen->social_status == 'ارمل'? 'selected' : '' }}>ارمل</option>
+                        <option value="متعدد" {{ isset($citizen) && $citizen->social_status == 'متعدد'? 'selected' : '' }}>متعدد</option>
+                        <option value="مطل" {{ isset($citizen) && $citizen->social_status == 'مطلق'? 'selected' : '' }}>مطلق</option>
+                        <option value="زوجة 1">زوجة 1 </option>
+                        <option value="زوجة 2">زوجة 2 </option>
+                        <option value="زوجة 3">زوجة 3 </option>
+                        <option value="زوجة 4">زوجة 4 </option>
                     </select>
                 </div>
                 <!-- Second Name -->
                 <div class="col-sm-2">
                     <label for="gender" class="form-label">الجنس</label>
                     <select id="gender" name="gender" class="form-select" required>
-                        <option value="0">ذكر</option>
-                        <option value="1">انثى</option>
+                        <option value="0" {{isset($citizen) && $citizen->gender=='0' ? 'selected' : ''}}>ذكر</option>
+                        <option value="1" {{isset($citizen) && $citizen->gender=='1' ? 'selected' : ''}}>انثى</option>
                     </select>
                 </div>
-                <!-- Third Name -->
+                <!-- date_of_birth -->
                 <div class="col-sm-3">
                     <label for="date_of_birth" class="form-label">تاريخ الميلاد</label>
-                    <input type="date" id="date_of_birth" name="date_of_birth" class="form-control">
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ $citizen->date_of_birth ?? old('date_of_birth','') }}" class="form-control">
                 </div>
             </div>
 
@@ -81,7 +82,7 @@
                     class="w-full border-gray-300 w-full px-4 py-2 border rounded-md" required>
                     <option value="">اختر المنطقة</option>
                     @foreach ($regions as $region)
-                        <option value="{{ $region->id }}">{{ $region->name }}</option>
+                        <option value="{{ $region->id }}" {{isset($citizen) && $citizen->region_id== $region->id ? 'selected' : ''}}>{{ $region->name }}</option>
                     @endforeach
                 </select>
                 </div>
@@ -94,7 +95,7 @@
             <div class="row mb-3">
                 <label for="wife_id" class="col-sm-3 col-form-label text-sm-end">هوية الزوجة</label>
                 <div class="col-sm-9">
-                    <input type="text" id="wife_id" name="wife_id" class="form-control">
+                    <input value="{{ $citizen->wife_id ?? old('wife_id','') }}" type="text" id="wife_id" name="wife_id" class="form-control">
                 </div>
             </div>
 
@@ -102,7 +103,7 @@
             <div class="row mb-3">
                 <label for="wife_name" class="col-sm-3 col-form-label text-sm-end">اسم الزوجة</label>
                 <div class="col-sm-9">
-                    <input type="text" id="wife_name" name="wife_name" class="form-control">
+                    <input value="{{ $citizen->wife_name ?? old('wife_name','') }}" type="text" id="wife_name" name="wife_name" class="form-control">
                 </div>
             </div>
 
@@ -112,17 +113,17 @@
                 <label class="col-sm-3 col-form-label text-sm-end">عدد الاسرة </label>
                 <div class="col-sm-2">
                     <label for="family_members" class="form-label">عدد الافراد</label>
-                    <input type="number" id="family_members" name="family_members" class="form-control">
+                    <input value="{{ $citizen->family_members ?? old('family_members','') }}" type="number" id="family_members" name="family_members" class="form-control">
                 </div>
                 <!-- mails_count -->
                 <div class="col-sm-2">
                     <label for="mails_count" class="form-label">عدد الذكور </label>
-                    <input type="number" id="mails_count" name="mails_count" class="form-control">
+                    <input value="{{ $citizen->mails_count ?? old('mails_count','') }}" type="number" id="mails_count" name="mails_count" class="form-control">
                 </div>
                 <!--femails_count -->
                 <div class="col-sm-2">
                     <label for="femails_count" class="form-label">عدد الاناث</label>
-                    <input type="number" id="femails_count" name="femails_count" class="form-control">
+                    <input  value="{{ $citizen->femails_count ?? old('femails_count','') }}" type="number" id="femails_count" name="femails_count" class="form-control">
                 </div>
             </div>
             {{-- عدد  --}}
@@ -131,12 +132,12 @@
                 <label class="col-sm-3 col-form-label text-sm-end">الاعمار </label>
                 <div class="col-sm-2">
                     <label for="leesthan3" class="form-label">اقل من 3 سنوات </label>
-                    <input type="number" id="leesthan3" name="leesthan3" class="form-control">
+                    <input value="{{ $citizen->leesthan3 ?? old('leesthan3','') }}" type="number" id="leesthan3" name="leesthan3" class="form-control">
                 </div>
-                <!-- mails_count -->
+                <!-- elderly_count -->
                 <div class="col-sm-2">
                     <label for="elderly_count" class="form-label">عدد المسنين </label>
-                    <input type="number" id="elderly_count" name="elderly_count" class="form-control">
+                    <input value="{{ $citizen->elderly_count ?? old('elderly_count','') }}" type="number" id="elderly_count" name="elderly_count" class="form-control">
                 </div>
             </div>
 
@@ -147,11 +148,11 @@
                 <!-- Diseases -->
                 <div class="col-sm-2">
                     <label for="disease" class="form-label">عدد الامراض المزمنة</label>
-                    <input type="number" id="disease" name="disease" class="form-control">
+                    <input value="{{ $citizen->disease ?? old('disease','') }}" type="number" id="disease" name="disease" class="form-control">
                 </div>
                 <div class="col-sm-6">
                     <label for="disease_description" class="form-label">تفاصيل الامراض المزمنة</label>
-                    <input type="text" id="disease_description" name="disease_description" class="form-control">
+                    <input value="{{ $citizen->disease_description ?? old('disease_description','') }}" type="text" id="disease_description" name="disease_description" class="form-control">
                 </div>
             </div>
 
@@ -162,11 +163,11 @@
                 <!-- Obstruction -->
                 <div class="col-sm-2">
                     <label for="obstruction" class="form-label">عدد الاعاقات</label>
-                    <input type="number" id="obstruction" name="obstruction" class="form-control">
+                    <input value="{{ $citizen->obstruction ?? old('obstruction','') }}" type="number" id="obstruction" name="obstruction" class="form-control">
                 </div>
                 <div class="col-sm-6">
                     <label for="obstruction_description" class="form-label">تفاصيل</label>
-                    <input type="text" id="obstruction_description" name="obstruction_description"
+                    <input value="{{ $citizen->obstruction_description ?? old('obstruction_description','') }}" type="text" id="obstruction_description" name="obstruction_description"
                         class="form-control">
                 </div>
             </div>
@@ -181,10 +182,10 @@
                 <label for="living_status" class="col-sm-3 col-form-label text-sm-end">حالة السكن</label>
                 <div class="col-sm-9">
                     <select id="living_status" name="living_status" class="form-select">
-                        <option value="">غير محدد</option>
-                        <option value="1">سيئ</option>
-                        <option value="2">جيد</option>
-                        <option value="3">ممتاز</option>
+                        <option value="" >غير محدد</option>
+                        <option value="1" {{isset($citizen) && $citizen->living_status=='1' ? 'selected' : ''}}>سيئ</option>
+                        <option value="2" {{isset($citizen) && $citizen->living_status=='2' ? 'selected' : ''}}>جيد</option>
+                        <option value="3" {{isset($citizen) && $citizen->living_status=='3' ? 'selected' : ''}}>ممتاز</option>
                     </select>
 
                 </div>
@@ -196,9 +197,9 @@
                 <div class="col-sm-9">
                     <select id="job" name="job" class="form-select">
                         <option value="">غير محدد</option>
-                        <option value="1">لا يعمل</option>
-                        <option value="2">عامل</option>
-                        <option value="3">موظف</option>
+                        <option value="1" {{isset($citizen) && $citizen->living_status=='1' ? 'selected' : ''}}>لا يعمل</option>
+                        <option value="2" {{isset($citizen) && $citizen->living_status=='2' ? 'selected' : ''}}>عامل</option>
+                        <option value="3" {{isset($citizen) && $citizen->living_status=='3' ? 'selected' : ''}}>موظف</option>
                     </select>
                 </div>
             </div>
@@ -206,16 +207,16 @@
             <div class="row mb-3">
                 <label for="original_address" class="col-sm-3 col-form-label text-sm-end">عنوان السكن الأصلي</label>
                 <div class="col-sm-9">
-                    <input type="text" id="original_address" name="original_address" class="form-control">
+                    <input value="{{ $citizen->original_address ?? old('original_address','') }}"  type="text" id="original_address" name="original_address" class="form-control">
                 </div>
             </div>
 
             <!-- Note -->
             <div class="row mb-3">
-                <label for="note" class="col-sm-3 col-form-label text-sm-end"> ملاحظة</label>
+                <label for="note"  class="col-sm-3 col-form-label text-sm-end"> ملاحظة</label>
 
                 <div class="col-sm-9">
-                    <textarea id="note" name="note" rows="3" class="form-control"></textarea>
+                    <input value="{{ $citizen->note ?? old('note','') }}"   id="note" name="note" rows="3" class="form-control"></textarea>
                 </div>
             </div>
         </div>
