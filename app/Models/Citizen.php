@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Log;
 
 class Citizen extends Model
 {
@@ -67,9 +67,11 @@ class Citizen extends Model
 
     public static function findOrCreateById($id, $additionalData = [])
     {
+        Log::info('adding id :'.$id);
         $citizen = self::withTrashed()->find($id);
 
         if (!$citizen) {
+            Log::info('non exist citizen adding , id: '.$id);
             $citizen = self::create([
                 'id' => $id,
                 'firstname' => $additionalData['firstname'] ?? 'Unknown',
@@ -77,6 +79,7 @@ class Citizen extends Model
                 'region_id' => 0,
                 'is_archived' => true,
             ]);
+            Log::info('non exist citizen added , id: '.$id);
         } elseif ($citizen->trashed()) {
             $citizen->restore();
             $citizen->update(['is_archived' => true]);
@@ -84,4 +87,14 @@ class Citizen extends Model
 
         return $citizen;
     }
+
+      /**
+     * Scope to only get archived citizens.
+     */
+    public function scopeArchived($query)
+    {
+        return $query->where('is_archived', true);
+    }
+
+
 }

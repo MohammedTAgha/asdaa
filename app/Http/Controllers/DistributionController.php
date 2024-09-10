@@ -177,13 +177,14 @@ class DistributionController extends Controller
         }
 
         try {
-            $report = $distributionService->addCitizensToDistribution($citizenIds, $distributionId);
+            $report = $distributionService->addCitizensToDistribution($citizenIds, $distributionId,[],true);
 
             $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
             return redirect()->back()
                 ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
                 ->with('addCitizensReportHtml', $reportHtml);
         } catch (\Exception $e) {
+            Log::error('eroor adding ctz : '.$e->getMessage());
             return redirect()->back()->with("warning", "حدث خطأ في الإضافة");
         }
     }

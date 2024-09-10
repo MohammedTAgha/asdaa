@@ -3,37 +3,56 @@ namespace App\Services;
 
 use App\Models\Citizen;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DistributionService
 {
-    public function addCitizensToDistribution(array $citizenIds, $distributionId, array $filters = [])
+    public function addCitizensToDistribution(array $citizenIds, $distributionId, array $filters = [], $addNonExist = false)
     {
         $totalIds = count($citizenIds);
-        DB::beginTransaction();
+        Log::info($citizenIds);
 
+        DB::beginTransaction();
+    
         try {
             // Apply filters to the citizens list before adding
-            $citizenIds = $this->applyFilters($citizenIds, $filters);
-
+            //$citizenIds = $this->applyFilters($citizenIds, $filters);
+            Log::info($citizenIds);
+    
             // Check which citizens already exist in the distribution
             $existingInDistribution = DB::table("distribution_citizens")
                 ->where("distribution_id", $distributionId)
                 ->whereIn("citizen_id", $citizenIds)
                 ->pluck("citizen_id")
                 ->toArray();
-
+    
             // Check which citizens exist in the citizens table
             $existingCitizens = Citizen::whereIn("id", $citizenIds)->pluck("id")->toArray();
-
+    
             // Identify non-existent citizens
             $nonExistentCitizens = array_diff($citizenIds, $existingCitizens);
-
-            // Identify citizens to be added (exist in citizens table but not in distribution)
-            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
-
+    
             $addedCount = 0;
             $addedCitizens = [];
-
+    
+            // If addNonExist is true, find or create missing citizens
+            if ($addNonExist && count($nonExistentCitizens) > 0) {
+                foreach ($nonExistentCitizens as $nonExistentId) {
+                    // Find or create the citizen with the findOrCreateById method
+                    $citizen = Citizen::findOrCreateById($nonExistentId, [
+                        'firstname' => 'Unknown',
+                        'lastname' => 'Unknown'
+                    ]);
+    
+                    // Add the newly created citizens to the list of existing citizens
+                    $existingCitizens[] = $citizen->id;
+                }
+            }
+    
+            // Identify citizens to be added (exist in citizens table but not in distribution)
+            $citizensToAdd = array_diff($existingCitizens, $existingInDistribution);
+    
+            // Add valid citizens to the distribution
             foreach ($citizensToAdd as $citizenId) {
                 DB::table("distribution_citizens")->insert([
                     "distribution_id" => $distributionId,
@@ -42,19 +61,20 @@ class DistributionService
                 $addedCount++;
                 $addedCitizens[] = $citizenId;
             }
-
+    
+            // Fetch citizen data for the report
             $existingCitizenData = Citizen::whereIn("id", $existingInDistribution)
                 ->select('id', 'firstname', 'lastname')
                 ->get()
                 ->toArray();
-
+    
             $addedCitizenData = Citizen::whereIn("id", $addedCitizens)
                 ->select('id', 'firstname', 'lastname')
                 ->get()
                 ->toArray();
-
+    
             DB::commit();
-
+    
             return [
                 'added' => [
                     'count' => $addedCount,
@@ -70,7 +90,7 @@ class DistributionService
                 ],
                 'nonexistent' => [
                     'count' => count($nonExistentCitizens),
-                    'citizens' => $nonExistentCitizens // This will be an array of IDs
+                    'citizens' => $nonExistentCitizens // Array of IDs of new citizens
                 ],
                 'totalIds' => $totalIds
             ];
@@ -79,6 +99,7 @@ class DistributionService
             throw new \Exception("Error adding citizens: " . $e->getMessage());
         }
     }
+    
         /**
      * Remove citizens from a distribution based on given filters.
      *
