@@ -13,11 +13,14 @@ class CitizenService
 {
     public function removeCitizens(array $citizenIds)
     {
+
+        
        if (empty($citizenIds)){
         Log::alert('no citizens found');
         return false;
        }
        try{
+        Citizen::whereIn('id', $citizenIds)->update(['is_archived' => true]);
         Citizen::whereIn('id', $citizenIds)->delete();
         Log::info('deleted');
         return true;
