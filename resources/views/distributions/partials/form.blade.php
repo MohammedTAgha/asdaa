@@ -6,9 +6,10 @@
                 required class="form-control">
         </div>
         <div class="col-md-6 mb-3">
-            <label for="date" class="form-label">تاريخ التسليم:</label>
-            <input type="date" id="date" name="date" value="{{ old('date', $distribution->date ?? '') }}"
-                required class="form-control">
+            <label for="arrive_date" class="form-label">تاريخ التوريد:</label>
+            <input type="date" id="arrive_date" name="arrive_date"
+                value="{{ old('arrive_date', $distribution->arrive_date ?? '') }}" class="form-control">
+
         </div>
     </div>
 
@@ -23,12 +24,21 @@
                     @endforeach
                 </select>
             </div> --}}
-            @livewire('category-dropdown', ['selectedCategory' => $distribution->distribution_category_id ?? null])        <div class="col-md-6 mb-3">
-            <label for="arrive_date" class="form-label">تاريخ التوريد:</label>
-            <input type="date" id="arrive_date" name="arrive_date"
-                value="{{ old('arrive_date', $distribution->arrive_date ?? '') }}" class="form-control">
+        @livewire('category-dropdown', ['selectedCategory' => $distribution->distribution_category_id ?? null])
+        <div class="col-md-6 mb-3">
+            <label for="date" class="form-label">تاريخ بدء التسليم:</label>
+            <input type="date" id="date" name="date" value="{{ old('date', $distribution->date ?? '') }}"
+                required class="form-control">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label for="done" class="form-label">تاريخ اكتمال:</label>
+            <input type="date" id="date" name="date" value="{{ old('date', $distribution->date ?? '') }}"
+        required class="form-control">
+
+           
         </div>
     </div>
+
 
     <div class="row">
         <div class="col-md-6 mb-3">
@@ -37,40 +47,35 @@
                 value="{{ old('quantity', $distribution->quantity ?? '') }}" class="form-control">
         </div>
         <div class="col-md-6 mb-3">
-            <label for="target" class="form-label">نوع المستفيدين:</label>
-            <input type="text" id="target" name="target" value="{{ old('target', $distribution->target ?? '') }}"
-                class="form-control">
+            <label for="expectation" class="form-label">عدد المتوقعين:</label>
+            <input type="text" id="expectation" name="expectation"
+                value="{{ old('expectation', $distribution->expectation ?? '') }}" class="form-control">
         </div>
     </div>
-
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="source" class="form-label">المصدر:</label>
-            <input type="text" id="source" name="source" value="{{ old('source', $distribution->source ?? '') }}"
-                class="form-control">
-        </div>
-        <div class="col-md-6 mb-3">
-            <label for="done" class="form-label">اكتمال:</label>
-            <select id="done" name="done" class="form-select">
-                <option value="1" {{ (old('done') ?? ($distribution->done ?? '')) == '1' ? 'selected' : '' }}>مكتمل
-                </option>
-                <option value="0" {{ (old('done') ?? ($distribution->done ?? '')) == '0' ? 'selected' : '' }}>غير
-                    مكتمل</option>
-            </select>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            <label for="target_count" class="form-label">عدد المستهدفين:</label>
-            <input type="number" id="target_count" name="target_count"
-                value="{{ old('target_count', $distribution->target_count ?? '') }}" class="form-control">
-        </div>
         <div class="col-md-6 mb-3">
             <label for="expectation" class="form-label">عدد المتوقعين:</label>
             <input type="text" id="expectation" name="expectation"
                 value="{{ old('expectation', $distribution->expectation ?? '') }}" class="form-control">
         </div>
+
+        <div class="col-md-6 mb-3">
+            <label for="target_count" class="form-label">عدد الذين استفادو:</label>
+            <input type="number" id="target_count" name="target_count"
+                value="{{ old('target_count', $distribution->target_count ?? '') }}" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="col-12 mb-3">
+        <label for="target" class="form-label">نوع المستفيدين:</label>
+        <input type="text" id="target" name="target" value="{{ old('target', $distribution->target ?? '') }}"
+            class="form-control">
+    </div>
+    <div class="row">
+        
+        
     </div>
 
     <div class="row">
