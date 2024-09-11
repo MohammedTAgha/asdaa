@@ -19,7 +19,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="distributionModalLabel">اختر التوزيع </h5>
+                <h5 class="modal-title" id="distributionModalLabel">Select Distribution</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -31,8 +31,8 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
-                <button type="button" id="select-distribution-btn" class="btn btn-primary">تاكيد</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="select-distribution-btn" class="btn btn-primary">Select</button>
             </div>
         </div>
     </div>
@@ -58,12 +58,12 @@
             اضافة جديد
             <span class="ti-xs ti ti-user-plus ms-1"></span>
         </a>
-        {{-- <form method="GET" class="mx-1"> --}}
-            <button id="export-btn" class="btn btn-success">
+        <form method="GET" class="mx-1">
+            <button type="submit" class="btn btn-success">
                 تصدير
                 <span class="ti-xs ti ti-table-export ms-1"></span>
             </button>
-        {{-- </form> --}}
+        </form>
 
         <!-- Filter Button with Dropdown Menu -->
         <div class="me-2 d-flex position-relative">
@@ -254,21 +254,6 @@ id
             @endif
 
             console.log('new id ', regionids)
-            $('#export-btn').on('click', function() {
-                var filters = {
-                    search: $('#searchctz').val(),
-                    regions: regionids,
-                    minMembers: $('#minMembers').val(),
-                    maxMembers: $('#maxMembers').val(),
-                    living_status: $('#living_status').val(),
-                    social_status: $('#social_status').val(),
-                    gender: $('#gender').val(),
-                    original_address: $('#original_address').val()
-                };
-
-                // Redirect to export route with filters
-                window.location.href = "{{ route('citizens.export') }}?" + $.param(filters);
-            });
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -278,12 +263,11 @@ id
                     data: function(d) {
                         d.search = $('#searchctz').val();
                         d.regions = regionids;
-                        d.minMembers = $('#minMembers').val();
-                        d.maxMembers = $('#maxMembers').val();
+                        d.minAge = $('#minAge').val();
+                        d.maxAge = $('#maxAge').val();
                         d.living_status = $('#living_status').val();
                         d.social_status = $('#social_status').val();
                         d.gender = $('#gender').val();
-                        d.oreginal_adress = $('#oreginal_adress')
                     }
                 },
                 columns: [{
@@ -337,25 +321,6 @@ id
                 order: [
                     [1, 'asc']
                 ],
-                language: {
-            "sProcessing":   "جاري المعالجة...",
-            "sLengthMenu":   "عرض _MENU_ سجل",
-            "sZeroRecords":  "لم يتم العثور على أي سجلات",
-            "sInfo":         "عرض من _START_ إلى _END_ من إجمالي _TOTAL_ سجل",
-            "sInfoEmpty":    "عرض 0 إلى 0 من 0 سجل",
-            "sInfoFiltered": "(تم تصفية من _MAX_ سجل)",
-            "sSearch":       "بحث:",
-            "oPaginate": {
-                "sFirst":    "الأول",
-                "sPrevious": "السابق",
-                "sNext":     "التالي",
-                "sLast":     "الأخير"
-            },
-            "oAria": {
-                "sSortAscending":  ": تفعيل لترتيب العمود تصاعديًا",
-                "sSortDescending": ": تفعيل لترتيب العمود تنازليًا"
-            }
-        }
             });
             $('#regions').on('change', function() {
                 console.log('change');

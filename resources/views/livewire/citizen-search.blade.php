@@ -21,7 +21,7 @@
         <div class="card">
             <div class="card-header">Citizen Information</div>
             <div class="card-body">
-                <h5 class="card-title">{{ $citizen->firstname}} {{$citizen->secondname}} {{$citizen->thirdname}} {{$citizen->lastname }}</h5>
+                <h5 class="card-title">{{ $citizen->name }}</h5>
                 <p class="card-text">ID: {{ $citizen->id }}</p>
             </div>
         </div>

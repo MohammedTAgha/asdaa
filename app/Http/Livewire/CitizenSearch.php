@@ -51,20 +51,18 @@ class CitizenSearch extends Component
     private function validateLuhn($id)
     {
         $sum = 0;
-        $id = strrev($id); // Reverse the string to iterate from right to left
-    
         for ($i = 0; $i < 8; $i++) {
-            $digit = (int) substr($id, $i, 1); // Extract each digit
-            if ($i % 2 === 1) { // Note: We changed this condition because we reversed the string
+            $digit = (int) $id[$i];
+            if ($i % 2 === 0) {
+                $sum += $digit;
+            } else {
                 $doubled = $digit * 2;
                 $sum += $doubled > 9 ? $doubled - 9 : $doubled;
-            } else {
-                $sum += $digit;
             }
         }
-    
+
         $checkDigit = (10 - ($sum % 10)) % 10;
-        return $checkDigit === (int) substr($id, 8, 1); // Compare with the last digit
+        return $checkDigit === (int) $id[8];
     }
 
     public function render()
