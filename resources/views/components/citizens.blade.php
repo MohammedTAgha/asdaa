@@ -179,7 +179,7 @@
 
             <ul x-show="open" @click.away="open = false" x-transition
                 class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
-               
+
                 <li><button id="copy-selected-ids" class="block px-4 py-2 hover:bg-gray-200">
                         نسخ التحديد
                     </button>
@@ -194,7 +194,7 @@
                     </button>
                 </li>
 
-               
+
                 <!-- Add more actions if needed -->
             </ul>
         </div>
@@ -409,7 +409,7 @@ id
                 $('#add-citizens-form').submit();
             });
 
-            $('codeConfermationModal').click(function(){
+            $('codeConfermationModal').click(function() {
                 $('#confirmationModal').modal('hide');
             })
             // Remove selected citizens
@@ -440,18 +440,34 @@ id
                 });
             });
 
-            // Copy selected citizen IDs to clipboard
             $('#copy-selected-ids').click(function() {
                 if (selectedCitizens.length === 0) {
                     alert("No citizens selected.");
                     return;
                 }
-                const ids = selectedCitizens.join(', ');
-                console.log(ids)
-                console.log(navigator.clipboard)
-                navigator.clipboard.writeText(ids).then(function() {
-                    alert("Citizen IDs copied to clipboard.");
+                const ids = selectedCitizens.join('\n'); // Join IDs with newline for text file
+                console.log(ids);
+
+                // Create a Blob with the IDs
+                const blob = new Blob([ids], {
+                    type: 'text/plain'
                 });
+                const url = URL.createObjectURL(blob);
+
+                // Create a temporary link element
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'تحديد ارقا هوايا.txt'; // Set the file name
+
+                // Append to the body, click and remove
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Release the object URL
+                URL.revokeObjectURL(url);
+
+                alert("تم التحميل كملف نص");
             });
 
             // Change region for selected citizens
