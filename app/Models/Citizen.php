@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Traits\CitizenFilters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Citizen extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CitizenFilters;
+
     protected $table='citizens';
+    
     protected $fillable = [
         'id',
         'firstname',
@@ -77,7 +80,7 @@ class Citizen extends Model
                 'id' => $id,
                 'firstname' => $additionalData['firstname'] ?? 'بلا اسم',
                 'lastname' => $additionalData['lastname'] ?? 'مجهول',
-                'region_id' => 0,
+                'region_id' =>$additionalData['region_id'] ?? 0,
                 'is_archived' => true,
             ]);
             Log::info('non exist citizen added , id: '.$id);

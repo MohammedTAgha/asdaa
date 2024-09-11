@@ -147,11 +147,11 @@ class CitizenController extends Controller
         }
     
         if ($request->has('minAge') && $request->minAge != null) {
-            // Add your age filtering logic
+            $query->where('age', '>=', $request->minAge);
         }
     
         if ($request->has('maxAge') && $request->maxAge != null) {
-            // Add your age filtering logic
+            $query->where('age', '<=', $request->maxAge);
         }
     
         if ($request->has('living_status') && $request->living_status != null) {
@@ -296,47 +296,10 @@ class CitizenController extends Controller
 
     public function export(Request $request)
     {
-        dd('export');
-        $query = Citizen::query();
+        dd($request);
 
-        // Apply the same filters as in the index method
-        if ($request->has('id') && !empty($request->input('id'))) {
-            $query->where('id', $request->input('id'));
-        }
-        if ($request->has('first_name') && !empty($request->input('first_name'))) {
-            $query->where('firstname', 'like', '%' . $request->input('first_name') . '%');
-        }
-        if ($request->has('second_name') && !empty($request->input('second_name'))) {
-            $query->where('secondname', 'like', '%' . $request->input('second_name') . '%');
-        }
-        if ($request->has('third_name') && !empty($request->input('third_name'))) {
-            $query->where('thirdname', 'like', '%' . $request->input('third_name') . '%');
-        }
-        if ($request->has('last_name') && !empty($request->input('last_name'))) {
-            $query->where('lastname', 'like', '%' . $request->input('last_name') . '%');
-        }
-        if ($request->has('search') && !empty($request->input('search'))) {
-            $query->where(function ($q) use ($request) {
-                $q->where('firstname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('secondname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('thirdname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('lastname', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('wife_name', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('id', 'like', '%' . $request->input('search') . '%')
-                    ->orWhere('note', 'like', '%' . $request->input('search') . '%');
-            });
-        }
-        if ($request->has('age')) {
-            $query->where('age', $request->input('age'));
-        }
-        if ($request->has('gender') && !empty($request->input('gender'))) {
-            $query->where('gender', $request->input('gender'));
-        }
-        if ($request->has('regions') && !empty($request->input('regions'))) {
-            $query->whereIn('region_id', $request->regions);
-        }
 
-        $citizens = $query->get();
+        $citizens = Citizen::filter($request->all());
 
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
