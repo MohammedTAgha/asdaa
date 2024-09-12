@@ -283,7 +283,7 @@ id
                         d.living_status = $('#living_status').val();
                         d.social_status = $('#social_status').val();
                         d.gender = $('#gender').val();
-                        d.oreginal_adress = $('#oreginal_adress')
+                        d.oreginal_adress = $('#oreginal_adress').val();
                     }
                 },
                 columns: [{
