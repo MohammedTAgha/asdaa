@@ -336,7 +336,7 @@ class CitizenController extends Controller
             $query->whereIn('region_id', $request->regions);
         }
 
-        $citizens = Citizen::filter($request->all())->get();
+        $citizens = Citizen::filter($request->all())->with('region')->get();
         
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
