@@ -296,7 +296,7 @@ class CitizenController extends Controller
 
     public function export(Request $request)
     {
-        dd('export');
+        
         $query = Citizen::query();
 
         // Apply the same filters as in the index method
@@ -336,8 +336,8 @@ class CitizenController extends Controller
             $query->whereIn('region_id', $request->regions);
         }
 
-        $citizens = $query->get();
-
+        $citizens = Citizen::filter($request->all())->get();
+        
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
 

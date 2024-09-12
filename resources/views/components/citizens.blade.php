@@ -106,9 +106,9 @@
                     <div class="mb-3">
                         <label for="ageRange" class="form-label">افراد الاسرة</label>
                         <div class="input-group">
-                            <input type="number" id="minAge" class="form-control" placeholder="Min">
+                            <input type="number" id="minMembers" class="form-control" placeholder="من">
                             <span class="input-group-text">-</span>
-                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
+                            <input type="number" id="maxMembers" class="form-control" placeholder="الى">
                         </div>
                     </div>
                     <div class="mb-3">
