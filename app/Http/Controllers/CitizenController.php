@@ -165,7 +165,27 @@ class CitizenController extends Controller
         if ($request->has('gender') && $request->gender != null) {
             $query->where('gender', $request->gender);
         }
+        
+        $query = Citizen::query();
+
+        // Apply other filters
+        // $query->filter($request->all());
     
+        // Apply citizen status filter
+        switch ($request->input('citizen_status')) {
+            case 'deleted':
+                $query->onlyTrashed();
+                break;
+            case 'archived':
+                $query->where('is_archived', true);
+                break;
+            case 'all':
+                $query->withTrashed();
+                break;
+            default:
+                $query->where('is_archived', false);
+                break;
+        }
         return DataTables::of($query)
             ->addColumn('region', function ($citizen) {
                 return $citizen->region->name ?? 'N/A';
@@ -175,7 +195,14 @@ class CitizenController extends Controller
                 
             })
             ->addColumn('action', function ($citizen) {
-                return '<a href="'.route('citizens.edit', $citizen->id).'" class="btn btn-sm btn-primary">Edit</a>';
+                $actions = '';
+                if ($citizen->trashed()) {
+                    $actions .= '<button class="btn btn-sm btn-success restore-btn" data-id="' . $citizen->id . '">Restore</button>';
+                } else {
+                    $actions .= '<a href="' . route('citizens.edit', $citizen->id) . '" class="btn btn-sm btn-primary">Edit</a>';
+                    // ... other actions ...
+                }
+                return $actions;
             })
             ->addColumn('checkbox', function ($citizen) {
                 return '<div class="form-check px form-check-sm form-check-custom form-check-solid"><input class="form-check-input w-18px" type="checkbox" name="citizens[]" value="'.$citizen->id.'"></div>';
@@ -341,6 +368,25 @@ class CitizenController extends Controller
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
 
+    
+    public function restore($id)
+    {
+        $restoredCount = $this->citizenService->restore($id);
+
+        if ($restoredCount > 0) {
+            return response()->json(['message' => 'Citizen restored successfully']);
+        } else {
+            return response()->json(['message' => 'Citizen not found or already restored'], 404);
+        }
+    }
+    
+    public function restoreMultiple(Request $request)
+    {
+        $ids = $request->input('ids');
+        $restoredCount = $this->citizenService->restore($ids);
+
+        return response()->json(['message' => "{$restoredCount} citizens restored successfully"]);
+    }
     public function upload(Request $request)
     {
         Log::error("--------------:", ["--------------" => "--------------"]);

@@ -53,6 +53,16 @@ class CitizenService
         }
     }
 
+    public function restore($ids): int
+    {
+        if (!is_array($ids)) {
+            $ids = [$ids];
+        }
+
+        return Citizen::withTrashed()
+            ->whereIn('id', $ids)
+            ->restore();
+    }
      /**
      * Get citizen information by their IDs.
      *

@@ -59,10 +59,10 @@
             <span class="ti-xs ti ti-user-plus ms-1"></span>
         </a>
         {{-- <form method="GET" class="mx-1"> --}}
-            <button id="export-btn" class="btn btn-success">
-                تصدير
-                <span class="ti-xs ti ti-table-export ms-1"></span>
-            </button>
+        <button id="export-btn" class="btn btn-success">
+            تصدير
+            <span class="ti-xs ti ti-table-export ms-1"></span>
+        </button>
         {{-- </form> --}}
 
         <!-- Filter Button with Dropdown Menu -->
@@ -111,14 +111,14 @@
                             <input type="number" id="maxMembers" class="form-control" placeholder="الى">
                         </div>
                     </div>
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="ageRange" class="form-label">العمر</label>
                         <div class="input-group">
                             <input type="number" id="minAge" class="form-control" placeholder="Min">
                             <span class="input-group-text">-</span>
                             <input type="number" id="maxAge" class="form-control" placeholder="Max">
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- Living Status -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
@@ -157,6 +157,15 @@
                             <option value="1">انثى</option>
                         </select>
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="citizen_status">Citizen Status:</label>
+                        <select id="citizen_status" class="form-control">
+                            <option value="current">Current Citizens</option>
+                            <option value="deleted">Deleted Citizens</option>
+                            <option value="archived">Archived Citizens</option>
+                            <option value="all">All Citizens</option>
+                        </select>
+                    </div>
                     <!-- Actions -->
                     <div class="flex justify-end">
                         <button id="close" type="button"
@@ -184,16 +193,19 @@
                         نسخ التحديد
                     </button>
                 </li>
-                <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">
-                        حذف التحديد
-                    </button>
-                </li>
-
+               
+                <li><button id="restore-selected" class="block px-4 py-2 hover:bg-gray-200">
+                    استعادة التحديد
+                </button>
+            </li>
                 <li><button id="change-region" class="block px-4 py-2 hover:bg-gray-200">
                         تغيير المنطقة
                     </button>
                 </li>
-
+                <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">
+                    حذف التحديد
+                </button>
+            </li>
 
                 <!-- Add more actions if needed -->
             </ul>
@@ -284,6 +296,7 @@ id
                         d.social_status = $('#social_status').val();
                         d.gender = $('#gender').val();
                         d.oreginal_adress = $('#oreginal_adress').val();
+                        d.citizen_status = $('#citizen_status').val();
                     }
                 },
                 columns: [{
@@ -338,24 +351,24 @@ id
                     [1, 'asc']
                 ],
                 language: {
-            "sProcessing":   "جاري المعالجة...",
-            "sLengthMenu":   "عرض _MENU_ سجل",
-            "sZeroRecords":  "لم يتم العثور على أي سجلات",
-            "sInfo":         "عرض من _START_ إلى _END_ من إجمالي _TOTAL_ سجل",
-            "sInfoEmpty":    "عرض 0 إلى 0 من 0 سجل",
-            "sInfoFiltered": "(تم تصفية من _MAX_ سجل)",
-            "sSearch":       "بحث:",
-            "oPaginate": {
-                "sFirst":    "الأول",
-                "sPrevious": "السابق",
-                "sNext":     "التالي",
-                "sLast":     "الأخير"
-            },
-            "oAria": {
-                "sSortAscending":  ": تفعيل لترتيب العمود تصاعديًا",
-                "sSortDescending": ": تفعيل لترتيب العمود تنازليًا"
-            }
-        }
+                    "sProcessing": "جاري المعالجة...",
+                    "sLengthMenu": "عرض _MENU_ سجل",
+                    "sZeroRecords": "لم يتم العثور على أي سجلات",
+                    "sInfo": "عرض من _START_ إلى _END_ من إجمالي _TOTAL_ سجل",
+                    "sInfoEmpty": "عرض 0 إلى 0 من 0 سجل",
+                    "sInfoFiltered": "(تم تصفية من _MAX_ سجل)",
+                    "sSearch": "بحث:",
+                    "oPaginate": {
+                        "sFirst": "الأول",
+                        "sPrevious": "السابق",
+                        "sNext": "التالي",
+                        "sLast": "الأخير"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": تفعيل لترتيب العمود تصاعديًا",
+                        "sSortDescending": ": تفعيل لترتيب العمود تنازليًا"
+                    }
+                }
             });
             $('#regions').on('change', function() {
                 console.log('change');
@@ -425,6 +438,54 @@ id
                 }
             });
 
+            // Function to handle restoration
+            function restoreCitizens(ids) {
+                var url = Array.isArray(ids) ? '{{ route('citizens.restore-multiple') }}' : '/citizens/' + ids +
+                    '/restore';
+                var data = {
+                    _token: '{{ csrf_token() }}',
+                    ids: Array.isArray(ids) ? ids : null
+                };
+                console.log('ids',ids);
+                
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function(response) {
+                        alert(response.message);
+                        table.ajax.reload();
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                        alert('خطا في الاستعادة');
+                    }
+                });
+            }
+
+            // Single citizen restore
+            $('#citizens-table').on('click', '.restore-btn', function() {
+                var citizenId = $(this).data('id');
+                if (confirm('Are you sure you want to restore this citizen?')) {
+                    restoreCitizens(citizenId);
+                }
+            });
+
+            // Multiple citizens restore
+            $('#restore-selected').click(function() {
+                // var selectedIds = $('.citizen-checkbox:checked').map(function() {
+                //     return $(this).val();
+                // }).get();
+
+                if (selectedCitizens.length === 0) {
+                    alert('Please select citizens to restore');
+                    return;
+                }
+
+                if (confirm('Are you sure you want to restore these citizens? ' +selectedCitizens.length)) {
+                    restoreCitizens(selectedCitizens);
+                }
+            });
             // When the page changes, keep checkboxes selected for already selected rows
             table.on('draw', function() {
                 table.rows().nodes().each(function(row) {
@@ -467,9 +528,18 @@ id
                         },
                         success: function(response) {
                             table.ajax.reload();
-                            selectedCitizens = [];
+
                             $('#confirmationModal').modal('hide');
-                            alert(response.message);
+                            console.log(response);
+
+                            console.log(selectedCitizens.length + " citizens deleted");
+
+                            alert('deleted');
+                        },
+                        erorr: function(xhr, status, error) {
+                            console.log(status);
+                            console.error(xhr.responseText);
+                            alert(xhr.responseText);
                         }
                     });
                 });

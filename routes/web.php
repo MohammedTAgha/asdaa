@@ -42,6 +42,9 @@ Route::prefix('citizens')->group(function () {
     Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
     Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
     Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
+    Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
+    Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
+
 });
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
