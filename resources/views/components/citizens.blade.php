@@ -193,19 +193,19 @@
                         نسخ التحديد
                     </button>
                 </li>
-               
+
                 <li><button id="restore-selected" class="block px-4 py-2 hover:bg-gray-200">
-                    استعادة التحديد
-                </button>
-            </li>
+                        استعادة التحديد
+                    </button>
+                </li>
                 <li><button id="change-region" class="block px-4 py-2 hover:bg-gray-200">
                         تغيير المنطقة
                     </button>
                 </li>
                 <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">
-                    حذف التحديد
-                </button>
-            </li>
+                        حذف التحديد
+                    </button>
+                </li>
 
                 <!-- Add more actions if needed -->
             </ul>
@@ -400,6 +400,11 @@ id
 
             let selectedCitizens = [];
 
+            // Helper function to standardize ID format
+            function standardizeId(id) {
+                return id.toString();
+            }
+
             // Handle select-all checkbox
             $('#select-all').on('click', function() {
                 var rows = table.rows({
@@ -412,23 +417,25 @@ id
                     table.rows({
                         'search': 'applied'
                     }).data().each(function(row) {
-                        if (!selectedCitizens.includes(row.id)) {
-                            selectedCitizens.push(row.id);
+                        const id = standardizeId(row.id);
+                        if (!selectedCitizens.includes(id)) {
+                            selectedCitizens.push(id);
                         }
                     });
                 } else {
                     table.rows({
                         'search': 'applied'
                     }).data().each(function(row) {
-                        selectedCitizens = selectedCitizens.filter(id => id !== row.id);
+                        const id = standardizeId(row.id);
+                        selectedCitizens = selectedCitizens.filter(selectedId => selectedId !== id);
                     });
                 }
+                console.log('all', selectedCitizens);
             });
-
 
             // Handle individual row checkbox selection
             $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
-                const citizenId = $(this).val();
+                const citizenId = standardizeId($(this).val());
                 if (this.checked) {
                     if (!selectedCitizens.includes(citizenId)) {
                         selectedCitizens.push(citizenId);
@@ -436,8 +443,43 @@ id
                 } else {
                     selectedCitizens = selectedCitizens.filter(id => id !== citizenId);
                 }
+                console.log(citizenId);
+                console.log(selectedCitizens);
             });
 
+            // When the page changes, keep checkboxes selected for already selected rows
+            table.on('draw', function() {
+                table.rows().nodes().each(function(row) {
+                    const checkbox = $(row).find('input[type="checkbox"]');
+                    const citizenId = standardizeId(checkbox.val());
+                    if (selectedCitizens.includes(citizenId)) {
+                        checkbox.prop('checked', true);
+                    } else {
+                        checkbox.prop('checked', false);
+                    }
+                });
+
+                // Update select-all checkbox
+                updateSelectAllCheckbox();
+            });
+
+            // Function to update select-all checkbox state
+            function updateSelectAllCheckbox() {
+                var allChecked = table.rows({
+                        'search': 'applied'
+                    }).nodes().length ===
+                    table.rows({
+                        'search': 'applied'
+                    }).nodes().filter(function() {
+                        return $(this).find('input[type="checkbox"]').prop('checked');
+                    }).length;
+                $('#select-all').prop('checked', allChecked);
+            }
+
+            // Update select-all checkbox when individual checkboxes change
+            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
+                updateSelectAllCheckbox();
+            });
             // Function to handle restoration
             function restoreCitizens(ids) {
                 var url = Array.isArray(ids) ? '{{ route('citizens.restore-multiple') }}' : '/citizens/' + ids +
@@ -446,8 +488,8 @@ id
                     _token: '{{ csrf_token() }}',
                     ids: Array.isArray(ids) ? ids : null
                 };
-                console.log('ids',ids);
-                
+                console.log('ids', ids);
+
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -482,21 +524,12 @@ id
                     return;
                 }
 
-                if (confirm('Are you sure you want to restore these citizens? ' +selectedCitizens.length)) {
+                if (confirm('Are you sure you want to restore these citizens? ' + selectedCitizens
+                    .length)) {
                     restoreCitizens(selectedCitizens);
                 }
             });
-            // When the page changes, keep checkboxes selected for already selected rows
-            table.on('draw', function() {
-                table.rows().nodes().each(function(row) {
-                    const checkbox = $(row).find('input[type="checkbox"]');
-                    const citizenId = checkbox.val();
-                    if (selectedCitizens.includes(citizenId)) {
-                        checkbox.prop('checked', true);
-                    }
-                });
-            });
-            //
+
 
             // When the user selects a distribution from the modal
             $('#select-distribution-btn').click(function() {
