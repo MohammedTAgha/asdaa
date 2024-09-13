@@ -4,7 +4,12 @@ namespace App\Exports;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Illuminate\Support\Collection;
-
+/*
+* export a report of citizens addition to a distribution
+*
+* @param array $citizenIds
+* @return \Illuminate\Database\Eloquent\Collection
+*/
 class CitizensdDistReportExport implements FromCollection, WithHeadings
 {
     protected $report;

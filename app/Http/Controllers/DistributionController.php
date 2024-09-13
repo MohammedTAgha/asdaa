@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\DistributionService;
 use Illuminate\Database\Eloquent\Model;
 use App\Exports\CitizensdDistReportExport;
+use App\Exports\DistributionExport;
 use App\Models\Distribution;
 use App\Models\DistributionCategory;
 use App\Models\DistributionCitizen;
@@ -380,6 +381,13 @@ class DistributionController extends Controller
     public function exportDistributionStatistics()
     {
         return $this->reportService->export();
+    }
+    // this is main export for distribution
+    public function export($id) 
+    {
+        $distribution = Distribution::with(['citizens', 'citizens.region', 'category', 'source'])->findOrFail($id);
+        
+        return Excel::download(new DistributionExport($distribution), 'distribution_' . $id .'_'. time() . '.xlsx');
     }
 
     public function destroy(Distribution $distribution)

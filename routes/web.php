@@ -46,6 +46,7 @@ Route::prefix('citizens')->group(function () {
     Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
 
 });
+Route::get('/distributions/{id}/export', [DistributionController::class, 'export'])->name('distributions.export');
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::post('/distributions/add-citizens-filter', [DistributionController::class, 'addCitizensFilter'])->name('distributions.addCitizensFilter');

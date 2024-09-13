@@ -54,6 +54,7 @@
                                     <a href="{{ route('distributions.edit', $distribution->id) }}">
                                         تحرير
                                     </a>
+                                    <a href="{{ route('distributions.export', $distribution->id) }}" >تنزيل</a>
                                 </td>
 
                             </tr>
