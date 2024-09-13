@@ -33,6 +33,7 @@ class Citizen extends Model
         'disease_description',
         'job',
         'living_status',
+        'original_city',
         'original_address',
         'note',
         'region_id',

@@ -117,3 +117,15 @@ protected $reportService;
             return false;
         }
     }
+
+
+/// 
+validate pinout 
+  $validator = Validator::make($request->all(), [
+        'city' => 'required|in:City1,City2,City3,City4,City5', // Replace with your actual city names
+        // Add other validation rules as needed
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
