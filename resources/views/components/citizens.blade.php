@@ -38,179 +38,156 @@
     </div>
 </div>
 
-<div class="row align-items-center">
-    <!-- Elements aligned at the start -->
-    <div class="col d-flex align-items-center">
-        <div class="d-flex me-3">
-            <div class="input-group">
+<div class="container mx-auto p-4">
+    <div class="row align-items-center">
+        <!-- Search Input -->
+        <div class="col d-flex align-items-center">
+            <div class="input-group me-3">
                 <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
-                <button type="submit" id="searchbtn" class="btn btn-primary ">
+                <button type="submit" id="searchbtn" class="btn btn-primary">
                     بحث
                     <span class="ti-xs ti ti-user-search ms-1"></span>
                 </button>
             </div>
         </div>
-    </div>
 
-    <!-- Elements aligned at the end -->
-    <div class="col-auto d-flex align-items-center position-relative">
-        <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
-            اضافة جديد
-            <span class="ti-xs ti ti-user-plus ms-1"></span>
-        </a>
-        {{-- <form method="GET" class="mx-1"> --}}
-        <button id="export-btn" class="btn btn-success">
-            تصدير
-            <span class="ti-xs ti ti-table-export ms-1"></span>
-        </button>
-        {{-- </form> --}}
-
-        <!-- Filter Button with Dropdown Menu -->
-        <div class="me-2 d-flex position-relative">
-            <button id="filterButton" type="button" class="btn btn-light-primary">
-                فلترة
-                <span class="ti-xs ti ti-filter-off ms-1"></span>
+        <!-- Action Buttons -->
+        <div class="col-auto d-flex align-items-center">
+            <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
+                اضافة جديد
+                <span class="ti-xs ti ti-user-plus ms-1"></span>
+            </a>
+            <button id="export-btn" class="btn btn-success mx-1">
+                تصدير
+                <span class="ti-xs ti ti-table-export ms-1"></span>
             </button>
 
-            <!-- Filter Popup Menu -->
-            <div id="filterMenu"
-                class="absolute left-0  z-10 hidden w-80 p-2 pt-1 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
-                <!-- Header -->
-                <div class="pb-1 mb-1 border-b border-gray-200">
-                    <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
+            <!-- Filter Button with Dropdown Menu -->
+            <div class="position-relative">
+                <button id="filterButton" type="button" class="btn btn-light-primary">
+                    فلترة
+                    <span class="ti-xs ti ti-filter-off ms-1"></span>
+                </button>
+                <div id="filterMenu"
+                    class="absolute left-0 z-10 hidden w-80 p-2 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
+                    <div class="pb-1 mb-1 border-b border-gray-200">
+                        <div class="text-lg font-semibold text-gray-700">خيارات التصنيف</div>
+                    </div>
+                    <form action="{{ route('citizens.index') }}" method="GET">
+                        <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                            <select id="regions" name="regions[]"
+                                class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
+                                @foreach ($regions as $region)
+                                    <option value="{{ $region->id }}"
+                                        {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                                        @if ($region->representatives->isNotEmpty())
+                                            {{ $region->name }} : {{ $region->representatives->first()->name }}
+                                        @else
+                                            {{ $region->name }}
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ageRange" class="form-label">افراد الاسرة</label>
+                            <div class="input-group">
+                                <input type="number" id="minMembers" class="form-control" placeholder="من">
+                                <span class="input-group-text">-</span>
+                                <input type="number" id="maxMembers" class="form-control" placeholder="الى">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
+                            <select id="living_status" name="living_status"
+                                class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="">غير محدد</option>
+                                <option value="1">سيئ</option>
+                                <option value="2">جيد</option>
+                                <option value="3">ممتاز</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
+                            <select id="social_status" name="social_status"
+                                class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="">غير محدد</option>
+                                <option value="0">اعزب</option>
+                                <option value="1">متزوج</option>
+                                <option value="2">ارمل</option>
+                                <option value="3">متعدد</option>
+                                <option value="4">مطلق</option>
+                                <option value="5">زوجة 1</option>
+                                <option value="6">زوجة 2</option>
+                                <option value="7">زوجة 3</option>
+                                <option value="8">زوجة 4</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
+                            <select id="gender" name="gender"
+                                class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="">غير محدد</option>
+                                <option value="0">ذكر</option>
+                                <option value="1">انثى</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="citizen_status">Citizen Status:</label>
+                            <select id="citizen_status" class="form-control">
+                                <option value="current">Current Citizens</option>
+                                <option value="deleted">Deleted Citizens</option>
+                                <option value="archived">Archived Citizens</option>
+                                <option value="all">All Citizens</option>
+                            </select>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button id="close" type="button"
+                                class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200">اغلاق</button>
+                            <button id="applyFilters" type="button"
+                                class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600">تطبيق</button>
+                        </div>
+                    </form>
                 </div>
-                <!-- Filter Form -->
-                <form action="{{ route('citizens.index') }}" method="GET">
-                    <!-- Prepositives -->
-                    <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                        <select id="regions" name="regions[]"
-                            class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 260px;"
-                            multiple>
-                            @foreach ($regions as $region)
-                                <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
-                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+            </div>
 
-                                    @if ($region->representatives->isNotEmpty())
-                                        {{ $region->name }} </br> :
-                                        {{ $region->representatives->first()->name }}
-                                    @else
-                                        {{ $region->name }}
-                                    @endif
-
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="ageRange" class="form-label">افراد الاسرة</label>
-                        <div class="input-group">
-                            <input type="number" id="minMembers" class="form-control" placeholder="من">
-                            <span class="input-group-text">-</span>
-                            <input type="number" id="maxMembers" class="form-control" placeholder="الى">
-                        </div>
-                    </div>
-                    {{-- <div class="mb-3">
-                        <label for="ageRange" class="form-label">العمر</label>
-                        <div class="input-group">
-                            <input type="number" id="minAge" class="form-control" placeholder="Min">
-                            <span class="input-group-text">-</span>
-                            <input type="number" id="maxAge" class="form-control" placeholder="Max">
-                        </div>
-                    </div> --}}
-                    <!-- Living Status -->
-                    <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700">حالة السكن ل:</label>
-                        <select id="living_status" name="living_status"
-                            class="w-full p-2 border border-gray-300 rounded-lg">
-                            <option value="">غير محدد</option>
-                            <option value="1">سيئ</option>
-                            <option value="2">جيد</option>
-                            <option value="3">ممتاز</option>
-                        </select>
-                    </div>
-                    <!-- Social Status -->
-                    <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700">الحالة الاجنماعية :</label>
-                        <select id="social_status" name="social_status"
-                            class="w-full p-2 border border-gray-300 rounded-lg">
-                            <option value="">غير محدد</option>
-                            <option value="0">اعزب</option>
-                            <option value="1">متزوج</option>
-                            <option value="2">ارمل</option>
-                            <option value="3">متعدد</option>
-                            <option value="4">مطلق</option>
-                            <option value="5">زوجة 1</option>
-                            <option value="6">زوجة 2</option>
-                            <option value="7">زوجة 3</option>
-                            <option value="8">زوجة 4</option>
-
-                        </select>
-                    </div>
-                    <!-- Gender -->
-                    <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700">الجنس:</label>
-                        <select id="gender" name= "gender" class="w-full p-2 border border-gray-300 rounded-lg">
-                            <option value="">غير محدد</option>
-                            <option value="0">ذكر</option>
-                            <option value="1">انثى</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-4">
-                        <label for="citizen_status">Citizen Status:</label>
-                        <select id="citizen_status" class="form-control">
-                            <option value="current">Current Citizens</option>
-                            <option value="deleted">Deleted Citizens</option>
-                            <option value="archived">Archived Citizens</option>
-                            <option value="all">All Citizens</option>
-                        </select>
-                    </div>
-                    <!-- Actions -->
-                    <div class="flex justify-end">
-                        <button id="close" type="button"
-                            class="px-4 py-2 mr-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                            اغلاق</button>
-                        <button id="applyFilters" type="button"
-                            class="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">تطبيق</button>
-                    </div>
-                </form>
+            <!-- Dropdown for Actions -->
+            <div x-data="{ open: false }" class="relative mb-3 z-50">
+                <button @click="open = !open" class="btn btn-light-primary">
+                    اجراءات التحديد
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <ul x-show="open" @click.away="open = false" x-transition
+                    class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md">
+                    <li><button id="copy-selected-ids" class="block px-4 py-2 hover:bg-gray-200">نسخ التحديد</button>
+                    </li>
+                    <li><button id="restore-selected" class="block px-4 py-2 hover:bg-gray-200">استعادة
+                            التحديد</button></li>
+                    <li><button id="change-region" class="block px-4 py-2 hover:bg-gray-200">تغيير المنطقة</button>
+                    </li>
+                    <li>
+                        <button id="unselect-all-action" class="block px-4 py-2 hover:bg-gray-200">الغاء
+                            المحددة</button>
+                    </li>
+                    <li>
+                        <button id="select-all-citizens-action" class="block px-4 py-2 hover:bg-gray-200">تحديد
+                            الكل</button>
+                    </li>
+                    <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">حذف التحديد</button>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div x-data="{ open: false }" class="relative mb-3 z-50">
-            <button @click="open = !open" class="btn btn-light-primary waves-effect">
-                اجراءات التحديد
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-
-            <ul x-show="open" @click.away="open = false" x-transition
-                class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
-
-                <li><button id="copy-selected-ids" class="block px-4 py-2 hover:bg-gray-200">
-                        نسخ التحديد
-                    </button>
-                </li>
-
-                <li><button id="restore-selected" class="block px-4 py-2 hover:bg-gray-200">
-                        استعادة التحديد
-                    </button>
-                </li>
-                <li><button id="change-region" class="block px-4 py-2 hover:bg-gray-200">
-                        تغيير المنطقة
-                    </button>
-                </li>
-                <li><button id="remove-selected" class="block px-4 py-2 hover:bg-gray-200">
-                        حذف التحديد
-                    </button>
-                </li>
-
-                <!-- Add more actions if needed -->
-            </ul>
-        </div>
-
     </div>
 </div>
 
@@ -222,9 +199,13 @@
     <button type="button" id="add-citizens-btn" class="btn btn-primary">اضافة مستفيدين</button>
 </form>
 @include('modals.confermation')
+
 <div class="table-responsive">
     <table id="citizens-table"
         class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
+        <div id="selection-indicator">
+            تم تحديد <span id="selected-count">0</span> عنصر
+        </div>
         <thead class="table-light">
             <tr>
                 <th class="w-8px p-0">
@@ -302,8 +283,14 @@ id
                 columns: [{
                         data: 'checkbox',
                         name: 'checkbox',
-                        orderable: false,
-                        searchable: false
+                        orderable: true,
+                        searchable: false,
+                        render: function(data, type, row) {
+                            if (type === 'sort') {
+                                return selectedCitizens.includes(row.id.toString()) ? '0' : '1';
+                            }
+                            return data;
+                        }
                     },
                     {
                         /*
@@ -347,9 +334,14 @@ id
                         searchable: false
                     }
                 ],
+                columnDefs: [{
+                    targets: 0,
+                    type: 'string'
+                }],
                 order: [
+                    [0, 'asc'],
                     [1, 'asc']
-                ],
+                ], // Sort by checkbox (selected first) then by ID
                 language: {
                     "sProcessing": "جاري المعالجة...",
                     "sLengthMenu": "عرض _MENU_ سجل",
@@ -399,10 +391,24 @@ id
             });
 
             let selectedCitizens = [];
+            let totalCitizens = 0;
 
             // Helper function to standardize ID format
             function standardizeId(id) {
                 return id.toString();
+            }
+
+            // Function to update the selection indicator
+            function updateSelectionIndicator() {
+                const selectedCount = selectedCitizens.length;
+                $('#selected-count').text(selectedCount);
+                $('#total-count').text(totalCitizens);
+
+                if (selectedCount > 0) {
+                    $('#selection-indicator').removeClass('d-none');
+                } else {
+                    $('#selection-indicator').addClass('d-none');
+                }
             }
 
             // Handle select-all checkbox
@@ -411,9 +417,53 @@ id
                     'search': 'applied'
                 }).nodes();
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                updateSelectedCitizens(this.checked);
+                updateSelectionIndicator();
+            });
 
-                // Add or remove all citizens from selectedCitizens array
+            // Handle individual row checkbox selection
+            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
+                const citizenId = standardizeId($(this).val());
                 if (this.checked) {
+                    if (!selectedCitizens.includes(citizenId)) {
+                        selectedCitizens.push(citizenId);
+                    }
+                } else {
+                    selectedCitizens = selectedCitizens.filter(id => id !== citizenId);
+                }
+                console.log(citizenId);
+                console.log(selectedCitizens);
+                updateSelectAllCheckbox();
+                updateSelectionIndicator();
+            });
+
+            // When the page changes, keep checkboxes selected for already selected rows
+            table.on('draw', function() {
+                table.rows().nodes().each(function(row) {
+                    const checkbox = $(row).find('input[type="checkbox"]');
+                    const citizenId = standardizeId(checkbox.val());
+                    checkbox.prop('checked', selectedCitizens.includes(citizenId));
+                });
+                updateSelectAllCheckbox();
+                updateSelectionIndicator();
+            });
+
+            // Function to update select-all checkbox state
+            function updateSelectAllCheckbox() {
+                var allChecked = table.rows({
+                        'search': 'applied'
+                    }).nodes().length ===
+                    table.rows({
+                        'search': 'applied'
+                    }).nodes().filter(function() {
+                        return $(this).find('input[type="checkbox"]').prop('checked');
+                    }).length;
+                $('#select-all').prop('checked', allChecked);
+            }
+
+            // Function to update selectedCitizens array
+            function updateSelectedCitizens(selectAll) {
+                if (selectAll) {
                     table.rows({
                         'search': 'applied'
                     }).data().each(function(row) {
@@ -430,55 +480,42 @@ id
                         selectedCitizens = selectedCitizens.filter(selectedId => selectedId !== id);
                     });
                 }
-                console.log('all', selectedCitizens);
-            });
-
-            // Handle individual row checkbox selection
-            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
-                const citizenId = standardizeId($(this).val());
-                if (this.checked) {
-                    if (!selectedCitizens.includes(citizenId)) {
-                        selectedCitizens.push(citizenId);
-                    }
-                } else {
-                    selectedCitizens = selectedCitizens.filter(id => id !== citizenId);
-                }
-                console.log(citizenId);
-                console.log(selectedCitizens);
-            });
-
-            // When the page changes, keep checkboxes selected for already selected rows
-            table.on('draw', function() {
-                table.rows().nodes().each(function(row) {
-                    const checkbox = $(row).find('input[type="checkbox"]');
-                    const citizenId = standardizeId(checkbox.val());
-                    if (selectedCitizens.includes(citizenId)) {
-                        checkbox.prop('checked', true);
-                    } else {
-                        checkbox.prop('checked', false);
-                    }
-                });
-
-                // Update select-all checkbox
-                updateSelectAllCheckbox();
-            });
-
-            // Function to update select-all checkbox state
-            function updateSelectAllCheckbox() {
-                var allChecked = table.rows({
-                        'search': 'applied'
-                    }).nodes().length ===
-                    table.rows({
-                        'search': 'applied'
-                    }).nodes().filter(function() {
-                        return $(this).find('input[type="checkbox"]').prop('checked');
-                    }).length;
-                $('#select-all').prop('checked', allChecked);
+                console.log('Selected citizens:', selectedCitizens);
+                updateSelectionIndicator();
             }
 
-            // Update select-all checkbox when individual checkboxes change
-            $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
-                updateSelectAllCheckbox();
+            // New action: Unselect All Selected Citizens
+            $('#unselect-all-action').on('click', function() {
+                selectedCitizens = [];
+                table.rows().nodes().each(function(row) {
+                    $(row).find('input[type="checkbox"]').prop('checked', false);
+                });
+                $('#select-all').prop('checked', false);
+                console.log('All citizens unselected');
+                console.log('Selected citizens:', selectedCitizens);
+                updateSelectionIndicator();
+            });
+
+            // New action: Select All Citizens (including those not in the current view)
+            $('#select-all-citizens-action').on('click', function() {
+                selectedCitizens = [];
+                table.rows().data().each(function(row) {
+                    const id = standardizeId(row.id);
+                    selectedCitizens.push(id);
+                });
+                table.rows().nodes().each(function(row) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                });
+                $('#select-all').prop('checked', true);
+                console.log('All citizens selected');
+                console.log('Selected citizens:', selectedCitizens);
+                updateSelectionIndicator();
+            });
+
+            // Initialize total count when the table is first loaded
+            table.on('init', function() {
+                totalCitizens = table.rows().count();
+                updateSelectionIndicator();
             });
             // Function to handle restoration
             function restoreCitizens(ids) {
@@ -525,7 +562,7 @@ id
                 }
 
                 if (confirm('Are you sure you want to restore these citizens? ' + selectedCitizens
-                    .length)) {
+                        .length)) {
                     restoreCitizens(selectedCitizens);
                 }
             });
