@@ -159,7 +159,7 @@
             </div>
 
             <!-- Dropdown for Actions -->
-            <div x-data="{ open: false }" class="relative mb-3 z-50">
+            <div x-data="{ open: false }" class="relative  z-50">
                 <button @click="open = !open" class="btn btn-light-primary">
                     اجراءات التحديد
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none"
