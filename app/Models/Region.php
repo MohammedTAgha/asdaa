@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Region extends Model
 {
-    protected $table='regions';
-    protected $primaryKey='id';
+    protected $table = 'regions';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'position',
@@ -23,5 +23,9 @@ class Region extends Model
     public function representatives()
     {
         return $this->hasMany(RegionRepresentative::class);
+    }
+    public function manager()
+    {
+        return $this->belongsToMany(User::class, 'region_managers', 'region_id', 'manager_id');
     }
 }

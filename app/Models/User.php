@@ -52,4 +52,8 @@ class User extends Authenticatable
 {
     return $this->belongsTo(Role::class);
 }
+
+    public function regions(){
+        return $this->belongsToMany(Region::class,'region_manegers','manager_id','region_id');
+    }
 }
