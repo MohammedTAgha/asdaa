@@ -129,3 +129,17 @@ validate pinout
     if ($validator->fails()) {
         return redirect()->back()->withErrors($validator)->withInput();
     }
+
+
+    //// use request costom
+    
+public function store(CitizenRequest $request)
+{
+    // The incoming request is valid...
+
+    // Create a new citizen record
+    Citizen::create($request->validated());
+
+    return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
+}
+

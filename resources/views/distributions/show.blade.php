@@ -241,12 +241,36 @@
 
                         <ul x-show="open" @click.away="open = false" x-transition
                             class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
+                           
+                            <li><a href="{{ route('distributions.export', $distribution->id) }}" class="block px-4 py-2 hover:bg-gray-200">
+                                تصدير الكشف
+                            </a></li>
+    
+                            <!-- Add more actions if needed -->
+                        </ul>
+                    </div>
+
+                    <div x-data="{ open: false }" class="relative mb-3 z-50">
+                        <button @click="open = !open" class="btn btn-light-primary waves-effect">
+                            اجراءات التحديد
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <ul x-show="open" @click.away="open = false" x-transition
+                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
                             <li><button id="make-done" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء
                                     المحددة</button></li>
                             <li><button id="make-undone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم
                                     المحدد</button></li>
                             <li><button id="delete-from-distribution" class="block px-4 py-2 hover:bg-gray-200">حذف
                                     من االمشروع</button></li>
+                            <li><button id="delete-from-distribution" class="block px-4 py-2 hover:bg-gray-200">
+                                تصدير الكشف
+                            </button></li>
+    
                             <!-- Add more actions if needed -->
                         </ul>
                     </div>
