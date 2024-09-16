@@ -64,15 +64,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export', [CitizenController::class, 'export'])->name('citizens.export');
         Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
         Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
-        Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
+
         Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
         Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
 
     });
-        Route::get('/', [HomeController::class, 'index'])->name('home');
+        
         Route::get('/test', [HomeController::class, 'test'])->name('test');
        
-        Route::resource('citizens', CitizenController::class);
         Route::resource('distributions', DistributionController::class);
         Route::resource('distribution_categories', DistributionCategoryController::class);
         Route::resource('children', ChildController::class);
@@ -81,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
      
         Route::resource('users', UserController::class);
         Route::resource('committees', CommitteeController::class);
-        Route::resource('staff', StaffController::class);
+        
 
     });
 
@@ -94,23 +93,15 @@ Route::middleware(['auth'])->group(function () {
     // Region Manager routes
     Route::middleware(['role:Region Manager,Admin,Super Manager'])->group(function () {
         Route::resource('sources', SourceController::class);
-        // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        // Route::get('/files', [FileController::class, 'index'])->name('files.index');
-        // Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
-        // Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-        // Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
-        // Route::resource('regions', RegionController::class);
-        // Route::resource('representatives', RegionRepresentativeController::class);
-        // Route::get('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
-        // Route::get('/citizens/export', [CitizenController::class, 'export'])->name('citizens.export');
-        // Route::post('/citizens/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-        // Route::get('/citizens/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
-        // Route::resource('citizens', CitizenController::class);
-        // Route::resource('distributions', DistributionController::class);
-        // Route::resource('distribution_categories', DistributionCategoryController::class);
-        // Route::resource('children', ChildController::class);
+        Route::resource('citizens', CitizenController::class);
+        Route::prefix('citizens')->group(function () {
+
+            Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
+    
+        });
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+        Route::resource('staff', StaffController::class);
+
     });
 
     // Guest routes
