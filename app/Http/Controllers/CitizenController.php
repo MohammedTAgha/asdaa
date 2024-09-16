@@ -143,16 +143,13 @@ class CitizenController extends Controller
         if ($request->has('regions') && !empty($request->regions)) {
             Log::info('has->regions');
             Log::info($request->regions);
+            Log::info('req');
+            Log::info($request);
+
             $query->whereIn('region_id', $request->regions);
         }
-    
-        if ($request->has('minAge') && $request->minAge != null) {
-            $query->where('age', '>=', $request->minAge);
-        }
-    
-        if ($request->has('maxAge') && $request->maxAge != null) {
-            // Add your age filtering logic
-        }
+        
+ 
     
         if ($request->has('living_status') && $request->living_status != null) {
             $query->where('living_status', $request->living_status);
@@ -165,9 +162,7 @@ class CitizenController extends Controller
         if ($request->has('gender') && $request->gender != null) {
             $query->where('gender', $request->gender);
         }
-        
-        $query = Citizen::query();
-
+ 
         // Apply other filters
         // $query->filter($request->all());
     
@@ -211,17 +206,7 @@ class CitizenController extends Controller
             ->make(true);
     }
 
-    public function query(Request $request)
-    {
-        $query = Citizen::query();
-
-
-
-        // Execute query and get results
-        $citizens = $query->get();
-
-        return response()->json($citizens);
-    }
+ 
 
 
     public function show($id)
