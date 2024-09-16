@@ -54,6 +54,6 @@ class User extends Authenticatable
 }
 
     public function regions(){
-        return $this->belongsToMany(Region::class,'region_manegers','manager_id','region_id');
+        return $this->belongsToMany(Region::class,'region_users','user_id','region_id');
     }
 }

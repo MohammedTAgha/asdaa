@@ -26,6 +26,6 @@ class Region extends Model
     }
     public function manager()
     {
-        return $this->belongsToMany(User::class, 'region_managers', 'region_id', 'manager_id');
+        return $this->belongsToMany(User::class, 'region_users', 'region_id', 'user_id');
     }
 }
