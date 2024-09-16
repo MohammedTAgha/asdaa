@@ -29,83 +29,81 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/files', [FileController::class, 'index'])->name('files.index');
-Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
-Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');
-// Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
 
+// File routes
+Route::prefix('files')->group(function () {
+    Route::get('/', [FileController::class, 'index'])->name('files.index');
+    Route::post('/upload', [FileController::class, 'upload'])->name('files.upload');
+    Route::get('/{file}', [FileController::class, 'show'])->name('files.show');
+});
+
+// Public distribution routes
 Route::get('/distributions/{id}/export', [DistributionController::class, 'export'])->name('distributions.export');
-Route::resource('distribution_citizens', DistributionCitizenController::class);
+Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
+Route::resource('distribution_citizens', DistributionCitizenController::class)->except(['create', 'edit']);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::post('/distributions/add-citizens-filter', [DistributionController::class, 'addCitizensFilter'])->name('distributions.addCitizensFilter');
-Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
 Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
-Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
-Route::get('/projects-report-export', [DistributionController::class, 'exportDistributionStatistics'])->name('distributions.exportDistributionStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
-Route::get('/projects-reports', [ReportController::class, 'showStatistics'])->name('reports.showStatistics'); // Route::get('/citizens', [CitizenController::class, 'index']);
+Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot');
+Route::get('/projects-report-export', [DistributionController::class, 'exportDistributionStatistics'])->name('distributions.exportDistributionStatistics');
+Route::get('/projects-reports', [ReportController::class, 'showStatistics'])->name('reports.showStatistics');
 
-Route::post('/distributions/{distribution}/update-citizens', [DistributionController::class,'updateCitizens'])->name('distributions.updateCitizens');
-Route::post('/distributions/{distribution}/delete-citizens',  [DistributionController::class,'deleteCitizens'])->name('distributions.deleteCitizens');
-
-
-Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
+// Citizen Upload routes
 Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
+Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
 Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
-Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
 
+// Authenticated routes
 Route::middleware(['auth'])->group(function () {
+
     // Super Manager routes
     Route::middleware(['role:Super Manager'])->group(function () {
-      
-    Route::prefix('citizens')->group(function () {
-        Route::post('/remove', [CitizenController::class, 'removeSelectedCitizens'])->name('citizens.remove');
-        Route::post('/change-region', [CitizenController::class, 'changeRegionForSelectedCitizens'])->name('citizens.change-region');
-        Route::get('/import', [CitizenController::class, 'import'])->name('citizens.import');
-        Route::get('/export', [CitizenController::class, 'export'])->name('citizens.export');
-        Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
-        Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+        Route::prefix('citizens')->group(function () {
+            Route::post('/remove', [CitizenController::class, 'removeSelectedCitizens'])->name('citizens.remove');
+            Route::post('/change-region', [CitizenController::class, 'changeRegionForSelectedCitizens'])->name('citizens.change-region');
+            Route::get('/import', [CitizenController::class, 'import'])->name('citizens.import');
+            Route::get('/export', [CitizenController::class, 'export'])->name('citizens.export');
+            Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
+            Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
+            Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
+            Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
+        });
 
-        Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
-        Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
-
-    });
-        
-        Route::get('/test', [HomeController::class, 'test'])->name('test');
-       
         Route::resource('distributions', DistributionController::class);
         Route::resource('distribution_categories', DistributionCategoryController::class);
         Route::resource('children', ChildController::class);
         Route::resource('representatives', RegionRepresentativeController::class);
         Route::resource('regions', RegionController::class);
-     
         Route::resource('users', UserController::class);
         Route::resource('committees', CommitteeController::class);
-        
-
+        Route::get('/test', [HomeController::class, 'test'])->name('test');
     });
 
     // Admin routes
     Route::middleware(['role:Admin,Super Manager'])->group(function () {
-        
-        // Additional routes for Admin and Super Manager...
+        // All routes from Super Manager, except user-related actions
+        Route::resource('citizens', CitizenController::class);
+        Route::resource('distributions', DistributionController::class)->except(['destroy']);
+        Route::resource('staff', StaffController::class)->except(['destroy']);
     });
 
     // Region Manager routes
     Route::middleware(['role:Region Manager,Admin,Super Manager'])->group(function () {
-        Route::resource('sources', SourceController::class);
-        Route::resource('citizens', CitizenController::class);
         Route::prefix('citizens')->group(function () {
-
+            Route::get('/', [CitizenController::class, 'index'])->name('citizens.index');
             Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
-    
         });
-        Route::get('/', [HomeController::class, 'index'])->name('home');
-        Route::resource('staff', StaffController::class);
 
+        Route::get('/', [HomeController::class, 'index'])->name('home');
+    
+        Route::resource('citizens', CitizenController::class)->except(['create', 'edit']);;
+        Route::resource('sources', SourceController::class)->except(['create', 'edit']);
+        Route::resource('staff', StaffController::class)->only(['index', 'show']);
     });
 
     // Guest routes
     Route::middleware(['role:Guest'])->group(function () {
+        // Guest routes can be added here...
     });
 });
 

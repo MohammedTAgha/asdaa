@@ -53,10 +53,12 @@
 
         <!-- Action Buttons -->
         <div class="col-auto d-flex align-items-center">
+            @can('create', App\Models\Citizen::class)
             <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
                 اضافة جديد
                 <span class="ti-xs ti ti-user-plus ms-1"></span>
             </a>
+            @endcan
             <button id="export-btn" class="btn btn-success mx-1">
                 تصدير
                 <span class="ti-xs ti ti-table-export ms-1"></span>

@@ -123,11 +123,15 @@
                                     <div>عرض الكل</div>
                                 </a>
                             </li>
+                            @can('create', App\Models\Citizen::class)
                             <li class="menu-item {{ request()->routeIs('citizens.create') ? 'active' : '' }}">
+                                
                                 <a href="{{ route('citizens.create') }}" class="menu-link">
                                     <div>اضافة جديد</div>
                                 </a>
+                                
                             </li>
+                            @endcan
                             <li class="menu-item {{ request()->routeIs('citizens.import') ? 'active' : '' }}">
                                 <a href="{{ route('citizens.import') }}" class="menu-link">
                                     <div>رفع كشف</div>
