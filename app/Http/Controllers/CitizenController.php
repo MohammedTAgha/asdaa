@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
 use App\Services\CitizenService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -26,81 +27,23 @@ class CitizenController extends Controller
     }
     public function index(Request $request)
     {
-
-        $query = Citizen::query();
+        $user = Auth::user();
+     
+        if ($user->role_id ==1) {
+            $filters = $request->all();
+            $filters['regions'] = $user->regions->pluck('id')->toArray();
+    
+            // Fetch the citizens with the applied filters
+            $citizens = Citizen::filter($filters)->get()->toArray();
+             
+        }
+        
         $regions = Region::all();
         $distributions = Distribution::all();
         $distribution = null;
         $distributionId = $request->input('distributionId');
-        if ($request->has('distributionId') && !empty($request->input('distributionId'))) {
-            $distribution = Distribution::find($request->input('distributionId'));
-        }
 
-        // Apply filters based on query parameters
-        if ($request->has('id') && !empty($request->input('id'))) {
-            $query->where('id', $request->input('id'));
-        }
-        if ($request->has('first_name') && !empty($request->input('first_name'))) {
-            $query->where('firstname', 'like', '%' . $request->input('first_name') . '%');
-        }
-        if ($request->has('second_name') && !empty($request->input('second_name'))) {
-            $query->where('secondname', 'like', '%' . $request->input('second_name') . '%');
-        }
-        if ($request->has('third_name') && !empty($request->input('third_name'))) {
-            $query->where('thirdname', 'like', '%' . $request->input('third_name') . '%');
-        }
-        if ($request->has('last_name') && !empty($request->input('last_name'))) {
-            $query->where('lastname', 'like', '%' . $request->input('last_name') . '%');
-        }
-
-        // Apply search filter
-        if ($request->has('search') && !empty($request->input('search'))) {
-            $search = $request->input('search');
-            $searchTerms = explode(' ', $search);
-        
-            $query->where(function ($q) use ($searchTerms, $search) {
-                // Full name search across name columns
-                $q->where(function ($nameQ) use ($searchTerms) {
-                    foreach ($searchTerms as $term) {
-                        $nameQ->where(function ($termQ) use ($term) {
-                            $termQ->where('firstname', 'like', '%' . $term . '%')
-                                  ->orWhere('secondname', 'like', '%' . $term . '%')
-                                  ->orWhere('thirdname', 'like', '%' . $term . '%')
-                                  ->orWhere('lastname', 'like', '%' . $term . '%');
-                        });
-                    }
-                });
-        
-                // Original single-term searches for other columns
-                $q->orWhere('wife_name', 'like', '%' . $search . '%')
-                  ->orWhere('id', 'like', '%' . $search . '%')
-                  ->orWhere('note', 'like', '%' . $search . '%');
-            });
-        }
-
-        // Apply age filter
-        if ($request->has('age')) {
-            $query->where('age', $request->input('age'));
-        }
-
-        if ($request->has('gender') && !empty($request->input('gender'))) {
-            $query->where('gender', $request->input('gender'));
-        }
-        // Apply region filter (handle multiple regions)
-        if ($request->has('regions')  && !empty($request->input('regions'))) {
-            //dd($request->input('regions'));
-            $query->whereIn('region_id', $request->regions);
-        }
-
-
-        $sortField = $request->get('sort', 'name'); // Default sort field
-        $sortDirection = $request->get('direction', 'asc'); // Default sort direction
-
-
-        $perPage = $request->input('per_page', 10);
-        // $citizens = Citizen::all();
-
-        $citizens = $query->get();
+        $citizens = Citizen::filter($request->all());
         if ($request->has('returnjson') && $request->input('returnjson') == 1) {
 
             return response()->json($citizens);
