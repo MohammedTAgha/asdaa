@@ -93,6 +93,23 @@ class Citizen extends Model
         return $citizen;
     }
 
+      // Scope for region-based filtering
+      public function scopeForUserRegions($query)
+      {
+        Log::info('using scope');
+          // If user is a region manager
+          if (auth()->user() && auth()->user()->role_id ==3) {
+              Log::info('is region manager');
+              Log::info(auth()->user()->role_id);
+
+              $regionIds = auth()->user()->regions->pluck('id')->toArray();  // Assuming the user has related regions
+              return $query->whereIn('region_id', $regionIds);
+          }
+          
+          // If user is not restricted by region, return all citizens
+          return $query;
+      }
+  
       /**
      * Scope to only get archived citizens.
      */

@@ -56,27 +56,15 @@ class CitizenController extends Controller
 
 
         $query = Citizen::with('region')
+            ->filter($request->all())
+            ->forUserRegions()
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
     
                
         // Apply other filters
-        $query->filter($request->all());
-    
-        // Apply citizen status filter
-        switch ($request->input('citizen_status')) {
-            case 'deleted':
-                $query->onlyTrashed();
-                break;
-            case 'archived':
-                $query->where('is_archived', true);
-                break;
-            case 'all':
-                $query->withTrashed();
-                break;
-            default:
-                $query->where('is_archived', false);
-                break;
-        }
+        // $query-->scopeForUserRegions();
+        
+
         return DataTables::of($query)
             ->addColumn('region', function ($citizen) {
                 return $citizen->region->name ?? 'N/A';
