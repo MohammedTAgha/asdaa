@@ -87,6 +87,26 @@ trait CitizenFilters
             $query->where('is_archived', $isArchived);
         });
 
+        
+        $query->when($filters['citizen_status'] ?? null, function ($query, $citizen_status) {
+            // $query->where('is_archived', $isArchived);
+            switch ($citizen_status) {
+                case 'deleted':
+                    $query->onlyTrashed();
+                    break;
+                case 'archived':
+                    $query->where('is_archived', true);
+                    break;
+                case 'all':
+                    $query->withTrashed();
+                    break;
+                default:
+                    $query->where('is_archived', false);
+                    break;
+            }
+        });
+
+
         return $query;
     }
 }

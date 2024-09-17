@@ -58,56 +58,9 @@ class CitizenController extends Controller
         $query = Citizen::with('region')
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
     
-                // Apply search filter
-                if ($request->has('search') && !empty($request->input('search'))) {
-                    $search = $request->input('search');
-                    $searchTerms = explode(' ', $search);
-                
-                    $query->where(function ($q) use ($searchTerms, $search) {
-                        // Full name search across name columns
-                        $q->where(function ($nameQ) use ($searchTerms) {
-                            foreach ($searchTerms as $term) {
-                                $nameQ->where(function ($termQ) use ($term) {
-                                    $termQ->where('firstname', 'like', '%' . $term . '%')
-                                          ->orWhere('secondname', 'like', '%' . $term . '%')
-                                          ->orWhere('thirdname', 'like', '%' . $term . '%')
-                                          ->orWhere('lastname', 'like', '%' . $term . '%');
-                                });
-                            }
-                        });
-                
-                        // Original single-term searches for other columns
-                        $q->orWhere('wife_name', 'like', '%' . $search . '%')
-                          ->orWhere('id', 'like', '%' . $search . '%')
-                          ->orWhere('note', 'like', '%' . $search . '%');
-                    });
-                }
-    
-        if ($request->has('regions') && !empty($request->regions)) {
-            Log::info('has->regions');
-            Log::info($request->regions);
-            Log::info('req');
-            Log::info($request);
-
-            $query->whereIn('region_id', $request->regions);
-        }
-        
- 
-    
-        if ($request->has('living_status') && $request->living_status != null) {
-            $query->where('living_status', $request->living_status);
-        }
-    
-        if ($request->has('social_status') && $request->social_status != null) {
-            $query->where('social_status', $request->social_status);
-        }
-    
-        if ($request->has('gender') && $request->gender != null) {
-            $query->where('gender', $request->gender);
-        }
- 
+               
         // Apply other filters
-        // $query->filter($request->all());
+        $query->filter($request->all());
     
         // Apply citizen status filter
         switch ($request->input('citizen_status')) {
