@@ -63,6 +63,22 @@
                     @endforeach
                 </select>
             </div>
+            <div class="mb-4">
+                <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
+                <select id="regions" name="regions[]" 
+                    class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
+                    @foreach ($regions as $region)
+                        <option value="{{ $region->id }}"
+                            {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                            @if ($region->representatives->isNotEmpty())
+                                {{ $region->name }} : {{ $region->representatives->first()->name }}
+                            @else
+                                {{ $region->name }}
+                            @endif
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>

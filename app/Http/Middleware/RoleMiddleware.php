@@ -24,7 +24,7 @@ class RoleMiddleware
         if (!in_array($user->role->name, $roles)) {
             abort(403, 'Unauthorized');
         }
-
+        
         return $next($request);
     }
 }

@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use App\Models\Committee;
+use App\Models\Region;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -19,8 +22,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $committees = Committee::all();
-
-        return view('users.create', compact('roles' , 'committees'));
+        $regions = Region::all();
+        return view('users.create', compact('roles', 'committees', 'regions'));
     }
 
     public function store(Request $request)
@@ -33,13 +36,15 @@ class UserController extends Controller
             'committee_id' => 'nullable|exists:committees,id',
             'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
+            'regions' => 'array', // Add this line for regions
+            'regions.*' => 'exists:regions,id', // Validate each region ID
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            
-            
+
+
             'password' => bcrypt($request->password),
             'role_id' => $request->role_id,
         ]);
@@ -49,7 +54,7 @@ class UserController extends Controller
             Log::info('has image ');
             Log::info($imagePath);
             // $data['image'] = $imagePath;
-        }else {
+        } else {
             Log::info('No image uploaded.');
         }
 
@@ -58,10 +63,14 @@ class UserController extends Controller
             'id' => $user->id, // Assuming user ID and staff ID are the same
             'name' => $request->name,
             'phone' => $request->phone ?? null, // Adjust as needed
-            'committee_id'=>$request->committee_id,
+            'committee_id' => $request->committee_id,
             'image' => $imagePath ?? 'default-image.jpg', // Set a default image or handle image upload
         ]);
 
+        // Attach regions to the user
+        if ($request->has('regions')) {
+            $user->regions()->attach($request->regions);
+        }
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
@@ -74,7 +83,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        $regions = Region::all();
+        return view('users.edit', compact('user', 'roles', 'regions'));
     }
 
     public function update(Request $request, User $user)
@@ -84,6 +94,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
+            'regions' => 'array',
+            'regions.*' => 'exists:regions,id',
         ]);
 
         $user->update([
@@ -92,6 +104,8 @@ class UserController extends Controller
             'role_id' => $request->role_id,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
+        // Update regions
+        $user->regions()->sync($request->regions);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }

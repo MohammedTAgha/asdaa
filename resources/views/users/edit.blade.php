@@ -31,6 +31,20 @@
                 @endforeach
             </select>
         </div>
+        <div class="mb-4">
+            <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
+            <select id="regions" name="regions[]" style="width: 100%;"
+                class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
+                @foreach ($regions as $region)
+                    <option value="{{ $region->id }}"
+                        {{ $user->regions->contains($region->id) ? 'selected' : '' }}>
+                        @if ($region->representatives->isNotEmpty())
+                            {{ $region->name }} 
+                        @endif
+                    </option>
+                @endforeach
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>
 </div>

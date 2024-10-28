@@ -123,7 +123,7 @@
                                     <div>عرض الكل</div>
                                 </a>
                             </li>
-                            @can('create', App\Models\Citizen::class)
+                            @can('create-citizens')
                             <li class="menu-item {{ request()->routeIs('citizens.create') ? 'active' : '' }}">
                                 
                                 <a href="{{ route('citizens.create') }}" class="menu-link">

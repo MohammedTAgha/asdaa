@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -49,11 +50,20 @@ class User extends Authenticatable
     }
 
     public function role()
-{
-    return $this->belongsTo(Role::class);
-}
+    {
+        return $this->belongsTo(Role::class);
+    }
 
-    public function regions(){
-        return $this->belongsToMany(Region::class,'region_users','user_id','region_id');
+    public function hasRole($role)
+    {
+        Log::info('role');
+        Log::info($role);
+        Log::info($this->role->name);
+        
+        return $this->name === $role;
+    }
+    public function regions()
+    {
+        return $this->belongsToMany(Region::class, 'region_users', 'user_id', 'region_id');
     }
 }

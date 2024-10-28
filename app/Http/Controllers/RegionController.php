@@ -9,7 +9,15 @@ class RegionController extends Controller
    public function index(){
         // $regions=Region::all();
         // return response()->json($regions);
+        $regions=[];
+        if (auth()->user() && auth()->user()->role_id ==3) {
+           $query = Region::query();
+           $regionIds = auth()->user()->regions->pluck('id')->toArray();
+           $regions = $query->whereIn('id',$regionIds)->get();
+           
+        }else
         $regions = Region::all();
+        
         return view('regions.index', compact('regions'));
    }
 

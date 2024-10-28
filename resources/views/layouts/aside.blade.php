@@ -95,7 +95,7 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 						</a>
 					</div>
 					<div class="menu-item">
-						@can('create', App\Models\Citizen::class)
+						
 						<a class="menu-link {{ request()->routeIs('citizens.create') ? 'active' : '' }}"
 							href="{{ route('citizens.create') }}">
 							<span class="menu-bullet">
@@ -103,7 +103,7 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 							</span>
 							<span class="menu-title">اضافة جديد</span>
 						</a>
-						@endcan
+						
 					</div>
 					<div class="menu-item">
 						<a class="menu-link {{ request()->routeIs('citizens.import') ? 'active' : '' }}"

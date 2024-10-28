@@ -53,7 +53,7 @@
 
         <!-- Action Buttons -->
         <div class="col-auto d-flex align-items-center">
-            @can('create', App\Models\Citizen::class)
+            @can('super')
             <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
                 اضافة جديد
                 <span class="ti-xs ti ti-user-plus ms-1"></span>
@@ -78,7 +78,7 @@
                     <form action="{{ route('citizens.index') }}" method="GET">
                         <div class="mb-4">
                             <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
-                            <select id="regions" name="regions[]"
+                            <select id="regions" name="regions[]" style="width: 100%;"
                                 class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
                                 @foreach ($regions as $region)
                                     <option value="{{ $region->id }}"
