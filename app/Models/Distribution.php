@@ -42,4 +42,11 @@ class Distribution extends Model
     {
         return $this->belongsTo(Source::class);
     }
+    public function citizensCount()
+    {
+        return count($this->citizens()->get());
+    }
+    
+
+
 }

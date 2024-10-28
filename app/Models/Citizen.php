@@ -33,7 +33,7 @@ class Citizen extends Model
         'disease_description',
         'job',
         'living_status',
-        'original_city',
+        'original_governorate_id',
         'original_address',
         'note',
         'region_id',
@@ -63,6 +63,11 @@ class Citizen extends Model
     public function children()
     {
         return $this->hasMany(Child::class);
+    }
+
+    public function originalGovernorate()
+    {
+        return $this->belongsTo(Governorate::class, 'original_governorate_id');
     }
 
     public function isArchived()
@@ -118,5 +123,13 @@ class Citizen extends Model
         return $query->where('is_archived', true);
     }
 
+    
+      /**
+     * Scope to only get archived citizens.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_archived', 0);
+    }
 
 }

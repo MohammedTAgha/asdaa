@@ -14,7 +14,7 @@ class DistributionReportService
     }
 
 
-public function generateStatistics()
+    public function generateStatistics()
     {
         // Query for statistics with regions
         $withRegions = DB::table('distribution_citizens')
@@ -47,6 +47,47 @@ public function generateStatistics()
         return [
             'withRegions' => $withRegions,
             'withoutRegions' => $withoutRegions,
+        ];
+    }
+
+    public function getStatistics($distribution): array
+    {
+        $stats = $this->calculateStats($distribution);
+
+        return [
+            ['Distribution Details'],
+            ['ID', $distribution->id],
+            ['Name', $distribution->name],
+            ['Date', $distribution->date],
+            ['Category', $distribution->category->name ?? ''],
+            ['Arrive Date', $distribution->arrive_date],
+            ['Quantity', $distribution->quantity],
+            ['Target', $distribution->target],
+            ['Source', $distribution->source->name ?? ''],
+            ['Done', $distribution->done ? 'Yes' : 'No'],
+            ['Target Count', $distribution->target_count],
+            ['Expectation', $distribution->expectation],
+            ['Min Count', $distribution->min_count],
+            ['Max Count', $distribution->max_count],
+            ['Note', $distribution->note],
+            [],
+            ['Statistics'],
+            ['Total Citizens', $stats['total_citizens']],
+            ['Total Quantity Distributed', $stats['total_quantity']],
+            ['Average Quantity per Citizen', $stats['avg_quantity']],
+            ['Completed Distributions', $stats['completed_distributions']],
+        ];
+    }
+
+    public function calculateStats($distribution): array
+    {
+        $citizens = $distribution->citizens;
+        
+        return [
+            'total_citizens' => $citizens->count(),
+            'total_quantity' => $citizens->sum('pivot.quantity'),
+            'avg_quantity' => $citizens->avg('pivot.quantity'),
+            'completed_distributions' => $citizens->where('pivot.done', 1)->count(),
         ];
     }
 }

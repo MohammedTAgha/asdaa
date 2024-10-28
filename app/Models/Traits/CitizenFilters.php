@@ -10,15 +10,27 @@ trait CitizenFilters
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('firstname', 'like', '%' . $search . '%')
-                    ->orWhere('secondname', 'like', '%' . $search . '%')
-                    ->orWhere('thirdname', 'like', '%' . $search . '%')
-                    ->orWhere('lastname', 'like', '%' . $search . '%')
-                    ->orWhere('id', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%')
-                    ->orWhere('phone2', 'like', '%' . $search . '%');
+                $searchTerms = explode(' ', $search);
+                $query->where(function ($q) use ($searchTerms, $search) {
+                    // Full name search across name columns
+                    $q->where(function ($nameQ) use ($searchTerms) {
+                        foreach ($searchTerms as $term) {
+                            $nameQ->where(function ($termQ) use ($term) {
+                                $termQ->where('firstname', 'like', '%' . $term . '%')
+                                    ->orWhere('secondname', 'like', '%' . $term . '%')
+                                    ->orWhere('thirdname', 'like', '%' . $term . '%')
+                                    ->orWhere('lastname', 'like', '%' . $term . '%');
+                            });
+                        }
+                    });
+                    // Original single-term searches for other columns
+                    $q->orWhere('wife_name', 'like', '%' . $search . '%')
+                        ->orWhere('id', 'like', '%' . $search . '%')
+                        ->orWhere('note', 'like', '%' . $search . '%');
+                });
             });
-        });
+        }); 
+
 
         $query->when($filters['region_id'] ?? null, function ($query, $regionId) {
             $query->where('region_id', $regionId);

@@ -57,6 +57,53 @@ class DistributionCheckService
         ];
     }
 
+     /**
+     * Check which citizens are in of distributions.
+     *
+     * @param array $citizenIds
+     * @param array $distributionIds the specified list
+     * @return array
+     */
+    public function checkCitizensInDistributions(array $citizenIds, array $distributionIds)
+    {
+        return $this->checkCitizens($citizenIds, $distributionIds);
+    }
+
+    /**
+     * Check which citizens are out of the specified distribution.
+     *
+     * @param array $citizenIds
+     * @param int $distributionId
+     * @return array
+     */
+    public function checkCitizensOutOfDistribution(array $citizenIds, int $distributionId)
+    {
+        return $this->checkCitizens($citizenIds, [$distributionId]);
+    }
+
+    /**
+     * Helper method to check citizens against distributions.
+     *
+     * @param array $citizenIds
+     * @param array $distributionIds
+     * @return array
+     */
+    private function checkCitizens(array $citizenIds, array $distributionIds)
+    {
+        // Fetch citizen IDs in the specified distributions
+        $citizensIn = Distribution::whereIn('distribution_id', $distributionIds)
+            ->whereIn('citizen_id', $citizenIds)
+            ->pluck('citizen_id')
+            ->toArray();
+
+        // Determine which citizens are in and which are out
+        return [
+            'in' => array_intersect($citizenIds, $citizensIn),
+            'out' => array_diff($citizenIds, $citizensIn),
+        ];
+    }
+
+    //not used
     /**
      * Remove citizens from the current distribution who have benefited from other distributions.
      *

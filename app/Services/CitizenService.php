@@ -20,7 +20,7 @@ class CitizenService
         return false;
        }
        try{
-        Citizen::whereIn('id', $citizenIds)->update(['is_archived' => true]);
+        Citizen::whereIn('id', $citizenIds)->update(['is_archived' => 1]);
         Citizen::whereIn('id', $citizenIds)->delete();
         Log::info('deleted');
         return true;
@@ -41,7 +41,7 @@ class CitizenService
     public function changeRegion(array $citizenIds, int $regionId): bool
     {
         try {
-            DB::transaction(function () use ($citizenIds, $regionId) {
+            DB::transaction(function  () use ($citizenIds, $regionId) {
                 // Update region for the selected citizens.
                 Citizen::whereIn('id', $citizenIds)->update(['region_id' => $regionId]);
             });
@@ -58,10 +58,18 @@ class CitizenService
         if (!is_array($ids)) {
             $ids = [$ids];
         }
-
-        return Citizen::withTrashed()
+        try {
+            $restored=Citizen::withTrashed()
             ->whereIn('id', $ids)
             ->restore();
+            Citizen::withTrashed()->whereIn('id', $ids)->update(['is_archived' => 0]);
+            
+            return $restored;
+        } catch (Exception $e) {
+            Log::error('erorr restoring ids');
+            Log::error($ids);
+            return false;
+        }
     }
      /**
      * Get citizen information by their IDs.

@@ -4,9 +4,26 @@ namespace App\Services;
 use App\Models\Citizen;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+/**
+ * this service are spasifide to handle citizens - distribution actions
+ */
 class DistributionService
 {
+    //
+    public function addAllActiveToDistribution($distributionId){
+        try {
+
+            $allCitizens = Citizen::all()->pluck('id')->toArray();
+            $this->addCitizensToDistribution($allCitizens,$distributionId);
+        }
+        catch (\Exception $e) {
+            
+            throw new \Exception("Error adding citizens: " . $e->getMessage());
+        }
+
+       
+        
+    }
     public function addCitizensToDistribution(array $citizenIds, $distributionId, array $filters = [], $addNonExist = false)
     {
         $totalIds = count($citizenIds);
