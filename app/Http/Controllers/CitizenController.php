@@ -138,7 +138,7 @@ class CitizenController extends Controller
             'obstruction_description' => $request->input('obstruction_description'),
 
         ];
-
+        
         Citizen::create($data);
         return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
     }
@@ -152,27 +152,7 @@ class CitizenController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-
-            'id' => 'required|string|max:255',
-            'firstname' => 'required|string',
-            'secondname' => 'nullable|string',
-            'thirdname' => 'nullable|string',
-            'lastname' => 'required|string',
-            'date_of_birth' => 'nullable|date',
-            'gender' => 'nullable|string',
-            // 'region_id' => 'nullable|string',
-            // 'wife_id' => 'nullable|string',
-            // 'wife_name' => 'nullable|string',
-            // 'widowed' => 'nullable|string',
-            // 'social_status' => 'nullable|string',
-            // 'living_status' =>'nullable|string',
-            // 'job' =>'nullable|string',
-            // 'original_address' =>'nullable|string',
-            // 'elderly_count' => 'nullable|string',
-            'note' => 'nullable|string',
-            // Add other validation rules as needed
-        ]);
+        $request->validate([$request->all()]);
 
         $citizen = Citizen::findOrFail($id);
         $citizen->update($request->all());
@@ -241,7 +221,7 @@ class CitizenController extends Controller
     public function restore($id)
     {
         $restoredCount = $this->citizenService->restore($id);
-
+        
         if ($restoredCount > 0) {
             return response()->json(['message' => 'Citizen restored successfully']);
         } else {
@@ -260,18 +240,21 @@ class CitizenController extends Controller
     {
         Log::error("--------------:", ["--------------" => "--------------"]);
         $request->validate([
+            'regionId'=>'nullable',
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
         $region=null;
-        if ($request->has('regionId') && !empty($request->regionId)) {
+        if ($request->has('regionId')) {
             $region=$request->regionId;
-            Log::info('$region');
+            Log::info('$region is zero ?');
             Log::info($region);
         }
-
+        Log::info('$region');
+        Log::error($region );
+        Log::error($request);
         $file = $request->file('excel_file');
         $import = new CitizensImport($region);
-
+        Log::error($file);
         try {
             $initialCount = Citizen::count(); // Count before import
             Excel::import($import, $file);
@@ -312,6 +295,7 @@ class CitizenController extends Controller
         if(empty($citizensIds)){return response()->json(['erorr'=>'no citizens']);}
         return $result ?  response()->json(['success'=>'romvid successfuly6']):
          response()->json(['success'=>'romvid successfuly6']);
+         
     }
 
     public function changeRegionForSelectedCitizens(Request $request){

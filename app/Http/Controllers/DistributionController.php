@@ -87,13 +87,15 @@ class DistributionController extends Controller
             ->with("success", "Distribution created successfully.");
     }
 
-    public function show($id)
+    public function show($id ,DistributionReportService $distributionReportService )
     {
         $distributions = Distribution::all();
         $citizens = Citizen::all();
         $distribution = Distribution::findOrFail($id);
         $regions = Region::all();
-        return view("distributions.show", compact("distribution", "citizens", "distributions", 'regions'));
+        $stats = $distributionReportService->calculateStats($distribution);
+       
+        return view("distributions.show", compact("distribution", "citizens", "distributions", 'regions','stats'));
     }
 
     public function edit(Distribution $distribution)
@@ -162,6 +164,28 @@ class DistributionController extends Controller
     {
         $distributions = Distribution::all();
         return response()->json(["distributions" => $distributions]);
+    }
+
+    public function addAllCitizens(Request $request , DistributionService $distributionService){
+        $distributionId = $request->input('distributionId');
+        Log::info("dist id ");
+        Log::info($distributionId);
+
+        if (empty($distributionId)) {
+            return redirect()->back()->with("warning", "لا يوجد كشف محدد");
+        }
+
+        try {
+            $report = $distributionService->addAllActiveToDistribution( $distributionId);
+
+            $reportHtml = view('modals.addctz2dist', ['report' => $report])->render();
+            return redirect()->back()
+                ->with('success', 'تمت العملية بنجاح. يرجى مراجعة التقرير للتفاصيل.')
+                ->with('addCitizensReportHtml', $reportHtml);
+        } catch (\Exception $e) {
+            Log::error('eroor adding ctz : '.$e->getMessage());
+            return redirect()->back()->with("warning", "حدث خطأ في الإضافة");
+        }
     }
 
     public function addCitizens(Request $request, DistributionService $distributionService, $distributionId = null)

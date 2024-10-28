@@ -15,8 +15,12 @@ class HomeController extends Controller{
     }
 
     public function test(){
-        $citizens = Citizen::all();
-        $distributions = Distribution::with('category')->get();
-        return view('home.test',compact('citizens','distributions'));
+         $query = Citizen::with('region');
+         $citizens = $query->get();
+        $distributions = Distribution::with('category')->first()->get();
+        $data = [];
+        $data['ctz']=$citizens;
+        
+        return view('home.test',compact('citizens','distributions','data'));
     }
 }

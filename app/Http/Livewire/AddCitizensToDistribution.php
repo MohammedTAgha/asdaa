@@ -19,6 +19,7 @@ class AddCitizensToDistribution extends Component
     public function openModal()
     {
         $this->showModal = true;
+        Log::info('opened');
     }
 
     // Close the modal
@@ -26,7 +27,7 @@ class AddCitizensToDistribution extends Component
     {
         $this->showModal = false;
     }
-
+    
     // Handle search input updates
     public function updatedSearchTerm()
     {

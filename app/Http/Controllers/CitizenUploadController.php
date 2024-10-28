@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\CitizensdDistReportExport;
+use App\Imports\CitizenDistributionImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -40,7 +41,7 @@ class CitizenUploadController extends Controller // upload to a distributin exel
     
         try {
             // Read the uploaded Excel file and get the first collection of data
-            $citizensData = Excel::toCollection(new CitizensImport, $file)->first();
+            $citizensData = Excel::toCollection(new CitizenDistributionImport, $file)->first();
             Log::alert('file');
             Log::alert($citizensData);
 
