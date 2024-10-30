@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 use App\Models\Distribution;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
+// this is for exporting single project
 class DistributionExport implements WithMultipleSheets
 {
     protected $distribution;

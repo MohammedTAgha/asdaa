@@ -2,16 +2,18 @@
 
 namespace App\Exports;
 
+use App\Services\DistributionReportService;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithTitle;
 
 class DistributionDetailsSheet implements FromArray, WithTitle
 {
     protected $distribution;
-
-    public function __construct($distribution)
+    protected $distributionStatsService ;
+    public function __construct($distribution )
     {
         $this->distribution = $distribution;
+        
     }
 
     public function array(): array
@@ -19,36 +21,43 @@ class DistributionDetailsSheet implements FromArray, WithTitle
         $stats = $this->calculateStats();
 
         return [
-            ['Distribution Details'],
-            ['ID', $this->distribution->id],
-            ['Name', $this->distribution->name],
-            ['Date', $this->distribution->date],
-            ['Category', $this->distribution->category->name ?? ''],
-            ['Arrive Date', $this->distribution->arrive_date],
-            ['Quantity', $this->distribution->quantity],
-            ['Target', $this->distribution->target],
-            ['Source', $this->distribution->source->name ?? ''],
-            ['Done', $this->distribution->done ? 'Yes' : 'No'],
-            ['Target Count', $this->distribution->target_count],
-            ['Expectation', $this->distribution->expectation],
-            ['Min Count', $this->distribution->min_count],
-            ['Max Count', $this->distribution->max_count],
-            ['Note', $this->distribution->note],
-            [],
-            ['Statistics'],
-            ['Total Citizens', $stats['total_citizens']],
-            ['Total Quantity Distributed', $stats['total_quantity']],
-            ['Average Quantity per Citizen', $stats['avg_quantity']],
-            ['Completed Distributions', $stats['completed_distributions']],
+            ['التفاصيل'],
+            ['رقم', $this->distribution->id],
+            ['التفاصيل', $this->distribution->name],
+            ['التاريخ', $this->distribution->date],
+            ['الفئة', $this->distribution->category->name ?? ''],
+            ['تاريخ التوريد', $this->distribution->arrive_date],
+            ['الكمية', $this->distribution->quantity],
+            ['المتهدفة', $this->distribution->target],
+            ['المصدر', $this->distribution->source->name ?? ''],
+            ['الاكتمال', $this->distribution->done ? 'Yes' : 'No'],
+            ['عدد المستهدفين المحتملين', $this->distribution->target_count],
+            ['عدد الفئة المستهدفة', $this->distribution->expectation],
+            ['اقل عدد للاسرة', $this->distribution->min_count],
+            ['اقصى عدد للاسرة', $this->distribution->max_count],
+            ['ملاحظات', $this->distribution->note],
+            ['-------'],
+            ['الاحصائيات'],
+            ['النسبة ', $stats['benefated_percentage']],
+            ['تم استلامهم', $stats['completed_distributions']],
+            ['اجمالي المستهدفين', $stats['total_citizens']],
+            ['عدد الكمة الموزعة', $stats['total_quantity']],
+          
         ];
     }
 
     private function calculateStats(): array
     {
         $citizens = $this->distribution->citizens;
-        
+        $citizens_count = count($citizens);
+        $benafated_count =$citizens->where('pivot.done', 1)->count();
+        $percentage =  ($benafated_count /$citizens_count)*100 ;
+
         return [
+            'benafated'=> $benafated_count,
+            'citizens_count'=> $citizens_count ,
             'total_citizens' => $citizens->count(),
+            'benefated_percentage'=>$percentage,
             'total_quantity' => $citizens->sum('pivot.quantity'),
             'avg_quantity' => $citizens->avg('pivot.quantity'),
             'completed_distributions' => $citizens->where('pivot.done', 1)->count(),
@@ -57,6 +66,6 @@ class DistributionDetailsSheet implements FromArray, WithTitle
 
     public function title(): string
     {
-        return 'Distribution Details';
+        return 'تفاصيل التوزيع';
     }
 }

@@ -50,6 +50,7 @@ class DistributionReportService
         ];
     }
 
+   //get statistics ass array and show its for excel file
     public function getStatistics($distribution): array
     {
         $stats = $this->calculateStats($distribution);
@@ -78,13 +79,19 @@ class DistributionReportService
             ['Completed Distributions', $stats['completed_distributions']],
         ];
     }
-
+ // this method takes a distribution and retern its statistics
     public function calculateStats($distribution): array
     {
-        $citizens = $distribution->citizens;
-        
+        $citizens =$distribution->citizens;
+        $citizens_count = count($citizens);
+        $benafated_count =$citizens->where('pivot.done', 1)->count();
+        $percentage =  ($benafated_count /$citizens_count)*100 ;
+
         return [
+            'benafated'=> $benafated_count,
+            'citizens_count'=> $citizens_count ,
             'total_citizens' => $citizens->count(),
+            'benefated_percentage'=>$percentage,
             'total_quantity' => $citizens->sum('pivot.quantity'),
             'avg_quantity' => $citizens->avg('pivot.quantity'),
             'completed_distributions' => $citizens->where('pivot.done', 1)->count(),
