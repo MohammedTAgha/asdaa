@@ -18,7 +18,7 @@ class CitizenController extends Controller
     {
         Log::info('api 111');
         $user = $request->user();
-        $citizens = Citizen::with('distributions')->get();
+        $citizens = Citizen::with('distributions','region.representatives')->get();
       
         // if ($user->hasRole('region_manager')) {
         //     // Assuming the User model has a region_id attribute

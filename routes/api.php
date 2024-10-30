@@ -1,7 +1,14 @@
 <?php
 
+use App\Models\Citizen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\CitizenController;
+use App\Http\Controllers\API\RegionController;
+use App\Http\Controllers\API\DistributionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +20,35 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+// Protect routes with Sanctum middleware
+ // Citizens CRUD
+ Route::apiResource('citizens', CitizenController::class);
+
+ // Regions CRUD
+ Route::apiResource('regions', RegionController::class);
+
+ // Distributions CRUD
+ Route::apiResource('distributions', DistributionController::class);
+
+//  // Additional routes can be added here
+// Route::middleware('auth:sanctum')->group(function () {
+//     // Citizens CRUD
+//     Route::apiResource('citizens', CitizenController::class);
+
+//     // Regions CRUD
+//     Route::apiResource('regions', RegionController::class);
+
+//     // Distributions CRUD
+//     Route::apiResource('distributions', DistributionController::class);
+
+//     // Additional routes can be added here
+// });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Log::info('api');
+    return $request;
+});
+Route::get('/',function (Request $request){
+    $citizens = Citizen::all()->take(10);
+    return response()->json($citizens);
 });

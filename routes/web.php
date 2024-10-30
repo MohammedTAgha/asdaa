@@ -18,6 +18,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,9 @@ use App\Http\Controllers\UserController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
+});
 
 
 // File Management Routes (Available to all authenticated users)
@@ -60,6 +63,7 @@ Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens
 Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');
 Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
 Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
+Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
