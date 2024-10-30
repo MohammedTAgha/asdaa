@@ -2,15 +2,15 @@
     <h2>Citizen Search</h2>
     <form wire:submit.prevent="searchCitizen" class="mb-4">
         <div class="form-group">
-            <label for="searchId">Citizen ID:</label>
+            <label for="searchId">ادخل رقم الهوية:</label>
             <input type="text" id="searchId" wire:model.debounce.300ms="searchId" class="form-control @error('searchId') is-invalid @elseif($isValid) is-valid @enderror" placeholder="Enter 9-digit ID">
             @error('searchId')
                 <div class="invalid-feedback">{{ $message }}</div>
             @elseif($isValid)
-                <div class="valid-feedback">ID is valid!</div>
+                <div class="valid-feedback">رقم صالح!</div>
             @enderror
         </div>
-        <button type="submit" class="btn btn-primary mt-2">Search</button>
+        <button type="submit" class="btn btn-primary mt-2">ابحث</button>
     </form>
 
     @if($errorMessage)
@@ -19,11 +19,13 @@
 
     @if($citizen)
         <div class="card">
-            <div class="card-header">Citizen Information</div>
+            <div class="card-header">نتيجة البحث</div>
+            <a href="{{route('citizens.show',$citizen->id)}}">
             <div class="card-body">
                 <h5 class="card-title">{{ $citizen->firstname}} {{$citizen->secondname}} {{$citizen->thirdname}} {{$citizen->lastname }}</h5>
-                <p class="card-text">ID: {{ $citizen->id }}</p>
+                <p class="card-text">الهوية: {{ $citizen->id }}</p>
             </div>
+            </a>
         </div>
     @endif
 </div>

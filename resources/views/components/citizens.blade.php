@@ -53,12 +53,12 @@
 
         <!-- Action Buttons -->
         <div class="col-auto d-flex align-items-center">
-            @can('super')
+            
             <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
                 اضافة جديد
                 <span class="ti-xs ti ti-user-plus ms-1"></span>
             </a>
-            @endcan
+            
             <button id="export-btn" class="btn btn-success mx-1">
                 تصدير
                 <span class="ti-xs ti ti-table-export ms-1"></span>
@@ -171,6 +171,9 @@
                 </button>
                 <ul x-show="open" @click.away="open = false" x-transition
                     class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md">
+                    <li>
+                        <button type="button" id="add-citizens-btn" class="block px-4 py-2 hover:bg-gray-200">اضافة مستفيدين</button>
+                    </li>
                     <li><button id="copy-selected-ids" class="block px-4 py-2 hover:bg-gray-200">نسخ التحديد</button>
                     </li>
                     <li><button id="restore-selected" class="block px-4 py-2 hover:bg-gray-200">استعادة
@@ -198,7 +201,7 @@
     <input type="hidden" id="distributionId" name="distributionId" value="{{ $distributionId ?? '' }}">
     <input type="hidden" name="citizens" value="{{ implode(',', $citizenIds ?? []) }}">
 
-    <button type="button" id="add-citizens-btn" class="btn btn-primary">اضافة مستفيدين</button>
+    {{-- <button type="button" id="add-citizens-btn" class="btn btn-primary">اضافة مستفيدين</button> --}}
 </form>
 @include('modals.confermation')
 

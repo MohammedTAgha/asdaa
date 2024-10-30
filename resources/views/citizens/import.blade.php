@@ -27,7 +27,7 @@
             @endif
             <div class="mb-4 text-center">
                 <a href="{{ route('citizens.template') }}" class="btn btn-outline btn-outline btn-outline-primary btn-active-light-primary waves-effect">
-                    تحميل الترويسة
+                    تحميل الترويسةهة
                     <span class="ti-xs ti ti-file-download me-1"></span>
                 </a>
             </div>

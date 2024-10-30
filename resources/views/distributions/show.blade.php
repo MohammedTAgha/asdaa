@@ -31,9 +31,9 @@
                         <h2 class="text-xl font-semibold text-gray-700">العدد المستهدف</h2>
                         <i class="fas fa-bullseye text-2xl text-blue-500"></i>
                     </div>
-                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->target_count }}</p>
+                    <p class="text-3xl font-bold text-gray-800">=={{ $stats['total_citizens'] }}</p>
                     <div class="mt-4 bg-gray-200 h-2 rounded-full">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ 0. * 100 }}%;"></div>
+                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ 0.5 * 100 }}%;"></div>
                     </div>
                 </div>
 
@@ -232,7 +232,7 @@
 
                     <div x-data="{ open: false }" class="relative mb-3 z-50">
                         <button @click="open = !open" class="btn btn-light-primary waves-effect">
-                            اجراءات التحديد
+                            اجراءات الكشف
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -245,6 +245,24 @@
                             <li><a href="{{ route('distributions.export', $distribution->id) }}" class="block px-4 py-2 hover:bg-gray-200">
                                 تصدير الكشف
                             </a></li>
+                            <li><button class="block px-4 py-2 hover:bg-gray-200" id="add-all-to-distribution">
+                                اضافة كافة الاسماء للكشف
+                            </button></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                                نقل الاسماء الى كشف اخر
+                            </a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                                استيراد اسماء كشف اخر
+                            </a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                               تسليم كل الكشف
+                            </a></li>
+                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                                الغاء تسليم كل الكشف
+                             </a></li>
+                             <li><a class="block px-4 py-2 hover:bg-gray-200">
+                                حذف اسماء كل الكشف
+                             </a></li>
     
                             <!-- Add more actions if needed -->
                         </ul>
@@ -540,6 +558,28 @@
                     deleteSelectedCitizens();
                 });
 
+                 // Action: Delete from distribution
+                 $('#add-all-to-distribution').click(function() {
+                    addAllToDistribution();
+                });
+
+                function addAllToDistribution(){
+                    $.ajax({
+                        url: '{{ route('distributions.addAllCitizens', $distribution) }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            distributionId: {{$distribution->id}}
+                        },
+                        success: function(response) {
+                            oTable.ajax.reload(); // Reload the table
+                           alert('تمت الاضافة بنجاح')
+                        },
+                        error: function(err) {
+                            console.error("Error deleting citizens:", err);
+                        }
+                    });
+                }
                 // Function to update citizens
                 function updateSelectedCitizens(field, value) {
                     if (selectedRows.length === 0) {
@@ -566,6 +606,7 @@
                 }
 
                 // Function to delete citizens from distribution
+
                 function deleteSelectedCitizens() {
                     if (selectedRows.length === 0) {
                         alert("No rows selected!");

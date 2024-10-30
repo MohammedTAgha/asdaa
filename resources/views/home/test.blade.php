@@ -23,10 +23,11 @@
 
 @endsection
 @section('content')
-
+ 
+@dd($data)
 <!-- Content -->
 
-<div class="container-xxl flex-grow-1 container-p-y">
+{{-- <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row g-4 mb-4">
       <div class="col-sm-6 col-xl-3">
         <div class="card">
@@ -249,5 +250,8 @@
   <script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
   <script src="../../assets/js/app-user-list.js"></script>
   @endpush
+
+@endsection --}}
+
 
 @endsection

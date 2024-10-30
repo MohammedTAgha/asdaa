@@ -211,6 +211,19 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <label for="is_archived" class="col-sm-3 col-form-label text-sm-end">مؤرشف</label>
+                <div class="col-sm-9">
+                    <select id="is_archived" name="is_archived" class="form-select">
+                    
+                        <option value="1"
+                            {{ isset($citizen) && $citizen->is_archived == '0' ? 'selected' : '' }}>فعال</option>
+                        <option value="2"
+                            {{ isset($citizen) && $citizen->is_archived == '1' ? 'selected' : '' }}>مؤرشف</option>
+                        
+                    </select>                </div>
+            </div>
+
             <!-- Note -->
             <div class="row mb-3">
                 <label for="note"  class="col-sm-3 col-form-label text-sm-end"> ملاحظة</label>
@@ -268,14 +281,14 @@
                 let checkDigit = (10 - (sum % 10)) % 10;
                 if (checkDigit === parseInt(id[8])) {
                     idInput.classList.add('is-valid');
-                    document.querySelector('#id ~ .valid-feedback').textContent = 'ID is valid!';
+                    document.querySelector('#id ~ .valid-feedback').textContent = 'الهوية صحيحة!';
                 } else {
                     idInput.classList.add('is-invalid');
-                    document.querySelector('#id ~ .invalid-feedback').textContent = 'Invalid ID!';
+                    document.querySelector('#id ~ .invalid-feedback').textContent = 'الهوية غير صالحة!';
                 }
             } else if (id.length > 0) {
                 idInput.classList.add('is-invalid');
-                document.querySelector('#id ~ .invalid-feedback').textContent = 'Invalid ID: Must be 9 digits long';
+                document.querySelector('#id ~ .invalid-feedback').textContent = 'يجب ان يكون الطول 9 خانات ';
             }
         }
     </script>
