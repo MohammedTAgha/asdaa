@@ -15,14 +15,15 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $regions = Region::with('representatives', 'citizens.distributions')->paginate(10);
 
-        if ($user->hasRole('region_manager')) {
-            // Region Managers can see only their region
-            $regions = Region::where('id', $user->region_id)->with('representatives', 'citizens')->get();
-        } else {
-            // Admins and Super Admins can see all regions
-            $regions = Region::with('representatives', 'citizens')->get();
-        }
+        // if ($user->hasRole('region_manager')) {
+        //     // Region Managers can see only their region
+        //     $regions = Region::where('id', $user->region_id)->with('representatives', 'citizens')->get();
+        // } else {
+        //     // Admins and Super Admins can see all regions
+        //     $regions = Region::with('representatives', 'citizens')->get();
+        // }
 
         return response()->json($regions, 200);
     }

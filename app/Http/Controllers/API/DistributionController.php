@@ -16,18 +16,35 @@ class DistributionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-
-        if ($user->hasRole('region_manager')) {
-            // Fetch distributions related to the manager's region
-            $distributions = Distribution::where('region_id', $user->region_id)->get();
-        } else {
-            // Admins and Super Admins can see all distributions
-            $distributions = Distribution::all();
-        }
+        $distributions = Distribution::with('citizens')->get();
+        
+        // if ($user->hasRole('region_manager')) {
+        //     // Fetch distributions related to the manager's region
+        //     $distributions = Distribution::where('region_id', $user->region_id)->get();
+        // } else {
+        //     // Admins and Super Admins can see all distributions
+        //     $distributions = Distribution::all();
+        // }
 
         return response()->json($distributions, 200);
     }
 
+    public function all(Request $request)
+    {
+        $user = $request->user();
+        $distributions = Distribution::with('citizens')->get();
+        
+        // if ($user->hasRole('region_manager')) {
+        //     // Fetch distributions related to the manager's region
+        //     $distributions = Distribution::where('region_id', $user->region_id)->get();
+        // } else {
+        //     // Admins and Super Admins can see all distributions
+        //     $distributions = Distribution::all();
+        // }
+
+        return response()->json($distributions, 200);
+    }
+    
     /**
      * Store a newly created distribution in storage.
      */

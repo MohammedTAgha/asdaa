@@ -48,6 +48,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         'رقم المحافظة الاصلية' => 'original_governorate_id',
         'مكان السكن الاصلي' => 'original_address',
         'ملاحظات' => 'note',
+        '2 ملاحظات' => 'note2',
         'الحالة الاجتماعية' => 'social_status',
         'تاريخ الميلاد' => 'date_of_birth',
         'الجنس'=>'gender',
@@ -102,7 +103,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'job' => $mappedRow['job'] ?? null,
             'living_status' => $mappedRow['living_status'] ?? null,
             'original_address' => $mappedRow['original_address'] ?? null,
-            'note' => $mappedRow['note'] ?? null,
+            'note' => "".$mappedRow['note']." - ".$mappedRow['note2']?? null,
             'region_id' => $regionId,
             'social_status' => $mappedRow['social_status'] ?? null,
              'is_archived'=>$row['is_archived'] ?? 0

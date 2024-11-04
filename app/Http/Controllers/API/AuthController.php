@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -17,12 +18,15 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-
+        Log::alert($request);
+        
         if (!Auth::attempt($credentials)) {
+            Log::alert('erorr log in');
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
+        Log::alert('✔');
         $user = $request->user();
+        Log::alert($user);
 
         // Create a Sanctum token
         $token = $user->createToken('api-token')->plainTextToken;

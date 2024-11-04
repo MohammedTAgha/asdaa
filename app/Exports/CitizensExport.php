@@ -45,6 +45,7 @@ class CitizensExport implements FromCollection ,WithHeadings
                 $citizen->social_status,
                 $citizen->elderly_count,
                 $citizen->is_archived,
+                $citizen->region->representatives->first()->name ?? 'مندوب غير محدد'
             ];
         });
     }
@@ -73,12 +74,14 @@ class CitizensExport implements FromCollection ,WithHeadings
             'حالة المعيشة',
             'العنوان الأصلي',
             'ملاحظات',
-            'اسم المنطقة', // Add this heading for the region name
+            'اسم المنطقة',
             'تاريخ الميلاد',
             'الجنس',
             'الحالة الاجتماعية',
             'عدد كبار السن',
             'علامة الأرشفة',
+            'region',
+
         ];
     }
 
