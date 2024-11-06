@@ -8,6 +8,13 @@ use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
+   /**
+     * this donoad excel file of all citizens along thair aids 
+     *
+     * @param array $citizenIds
+     * @param int $regionId
+     * @return array
+     */
 class CitizensAndDistributionExportService implements FromArray, WithHeadings
 {
     protected $citizens;
@@ -21,7 +28,7 @@ class CitizensAndDistributionExportService implements FromArray, WithHeadings
     public function headings(): array
     {
         $distributionNames = Distribution::pluck('name')->toArray();
-        return array_merge(['Citizen Name'], $distributionNames);
+        return array_merge(['الهوية','الاسم رباعي','المندوب'], $distributionNames);
     }
 
     // Format data for each row in the Excel file
@@ -31,7 +38,10 @@ class CitizensAndDistributionExportService implements FromArray, WithHeadings
 
         foreach ($this->citizens as $citizen) {
             // Add citizen's name as the first column
-            $row = [$citizen->firstname]; 
+            $id = $citizen->id;
+            $name = $citizen->firstname." ".$citizen->secondname." ".$citizen->thirdname." ".$citizen->lastname;
+            $region =  $citizen->region->representatives->first()->name ??  $citizen->region->name ?? 'no region';
+            $row = [$id ,$name , $region]; 
 
             // Iterate through each distribution
             $distributions = Distribution::all();
