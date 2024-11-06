@@ -12,6 +12,7 @@ use App\Exports\CitizensExport;
 use Illuminate\Support\Facades\Log;
 use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
+use App\Services\CitizensAndDistributionExportService;
 use App\Services\CitizenService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -314,4 +315,9 @@ class CitizenController extends Controller
         $citizen->delete();
         return redirect()->route('citizens.index')->with('success', 'Citizen deleted successfully.');
     }
+
+    public function exportWithDistributions(CitizensAndDistributionExportService $exportService)
+{
+    return $exportService->export();
+}
 }

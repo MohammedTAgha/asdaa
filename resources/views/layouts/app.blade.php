@@ -5,7 +5,7 @@
     data-assets-path="../../assets/" data-template="vertical-menu-template">
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=0.9" />
+<meta name="viewport" content="width=device-width, initial-scale=0.85" />
 {{-- <meta name="viewport" --}}
 {{--    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" /> --}}
 <title> @yield('title','ادارة اصداء') </title>

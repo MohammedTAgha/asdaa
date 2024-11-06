@@ -23,6 +23,7 @@ class CitizenSearch extends Component
 
         if ($this->isValid) {
             $this->citizen = Citizen::where('id', $this->searchId)->first();
+            
             if (!$this->citizen) {
                 $this->errorMessage = 'Citizen not found';
             }

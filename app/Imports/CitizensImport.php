@@ -103,7 +103,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'job' => $mappedRow['job'] ?? null,
             'living_status' => $mappedRow['living_status'] ?? null,
             'original_address' => $mappedRow['original_address'] ?? null,
-            'note' => "".$mappedRow['note']." - ".$mappedRow['note2']?? null,
+            'note' => $mappedRow['note']?? null,
             'region_id' => $regionId,
             'social_status' => $mappedRow['social_status'] ?? null,
              'is_archived'=>$row['is_archived'] ?? 0
