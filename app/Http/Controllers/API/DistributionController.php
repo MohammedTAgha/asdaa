@@ -16,7 +16,7 @@ class DistributionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $distributions = Distribution::with('citizens')->get();
+        $distributions = Distribution::with('citizens')->paginate(10);
         
         // if ($user->hasRole('region_manager')) {
         //     // Fetch distributions related to the manager's region
