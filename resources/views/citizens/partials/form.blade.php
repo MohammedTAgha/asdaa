@@ -216,9 +216,9 @@
                 <div class="col-sm-9">
                     <select id="is_archived" name="is_archived" class="form-select">
                     
-                        <option value="1"
+                        <option value="0"
                             {{ isset($citizen) && $citizen->is_archived == '0' ? 'selected' : '' }}>فعال</option>
-                        <option value="2"
+                        <option value="1"
                             {{ isset($citizen) && $citizen->is_archived == '1' ? 'selected' : '' }}>مؤرشف</option>
                         
                     </select>                </div>
