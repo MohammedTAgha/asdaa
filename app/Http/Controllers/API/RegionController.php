@@ -15,7 +15,7 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $regions = Region::with('representatives', 'citizens.distributions')->paginate(10);
+        $regions = Region::with( 'citizens')->paginate(2);
 
         // if ($user->hasRole('region_manager')) {
         //     // Region Managers can see only their region
@@ -27,7 +27,13 @@ class RegionController extends Controller
 
         return response()->json($regions, 200);
     }
-
+    public function all(Request $request)
+    {
+        $user = $request->user();
+        $regions = Region::with('citizens','representatives')->get();
+        
+        return response()->json($regions, 200);
+    }
     /**
      * Store a newly created region in storage.
      */
