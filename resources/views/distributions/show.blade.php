@@ -248,19 +248,19 @@
                             <li><button class="block px-4 py-2 hover:bg-gray-200" id="add-all-to-distribution">
                                 اضافة كافة الاسماء للكشف
                             </button></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                            <li><button class="block px-4 py-2 hover:bg-gray-200">
                                 نقل الاسماء الى كشف اخر
-                            </a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                            </button></li>
+                            <li><button class="block px-4 py-2 hover:bg-gray-200">
                                 استيراد اسماء كشف اخر
-                            </a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                            </button></li>
+                            <li><button id="give-all"  class="block px-4 py-2 hover:bg-gray-200">
                                تسليم كل الكشف
-                            </a></li>
-                            <li><a class="block px-4 py-2 hover:bg-gray-200">
+                            </button></li>
+                            <li><a class="block px-4 py-2 hover:bg-red-200">
                                 الغاء تسليم كل الكشف
                              </a></li>
-                             <li><a class="block px-4 py-2 hover:bg-gray-200">
+                             <li><a class="block px-4 py-2 hover:bg-red-200">
                                 حذف اسماء كل الكشف
                              </a></li>
     
@@ -561,6 +561,11 @@
                  // Action: Delete from distribution
                  $('#add-all-to-distribution').click(function() {
                     addAllToDistribution();
+                });
+
+                // Action: Delete from distribution
+                $('#give-all').click(function() {
+                    // addAllToDistribution();
                 });
 
                 function addAllToDistribution(){
