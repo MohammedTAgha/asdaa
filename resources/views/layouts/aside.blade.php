@@ -58,7 +58,17 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 					<span class="menu-title">الرئيسية</span>
 				</a>
 			</div>
-
+			<div class="menu-item">
+				<a class="menu-link {{ request()->routeIs('queries') ? 'active' : '' }}"
+					href="{{ route('queries') }}">
+					<span class="menu-icon">
+						<span class="svg-icon svg-icon-2">
+							<i class="ti ti-serach"></i>
+						</span>
+					</span>
+					<span class="menu-title">الاستعلامات</span>
+				</a>
+			</div>
 			{{-- <!-- Test -->
 			<div class="menu-item">
 				<a class="menu-link {{ request()->routeIs('test') ? 'active' : '' }}"
@@ -180,7 +190,7 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
-									<span class="menu-title"> المساعدات مع المشاريع</span>
+									<span class="menu-title"> المواطنين  مع المساعدات</span>
 								</a>
 							</div>
 						</div>

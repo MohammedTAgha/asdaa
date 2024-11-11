@@ -38,6 +38,7 @@ Route::get('/linkstorage', function () {
 // File Management Routes (Available to all authenticated users)
 Route::middleware('auth')->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/queries', [HomeController::class, 'queries'])->name('queries');
     Route::get('/files', [FileController::class, 'index'])->name('files.index');
     Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
     Route::get('/files/{file}', [FileController::class, 'show'])->name('files.show');

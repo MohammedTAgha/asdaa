@@ -1,69 +1,119 @@
+
 @extends('dashboard')
 
 @section('content')
-    <livewire:citizen-search />
-    @push('scripts')
-        <script>
-            const modal = new bootstrap.Modal(document.getElementById('citizenModal'));
-            console.log('ccc');
-            $(document).ready(function() {
-                $('#submitButton').click(function() {
-                    console.log('ccc');
-                    var id = $('#id').val();
-                    var first_name = $('#first_name').val();
-                    var second_name = $('#second_name').val();
-                    var third_name = $('#third_name').val();
-                    var last_name = $('#last_name').val();
 
-                    $.ajax({
-                        url: '/citizens', // Use the resource route for citizens
-                        type: 'GET',
-                        data: {
-                            id: id,
-                            first_name: first_name,
-                            second_name: second_name,
-                            third_name: third_name,
-                            last_name: last_name,
-                            returnjson: 1,
-                        },
-                        success: function(response) {
-                            // Handle the response data here
-                            //document.getElementById('modal').classList.remove('hidden');
-                            modal.show();
-                            console.log(response);
-                            const cardsContainer = document.getElementById('cardsContainer');
-                            cardsContainer.innerHTML = ''; // Clear previous content
-                            response.forEach(citizen => {
-                                const card = document.createElement('div');
-                                card.className = 'p-4 bg-gray-100 rounded-lg shadow';
-                                card.innerHTML = `
-                                <div>
-                                <a href="/citizens/${citizen.id}">
-                                <p><strong>الهوية:</strong> ${citizen.id}</p>
-                                <p><strong>الاسم:</strong> ${citizen.firstname} ${citizen.secondname} ${citizen.thirdname} ${citizen.lastname}</p>
-                                <p><strong>تاريخ الميلاد:</strong> ${citizen.date_of_birth}</p>
-                                <p><strong>الجنس:</strong> ${citizen.gender}</p>
-                                <p><strong>الزوجة:</strong> ${citizen.wife_name}</p>
-                                <p><strong>رقم المنقطة:</strong> ${citizen.region_id}</p>
-                                <p><strong>العمل:</strong> ${citizen.job}</p>
-                                <p><strong>الحالة الاجتماعية:</strong> ${citizen.living_status}</p>
-                                <p><strong>Note:</strong> ${citizen.note}</p>
-                                </div>
-                                </a>
-                            `;
-                                cardsContainer.appendChild(card);
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
-                });
-            });
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <!-- Total Citizens Card -->
+    <div class="bg-blue-50 border-l-4 border-blue-300 shadow-md rounded-lg p-6">
+        <h3 class="text-blue-700 text-lg font-semibold">Total Citizens</h3>
+        <p class="text-3xl font-bold text-blue-800">45,000</p>
+    </div>
 
-            document.getElementById('closeModalButton').addEventListener('click', function() {
-                document.getElementById('modal').classList.add('hidden');
-            });
-        </script>
-    @endpush
+    
+    <!-- Aids Distributed Card -->
+    <div class="bg-orange-50 border-l-4 border-orange-300 shadow-md rounded-lg p-6">
+        <h3 class="text-orange-700 text-lg font-semibold">Aids Distributed</h3>
+        <p class="text-3xl font-bold text-orange-800">12,500</p>
+    </div>
+
+    <!-- Packages Count Card -->
+    <div class="bg-blue-50 border-l-4 border-blue-300 shadow-md rounded-lg p-6">
+        <h3 class="text-blue-700 text-lg font-semibold">Packages Distributed</h3>
+        <p class="text-3xl font-bold text-blue-800">8,200</p>
+    </div>
+
+    <div class="bg-orange-50 border-l-4 border-orange-300 shadow-md rounded-lg p-6">
+        <h3 class="text-orange-700 text-lg font-semibold">Area Served (sq.km)</h3>
+        <p class="text-3xl font-bold text-orange-800">3,500</p>
+    </div>
+
+    <!-- Students Enrolled Card -->
+    <div class="bg-blue-50 border-l-4 border-blue-300 shadow-md rounded-lg p-6">
+        <h3 class="text-blue-700 text-lg font-semibold">Students in School</h3>
+        <p class="text-3xl font-bold text-blue-800">1,200</p>
+    </div>
+
+    <!-- Water Sublimation Per Day Card with Progress -->
+    <div class="bg-orange-50 border-l-4 border-orange-300 shadow-md rounded-lg p-6">
+        <h3 class="text-orange-700 text-lg font-semibold">Water Sublimation (L/day)</h3>
+        <div class="flex items-center mt-2">
+            <div class="w-full bg-orange-100 rounded-full h-4">
+                <div class="bg-orange-300 h-4 rounded-full" style="width: 75%"></div>
+            </div>
+            <span class="ml-2 text-orange-700 font-bold">75%</span>
+        </div>
+    </div>
+
+    <!-- Medical Centers Card -->
+    <div class="bg-blue-50 border-l-4 border-blue-300 shadow-md rounded-lg p-6">
+        <h3 class="text-blue-700 text-lg font-semibold">Medical Centers</h3>
+        <p class="text-3xl font-bold text-blue-800">15</p>
+    </div>
+
+</div>
+
+
+<div class="bg-white shadow-lg rounded-lg p-6 text-center">
+    <h2 class="text-gray-500 text-sm uppercase font-semibold">Total Citizens</h2>
+    <div class="text-4xl font-bold text-gray-800 mt-2">
+        <span id="citizen-counter" data-target="5000">0</span>
+    </div>
+</div>
+<div class="bg-white shadow-lg rounded-lg p-6 text-center">
+    <h2 class="text-gray-500 text-sm uppercase font-semibold">Distributions Completed</h2>
+    <div class="relative w-32 h-32 mx-auto mt-4">
+        <svg class="w-full h-full">
+            <circle cx="50%" cy="50%" r="48" stroke="#e2e8f0" stroke-width="8" fill="none" />
+            <circle cx="50%" cy="50%" r="48" stroke="#4f46e5" stroke-width="8" fill="none"
+                stroke-dasharray="300" stroke-dashoffset="150" class="progress-circle" />
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center text-2xl font-semibold text-gray-800">
+            <span id="percentage-counter">50</span>%
+        </div>
+    </div>
+</div>
+
+<div class="bg-white shadow-lg rounded-lg p-6 text-center">
+    <h2 class="text-gray-500 text-sm uppercase font-semibold">Distribution Goal Progress</h2>
+    <div class="w-full bg-gray-200 rounded-full h-4 mt-4">
+        <div class="bg-blue-500 h-4 rounded-full" style="width: 70%;"></div>
+    </div>
+    <p class="text-gray-600 mt-2 text-sm">70% completed</p>
+</div>
+
+<script>
+    document.querySelectorAll('[data-target]').forEach(counter => {
+    const target = +counter.getAttribute('data-target');
+    const updateCounter = () => {
+        const current = +counter.innerText;
+        const increment = target / 200; // Adjust speed
+
+        if (current < target) {
+            counter.innerText = Math.ceil(current + increment);
+            setTimeout(updateCounter, 10);
+        } else {
+            counter.innerText = target;
+        }
+    };
+    updateCounter();
+});
+
+const circle = document.querySelector('.progress-circle');
+const percentageCounter = document.getElementById('percentage-counter');
+const percentage = 75; // Set desired percentage
+
+let currentPercent = 0;
+const updateProgress = () => {
+    if (currentPercent < percentage) {
+        currentPercent++;
+        percentageCounter.innerText = currentPercent;
+        circle.style.strokeDashoffset = 300 - (300 * currentPercent) / 100;
+        setTimeout(updateProgress, 20); // Adjust speed
+    }
+};
+updateProgress();
+
+</script>
+
 @endsection
