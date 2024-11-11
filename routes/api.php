@@ -24,6 +24,7 @@ use App\Http\Controllers\API\DistributionController;
  // Citizens CRUD
  Route::post('/login', [AuthController::class, 'login']);
  Route::get('distributions/all', [DistributionController::class, 'all']);
+ Route::get('regions/all', [RegionController::class, 'all']);
  Route::apiResource('citizens', CitizenController::class);
 
  // Regions CRUD
