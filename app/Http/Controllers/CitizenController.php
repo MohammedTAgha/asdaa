@@ -14,6 +14,7 @@ use App\Exports\CitizensTemplateExport;
 use App\Exports\FailedRowsExport;
 use App\Services\CitizensAndDistributionExportService;
 use App\Services\CitizenService;
+use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
