@@ -46,7 +46,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('distribution_citizens', DistributionCitizenController::class);
 Route::post('/distributions/add-citizens', [DistributionController::class, 'addCitizens'])->name('distributions.addCitizens');
 Route::post('/distributions/add-citizens-filter', [DistributionController::class, 'addCitizensFilter'])->name('distributions.addCitizensFilter');
-Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistri2butions');
+Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
 Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
 Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
 
