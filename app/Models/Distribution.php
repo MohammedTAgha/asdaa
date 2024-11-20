@@ -20,6 +20,7 @@ class Distribution extends Model
         'source',
         'source_id',
         'done',
+        'pakages_count',
         'target_count',
         'expectation',
         'min_count',
