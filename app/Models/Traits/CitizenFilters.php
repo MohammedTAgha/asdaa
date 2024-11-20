@@ -47,6 +47,15 @@ trait CitizenFilters
         $query->when($filters['id'] ?? null, function ($query, $id) {
             $query->where('id',$id);
         });
+
+        $query->when($filters['minMembers'] ?? null, function ($query, $minMembers) {
+            $query->where('family_members', '>=',$minMembers);
+        });
+
+        $query->when($filters['maxMembers'] ?? null, function ($query, $maxMembers) {
+            $query->where('family_members', '<=',$maxMembers);
+        });
+
         $query->when($filters['regions'] ?? null, function ($query, $regions) {
             $query->whereIn('region_id', $regions);
         });
