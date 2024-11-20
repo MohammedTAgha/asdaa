@@ -27,7 +27,7 @@
             @endif
             <div class="mb-4 text-center">
                 <a href="{{ route('citizens.template') }}" class="btn btn-outline btn-outline btn-outline-primary btn-active-light-primary waves-effect">
-                    تحميل الترويسةهة
+                    تحميل الترويسة
                     <span class="ti-xs ti ti-file-download me-1"></span>
                 </a>
             </div>
@@ -45,7 +45,7 @@
                     <select id="regionId" name="regionId"
                         class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 100%;" >
                         @foreach ($regions as $region)
-                         <option value=""></option>
+                         
                             <option   value="{{ $region->id }}" 
                                 {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
     
