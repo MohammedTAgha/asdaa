@@ -15,7 +15,7 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $regions = Region::with( 'citizens')->paginate(2);
+        $regions = Region::with( 'citizens')->paginate(6);
 
         // if ($user->hasRole('region_manager')) {
         //     // Region Managers can see only their region
