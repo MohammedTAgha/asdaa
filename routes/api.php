@@ -56,3 +56,8 @@ Route::get('/',function (Request $request){
     $citizens = Citizen::all()->take(10);
     return response()->json($citizens);
 });
+
+Route::get('/testconnection',function (){
+    $data = ['status'=>'connected' , 'connected'=>true];
+    return response()->json($data);
+});
