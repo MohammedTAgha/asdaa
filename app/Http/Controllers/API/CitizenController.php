@@ -18,7 +18,7 @@ class CitizenController extends Controller
     {
         Log::info('api 111');
         $user = $request->user();
-        $citizens = Citizen::with('distributions','region.representatives')->paginate(10);
+        $citizens = Citizen::filter($request->all())->with('distributions','region.representatives')->paginate(10);
       
         // if ($user->hasRole('region_manager')) {
         //     // Assuming the User model has a region_id attribute
@@ -31,6 +31,14 @@ class CitizenController extends Controller
         return response()->json($citizens, 200);
     }
 
+    public function all(Request $request)
+    {
+        Log::info('api all');
+         
+        $citizens = Citizen::filter($request->all())->with('distributions','region.representatives')->get();
+  
+        return response()->json($citizens, 200);
+    }
     /**
      * Store a newly created citizen in storage.
      */
@@ -78,9 +86,9 @@ class CitizenController extends Controller
         }
 
         // Region Managers can only view citizens in their region
-        if ($user->hasRole('region_manager') && $citizen->region_id !== $user->region_id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+        // if ($user->hasRole('region_manager') && $citizen->region_id !== $user->region_id) {
+        //     return response()->json(['message' => 'Unauthorized'], 403);
+        // }
 
         return response()->json($citizen, 200);
     }
