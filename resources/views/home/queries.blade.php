@@ -2,7 +2,7 @@
 @extends('dashboard')
 
 @section('content')
-    {{-- <livewire:citizen-search />
+    <livewire:citizen-search />
     @push('scripts')
         <script>
             const modal = new bootstrap.Modal(document.getElementById('citizenModal'));
@@ -66,13 +66,13 @@
                 document.getElementById('modal').classList.add('hidden');
             });
         </script>
-    @endpush --}}
+    @endpush
 
-    <div class="container">
+    {{-- <div class="container">
         <h1> الاستعلامات </h1>
         
         <!-- Search Form -->
-        <form action=" " method="GET">
+        <form action="" method="GET">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <!-- General Search Input -->
@@ -131,6 +131,6 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div> --}}
     
 @endsection

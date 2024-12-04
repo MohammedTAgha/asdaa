@@ -248,7 +248,7 @@ class CitizenController extends Controller
         $region=null;
         if ($request->has('regionId')) {
             $region=$request->regionId;
-            Log::info('$region is zero ?');
+            Log::info('$region is zero ? founded:');
             Log::info($region);
         }
         Log::info('$region');
@@ -273,8 +273,14 @@ class CitizenController extends Controller
         // Generate Excel file with failed rows
         $failedExcelPath = null;
         if (!empty($failedRows)) {
+            $user = Auth::user();
+            $regionmsg = ' no region';
+            if ($request->has('regionId')) {
+                $regionmsg=$request->regionId;
+
+            }
             Log::error("data fails:", ["-->>" => 'xxxx']);
-            $failedExcelPath = 'failed_citizens_' . time() . '.xlsx';
+            $failedExcelPath = 'failed_citizens_'.$user->name.'_' .$regionmsg . "_".time() . '.xlsx';
             Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
         }
 

@@ -4,7 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Citizen; // Assuming you have a Citizen model
-
+use Illuminate\Support\Facades\Log;
+// @ fix shoing result
 class CitizenSearch extends Component
 {
     public $searchId = '';
@@ -19,15 +20,29 @@ class CitizenSearch extends Component
 
     public function searchCitizen()
     {
-        $this->validate();
+        Log::alert('searching citizens');
 
-        if ($this->isValid) {
-            $this->citizen = Citizen::where('id', $this->searchId)->first();
-            
-            if (!$this->citizen) {
-                $this->errorMessage = 'Citizen not found';
+        try {
+            $this->validate();
+            if ($this->isValid) {
+                $this->citizen = Citizen::where('id', $this->searchId)->first();
+                // $this->errorMessage = 'no errors';
+                if (!$this->citizen) {
+                    $this->errorMessage = 'Citizen not found';
+                }
             }
+        } catch (\Throwable $e) {
+            Log::alert('not valid');
+            $this->errorMessage = 'eroor validation input';
+            Log::alert( $e->getMessage());
         }
+       
+        Log::alert('result');
+
+        Log::alert($this->searchId);
+        Log::alert($this->isValid);
+        // Log::alert($this->citizen->name);
+        
     }
 
     public function rules()
