@@ -12,7 +12,8 @@ class Region extends Model
     protected $fillable = [
         'name',
         'position',
-        'note'
+        'note',
+        'big_region_id',
 
     ];
     public function citizens()
@@ -27,5 +28,14 @@ class Region extends Model
     public function manager()
     {
         return $this->belongsToMany(User::class, 'region_users', 'region_id', 'user_id');
+    }
+
+    public function bigRegion()
+    {
+        return $this->belongsTo(BigRegion::class, 'big_region_id');
+    }
+    public function bigRegionManager()
+    {
+        return $this->bigRegion->representative();
     }
 }

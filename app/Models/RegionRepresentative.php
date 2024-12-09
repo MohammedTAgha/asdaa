@@ -16,9 +16,15 @@ class RegionRepresentative extends Model
         'phone',
         'address',
         'note',
+        'is_big_region_representative',
     ];
     public function region()
     {
         return $this->belongsTo(Region::class);
+    }
+
+    public function bigRegion()
+    {
+        return $this->hasOne(BigRegion::class, 'representative_id');
     }
 }
