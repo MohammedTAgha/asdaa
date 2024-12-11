@@ -44,11 +44,12 @@
                     <label for="regionId" class="block mb-1 font-medium text-gray-700">اختر المنطقة:</label>
                     <select id="regionId" name="regionId"
                         class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 100%;" >
+                        <option value="">تحديد من الملف (حسب رقم المنطقة)</option>
                         @foreach ($regions as $region)
-                         
+                            
                             <option   value="{{ $region->id }}" 
                                 {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
-    
+                                
                                 @if ($region->representatives->isNotEmpty())
                                     {{ $region->name }} </br> :
                                     {{ $region->representatives->first()->name }}
