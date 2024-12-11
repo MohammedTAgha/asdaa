@@ -52,4 +52,11 @@ class HomeController extends Controller
 
         return view('home.test', compact('citizens', 'distributions', 'data'));
     }
+
+    public function actions()
+    {
+       
+
+        return view('home.actions');
+    }
 }
