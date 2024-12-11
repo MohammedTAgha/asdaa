@@ -85,8 +85,11 @@ class DistributionReportService
         $citizens =$distribution->citizens;
         $citizens_count = count($citizens);
         $benafated_count =$citizens->where('pivot.done', 1)->count();
-        $percentage =  ($benafated_count /$citizens_count)*100 ;
-
+        if ($citizens_count !=0){
+            $percentage =  ($benafated_count /$citizens_count)*100 ;
+        }else{
+            $percentage = 0;
+        }
         return [
             'benafated'=> $benafated_count,
             'citizens_count'=> $citizens_count ,
