@@ -274,10 +274,23 @@ class CitizenController extends Controller
         $failedExcelPath = null;
         if (!empty($failedRows)) {
             $user = Auth::user();
-            $regionmsg = ' no region';
+            
             if ($request->has('regionId')) {
-                $regionmsg=$request->regionId;
-
+                $regionid=$request->regionId;
+                $region = Region::find($regionid);
+                try {
+                    Log::alert($region);
+                $regionmsg = $region->name;
+                Log::alert($regionmsg);
+                if(!empty($region->representatives)){
+                    Log::alert($region->representatives);
+                    $regionmsg=$region->representatives->first()->name;
+                }
+                } catch (\Throwable $th) {
+                    $regionmsg = 'تعذر التحديد';
+                }
+            }else{
+                $regionmsg = 'no region';
             }
             Log::error("data fails:", ["-->>" => 'xxxx']);
             $failedExcelPath = 'failed_citizens_'.$user->name.'_' .$regionmsg . "_".time() . '.xlsx';
