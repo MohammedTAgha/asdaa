@@ -124,6 +124,16 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 							<span class="menu-title">رفع كشف</span>
 						</a>
 					</div>
+
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('actions') ? 'active' : '' }}"
+							href="{{ route('actions') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">رفع كشف</span>
+						</a>
+					</div>
 				</div>
 			</div>
 

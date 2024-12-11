@@ -82,7 +82,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
 
         });
-        
+        Route::get('/actions', [HomeController::class, 'actions'])->name('actions');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
         Route::resource('citizens', CitizenController::class);
         Route::resource('distributions', DistributionController::class);
