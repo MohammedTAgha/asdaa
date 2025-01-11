@@ -42,7 +42,7 @@ class FileController extends Controller
         if ($file->hidden && auth()->user()->role !== 'Super Admin') {
             abort(403);
         }
-
+        // dd(storage_path('app/public/' . $file->path));
         return response()->download(storage_path('app/public/' . $file->path));
     }
-}
+}   
