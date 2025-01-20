@@ -1,5 +1,9 @@
 @extends('layouts.app')
-
+@dump()
+@php
+    $subRegionsIds=$bigRegion->regions()->pluck('id')->toArray();
+    $subRegionsIds->contains
+@endphp
 @section('content')
 <div class="container">
     <h1>edit Big Region</h1>
@@ -16,6 +20,22 @@
                 @foreach ($representatives as $rep)
                     <option value="{{ $rep->id }}" {{isset($bigRegion->representative->id) && $bigRegion->representative->id== $rep->id ? 'selected' : ''}}>{{ $rep->name }}   
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="regions">Regions</label>
+            <select name="regions[]" id="regions" class="select2-multiple p-2  border border-gray-300 rounded-lg" style="width: 100%;" multiple>
+                @foreach ($regions as $region)
+                    <option value="{{ $region->id }}" {{}} >
+                        {{ $region->name }}
+                        @if ($region->representatives->isNotEmpty())
+                        {{ $region->name }} </br> :
+                        {{ $region->representatives->first()->name }}
+                        @else
+                            {{ $region->name }}
+                        @endif
+                    </option>
                 @endforeach
             </select>
         </div>

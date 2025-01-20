@@ -244,7 +244,18 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 					<span class="menu-title">المناطق</span>
 				</a>
 			</div>
-
+			<!-- big Regions -->
+			<div class="menu-item">
+				<a class="menu-link {{ request()->routeIs('big-regions.index') ? 'active' : '' }}"
+					href="{{ route('big-regions.index') }}">
+					<span class="menu-icon">
+						<span class="svg-icon svg-icon-2">
+							<i class="ti ti-map"></i>
+						</span>
+					</span>
+					<span class="menu-title">المناطق الكبرى</span>
+				</a>
+			</div>
 			<!-- Staff -->
 			<div class="menu-item">
 				<a class="menu-link {{ request()->routeIs('staff.index') ? 'active' : '' }}"
