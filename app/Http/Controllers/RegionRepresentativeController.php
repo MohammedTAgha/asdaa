@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RegionRepresentative;
 use App\Models\Region;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class RegionRepresentativeController extends Controller
 {
@@ -22,30 +23,56 @@ class RegionRepresentativeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'id' => 'required|numeric|digits_between:1,20',
-            'name' => 'required|string|max:255',
-            'region_id' => 'required_if:is_big_region_representative,false|exists:regions,id',
-            'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string|max:255',
-            'note' => 'nullable|string',
-            'is_big_region_representative' => 'boolean',
-        ]);
+        try {
+            // First, determine if this is a big region representative
+            $isBigRegion = $request->has('is_big_region_representative');
+            
+            // Set up validation rules
+            $rules = [
+                'id' => 'required|numeric|digits_between:1,20|unique:region_representatives,id',
+                'name' => 'required|string|max:255',
+                'phone' => 'nullable|string|max:15',
+                'address' => 'nullable|string|max:255',
+                'note' => 'nullable|string',
+            ];
 
-        // If representative is a big region manager, they can't be assigned to a regular region
-        if ($request->is_big_region_representative) {
-            $request->merge(['region_id' => null]);
+            // Only require region_id for regular representatives
+            if (!$isBigRegion) {
+                $rules['region_id'] = 'required|exists:regions,id';
+            }
+
+            $validated = $request->validate($rules);
+
+            // Prepare data for creation
+            $data = $validated;
+            $data['is_big_region_representative'] = $isBigRegion;
+            
+            // If big region representative, ensure no region is assigned
+            if ($isBigRegion) {
+                $data['region_id'] = null;
+            }
+
+            Log::info('Creating representative with data:', ['data' => $data]);
+
+            RegionRepresentative::create($data);
+            return redirect()->route('representatives.index')
+                ->with('success', 'Representative created successfully.');
+
+        } catch (\Exception $e) {
+            Log::error('Error creating representative', [
+                'error' => $e->getMessage(),
+                'request_data' => $request->all()
+            ]);
+            return back()->withErrors(['error' => 'An error occurred while creating the representative. Please try again.'])
+                ->withInput();
         }
-
-        RegionRepresentative::create($request->all());
-        return redirect()->route('representatives.index')->with('success', 'Representative created successfully.');
     }
 
     public function show($id)
     {
         $representative = RegionRepresentative::with('region')->findOrFail($id);
         $regions = Region::all();
-        return view('representatives.show', compact('representative' , 'regions'));
+        return view('representatives.show', compact('representative', 'regions'));
     }
 
     public function edit($id)
@@ -60,7 +87,7 @@ class RegionRepresentativeController extends Controller
         $request->validate([
             'id' => 'required|numeric',
             'name' => 'required|string|max:255',
-            'region_id' => 'required_if:is_big_region_representative,false|exists:regions,id',
+            'region_id' => 'nullable|exists:regions,id',
             'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:255',
             'note' => 'nullable|string',
@@ -89,7 +116,6 @@ class RegionRepresentativeController extends Controller
     {
         $representative = RegionRepresentative::findOrFail($id);
         $representative->delete();
-
         return redirect()->route('representatives.index')->with('success', 'Representative deleted successfully.');
     }
 }
