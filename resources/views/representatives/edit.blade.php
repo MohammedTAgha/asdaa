@@ -42,17 +42,19 @@
 
             {{-- Big Region Selection --}}
             <div class="mb-4" id="big-region-select" style="{{ !$representative->is_big_region_representative ? 'display: none;' : '' }}">
-                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة:</label>
-                <select name="big_region_id" id="big_region_id" class="w-full px-4 py-2 border rounded-md"
-                        {{ $representative->managedBigRegion()->exists() ? '' : 'disabled' }}>
-                    <option value="">اختر منطقة كبيرة</option>
+                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة (اختياري):</label>
+                <select name="big_region_id" id="big_region_id" class="w-full px-4 py-2 border rounded-md">
+                    <option value="">لا يوجد منطقة كبيرة</option>
                     @foreach ($bigRegions as $bigRegion)
                         <option value="{{ $bigRegion->id }}" 
-                            {{ $representative->managedBigRegion && $representative->managedBigRegion->id == $bigRegion->id ? 'selected' : '' }}>
+                            {{ ($representative->managedBigRegion && $representative->managedBigRegion->id == $bigRegion->id) ? 'selected' : '' }}>
                             {{ $bigRegion->name }}
                         </option>
                     @endforeach
                 </select>
+                @error('big_region_id')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="mb-4">

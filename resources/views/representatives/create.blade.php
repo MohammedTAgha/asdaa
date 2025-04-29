@@ -51,10 +51,10 @@
 
             {{-- Big Region Selection --}}
             <div class="mb-4" id="big-region-select" style="{{ !old('is_big_region_representative') ? 'display: none;' : '' }}">
-                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة:</label>
+                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة (اختياري):</label>
                 <select name="big_region_id" id="big_region_id" 
                         class="w-full px-4 py-2 border rounded-md @error('big_region_id') border-red-500 @enderror">
-                    <option value="">اختر منطقة كبيرة</option>
+                    <option value="">لا يوجد منطقة كبيرة</option>
                     @foreach ($bigRegions as $bigRegion)
                         <option value="{{ $bigRegion->id }}" {{ old('big_region_id') == $bigRegion->id ? 'selected' : '' }}>
                             {{ $bigRegion->name }}
@@ -105,6 +105,7 @@
         document.getElementById('is_big_region_representative').addEventListener('change', function() {
             const regionSelect = document.getElementById('region-select');
             const bigRegionSelect = document.getElementById('big-region-select');
+            const bigRegionSelectInput = document.getElementById('big_region_id');
             
             if (this.checked) {
                 regionSelect.style.display = 'none';
