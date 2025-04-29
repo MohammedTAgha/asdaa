@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RegionRepresentative;
 use App\Models\Region;
-use App\Models\BigRegion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class RegionRepresentativeController extends Controller
@@ -20,8 +18,7 @@ class RegionRepresentativeController extends Controller
     public function create()
     {
         $regions = Region::all();
-        $bigRegions = BigRegion::doesntHave('representative')->get();
-        return view('representatives.create', compact('regions', 'bigRegions'));
+        return view('representatives.create', compact('regions'));
     }
 
     public function store(Request $request)
@@ -29,11 +26,6 @@ class RegionRepresentativeController extends Controller
         try {
             // First, determine if this is a big region representative
             $isBigRegion = $request->has('is_big_region_representative');
-            
-            // Check if ID already exists
-            if (RegionRepresentative::where('id', $request->id)->exists()) {
-                return back()->withErrors(['id' => 'رقم الهوية مستخدم مسبقاً'])->withInput();
-            }
             
             // Set up validation rules
             $rules = [
@@ -44,46 +36,27 @@ class RegionRepresentativeController extends Controller
                 'note' => 'nullable|string',
             ];
 
-            // Add validation rules based on representative type
-            if ($isBigRegion) {
-                $rules['big_region_id'] = 'required|exists:big_regions,id';
-            } else {
+            // Only require region_id for regular representatives
+            if (!$isBigRegion) {
                 $rules['region_id'] = 'required|exists:regions,id';
             }
 
             $validated = $request->validate($rules);
 
-            try {
-                DB::beginTransaction();
-
-                // Create the representative first
-                $data = array_merge($validated, [
-                    'is_big_region_representative' => $isBigRegion,
-                    'region_id' => $isBigRegion ? null : $validated['region_id']
-                ]);
-                
-                // Remove big_region_id from data as it's not a column in representatives table
-                if (isset($data['big_region_id'])) {
-                    unset($data['big_region_id']);
-                }
-
-                $representative = RegionRepresentative::create($data);
-
-                // If this is a big region representative and a big region was selected
-                if ($isBigRegion && $request->has('big_region_id')) {
-                    // Update the big region with the new representative's ID
-                    BigRegion::where('id', $request->big_region_id)
-                        ->update(['representative_id' => $representative->id]);
-                }
-
-                DB::commit();
-                return redirect()->route('representatives.index')
-                    ->with('success', 'Representative created successfully.');
-
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
+            // Prepare data for creation
+            $data = $validated;
+            $data['is_big_region_representative'] = $isBigRegion;
+            
+            // If big region representative, ensure no region is assigned
+            if ($isBigRegion) {
+                $data['region_id'] = null;
             }
+
+            Log::info('Creating representative with data:', ['data' => $data]);
+
+            RegionRepresentative::create($data);
+            return redirect()->route('representatives.index')
+                ->with('success', 'Representative created successfully.');
 
         } catch (\Exception $e) {
             Log::error('Error creating representative', [
@@ -97,21 +70,16 @@ class RegionRepresentativeController extends Controller
 
     public function show($id)
     {
-        $representative = RegionRepresentative::with(['region', 'managedBigRegion'])->findOrFail($id);
+        $representative = RegionRepresentative::with('region')->findOrFail($id);
         $regions = Region::all();
         return view('representatives.show', compact('representative', 'regions'));
     }
 
     public function edit($id)
     {
-        $representative = RegionRepresentative::with('managedBigRegion')->findOrFail($id);
+        $representative = RegionRepresentative::findOrFail($id);
         $regions = Region::all();
-        $bigRegions = BigRegion::where(function($query) use ($representative) {
-            $query->doesntHave('representative')
-                  ->orWhere('representative_id', $representative->id);
-        })->get();
-        
-        return view('representatives.edit', compact('representative', 'regions', 'bigRegions'));
+        return view('representatives.edit', compact('representative', 'regions'));
     }
 
     public function update(Request $request, $id)
@@ -140,34 +108,13 @@ class RegionRepresentativeController extends Controller
             }
         }
 
-        // Update the representative
         $representative->update($request->all());
-
-        // Handle big region assignment if this is a big region representative
-        if ($request->is_big_region_representative && $request->has('big_region_id')) {
-            // First, remove this representative from any other big regions they might manage
-            BigRegion::where('representative_id', $representative->id)
-                ->where('id', '!=', $request->big_region_id)
-                ->update(['representative_id' => null]);
-            
-            // Then assign them to the selected big region
-            if ($request->big_region_id) {
-                BigRegion::findOrFail($request->big_region_id)
-                    ->update(['representative_id' => $representative->id]);
-            }
-        }
-
         return redirect()->route('representatives.index')->with('success', 'Representative updated successfully.');
     }
 
     public function destroy($id)
     {
         $representative = RegionRepresentative::findOrFail($id);
-        
-        // Clear any big region assignments
-        BigRegion::where('representative_id', $representative->id)
-            ->update(['representative_id' => null]);
-            
         $representative->delete();
         return redirect()->route('representatives.index')->with('success', 'Representative deleted successfully.');
     }

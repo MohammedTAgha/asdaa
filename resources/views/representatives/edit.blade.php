@@ -9,7 +9,7 @@
             @method('PUT')
             <div class="mb-4">
                 <label for="id" class="block text-gray-700">الهوية:</label>
-                <input type="number" name="id" id="id" value="{{ $representative->id }}" class="w-full px-4 py-2 border rounded-md" required readonly>
+                <input type="number" name="id" id="id" value="{{ $representative->id }}" class="w-full px-4 py-2 border rounded-md" required>
             </div>
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الاسم:</label>
@@ -26,8 +26,6 @@
                     @endif
                 </div>
             </div>
-
-            {{-- Regular Region Selection --}}
             <div class="mb-4" id="region-select" style="{{ $representative->is_big_region_representative ? 'display: none;' : '' }}">
                 <label for="region_id" class="block text-gray-700">المنطقة:</label>
                 <select name="region_id" id="region_id" class="w-full px-4 py-2 border rounded-md">
@@ -39,22 +37,6 @@
                     @endforeach
                 </select>
             </div>
-
-            {{-- Big Region Selection --}}
-            <div class="mb-4" id="big-region-select" style="{{ !$representative->is_big_region_representative ? 'display: none;' : '' }}">
-                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة:</label>
-                <select name="big_region_id" id="big_region_id" class="w-full px-4 py-2 border rounded-md"
-                        {{ $representative->managedBigRegion()->exists() ? '' : 'disabled' }}>
-                    <option value="">اختر منطقة كبيرة</option>
-                    @foreach ($bigRegions as $bigRegion)
-                        <option value="{{ $bigRegion->id }}" 
-                            {{ $representative->managedBigRegion && $representative->managedBigRegion->id == $bigRegion->id ? 'selected' : '' }}>
-                            {{ $bigRegion->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
             <div class="mb-4">
                 <label for="phone" class="block text-gray-700">رقم الهاتف:</label>
                 <input type="text" name="phone" id="phone" value="{{ $representative->phone }}" class="w-full px-4 py-2 border rounded-md">
@@ -68,9 +50,8 @@
                 <textarea name="note" id="note" class="w-full px-4 py-2 border rounded-md">{{ $representative->note }}</textarea>
             </div>
             <div>
-                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">تحديث</button>
-                <a href="{{ route('representatives.index') }}"
-                    class="bg-gray-500 text-white px-4 py-2 rounded ml-2 hover:bg-gray-600">الغاء</a>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">تحديث</button>
+                <a href="{{ route('representatives.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded ml-2">الغاء</a>
             </div>
         </form>
     </div>
@@ -79,19 +60,11 @@
     <script>
         document.getElementById('is_big_region_representative').addEventListener('change', function() {
             const regionSelect = document.getElementById('region-select');
-            const bigRegionSelect = document.getElementById('big-region-select');
-            const bigRegionSelectInput = document.getElementById('big_region_id');
-            
             if (this.checked) {
                 regionSelect.style.display = 'none';
-                bigRegionSelect.style.display = 'block';
-                bigRegionSelectInput.disabled = false;
                 document.getElementById('region_id').value = '';
             } else {
                 regionSelect.style.display = 'block';
-                bigRegionSelect.style.display = 'none';
-                bigRegionSelectInput.disabled = true;
-                bigRegionSelectInput.value = '';
             }
         });
     </script>
