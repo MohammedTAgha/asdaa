@@ -14,8 +14,8 @@ class Region extends Model
         'position',
         'note',
         'big_region_id',
-
     ];
+
     public function citizens()
     {
         return $this->hasMany(Citizen::class);
@@ -23,8 +23,9 @@ class Region extends Model
 
     public function representatives()
     {
-        return $this->hasMany(RegionRepresentative::class);
+        return $this->hasMany(RegionRepresentative::class)->where('is_big_region_representative', false);
     }
+
     public function manager()
     {
         return $this->belongsToMany(User::class, 'region_users', 'region_id', 'user_id');
@@ -34,8 +35,14 @@ class Region extends Model
     {
         return $this->belongsTo(BigRegion::class, 'big_region_id');
     }
-    public function bigRegionManager()
+
+    public function getBigRegionManagerAttribute()
     {
-        return $this->bigRegion->representative();
+        return $this->bigRegion ? $this->bigRegion->representative : null;
+    }
+
+    public function isSubRegion()
+    {
+        return !is_null($this->big_region_id);
     }
 }

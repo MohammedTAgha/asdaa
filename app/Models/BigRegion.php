@@ -21,12 +21,10 @@ class BigRegion extends Model
 
     public function representative()
     {
-        return $this->belongsTo(RegionRepresentative::class, 'representative_id');
+        return $this->belongsTo(RegionRepresentative::class, 'representative_id')
+            ->where('is_big_region_representative', true);
     }
-    public function bigRegion()
-    {
-        return $this->hasOne(BigRegion::class, 'representative_id');
-    }
+
     public function citizens()
     {
         return $this->hasManyThrough(Citizen::class, Region::class, 'big_region_id', 'region_id');

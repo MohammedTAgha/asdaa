@@ -18,13 +18,26 @@ class RegionRepresentative extends Model
         'note',
         'is_big_region_representative',
     ];
+
+    // A representative can manage either a regular region or a big region
     public function region()
     {
         return $this->belongsTo(Region::class);
     }
 
-    public function bigRegion()
+    public function managedBigRegion()
     {
         return $this->hasOne(BigRegion::class, 'representative_id');
+    }
+
+    public function managedRegions()
+    {
+        return $this->hasMany(Region::class, 'region_id');
+    }
+
+    // Helper method to check representative type
+    public function isBigRegionManager()
+    {
+        return $this->is_big_region_representative;
     }
 }
