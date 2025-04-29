@@ -33,7 +33,7 @@
                             </td>
                             
                             <td class="w-1/5 py-3 px-4">{{ $representative->phone }}</td>
-                            <td class="w-1/5 py-3 px-4">{{  count($representative->region->citizens) }} اسرة</td>
+                            {{-- <td class="w-1/5 py-3 px-4">{{ $representative->region->citizens ?  count($representative->region->citizens) : " 0 " }} اسرة</td> --}}
                             {{-- <td class="w-1/5 py-3 px-4">{{ $representative->address }}</td> --}}
                             <td class="w-1/5 py-3 px-4">
                                 <a href="{{ route('representatives.show', $representative->id) }}"

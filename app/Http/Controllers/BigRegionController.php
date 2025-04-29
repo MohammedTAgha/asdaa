@@ -28,8 +28,8 @@ class BigRegionController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'representative_id' => 'required|exists:region_representatives,id',
-            'regions' => 'array',
-            'regions.*' => 'exists:regions,id',
+            'regions' => 'nullable|array',
+            // 'regions.*' => 'exists:regions,id',
         ]);
 
         $bigRegion = BigRegion::create([
@@ -37,8 +37,12 @@ class BigRegionController extends Controller
             'note' => $request->note,
             'representative_id' => $validated['representative_id'],
         ]);
-        
-        Region::whereIn('id',$validated['regions'])->update(['big_region_id'=>$bigRegion->id]); 
+        try {
+            Region::whereIn('id',$validated['regions'])->update(['big_region_id'=>$bigRegion->id]); 
+
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
 
         return redirect()->route('big-regions.index')->with('success', 'Big Region created successfully!');
     }
@@ -63,7 +67,7 @@ class BigRegionController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'representative_id' => 'required|exists:region_representatives,id',
-            'regions' => 'array',
+            'regions' => 'nullable|array',
             'regions.*' => 'exists:regions,id',
         ]);
         $bigRegion=BigRegion::findOrFail($id);

@@ -20,6 +20,7 @@ use App\Http\Controllers\SourceController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------

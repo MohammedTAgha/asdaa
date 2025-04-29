@@ -60,7 +60,7 @@ class RegionRepresentativeController extends Controller
             'address' => 'nullable|string|max:255',
             'note' => 'nullable|string',
         ]);
-        $representative = RegionRepresentative::findOrFail($id);
+        $representative = RegionRepresentative::findOrFail($id);    
         //dd($representative);
         $representative->update([
             'id' => $request->id,
