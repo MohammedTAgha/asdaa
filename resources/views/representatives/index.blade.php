@@ -1,53 +1,76 @@
 @extends('dashboard')
-@section('title', "مناديب المناطق")
+@section('title', 'المندوبين')
 
 @section('content')
-    <div class="container mx-auto py-12">
-        <h1 class="text-4xl font-bold mb-4"> مناديب المناطق</h1>
-        <a href="{{ route('representatives.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded"> اضافة مندوب جديد </a>
-        <div class="mt-6">
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="w-1/5 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
-                        <th class="w-1/5 py-3 px-4 uppercase font-semibold text-sm">المنطقة</th>
-                        <th class="w-1/5 py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                        <th class="w-1/5 py-3 px-4 uppercase font-semibold text-sm">عدد السكان</th>
-                        <th class="w-1/5 py-3 px-4 uppercase font-semibold text-sm">اجراءات</th>
+    <div class="container mx-auto py-6">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">المندوبين</h1>
+            <a href="{{ route('representatives.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                اضافة مندوب جديد
+            </a>
+        </div>
+
+        <div class="bg-white shadow-md rounded my-6">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <th class="py-3 px-6 text-right">الهوية</th>
+                        <th class="py-3 px-6 text-right">الاسم</th>
+                        <th class="py-3 px-6 text-right">نوع المندوب</th>
+                        <th class="py-3 px-6 text-right">المنطقة</th>
+                        <th class="py-3 px-6 text-right">رقم الهاتف</th>
+                        <th class="py-3 px-6 text-right">العنوان</th>
+                        <th class="py-3 px-6 text-right">ملاحظة</th>
+                        <th class="py-3 px-6 text-center">الاجراءات</th>
                     </tr>
                 </thead>
-                <tbody class="text-gray-700">
-                    @foreach ($representatives as $representative)
-                        <tr>
-
-                            <td class="w-1/5 py-3 px-4">
-                                <a href="{{ route('representatives.show', $representative->id) }}">
-                                    {{ $representative->name }}
+                <tbody class="text-gray-600 text-sm font-light">
+                    @foreach($representatives as $representative)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-right">{{ $representative->id }}</td>
+                        <td class="py-3 px-6 text-right">{{ $representative->name }}</td>
+                        <td class="py-3 px-6 text-right">
+                            @if($representative->is_big_region_representative)
+                                <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
+                                    مندوب منطقة كبيرة
+                                    @if($representative->managedBigRegion)
+                                        ({{ $representative->managedBigRegion->name }})
+                                    @endif
+                                </span>
+                            @else
+                                <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">
+                                    مندوب منطقة
+                                </span>
+                            @endif
+                        </td>
+                        <td class="py-3 px-6 text-right">
+                            @if(!$representative->is_big_region_representative)
+                                {{ $representative->region ? $representative->region->name : '-' }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="py-3 px-6 text-right">{{ $representative->phone ?? '-' }}</td>
+                        <td class="py-3 px-6 text-right">{{ $representative->address ?? '-' }}</td>
+                        <td class="py-3 px-6 text-right">{{ $representative->note ?? '-' }}</td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex item-center justify-center">
+                                <a href="{{ route('representatives.edit', $representative->id) }}" 
+                                   class="bg-blue-500 text-white rounded-lg px-3 py-1 mx-1">
+                                    تعديل
                                 </a>
-                            </td>
-
-                            <td class="w-1/5 py-3 px-4">
-                                <a href="{{ route('regions.show', $representative->region->id ?? 0 ) }}">
-                                {{ $representative->region->name ??'N/A'  }} - {{ $representative->region->id ??'**'  }}
-                            
-                            </td>
-                            
-                            <td class="w-1/5 py-3 px-4">{{ $representative->phone }}</td>
-                            {{-- <td class="w-1/5 py-3 px-4">{{ $representative->region->citizens ?  count($representative->region->citizens) : " 0 " }} اسرة</td> --}}
-                            {{-- <td class="w-1/5 py-3 px-4">{{ $representative->address }}</td> --}}
-                            <td class="w-1/5 py-3 px-4">
-                                <a href="{{ route('representatives.show', $representative->id) }}"
-                                    class="text-blue-500">عرض</a>
-                                <a href="{{ route('representatives.edit', $representative->id) }}"
-                                    class="text-green-500 ml-2">تعديل</a>
-                                {{-- <form action="{{ route('representatives.destroy', $representative->id) }}" method="POST"
-                                    class="inline">
+                                <form action="{{ route('representatives.destroy', $representative->id) }}" 
+                                      method="POST" class="inline"
+                                      onsubmit="return confirm('هل انت متأكد من حذف هذا المندوب؟');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 ml-2">الغاء</button>
-                                </form> --}}
-                            </td>
-                        </tr>
+                                    <button type="submit" class="bg-red-500 text-white rounded-lg px-3 py-1 mx-1">
+                                        حذف
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>

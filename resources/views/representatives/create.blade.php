@@ -8,15 +8,22 @@
             @csrf
             <div class="mb-4">
                 <label for="id" class="block text-gray-700">الهوية:</label>
-                <input type="text" name="id" id="id" class="w-full px-4 py-2 border rounded-md">
+                <input type="number" name="id" id="id" class="w-full px-4 py-2 border rounded-md" required>
             </div>
             <div class="mb-4">
                 <label for="name" class="block text-gray-700">الاسم:</label>
                 <input type="text" name="name" id="name" class="w-full px-4 py-2 border rounded-md" required>
             </div>
             <div class="mb-4">
+                <div class="flex items-center">
+                    <input type="checkbox" name="is_big_region_representative" id="is_big_region_representative" class="mr-2" value="1">
+                    <label for="is_big_region_representative" class="text-gray-700">مندوب منطقة كبيرة</label>
+                </div>
+            </div>
+            <div class="mb-4" id="region-select">
                 <label for="region_id" class="block text-gray-700">المنطقة:</label>
-                <select name="region_id" id="region_id" class="w-full px-4 py-2 border rounded-md" required>
+                <select name="region_id" id="region_id" class="w-full px-4 py-2 border rounded-md">
+                    <option value="">اختر منطقة</option>
                     @foreach ($regions as $region)
                         <option value="{{ $region->id }}">{{ $region->name }}</option>
                     @endforeach
@@ -41,4 +48,18 @@
             </div>
         </form>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('is_big_region_representative').addEventListener('change', function() {
+            const regionSelect = document.getElementById('region-select');
+            if (this.checked) {
+                regionSelect.style.display = 'none';
+                document.getElementById('region_id').value = '';
+            } else {
+                regionSelect.style.display = 'block';
+            }
+        });
+    </script>
+    @endpush
 @endsection
