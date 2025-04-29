@@ -59,12 +59,12 @@ class RegionRepresentativeController extends Controller
                     'address' => $validated['address'] ?? null,
                     'note' => $validated['note'] ?? null,
                     'is_big_region_representative' => $isBigRegion,
-                    'region_id' => $isBigRegion ? null : $validated['region_id']
+                    'region_id' => !$isBigRegion ? $validated['region_id'] : null
                 ]);
 
                 // If this is a big region representative and a big region was selected
                 if ($isBigRegion && !empty($validated['big_region_id'])) {
-                    // Clear any other representative from this big region first
+                    // Assign the representative to the big region
                     $bigRegion = BigRegion::findOrFail($validated['big_region_id']);
                     $bigRegion->update(['representative_id' => $representative->id]);
                 }
