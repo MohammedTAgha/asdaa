@@ -31,6 +31,8 @@
                     <label for="is_big_region_representative" class="text-gray-700">مندوب منطقة كبيرة</label>
                 </div>
             </div>
+            
+            {{-- Regular Region Selection --}}
             <div class="mb-4" id="region-select" style="{{ old('is_big_region_representative') ? 'display: none;' : '' }}">
                 <label for="region_id" class="block text-gray-700">المنطقة:</label>
                 <select name="region_id" id="region_id" 
@@ -46,6 +48,24 @@
                     <p class="text-red-500 text-xs italic">{{ $message }}</p>
                 @enderror
             </div>
+
+            {{-- Big Region Selection --}}
+            <div class="mb-4" id="big-region-select" style="{{ !old('is_big_region_representative') ? 'display: none;' : '' }}">
+                <label for="big_region_id" class="block text-gray-700">المنطقة الكبيرة:</label>
+                <select name="big_region_id" id="big_region_id" 
+                        class="w-full px-4 py-2 border rounded-md @error('big_region_id') border-red-500 @enderror">
+                    <option value="">اختر منطقة كبيرة</option>
+                    @foreach ($bigRegions as $bigRegion)
+                        <option value="{{ $bigRegion->id }}" {{ old('big_region_id') == $bigRegion->id ? 'selected' : '' }}>
+                            {{ $bigRegion->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('big_region_id')
+                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
+                @enderror
+            </div>
+
             <div class="mb-4">
                 <label for="phone" class="block text-gray-700">رقم الهاتف:</label>
                 <input type="text" name="phone" id="phone" 
@@ -84,19 +104,32 @@
     <script>
         document.getElementById('is_big_region_representative').addEventListener('change', function() {
             const regionSelect = document.getElementById('region-select');
+            const bigRegionSelect = document.getElementById('big-region-select');
+            
             if (this.checked) {
                 regionSelect.style.display = 'none';
+                bigRegionSelect.style.display = 'block';
                 document.getElementById('region_id').value = '';
             } else {
                 regionSelect.style.display = 'block';
+                bigRegionSelect.style.display = 'none';
+                document.getElementById('big_region_id').value = '';
             }
         });
 
         // Check for any validation errors and show them
         @if($errors->any())
             const hasErrors = {!! json_encode($errors->toArray()) !!};
-            if (hasErrors.region_id && !document.getElementById('is_big_region_representative').checked) {
+            const isBigRegion = document.getElementById('is_big_region_representative').checked;
+            
+            if (hasErrors.region_id && !isBigRegion) {
                 document.getElementById('region-select').style.display = 'block';
+                document.getElementById('big-region-select').style.display = 'none';
+            }
+            
+            if (hasErrors.big_region_id && isBigRegion) {
+                document.getElementById('region-select').style.display = 'none';
+                document.getElementById('big-region-select').style.display = 'block';
             }
         @endif
     </script>
