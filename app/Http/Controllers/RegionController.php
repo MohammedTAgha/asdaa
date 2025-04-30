@@ -6,28 +6,52 @@ use App\Models\Region;
 use App\Models\BigRegion;
 use App\Models\RegionRepresentative;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $query = Region::with(['bigRegion.representative', 'representatives']);
         
-        if (auth()->user() && auth()->user()->role_id == 3) { // region manager role
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhereHas('bigRegion', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('representatives', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter by big region
+        if ($request->filled('big_region_id')) {
+            $query->where('big_region_id', $request->big_region_id);
+        }
+
+        // Sort functionality
+        $sort = $request->sort ?? 'name';
+        $direction = $request->direction ?? 'asc';
+        $query->orderBy($sort, $direction);
+        
+        if (auth()->user() && auth()->user()->role_id == 3) {
             $regionIds = auth()->user()->regions->pluck('id')->toArray();
-            $regions = $query->whereIn('id', $regionIds)->get();
-        } else {
-            $regions = $query->get();
+            $query->whereIn('id', $regionIds);
         }
         
-        return view('regions.index', compact('regions'));
+        $regions = $query->paginate(10);
+        $bigRegions = BigRegion::all();
+        
+        return view('regions.index', compact('regions', 'bigRegions'));
     }
 
     public function create()
     {
-        $bigRegions = BigRegion::with(['representative' => function($query) {
-            $query->where('is_big_region_representative', true);
-        }])->get();
+        $bigRegions = BigRegion::with('representative')->get();
         $representatives = RegionRepresentative::where('is_big_region_representative', false)
             ->doesntHave('region')
             ->get();
@@ -36,26 +60,39 @@ class RegionController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:regions,name',
             'position' => 'required|string|max:255',
-            'note' => 'nullable|string',
             'big_region_id' => 'nullable|exists:big_regions,id',
             'representative_ids' => 'nullable|array',
-            'representative_ids.*' => 'exists:region_representatives,id'
+            'representative_ids.*' => 'exists:region_representatives,id',
+            'note' => 'nullable|string'
         ]);
 
-        $region = Region::create($request->all());
+        try {
+            DB::beginTransaction();
 
-        if ($request->has('representative_ids')) {
-            foreach ($request->representative_ids as $repId) {
-                RegionRepresentative::where('id', $repId)
+            $region = Region::create([
+                'name' => $validated['name'],
+                'position' => $validated['position'],
+                'big_region_id' => $validated['big_region_id'],
+                'note' => $validated['note']
+            ]);
+
+            if (!empty($validated['representative_ids'])) {
+                RegionRepresentative::whereIn('id', $validated['representative_ids'])
                     ->where('is_big_region_representative', false)
                     ->update(['region_id' => $region->id]);
             }
-        }
 
-        return redirect()->route('regions.index')->with('success', 'Region created successfully.');
+            DB::commit();
+            return redirect()->route('regions.index')
+                ->with('success', 'تم إنشاء المنطقة بنجاح');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'حدث خطأ أثناء إنشاء المنطقة'])
+                ->withInput();
+        }
     }
 
     public function show($id)

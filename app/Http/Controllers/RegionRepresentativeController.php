@@ -11,10 +11,64 @@ use Illuminate\Support\Facades\Log;
 
 class RegionRepresentativeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $representatives = RegionRepresentative::with(['region', 'managedBigRegion'])->get();
-        return view('representatives.index', compact('representatives'));
+        $query = RegionRepresentative::with(['region', 'managedBigRegion'])
+            ->when($request->filled('search'), function($q) use ($request) {
+                $search = $request->search;
+                $q->where(function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('phone', 'like', "%{$search}%")
+                          ->orWhere('address', 'like', "%{$search}%")
+                          ->orWhereHas('region', function($q) use ($search) {
+                              $q->where('name', 'like', "%{$search}%");
+                          })
+                          ->orWhereHas('managedBigRegion', function($q) use ($search) {
+                              $q->where('name', 'like', "%{$search}%");
+                          });
+                });
+            })
+            ->when($request->filled('type'), function($q) use ($request) {
+                if ($request->type === 'big_region') {
+                    $q->where('is_big_region_representative', true);
+                } elseif ($request->type === 'region') {
+                    $q->where('is_big_region_representative', false);
+                }
+            })
+            ->when($request->filled('region_id'), function($q) use ($request) {
+                $q->where('region_id', $request->region_id);
+            })
+            ->when($request->filled('big_region_id'), function($q) use ($request) {
+                $q->whereHas('managedBigRegion', function($query) use ($request) {
+                    $query->where('id', $request->big_region_id);
+                });
+            });
+
+        // Sorting
+        $sort = $request->sort ?? 'name';
+        $direction = $request->direction ?? 'asc';
+        
+        if ($sort === 'region') {
+            $query->orderBy(function($q) {
+                return Region::select('name')
+                    ->whereColumn('region_id', 'regions.id')
+                    ->limit(1);
+            }, $direction);
+        } elseif ($sort === 'big_region') {
+            $query->orderBy(function($q) {
+                return BigRegion::select('name')
+                    ->whereColumn('representative_id', 'region_representatives.id')
+                    ->limit(1);
+            }, $direction);
+        } else {
+            $query->orderBy($sort, $direction);
+        }
+
+        $representatives = $query->paginate(10);
+        $regions = Region::all();
+        $bigRegions = BigRegion::all();
+        
+        return view('representatives.index', compact('representatives', 'regions', 'bigRegions'));
     }
 
     public function create()
