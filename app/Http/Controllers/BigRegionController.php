@@ -12,7 +12,13 @@ class BigRegionController extends Controller
 {
     public function index()
     {
-        $bigRegions = BigRegion::with('regions', 'representative')->get();
+        $bigRegions = BigRegion::with([
+            'representative',
+            'regions',
+            'regions.representatives',
+            'regions.citizens'
+        ])->get();
+
         return view('big-regions.index', compact('bigRegions'));
     }
 
