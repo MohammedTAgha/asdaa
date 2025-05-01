@@ -29,4 +29,13 @@ class BigRegion extends Model
     {
         return $this->hasManyThrough(Citizen::class, Region::class, 'big_region_id', 'region_id');
     }
+
+    public function distributions()
+    {
+        return Distribution::whereHas('citizens', function($query) {
+            $query->whereHas('region', function($query) {
+                $query->where('big_region_id', $this->id);
+            });
+        });
+    }
 }

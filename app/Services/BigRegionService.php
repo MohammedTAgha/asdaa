@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Models\BigRegion;
+use App\Models\Distribution;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BigRegionService
 {
@@ -13,8 +14,8 @@ class BigRegionService
         $query = BigRegion::with([
             'representative',
             'regions.representatives',
-            'regions.citizens',
-            'regions.citizens.distributions'
+            'regions.citizens.distributions',
+            'citizens'
         ]);
         
         if ($bigRegionId) {
@@ -80,33 +81,30 @@ class BigRegionService
 
     private function calculateDistributionsStats($bigRegion): array
     {
-        $allDistributions = collect();
-        
-        foreach ($bigRegion->regions as $region) {
-            foreach ($region->citizens as $citizen) {
-                $allDistributions = $allDistributions->concat($citizen->distributions);
-            }
-        }
+        // Get all distributions for this big region with their beneficiary counts
+        $distributions = Distribution::whereHas('citizens', function($query) use ($bigRegion) {
+            $query->whereHas('region', function($query) use ($bigRegion) {
+                $query->where('big_region_id', $bigRegion->id);
+            });
+        })->withCount(['citizens as beneficiaries_count' => function($query) use ($bigRegion) {
+            $query->whereHas('region', function($query) use ($bigRegion) {
+                $query->where('big_region_id', $bigRegion->id);
+            });
+        }])->get();
 
-        $uniqueDistributions = $allDistributions->unique('id');
+        $totalCitizens = $this->calculateTotalCitizens($bigRegion);
 
         return [
-            'total_distributions' => $uniqueDistributions->count(),
-            'distributions' => $uniqueDistributions->map(function ($distribution) use ($bigRegion) {
-                $beneficiariesCount = 0;
-                foreach ($bigRegion->regions as $region) {
-                    $beneficiariesCount += $region->citizens->filter(function ($citizen) use ($distribution) {
-                        return $citizen->distributions->contains('id', $distribution->id);
-                    })->count();
-                }
-                
+            'total_distributions' => $distributions->count(),
+            'distributions' => $distributions->map(function ($distribution) use ($totalCitizens) {
                 return [
                     'id' => $distribution->id,
                     'name' => $distribution->name,
-                    'beneficiaries_count' => $beneficiariesCount,
-                    'percentage' => $this->calculateTotalCitizens($bigRegion) > 0 
-                        ? round(($beneficiariesCount / $this->calculateTotalCitizens($bigRegion)) * 100, 1) 
-                        : 0
+                    'beneficiaries_count' => $distribution->beneficiaries_count,
+                    'percentage' => $totalCitizens > 0 
+                        ? round(($distribution->beneficiaries_count / $totalCitizens) * 100, 1) 
+                        : 0,
+                    'status' => $distribution->status
                 ];
             })
         ];
