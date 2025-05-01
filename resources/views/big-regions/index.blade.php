@@ -3,117 +3,53 @@
 
 @section('content')
 <div class="container mx-auto py-6">
-    <div class="mb-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-3xl font-bold">المناطق الكبيرة</h1>
-            <a href="{{ route('big-regions.create') }}" 
-               class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                إضافة منطقة كبيرة
-            </a>
-        </div>
+    {{-- Header --}}
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">المناطق الكبيرة</h1>
+        <a href="{{ route('big-regions.create') }}" 
+           class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 flex items-center">
+            <i class="fas fa-plus ml-2"></i>
+            إضافة منطقة كبيرة
+        </a>
     </div>
 
-    @php
-        $bigRegionService = app(App\Services\BigRegionService::class);
-        $stats = $bigRegionService->getBigRegionStatistics();
-    @endphp
-
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        @forelse($bigRegions as $bigRegion)
-            @php
-                $regionStats = $stats->firstWhere('id', $bigRegion->id);
-            @endphp
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                {{-- Header --}}
-                <div class="p-6 border-b">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-xl font-bold">{{ $bigRegion->name }}</h2>
-                            @if($bigRegion->representative)
-                                <div class="mt-2 flex items-center text-gray-600">
-                                    <i class="fas fa-user-tie ml-2"></i>
-                                    <span>{{ $bigRegion->representative->name }}</span>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="flex space-x-2 rtl:space-x-reverse">
-                            <a href="{{ route('big-regions.show', $bigRegion) }}" 
-                               class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('big-regions.edit', $bigRegion) }}" 
-                               class="text-gray-600 hover:text-gray-900">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Statistics Grid --}}
-                <div class="grid grid-cols-3 divide-x rtl:divide-x-reverse">
-                    <div class="p-4 text-center">
-                        <div class="text-2xl font-bold text-blue-600">
-                            {{ $regionStats['total_regions'] }}
-                        </div>
-                        <div class="text-sm text-gray-600">المناطق</div>
-                    </div>
-                    <div class="p-4 text-center">
-                        <div class="text-2xl font-bold text-green-600">
-                            {{ $regionStats['total_citizens'] }}
-                        </div>
-                        <div class="text-sm text-gray-600">المواطنين</div>
-                    </div>
-                    <div class="p-4 text-center">
-                        <div class="text-2xl font-bold text-purple-600">
-                            {{ $regionStats['total_representatives'] }}
-                        </div>
-                        <div class="text-sm text-gray-600">المندوبين</div>
-                    </div>
-                </div>
-
-                {{-- Coverage Progress --}}
-                <div class="px-6 py-4">
-                    <div class="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>تغطية المندوبين</span>
-                        <span>{{ $regionStats['coverage_stats']['coverage_percentage'] }}%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-blue-600 h-2 rounded-full" 
-                             style="width: {{ $regionStats['coverage_stats']['coverage_percentage'] }}%">
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Recent Regions --}}
-                @if($regionStats['regions_summary']->count() > 0)
-                    <div class="px-6 py-4 bg-gray-50">
-                        <div class="text-sm font-medium text-gray-600 mb-2">
-                            آخر المناطق ({{ min(3, $regionStats['regions_summary']->count()) }})
-                        </div>
-                        <div class="space-y-2">
-                            @foreach($regionStats['regions_summary']->take(3) as $region)
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm">{{ $region['name'] }}</span>
-                                    <span class="text-xs text-gray-500">
-                                        {{ $region['citizens_count'] }} مواطن
-                                    </span>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+    {{-- Search and Filter --}}
+    <div class="bg-white rounded-lg shadow mb-6 p-4">
+        <form action="{{ route('big-regions.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="relative">
+                <input type="text" 
+                       name="search" 
+                       value="{{ request('search') }}"
+                       placeholder="البحث في المناطق الكبيرة..."
+                       class="w-full px-4 py-2 border rounded-md">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
             </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" 
+                        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 flex items-center">
+                    <i class="fas fa-filter ml-2"></i>
+                    تطبيق الفلتر
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {{-- Big Regions Grid --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @forelse($bigRegions as $bigRegion)
+            <x-big-region-card :bigRegion="$bigRegion" :detailed="false" />
         @empty
             <div class="col-span-full">
                 <div class="text-center py-12 bg-white rounded-lg shadow">
-                    <i class="fas fa-folder-open text-4xl text-gray-400 mb-4"></i>
+                    <i class="fas fa-building text-4xl text-gray-400 mb-4"></i>
                     <h3 class="text-lg font-medium text-gray-900">لا توجد مناطق كبيرة</h3>
                     <p class="mt-2 text-gray-500">قم بإضافة منطقة كبيرة جديدة للبدء</p>
                     <div class="mt-6">
                         <a href="{{ route('big-regions.create') }}" 
                            class="inline-flex items-center px-4 py-2 border border-transparent 
                                   rounded-md shadow-sm text-sm font-medium text-white 
-                                  bg-blue-600 hover:bg-blue-700">
+                                  bg-purple-600 hover:bg-purple-700">
                             <i class="fas fa-plus ml-2"></i>
                             إضافة منطقة كبيرة
                         </a>
@@ -122,5 +58,12 @@
             </div>
         @endforelse
     </div>
+
+    {{-- Pagination --}}
+    @if($bigRegions->hasPages())
+    <div class="mt-6">
+        {{ $bigRegions->links() }}
+    </div>
+    @endif
 </div>
 @endsection

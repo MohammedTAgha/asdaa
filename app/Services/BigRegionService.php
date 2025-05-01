@@ -25,6 +25,8 @@ class BigRegionService
         $bigRegions = $query->get();
         
         return $bigRegions->map(function ($bigRegion) {
+            $distributionStats = $this->calculateDistributionsStats($bigRegion);
+            
             return [
                 'id' => $bigRegion->id,
                 'name' => $bigRegion->name,
@@ -33,9 +35,10 @@ class BigRegionService
                 'total_representatives' => $this->calculateTotalRepresentatives($bigRegion),
                 'total_family_members' => $this->calculateTotalFamilyMembers($bigRegion),
                 'coverage_stats' => $this->calculateCoverageStats($bigRegion),
-                'distributions_stats' => $this->calculateDistributionsStats($bigRegion),
+                'distributions_stats' => $distributionStats,
                 'regions_summary' => $this->getRegionsSummary($bigRegion),
                 'representative_info' => $this->getRepresentativeInfo($bigRegion),
+                'distribution_progress' => $this->calculateDistributionProgress($bigRegion, $distributionStats),
                 'created_at' => $bigRegion->created_at->format('Y-m-d'),
                 'updated_at' => $bigRegion->updated_at->format('Y-m-d')
             ];
@@ -81,7 +84,6 @@ class BigRegionService
 
     private function calculateDistributionsStats($bigRegion): array
     {
-        // Get all distributions for this big region with their beneficiary counts
         $distributions = Distribution::whereHas('citizens', function($query) use ($bigRegion) {
             $query->whereHas('region', function($query) use ($bigRegion) {
                 $query->where('big_region_id', $bigRegion->id);
@@ -96,7 +98,17 @@ class BigRegionService
 
         return [
             'total_distributions' => $distributions->count(),
-            'distributions' => $distributions->map(function ($distribution) use ($totalCitizens) {
+            'distributions' => $distributions->map(function ($distribution) use ($bigRegion, $totalCitizens) {
+                $statuses = DB::table('distribution_citizens')
+                    ->join('citizens', 'citizens.id', '=', 'distribution_citizens.citizen_id')
+                    ->join('regions', 'regions.id', '=', 'citizens.region_id')
+                    ->where('regions.big_region_id', $bigRegion->id)
+                    ->where('distribution_citizens.distribution_id', $distribution->id)
+                    ->select('distribution_citizens.done', DB::raw('count(*) as total'))
+                    ->groupBy('distribution_citizens.done')
+                    ->pluck('total', 'done')
+                    ->toArray();
+
                 return [
                     'id' => $distribution->id,
                     'name' => $distribution->name,
@@ -104,9 +116,39 @@ class BigRegionService
                     'percentage' => $totalCitizens > 0 
                         ? round(($distribution->beneficiaries_count / $totalCitizens) * 100, 1) 
                         : 0,
-                    'status' => $distribution->status
+                    'status' => $distribution->status,
+                    'status_counts' => [
+                        'distributed' => $statuses['distributed'] ?? 0,
+                        'pending' => $statuses['pending'] ?? 0,
+                        'cancelled' => $statuses['cancelled'] ?? 0
+                    ]
                 ];
             })
+        ];
+    }
+
+    private function calculateDistributionProgress($bigRegion, $distributionStats): array
+    {
+        $totalDistributed = 0;
+        $totalPending = 0;
+        $totalCancelled = 0;
+        $totalBeneficiaries = 0;
+
+        foreach ($distributionStats['distributions'] as $dist) {
+            $totalDistributed += $dist['status_counts']['distributed'];
+            $totalPending += $dist['status_counts']['pending'];
+            $totalCancelled += $dist['status_counts']['cancelled'];
+            $totalBeneficiaries += $dist['beneficiaries_count'];
+        }
+
+        return [
+            'total_distributed' => $totalDistributed,
+            'total_pending' => $totalPending,
+            'total_cancelled' => $totalCancelled,
+            'total_beneficiaries' => $totalBeneficiaries,
+            'distribution_rate' => $totalBeneficiaries > 0 
+                ? round(($totalDistributed / $totalBeneficiaries) * 100, 1) 
+                : 0
         ];
     }
 
