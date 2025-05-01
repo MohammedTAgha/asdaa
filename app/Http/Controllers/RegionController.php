@@ -101,10 +101,15 @@ class RegionController extends Controller
             'bigRegion.representative',
             'representatives' => function($query) {
                 $query->where('is_big_region_representative', false);
-            }
+            },
+            'citizens'
         ])->findOrFail($id);
         
-        return view('regions.show', compact('region'));
+        // Get all regions and distributions for the citizens component
+        $regions = Region::with('representatives')->get();
+        $distributions = \App\Models\Distribution::all();
+        
+        return view('regions.show', compact('region', 'regions', 'distributions'));
     }
 
     public function edit($id)

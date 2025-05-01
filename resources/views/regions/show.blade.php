@@ -96,5 +96,10 @@
             </div>
             
         </div>
+
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">مواطني المنطقة</h2>
+            <x-citizens :citizens="$region->citizens" :distributions="$distributions" :regions="$regions" :regionId="$region->id" />
+        </div>
     </div>
 @endsection
