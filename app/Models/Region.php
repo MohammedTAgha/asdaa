@@ -16,6 +16,12 @@ class Region extends Model
         'big_region_id',
     ];
 
+    // Default eager loading for statistics
+    protected $with = ['citizens', 'representatives', 'bigRegion.representative'];
+
+    // Append computed attributes
+    protected $appends = ['total_family_members', 'total_projects'];
+
     public function citizens()
     {
         return $this->hasMany(Citizen::class);
@@ -44,5 +50,15 @@ class Region extends Model
     public function isSubRegion()
     {
         return !is_null($this->big_region_id);
+    }
+
+    public function getTotalFamilyMembersAttribute()
+    {
+        return $this->citizens->sum('family_members');
+    }
+
+    public function getTotalProjectsAttribute()
+    {
+        return $this->citizens->flatMap->distributions->unique()->count();
     }
 }
