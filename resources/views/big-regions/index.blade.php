@@ -13,8 +13,16 @@
         </div>
     </div>
 
+    @php
+        $bigRegionService = app(App\Services\BigRegionService::class);
+        $stats = $bigRegionService->getBigRegionStatistics();
+    @endphp
+
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         @forelse($bigRegions as $bigRegion)
+            @php
+                $regionStats = $stats->firstWhere('id', $bigRegion->id);
+            @endphp
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 {{-- Header --}}
                 <div class="p-6 border-b">
@@ -23,7 +31,7 @@
                             <h2 class="text-xl font-bold">{{ $bigRegion->name }}</h2>
                             @if($bigRegion->representative)
                                 <div class="mt-2 flex items-center text-gray-600">
-                                    <i class="fas fa-user-tie mr-2"></i>
+                                    <i class="fas fa-user-tie ml-2"></i>
                                     <span>{{ $bigRegion->representative->name }}</span>
                                 </div>
                             @endif
@@ -45,60 +53,49 @@
                 <div class="grid grid-cols-3 divide-x rtl:divide-x-reverse">
                     <div class="p-4 text-center">
                         <div class="text-2xl font-bold text-blue-600">
-                            {{ $bigRegion->regions->count() }}
+                            {{ $regionStats['total_regions'] }}
                         </div>
                         <div class="text-sm text-gray-600">المناطق</div>
                     </div>
                     <div class="p-4 text-center">
                         <div class="text-2xl font-bold text-green-600">
-                            {{ $bigRegion->regions->sum(function($region) {
-                                return $region->citizens->count();
-                            }) }}
+                            {{ $regionStats['total_citizens'] }}
                         </div>
                         <div class="text-sm text-gray-600">المواطنين</div>
                     </div>
                     <div class="p-4 text-center">
                         <div class="text-2xl font-bold text-purple-600">
-                            {{ $bigRegion->regions->sum(function($region) {
-                                return $region->representatives->count();
-                            }) }}
+                            {{ $regionStats['total_representatives'] }}
                         </div>
                         <div class="text-sm text-gray-600">المندوبين</div>
                     </div>
                 </div>
 
-                {{-- Progress Bar --}}
-                @php
-                    $totalRegions = $bigRegion->regions->count();
-                    $regionsWithReps = $bigRegion->regions->filter(function($region) {
-                        return $region->representatives->count() > 0;
-                    })->count();
-                    $percentage = $totalRegions > 0 ? ($regionsWithReps / $totalRegions) * 100 : 0;
-                @endphp
+                {{-- Coverage Progress --}}
                 <div class="px-6 py-4">
                     <div class="flex justify-between text-sm text-gray-600 mb-1">
                         <span>تغطية المندوبين</span>
-                        <span>{{ number_format($percentage, 1) }}%</span>
+                        <span>{{ $regionStats['coverage_stats']['coverage_percentage'] }}%</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2">
                         <div class="bg-blue-600 h-2 rounded-full" 
-                             style="width: {{ $percentage }}%">
+                             style="width: {{ $regionStats['coverage_stats']['coverage_percentage'] }}%">
                         </div>
                     </div>
                 </div>
 
                 {{-- Recent Regions --}}
-                @if($bigRegion->regions->count() > 0)
+                @if($regionStats['regions_summary']->count() > 0)
                     <div class="px-6 py-4 bg-gray-50">
                         <div class="text-sm font-medium text-gray-600 mb-2">
-                            آخر المناطق ({{ min(3, $bigRegion->regions->count()) }})
+                            آخر المناطق ({{ min(3, $regionStats['regions_summary']->count()) }})
                         </div>
                         <div class="space-y-2">
-                            @foreach($bigRegion->regions->take(3) as $region)
+                            @foreach($regionStats['regions_summary']->take(3) as $region)
                                 <div class="flex justify-between items-center">
-                                    <span class="text-sm">{{ $region->name }}</span>
+                                    <span class="text-sm">{{ $region['name'] }}</span>
                                     <span class="text-xs text-gray-500">
-                                        {{ $region->citizens->count() }} مواطن
+                                        {{ $region['citizens_count'] }} مواطن
                                     </span>
                                 </div>
                             @endforeach
@@ -117,7 +114,7 @@
                            class="inline-flex items-center px-4 py-2 border border-transparent 
                                   rounded-md shadow-sm text-sm font-medium text-white 
                                   bg-blue-600 hover:bg-blue-700">
-                            <i class="fas fa-plus mr-2"></i>
+                            <i class="fas fa-plus ml-2"></i>
                             إضافة منطقة كبيرة
                         </a>
                     </div>

@@ -6,17 +6,25 @@ namespace App\Http\Controllers;
 use App\Models\BigRegion;
 use App\Models\Region;
 use App\Models\RegionRepresentative;
+use App\Services\BigRegionService;
 use Illuminate\Http\Request;
 
 class BigRegionController extends Controller
 {
+    protected $bigRegionService;
+
+    public function __construct(BigRegionService $bigRegionService)
+    {
+        $this->bigRegionService = $bigRegionService;
+    }
+
     public function index()
     {
         $bigRegions = BigRegion::with([
             'representative',
             'regions',
             'regions.representatives',
-            'regions.citizens'
+            'regions.citizens.distributions'
         ])->get();
 
         return view('big-regions.index', compact('bigRegions'));
@@ -64,7 +72,12 @@ class BigRegionController extends Controller
 
     public function show(BigRegion $bigRegion)
     {
-        $bigRegion->load('regions.representatives', 'representative');
+        $bigRegion->load([
+            'regions.representatives', 
+            'regions.citizens.distributions',
+            'representative'
+        ]);
+
         return view('big-regions.show', compact('bigRegion'));
     }
 
