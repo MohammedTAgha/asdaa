@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Region;
 use App\Models\BigRegion;
+use App\Models\Distribution;
 use App\Models\RegionRepresentative;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -97,17 +98,27 @@ class RegionController extends Controller
 
     public function show($id)
     {
+        // Fetch region with all needed relationships
         $region = Region::with([
             'bigRegion.representative',
             'representatives' => function($query) {
                 $query->where('is_big_region_representative', false);
             },
-            'citizens'
+            'citizens' => function($query) {
+                $query->withCount('distributions');
+            }
         ])->findOrFail($id);
         
-        // Get all regions and distributions for the citizens component
+        // Get total family members
+        $region->total_family_members = $region->citizens->sum('family_members');
+        
+        // Get all distributions with their citizens for this region
+        $distributions = Distribution::with(['citizens' => function($query) use ($region) {
+            $query->where('region_id', $region->id);
+        }])->get();
+
+        // Get all regions for the citizen component
         $regions = Region::with('representatives')->get();
-        $distributions = \App\Models\Distribution::all();
         
         return view('regions.show', compact('region', 'regions', 'distributions'));
     }

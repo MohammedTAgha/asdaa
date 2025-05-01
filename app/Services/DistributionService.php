@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Citizen;
+use App\Models\Distribution;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 /**
@@ -226,6 +227,57 @@ class DistributionService
         }
 
         return $query->pluck('id')->toArray();
+    }
+
+    public function getDistributionStatistics($distributionId = null)
+    {
+        $query = Distribution::with(['citizens', 'region']);
+        
+        if ($distributionId) {
+            $query->where('id', $distributionId);
+        }
+
+        $distributions = $query->get();
+        
+        $stats = $distributions->map(function ($distribution) {
+            return [
+                'id' => $distribution->id,
+                'name' => $distribution->name,
+                'total_citizens' => $distribution->citizens->count(),
+                'total_family_members' => $distribution->citizens->sum('family_members'),
+                'citizens_by_region' => $distribution->citizens->groupBy('region_id')
+                    ->map(function ($citizens, $regionId) {
+                        $region = $citizens->first()->region;
+                        return [
+                            'region_name' => $region ? $region->name : 'Unknown',
+                            'count' => $citizens->count(),
+                            'total_members' => $citizens->sum('family_members')
+                        ];
+                    }),
+                'status' => $distribution->status,
+                'created_at' => $distribution->created_at->format('Y-m-d'),
+                'updated_at' => $distribution->updated_at->format('Y-m-d')
+            ];
+        });
+
+        return $distributionId ? $stats->first() : $stats;
+    }
+
+    public function getDistributionProgress($distributionId)
+    {
+        $distribution = Distribution::findOrFail($distributionId);
+        
+        return [
+            'total_distributed' => $distribution->citizens()
+                ->wherePivot('status', 'distributed')
+                ->count(),
+            'total_pending' => $distribution->citizens()
+                ->wherePivot('status', 'pending')
+                ->count(),
+            'total_cancelled' => $distribution->citizens()
+                ->wherePivot('status', 'cancelled')
+                ->count()
+        ];
     }
 }
 
