@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Distribution extends Model
 {
@@ -35,19 +36,35 @@ class Distribution extends Model
     public function citizens()
     {
         return $this->belongsToMany(Citizen::class, 'distribution_citizens')
-        ->withPivot('id','quantity','recipient','note','done','date');
-        
+            ->withPivot('id','quantity','recipient','note','done','date');
     }
+
     // Define the relationship with Source
     public function source()
     {
         return $this->belongsTo(Source::class);
     }
+
     public function citizensCount()
     {
-        return count($this->citizens()->get());
+        return $this->citizens()->count();
     }
-    
 
-
+    public function getRegionsSummary()
+    {
+        return DB::table('citizens')
+            ->join('distribution_citizens', 'citizens.id', '=', 'distribution_citizens.citizen_id')
+            ->join('regions', 'citizens.region_id', '=', 'regions.id')
+            ->where('distribution_citizens.distribution_id', $this->id)
+            ->whereNull('citizens.deleted_at')
+            ->select(
+                'regions.name',
+                DB::raw('count(DISTINCT citizens.id) as count'),
+                DB::raw('SUM(CASE WHEN distribution_citizens.done = 1 THEN 1 ELSE 0 END) as completed'),
+                DB::raw('SUM(distribution_citizens.quantity) as total_quantity')
+            )
+            ->groupBy('regions.name')
+            ->orderBy('count', 'desc')
+            ->get();
+    }
 }

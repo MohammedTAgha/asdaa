@@ -57,7 +57,9 @@ class Citizen extends Model
     public function distributions()
     {
         return $this->belongsToMany(Distribution::class, 'distribution_citizens')
-        ->withPivot('id','quantity','recipient','note','done','date');
+            ->withPivot(['id', 'quantity', 'recipient', 'note', 'done', 'date'])
+            ->select(['distributions.*'])  // Only select base distribution fields when eager loading
+            ->withTimestamps();
     }
     
     public function children()

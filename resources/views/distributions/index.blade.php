@@ -2,116 +2,236 @@
 @section('title', "المشاريع")
 
 @section('content')
-    <div class="container mx-auto px-1">
-
-        <div class="card px-4 py-4">
-            <div class="col">
-                <span class="h3">المشاريع</span>
-                <span class="my-3">|</span>
-                <a href="{{ route('distributions.create') }}" class="btn btn-primary waves-effect">
-                    مشروع جديد
-                    <span class="ti-xs ti ti-plus me-1"></span>
-                </a>
+<div class="container mx-auto px-4 py-6">
+    {{-- Statistics Overview --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {{-- Total Projects Card --}}
+        <div class="bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-gray-500 text-sm">إجمالي المشاريع</h3>
+                    <p class="text-3xl font-bold text-gray-800">{{ $stats['distribution_statistics']['total_distributions'] }}</p>
+                </div>
+                <div class="bg-blue-100 rounded-full p-3">
+                    <i class="fas fa-project-diagram text-2xl text-blue-600"></i>
+                </div>
             </div>
-            <div class="table-responsive text-nowrap mt-3">
-                <table class="table table-striped table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>رقم</th>
-                            <th>الوصف</th>
-                            <th>الفئة</th>
-                            <th>المزود</th>
-                            <th>الكمية</th>
-                            <th>اكتمل</th>
-                            <th>خيارات</th>
-
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-
-                        @foreach ($distributions as $distribution)
-                            <tr class="py-2">
-                                <td>
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        {{ $distribution->id }}
-                                    </a>
-                                </td>
-
-                                <td>
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        {{ $distribution->name }}
-                                    </a>
-                                </td>
-
-                                <td>{{ $distribution->name }}</td>
-                                <td>{{ $distribution->source }}</td>
-                                <td>{{ $distribution->quantity }}</td>
-                                <td>{{ $distribution->done }}</td>
-                                <td>
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        عرض
-                                    </a>
-                                    <a href="{{ route('distributions.edit', $distribution->id) }}">
-                                        تحرير
-                                    </a>
-                                    <a href="{{ route('distributions.export', $distribution->id) }}" >تنزيل</a>
-                                </td>
-
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table>
+            <div class="flex items-center text-sm">
+                <span class="text-green-500">
+                    <i class="fas fa-arrow-up ml-1"></i>
+                    {{ $stats['distribution_statistics']['total_distributions']  ?? 0 }}
+                </span>
+                <span class="text-gray-500 mr-2">منذ الشهر الماضي</span>
             </div>
         </div>
-        {{-- <div class="mt-4">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="bg-gray-800 text-white">
-                        <tr>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">رقم</th>
-                            <th class="w-2/7 py-3 px-4 uppercase font-semibold text-sm">الوصف</th>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الفئة</th>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">المزود</th>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">الكمية</th>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">اكتمل</th>
-                            <th class="w-1/7 py-3 px-4 uppercase font-semibold text-sm">خيارات</th>
 
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        @foreach ($distributions as $distribution)
-                            <tr>
-                                <td class="w-1/7 py-3 px-4">
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        {{ $distribution->id }}
-                                    </a>
-                                </td>
-
-                                <td class="w-2/7 py-3 px-4">
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        {{ $distribution->name }}
-                                    </a>
-                                </td>
-
-                                <td class="w-1/7 py-3 px-4">{{ $distribution->name }}</td>
-                                <td class="w-1/7 py-3 px-4">{{ $distribution->source }}</td>
-                                <td class="w-1/7 py-3 px-4">{{ $distribution->quantity }}</td>
-                                <td class="w-1/7 py-3 px-4">{{ $distribution->done }}</td>
-                                <td class="w-1/7 py-3 px-4">
-                                    <a href="{{ route('distributions.show', $distribution->id) }}">
-                                        عرض
-                                    </a>
-                                    <a href="{{ route('distributions.edit', $distribution->id) }}">
-                                        تحرير
-                                    </a>
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        {{-- Beneficiaries Card --}}
+        <div class="bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-gray-500 text-sm">المستفيدين</h3>
+                    <p class="text-3xl font-bold text-gray-800">{{ $stats['benefited_citizens_statistics']['benefited_citizens_count'] }}</p>
+                </div>
+                <div class="bg-green-100 rounded-full p-3">
+                    <i class="fas fa-users text-2xl text-green-600"></i>
+                </div>
             </div>
-        </div> --}}
+            <div class="flex items-center text-sm">
+                <span class="text-gray-500">متوسط المشاريع لكل مستفيد:</span>
+                <span class="text-blue-600 font-medium mr-1">
+                    {{ $stats['benefited_citizens_statistics']['average_distributions_per_person'] }}
+                </span>
+            </div>
+        </div>
+
+        {{-- Active Distributions Card --}}
+        <div class="bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-gray-500 text-sm">المشاريع النشطة</h3>
+                    <p class="text-3xl font-bold text-gray-800">{{ $activeDistributions ?? 0 }}</p>
+                </div>
+                <div class="bg-yellow-100 rounded-full p-3">
+                    <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                </div>
+            </div>
+            <div class="flex items-center text-sm">
+                <span class="text-yellow-600">
+                    {{ $pendingBeneficiaries ?? 0 }}
+                </span>
+                <span class="text-gray-500 mr-2">مستفيد في الانتظار</span>
+            </div>
+        </div>
+
+        {{-- Coverage Card --}}
+        <div class="bg-white rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-gray-500 text-sm">تغطية المناطق</h3>
+                    <p class="text-3xl font-bold text-gray-800">{{ $stats['regional_statistics']['benefited_regions_count'] }}</p>
+                </div>
+                <div class="bg-purple-100 rounded-full p-3">
+                    <i class="fas fa-map-marker-alt text-2xl text-purple-600"></i>
+                </div>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-purple-600 h-2 rounded-full" 
+                     style="width: {{ ($stats['regional_statistics']['benefited_regions_count'] / $totalRegions) * 100 }}%">
+                </div>
+            </div>
+        </div>
     </div>
+
+    {{-- Actions Bar --}}
+    <div class="bg-white rounded-lg shadow-lg p-4 mb-8">
+        <div class="flex flex-wrap items-center justify-between">
+            <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                <a href="{{ route('distributions.create') }}" 
+                   class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <i class="fas fa-plus ml-2"></i>
+                    مشروع جديد
+                </a>
+                <div class="relative">
+                    <input type="text" 
+                           id="search" 
+                           placeholder="البحث في المشاريع..." 
+                           class="w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                <button class="text-gray-600 hover:text-gray-800 p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-filter"></i>
+                </button>
+                <a href="{{ route('distributions.exportDistributionStatistics') }}" 
+                   class="text-gray-600 hover:text-gray-800 p-2 rounded-lg hover:bg-gray-100">
+                    <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- Projects Grid --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach ($distributions as $distribution)
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
+            {{-- Project Header --}}
+            <div class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-b">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">{{ $distribution->name }}</h3>
+                        <p class="text-sm text-gray-600 mt-1">
+                            <i class="fas fa-tag ml-1"></i>
+                            {{ $distribution->category?->name ?? 'غير مصنف' }}
+                        </p>
+                    </div>
+                    <div class="flex space-x-2 rtl:space-x-reverse">
+                        <a href="{{ route('distributions.show', $distribution->id) }}" 
+                           class="text-blue-600 hover:text-blue-800 p-1"
+                           title="عرض">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('distributions.edit', $distribution->id) }}" 
+                           class="text-yellow-600 hover:text-yellow-800 p-1"
+                           title="تعديل">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{{ route('distributions.export', $distribution->id) }}" 
+                           class="text-green-600 hover:text-green-800 p-1"
+                           title="تنزيل">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Project Stats --}}
+            <div class="p-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <span class="text-sm text-gray-500">المستفيدين</span>
+                        <p class="text-xl font-bold text-gray-800">{{ $distribution->citizens()->count() }}</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-sm text-gray-500">الكمية</span>
+                        <p class="text-xl font-bold text-gray-800">{{ $distribution->quantity ?? 0 }}</p>
+                    </div>
+                </div>
+
+                {{-- Progress Bar --}}
+                <div class="mt-4">
+                    @php
+                        $completedCount = $distribution->citizens()->wherePivot('done', true)->count();
+                        $totalCount = $distribution->citizens()->count();
+                        $percentage = $totalCount > 0 ? ($completedCount / $totalCount) * 100 : 0;
+                    @endphp
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>تقدم التوزيع</span>
+                        <span>{{ number_format($percentage, 1) }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                             style="width: {{ $percentage }}%">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Project Footer --}}
+            <div class="px-4 py-3 bg-gray-50 border-t flex justify-between items-center text-sm">
+                <span class="text-gray-600">
+                    <i class="fas fa-calendar-alt ml-1"></i>
+                    {{ $distribution->date ? \Carbon\Carbon::parse($distribution->date)->format('Y/m/d') : 'غير محدد' }}
+                </span>
+                <span class="text-gray-600">
+                    <i class="fas fa-building ml-1"></i>
+                    {{ $distribution->source?->name ?? $distribution->source ?? 'غير محدد' }}
+                </span>
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    // Search functionality
+    document.getElementById('search').addEventListener('keyup', function(e) {
+        let searchText = e.target.value.toLowerCase();
+        document.querySelectorAll('.grid > div').forEach(card => {
+            let projectName = card.querySelector('h3').textContent.toLowerCase();
+            let projectCategory = card.querySelector('.text-gray-600').textContent.toLowerCase();
+            
+            if(projectName.includes(searchText) || projectCategory.includes(searchText)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Animation on scroll
+    function animateOnScroll() {
+        const cards = document.querySelectorAll('.grid > div');
+        cards.forEach((card, index) => {
+            card.style.animation = `fadeInUp 0.5s ease-out ${index * 0.1}s forwards`;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', animateOnScroll);
+</script>
+
+<style>
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+@endpush
 @endsection

@@ -13,7 +13,6 @@ class DistributionReportService
         return Excel::download(new DistributionStatisticsExport(), 'تقرير المشاريع.xlsx');
     }
 
-
     public function generateStatistics()
     {
         // Query for statistics with regions
@@ -24,11 +23,10 @@ class DistributionReportService
             ->select(
                 'regions.name as region_name',
                 'distributions.name as project_name',
-                DB::raw('count(citizens.id) as total_citizens'),
-                DB::raw('count(distribution_citizens.id) as benefited_citizens'),
-                DB::raw('ROUND((count(distribution_citizens.id) / count(citizens.id)) * 100, 2) as percentage')
+                DB::raw('count(DISTINCT citizens.id) as total_citizens'),
+                DB::raw('count(DISTINCT CASE WHEN distribution_citizens.done = true THEN citizens.id END) as benefited_citizens'),
+                DB::raw('ROUND((count(DISTINCT CASE WHEN distribution_citizens.done = true THEN citizens.id END) / count(DISTINCT citizens.id)) * 100, 2) as percentage')
             )
-            ->where('distribution_citizens.done', true)
             ->groupBy('regions.name', 'distributions.name')
             ->get();
 
@@ -37,20 +35,19 @@ class DistributionReportService
             ->leftJoin('distribution_citizens', 'distributions.id', '=', 'distribution_citizens.distribution_id')
             ->select(
                 'distributions.name as project_name',
-                DB::raw('count(distribution_citizens.citizen_id) as total_citizens'),
-                DB::raw('sum(case when distribution_citizens.done = true then 1 else 0 end) as benefited_citizens')
+                DB::raw('count(DISTINCT distribution_citizens.citizen_id) as total_citizens'),
+                DB::raw('count(DISTINCT CASE WHEN distribution_citizens.done = true THEN distribution_citizens.citizen_id END) as benefited_citizens')
             )
             ->groupBy('distributions.name')
             ->get();
 
-        // Combine the results
         return [
             'withRegions' => $withRegions,
             'withoutRegions' => $withoutRegions,
         ];
     }
 
-   //get statistics ass array and show its for excel file
+    //get statistics ass array and show its for excel file
     public function getStatistics($distribution): array
     {
         $stats = $this->calculateStats($distribution);
@@ -79,25 +76,33 @@ class DistributionReportService
             ['Completed Distributions', $stats['completed_distributions']],
         ];
     }
- // this method takes a distribution and retern its statistics
+
+    // this method takes a distribution and retern its statistics
     public function calculateStats($distribution): array
     {
-        $citizens =$distribution->citizens;
-        $citizens_count = count($citizens);
-        $benafated_count =$citizens->where('pivot.done', 1)->count();
-        if ($citizens_count !=0){
-            $percentage =  ($benafated_count /$citizens_count)*100 ;
-        }else{
-            $percentage = 0;
-        }
+        $citizens = $distribution->citizens()
+            ->select([
+                'citizens.*',
+                'distribution_citizens.done as pivot_done',
+                'distribution_citizens.quantity as pivot_quantity'
+            ])
+            ->get();
+
+        $citizens_count = $citizens->count();
+        $benafated_count = $citizens->where('pivot_done', 1)->count();
+        
+        $percentage = $citizens_count > 0 
+            ? ($benafated_count / $citizens_count) * 100 
+            : 0;
+
         return [
-            'benafated'=> $benafated_count,
-            'citizens_count'=> $citizens_count ,
-            'total_citizens' => $citizens->count(),
-            'benefated_percentage'=>$percentage,
-            'total_quantity' => $citizens->sum('pivot.quantity'),
-            'avg_quantity' => $citizens->avg('pivot.quantity'),
-            'completed_distributions' => $citizens->where('pivot.done', 1)->count(),
+            'benafated' => $benafated_count,
+            'citizens_count' => $citizens_count,
+            'total_citizens' => $citizens_count,
+            'benefated_percentage' => $percentage,
+            'total_quantity' => $citizens->sum('pivot_quantity'),
+            'avg_quantity' => $citizens->avg('pivot_quantity') ?? 0,
+            'completed_distributions' => $benafated_count,
         ];
     }
 }

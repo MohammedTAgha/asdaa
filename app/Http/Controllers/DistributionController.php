@@ -31,8 +31,15 @@ class DistributionController extends Controller
 
     public function index()
     {
-        $distributions = Distribution::with("category", 'source')->get();
-        return view("distributions.index", compact("distributions"));
+        $distributions = Distribution::with(["category", 'source', 'citizens'])->get();
+        $statisticsService = new \App\Services\StatisticsService();
+        $stats = $statisticsService->getAllStatistics();
+        
+        // Calculate active distributions
+        $activeDistributions = $distributions->where('done', false)->count();
+        $totalRegions = \App\Models\Region::count();
+        
+        return view("distributions.index", compact("distributions", "stats", "activeDistributions", "totalRegions"));
     }
 
     public function create()
@@ -87,15 +94,23 @@ class DistributionController extends Controller
             ->with("success", "Distribution created successfully.");
     }
 
-    public function show($id ,DistributionReportService $distributionReportService )
+    public function show($id, DistributionReportService $distributionReportService)
     {
-        $distributions = Distribution::all();
-        $citizens = Citizen::all();
-        $distribution = Distribution::findOrFail($id);
-        $regions = Region::all();
+        $distribution = Distribution::with(['citizens', 'citizens.region', 'category', 'source'])->findOrFail($id);
         $stats = $distributionReportService->calculateStats($distribution);
-       
-        return view("distributions.show", compact("distribution", "citizens", "distributions", 'regions','stats'));
+        
+        // Add regions summary to stats
+        $regions_summary = $distribution->citizens()
+            ->join('regions', 'citizens.region_id', '=', 'regions.id')
+            ->select('regions.name', DB::raw('count(*) as count'))
+            ->groupBy('regions.name')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->toArray();
+        
+        $stats['regions_summary'] = $regions_summary;
+        
+        return view("distributions.show", compact("distribution", "stats"));
     }
 
     public function edit(Distribution $distribution)

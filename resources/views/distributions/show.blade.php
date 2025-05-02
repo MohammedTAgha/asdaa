@@ -1,733 +1,313 @@
 @extends('dashboard')
-@section('title', 'مشروع' . ' ' . $distribution->name)
+@section('title', $distribution->name)
 
 @section('content')
-
-
-    <div>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
-        @if (session('status'))
-            <div class="alert alert-{{ session('status')['type'] }}">
-                {{ session('status')['message'] }}
-            </div>
-        @endif
-        <div class="container mx-auto px-4 py-8">
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">تفاصيل المشروع</h1>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Target Count Card -->
-                <div
-                    class="stat-card bg-white rounded-xl   p-6  shadow-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-700">العدد المستهدف</h2>
-                        <i class="fas fa-bullseye text-2xl text-blue-500"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-800">=={{ $stats['total_citizens'] }}</p>
-                    <div class="mt-4 bg-gray-200 h-2 rounded-full">
-                        <div class="bg-blue-500 h-2 rounded-full" style="width: {{ 0.5 * 100 }}%;"></div>
-                    </div>
-                </div>
-
-                <!-- Benefited Count Card -->
-                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-700">عدد المستفيدين</h2>
-                        <i class="fas fa-users text-2xl text-green-500"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->expectation }}</p>
-                    <p class="text-sm text-gray-600 mt-2">المتوقع: {{ $distribution->expectation }}</p>
-                </div>
-
-                <!-- Package Numbers Card -->
-                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-700">عدد الحزم</h2>
-                        <i class="fas fa-box text-2xl text-yellow-500"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-gray-800">{{ $distribution->quantity }}</p>
-                </div>
-
-                <!-- Time Period Card -->
-                <div class="stat-card bg-white rounded-lg p-6 shadow-lg hover:shadow-xl  transition-shadow duration-300">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-xl font-semibold text-gray-700">الفترة الزمنية</h2>
-                        <i class="fas fa-calendar-alt text-2xl text-purple-500"></i>
-                    </div>
-                    <p class="text-lg font-medium text-gray-800">{{ $distribution->arrive_date }}</p>
+<div class="container mx-auto px-4 py-6">
+    {{-- Project Header --}}
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex justify-between items-start">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ $distribution->name }}</h1>
+                <div class="flex items-center space-x-4 rtl:space-x-reverse text-gray-600">
+                    <span class="flex items-center">
+                        <i class="fas fa-tag ml-2"></i>
+                        {{ $distribution->category?->name ?? 'غير مصنف' }}
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-building ml-2"></i>
+                        {{ $distribution->source?->name ?? $distribution->source ?? 'غير محدد' }}
+                    </span>
+                    <span class="flex items-center">
+                        <i class="fas fa-calendar ml-2"></i>
+                        {{ $distribution->date ? \Carbon\Carbon::parse($distribution->date)->format('Y/m/d') : 'غير محدد' }}
+                    </span>
                 </div>
             </div>
-
-            <!-- Additional Project Details -->
-            <div class="mt-8 bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold mb-4 text-gray-800">معلومات إضافية</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">الوصف</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->name }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">المصدر</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->source }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">الحالة</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->done ? 'مكتمل' : 'غير مكتمل' }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">عدد الأفراد</label>
-                        <p class="mt-1 text-gray-900">من {{ $distribution->min_count }} إلى {{ $distribution->max_count }}
-                        </p>
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700">ملاحظة</label>
-                        <p class="mt-1 text-gray-900">{{ $distribution->note }}</p>
-                    </div>
-                </div>
+            <div class="flex space-x-2 rtl:space-x-reverse">
+                <a href="{{ route('distributions.edit', $distribution) }}" 
+                   class="btn-secondary">
+                    <i class="fas fa-edit ml-1"></i>
+                    تعديل
+                </a>
+                <a href="{{ route('distributions.export', $distribution->id) }}" 
+                   class="btn-primary">
+                    <i class="fas fa-download ml-1"></i>
+                    تصدير
+                </a>
             </div>
-        </div>
-
-        {{-- @component('components.box', ['title' => 'بيانات التوزيع'])
-
-        @endcomponent --}}
-
-        @component('components.box', ['title' => 'المستفيدين', 'styles' => 'mt-3'])
-            @slot('side')
-                <!-- Advanced Filter Modal 2 -->
-                <div class="modal fade" id="advancedFilterModal" aria-labelledby="advancedFilterModalLabel">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="advancedFilterModalLabel">فلترةالاسماء المراد اضافتها</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form id="advancedFilterForm" action="{{ route('distributions.addCitizensFilter') }}" method="POST">
-                                @csrf
-                                <div class="modal-body">
-                                    <!-- regions  -->
-                                    <div class="mb-4" style="z-index: 99999">
-                                        <label class="block mb-1 font-medium text-gray-700">اختر المناطق:</label>
-                                        <select id="regions" name="regions[]"
-                                            class="select2-multiple  p-2  border border-gray-300 rounded-lg"
-                                            style="width: 100%; z-index: 99999" multiple>
-                                            @foreach ($regions as $region)
-                                                <option class=" w-120px" value="{{ $region->id }}" style="width: 260px;"
-                                                    {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
-
-                                                    @if ($region->representatives->isNotEmpty())
-                                                        {{ $region->name }} </br> :
-                                                        {{ $region->representatives->first()->name }}
-                                                    @else
-                                                        {{ $region->name }}
-                                                    @endif
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <!-- distribution  -->
-                                    <div class="mb-4" style="z-index: 99999">
-                                        <label class="block mb-1 font-medium text-gray-700">اختر المشروع:</label>
-                                        <select id="regions" name="distributionId"
-                                            class="select2  p-2  border border-gray-300 rounded-lg"
-                                            style="width: 100%; z-index: 99999">
-                                            @foreach ($distributions as $row_distribution)
-                                                <option value="{{ $distribution->id }}"
-                                                    {{ $distribution->id == $row_distribution->id ? 'selected' : '' }}>
-                                                    {{ $row_distribution->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    {{-- <div class="mb-3">
-                                        <label for="gender" class="form-label">الحالة الاجتماعية</label>
-                                        <select id="gender" class="form-select">
-                                            <option value="">All</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                        </select>
-                                    </div> --}}
-                                    <div class="mb-3">
-                                        <label for="ageRange" class="form-label">افراد الاسرة</label>
-                                        <div class="input-group">
-                                            <input type="number" id="min_row_distribution" name="min_row_distribution"
-                                                class="form-control" placeholder="من">
-                                            <span class="input-group-text">-</span>
-                                            <input type="number" id="max_row_distribution" name="max_row_distribution"
-                                                class="form-control" placeholder="الى">
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">اغلق</button>
-                                    <button type="submit" class="btn btn-primary">اضافة الفرز الى مشروع
-                                        {{ $distribution->name }}</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal -->
-                <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="modalCenterTitle">اضافة مستفيدين ل {{ $distribution->name }} </h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row">
-                                    <div class="col-lg-4 p-4">
-                                        <small class="text-light fw-semibold"> اضافة حسب </small>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                                    Close
-                                </button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @include('modals.add_citizens_list_modal')
-                @component('modals.add_citizens_list_modal',['distributionId'=>$distribution->id,'distribution'=>$distribution])
-                    
-                @endcomponent
-                <div class="d-flex">
-                    <livewire:add-citizens-to-distribution :distribution-id="$distribution->id" />
-                    {{-- go to main ctz list  --}}
-                    <a href="{{ route('citizens.index') }}?distributionId={{ $distribution->id }}" type="button"
-                        class="btn btn-light-primary waves-effect">
-                        <i class="tf-icons ti ti-list-details ti-xs me-1"></i> اضافة من الكشف
-                    </a>
-                    {{-- show filter for citizents and spasific roules  --}}
-                    <button type="button" class="btn btn-light-primary waves-effect" data-bs-toggle="modal"
-                        data-bs-target="#advancedFilterModal">
-                        <i class="icon-xl fas fa-filter"></i>اضافة حسب فلتر
-                    </button>
-                    <button type="button" class="btn btn-light-primary waves-effect" data-bs-toggle="modal"
-                        data-bs-target="#AddCitizensIdListModal">
-                        <i class="icon-xl fas fa-plus"></i>اضافة ارقام هوايا
-                    </button>
-                    {{-- <button type="button" class="btn btn-label-primary waves-effect" data-bs-toggle="modal" data-bs-target="#regionsSelectModal">
-                        <i class="tf-icons ti ti-map ti-xs me-1"></i> اضافة مناطق
-                    </button> --}}
-                    <a href="{{ route('upload.citizens') }}" type="button" class="btn btn-light-primary waves-effect">
-                        <i class="tf-icons ti ti-file-upload ti-xs me-1"></i> تحميل ملف
-                    </a>
-
-                    <div x-data="{ open: false }" class="relative mb-3 z-50">
-                        <button @click="open = !open" class="btn btn-light-primary waves-effect">
-                            اجراءات الكشف
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul x-show="open" @click.away="open = false" x-transition
-                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
-                           
-                            <li><a href="{{ route('distributions.export', $distribution->id) }}" class="block px-4 py-2 hover:bg-gray-200">
-                                تصدير الكشف
-                            </a></li>
-                            <li><button class="block px-4 py-2 hover:bg-gray-200" id="add-all-to-distribution">
-                                اضافة كافة الاسماء للكشف
-                            </button></li>
-                            <li><button class="block px-4 py-2 hover:bg-gray-200">
-                                نقل الاسماء الى كشف اخر
-                            </button></li>
-                            <li><button class="block px-4 py-2 hover:bg-gray-200">
-                                استيراد اسماء كشف اخر
-                            </button></li>
-                            <li><button id="give-all"  class="block px-4 py-2 hover:bg-gray-200">
-                               تسليم كل الكشف
-                            </button></li>
-                            <li><a class="block px-4 py-2 hover:bg-red-200">
-                                الغاء تسليم كل الكشف
-                             </a></li>
-                             <li><a class="block px-4 py-2 hover:bg-red-200">
-                                حذف اسماء كل الكشف
-                             </a></li>
-    
-                            <!-- Add more actions if needed -->
-                        </ul>
-                    </div>
-
-                    <div x-data="{ open: false }" class="relative mb-3 z-50">
-                        <button @click="open = !open" class="btn btn-light-primary waves-effect">
-                            اجراءات التحديد
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <ul x-show="open" @click.away="open = false" x-transition
-                            class="absolute right-0 bg-white text-black mt-2 py-2 w-48 shadow-md rounded-md z-50">
-                            <li><button id="make-done" class="block px-4 py-2 hover:bg-gray-200">تسليم الاسماء
-                                    المحددة</button></li>
-                            <li><button id="make-undone" class="block px-4 py-2 hover:bg-gray-200">الغاء تسليم
-                                    المحدد</button></li>
-                            <li><button id="delete-from-distribution" class="block px-4 py-2 hover:bg-gray-200">حذف
-                                    من االمشروع</button></li>
-                            <li><button id="delete-from-distribution" class="block px-4 py-2 hover:bg-gray-200">
-                                تصدير الكشف
-                            </button></li>
-    
-                            <!-- Add more actions if needed -->
-                        </ul>
-                    </div>
-
-                </div>
-                {{--            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" --}}
-                {{--                    data-bs-target="#modalCenter"> --}}
-                {{--                اضافة مستفيدين --}}
-                {{--            </button> --}}
-            @endslot
-            <div class="bg-white">
-
-                <div class="table-responsive">
-                    @php
-                        $citizens = $distribution->citizens;
-                    @endphp
-
-                    <input type="text" id="searchbar" class="form-control" placeholder='بحث فوري ...'>
-
-                    <table id="ctzlist" class="table table table-row-bordered gy-2">
-                        <thead class="table-light">
-                            <tr>
-                                <th class=" py-3 px-2 font-semibold ">
-                                    <input type="checkbox" id="select-all" />
-                                </th>
-                                <th class=" py-3 px-2 font-semibold ">الهوية</th>
-                                <th class=" py-3 px-2 font-semibold ">الاسم</th>
-                                <th class=" py-3 px-2 font-semibold ">المنطقة</th>
-                                <th class=" py-3 px-2 font-semibold ">افراد</th>
-                                {{-- <th class=" py-3 px-2 font-semibold ">الحالة الاجتماعية</th> --}}
-                                <th class=" py-3 px-2 font-semibold ">الكمية <br>المستلمة</th>
-                                <th class=" py-3 px-2 font-semibold ">استلم</th>
-                                <th class=" py-3 px-2 font-semibold ">تاريخ الاستلام</th>
-                                <th class=" py-3 px-2 font-semibold ">اسم المستلم</th>
-                                <th class=" py-3 px-2 font-semibold ">ملاحظة</th>
-                                <th class=" py-3 px-2 font-semibold "></th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            <!-- DataTables will populate this area -->
-                        </tbody>
-                    </table>
-
-
-                </div>
-            @endcomponent
-
         </div>
     </div>
 
-
-    @if (session('truncated_citizens'))
-        <div id="snackbar" class="fixed bottom-4 left-4 bg-red-600 text-white px-4 py-2 rounded-md shadow-md">
-            Warning: Data truncated for the following citizen
-            IDs: {{ implode(', ', session('truncated_citizens')) }}
+    {{-- Statistics Cards --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {{-- Target Count --}}
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">المستفيدين</h2>
+                <div class="bg-blue-100 rounded-full p-3">
+                    <i class="fas fa-users text-2xl text-blue-600"></i>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">العدد الكلي</span>
+                    <span class="text-2xl font-bold text-gray-800">{{ $stats['citizens_count'] }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">تم التوزيع</span>
+                    <span class="text-xl text-green-600">{{ $stats['benafated'] }}</span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-600">نسبة الإنجاز</span>
+                    <span class="text-blue-600">{{ number_format($stats['benefated_percentage'], 1) }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ $stats['benefated_percentage'] }}%"></div>
+                </div>
+            </div>
         </div>
-    @endif
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const cards = document.querySelectorAll('.stat-card');
-                cards.forEach((card, index) => {
-                    card.style.animationDelay = `${index * 0.1}s`;
-                });
-            });
-        </script>
-        <script>
-            $(document).ready(function() {
-                if ($('#snackbar').length) {
-                    setTimeout(function() {
-                        $('#snackbar').fadeOut('slow');
-                    }, 5000);
-                }
-            });
-        </script>
-        <script>
-            const openModalButton = document.getElementById('openModalButton');
-            const closeModalButton = document.getElementById('closeModalButton');
-            const modal = document.getElementById('myModal');
+        {{-- Package Stats --}}
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">الكميات</h2>
+                <div class="bg-green-100 rounded-full p-3">
+                    <i class="fas fa-box text-2xl text-green-600"></i>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">الكمية الكلية</span>
+                    <span class="text-2xl font-bold text-gray-800">{{ $distribution->quantity ?? 0 }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">تم توزيع</span>
+                    <span class="text-xl text-green-600">{{ $stats['total_quantity'] ?? 0 }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">متوسط لكل مستفيد</span>
+                    <span class="text-lg text-blue-600">{{ number_format($stats['avg_quantity'] ?? 0, 1) }}</span>
+                </div>
+            </div>
+        </div>
 
-            openModalButton.addEventListener('click', function() {
-                modal.classList.remove('hidden');
-            });
+        {{-- Coverage Stats --}}
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">تغطية المناطق</h2>
+                <div class="bg-purple-100 rounded-full p-3">
+                    <i class="fas fa-map-marker-alt text-2xl text-purple-600"></i>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">عدد المناطق المستفيدة</span>
+                    <span class="text-2xl font-bold text-gray-800">{{ count($stats['regions_summary'] ?? []) }}</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    @foreach(array_slice($stats['regions_summary'] ?? [], 0, 3) as $region)
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                            {{ $region['name'] }}
+                        </span>
+                    @endforeach
+                    @if(count($stats['regions_summary'] ?? []) > 3)
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            +{{ count($stats['regions_summary']) - 3 }}
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-            closeModalButton.addEventListener('click', function() {
-                modal.classList.add('hidden');
-            });
-        </script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            // Refresh DataTable when a new citizen is added
-            window.addEventListener('citizenAdded', () => {
-                console.log('addddd');
+        {{-- Time Stats --}}
+        <div class="stat-card bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">معلومات زمنية</h2>
+                <div class="bg-yellow-100 rounded-full p-3">
+                    <i class="fas fa-clock text-2xl text-yellow-600"></i>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">تاريخ البدء</span>
+                    <span class="text-gray-800">{{ $distribution->date ? \Carbon\Carbon::parse($distribution->date)->format('Y/m/d') : 'غير محدد' }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">تاريخ الوصول</span>
+                    <span class="text-gray-800">{{ $distribution->arrive_date ? \Carbon\Carbon::parse($distribution->arrive_date)->format('Y/m/d') : 'غير محدد' }}</span>
+                </div>
+                @if($distribution->done)
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                        <i class="fas fa-check-circle ml-1"></i>
+                        مكتمل
+                    </span>
+                @else
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                        <i class="fas fa-clock ml-1"></i>
+                        قيد التنفيذ
+                    </span>
+                @endif
+            </div>
+        </div>
+    </div>
 
-                oTable.ajax.reload();
-            });
-            // pivits selection action code
-            document.getElementById('select-all').addEventListener('click', function() {
-                let checkboxes = document.querySelectorAll('.select-citizen');
-                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-            });
+    {{-- Project Details --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {{-- Main Info --}}
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">تفاصيل المشروع</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @if($distribution->target)
+                <div>
+                    <label class="text-sm font-medium text-gray-600">الفئة المستهدفة</label>
+                    <p class="mt-1 text-gray-800">{{ $distribution->target }}</p>
+                </div>
+                @endif
+                
+                @if($distribution->expectation)
+                <div>
+                    <label class="text-sm font-medium text-gray-600">العدد المتوقع</label>
+                    <p class="mt-1 text-gray-800">{{ $distribution->expectation }}</p>
+                </div>
+                @endif
 
-            $(document).ready(function() {
-                let selectedRows = [];
-                // Set CSRF token for AJAX requests     // Set CSRF token for AJAX requests
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                var oTable = $('#ctzlist').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
-                    ajax: '{{ route('distributions.citizens', $distribution->id) }}',
-                    columns: [{
-                            data: 'checkbox',
-                            name: 'checkbox',
-                            render: function(data, type, row) {
-                                let checked = selectedRows.includes(row.pivot_id) ? 'checked' : '';
-                                return `<div class="form-check px form-check-sm form-check-custom form-check-solid">
-                                <input type="checkbox" class="select-pivot" value="${row.pivot_id}" data-id="${row.pivot_id}" ${checked} />
-                            </div>`;
-                            },
-                            orderable: false,
-                            searchable: false,
-                        },
+                @if($distribution->min_count || $distribution->max_count)
+                <div>
+                    <label class="text-sm font-medium text-gray-600">عدد الأفراد</label>
+                    <p class="mt-1 text-gray-800">من {{ $distribution->min_count }} إلى {{ $distribution->max_count }}</p>
+                </div>
+                @endif
+            </div>
 
-                        {
-                            data: 'id',
-                            name: 'id',
-                            render: function(data, type, row) {
-                                return `<a href="{{ route('citizens.show', '') }}/${data}">${data}</a>`;
-                            }
-                        },
-                        {
-                            data: 'fullname',
-                            name: 'fullname',
-                            render: function(data, type, row) {
-                                return `<a href="{{ route('citizens.show', '') }}/${row.citizen_id}">${data}</a>`;
-                            }
-                        },
-                        {
-                            data: 'region',
-                            name: 'region',
-                            render: function(data, type, row) {
-                                return `<a href="{{ route('regions.show', '') }}/${row.region_id}">
-                            <input type="hidden" name="name" value="${row.fullname}">
-                            ${data}
-                        </a>`;
-                            }
-                        },
-                        {
-                            data: 'family_members',
-                            name: 'family_members'
-                        },
-                        {
-                            data: 'quantity',
-                            name: 'quantity',
-                            render: function(data, type, row) {
-                                return `<input class="form-control" type="number" name="quantity" value="${data ? data : ''}" id="quantity" style="width: 65px">`;
-                            }
-                        },
-                        {
-                            data: 'done',
-                            name: 'done',
-                            render: function(data, type, row) {
-                                let checked = data ? 'checked' : '';
-                                return `<input class="form-check-input" type="checkbox" id="done" name="done" value="${data}" data-id="${row.pivot_id}" ${checked}>`;
-                            }
-                        },
-                        {
-                            data: 'date',
-                            name: 'date',
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `<input class="form-control" type="date" name="date" value="${data ? data : ''}" style="width: 160px">`;
-                            }
-                        },
-                        {
-                            data: 'recipient',
-                            name: 'recipient',
-                            searchable: false,
-                            render: function(data, type, row) {
-                                return `<input class="form-control" name="recipient" value="${data ? data : ''}" id="recipient" style="width: 155px">`;
-                            }
-                        },
-                        {
-                            data: 'note',
-                            name: 'note',
-                            searchable: false,
+            @if($distribution->note)
+            <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
+                <label class="text-sm font-medium text-gray-600">ملاحظات</label>
+                <p class="mt-1 text-gray-800">{{ $distribution->note }}</p>
+            </div>
+            @endif
+        </div>
 
-                            render: function(data, type, row) {
-                                return `<input class="form-control" name="note" id="note" value="${data ? data : ''}" style="width: 90px">`;
-                            }
-                        },
-                        {
-                            data: 'pivot_id',
-                            name: 'pivot_id',
-                            render: function(data, type, row) {
-                                return `<button id='update-button' class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-1 rounded" data-id="${data}">تحديث</button>`;
-                            },
-                            orderable: false,
-                            searchable: false,
-                        }
-                    ]
-                });
+        {{-- Quick Actions --}}
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">إجراءات سريعة</h2>
+            <div class="space-y-3">
+                <button class="w-full btn-primary" onclick="document.getElementById('addCitizensModal').style.display='block'">
+                    <i class="fas fa-user-plus ml-2"></i>
+                    إضافة مستفيدين
+                </button>
+                <button class="w-full btn-secondary" onclick="document.getElementById('filterModal').style.display='block'">
+                    <i class="fas fa-filter ml-2"></i>
+                    تصفية المستفيدين
+                </button>
+                <button class="w-full btn-secondary">
+                    <i class="fas fa-file-export ml-2"></i>
+                    تصدير التقرير
+                </button>
+                @if(!$distribution->done)
+                <button class="w-full btn-success">
+                    <i class="fas fa-check-circle ml-2"></i>
+                    إنهاء المشروع
+                </button>
+                @endif
+            </div>
+        </div>
+    </div>
 
-                // Handle 'select-all' functionality
-                $('#select-all').on('change', function() {
-                    let isChecked = $(this).is(':checked');
+    {{-- Beneficiaries Table Section --}}
+    @include('components.box', ['title' => 'المستفيدين'])
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-4 border-b">
+                <div class="flex flex-wrap items-center justify-between">
+                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                        <div class="relative">
+                            <input type="text" 
+                                   id="searchbar" 
+                                   class="form-control pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                   placeholder="بحث فوري...">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                            <button id="make-done" class="btn-success">
+                                <i class="fas fa-check ml-1"></i>
+                                تسليم المحدد
+                            </button>
+                            <button id="delete-from-distribution" class="btn-danger">
+                                <i class="fas fa-trash ml-1"></i>
+                                حذف المحدد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    // Select or deselect all visible rows
-                    $('.select-pivot').each(function() {
-                        let pivotId = $(this).data('id');
+            <div class="overflow-x-auto">
+                <table id="ctzlist" class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-right">
+                                <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            </th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">الهوية</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">الاسم</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">المنطقة</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">افراد</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">الكمية المستلمة</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">استلم</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">تاريخ الاستلام</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">اسم المستلم</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">ملاحظة</th>
+                            <th class="px-4 py-3 text-right text-sm font-medium text-gray-500">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- DataTable will populate this -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endsection
 
-                        if (isChecked) {
-                            if (!selectedRows.includes(pivotId)) {
-                                selectedRows.push(pivotId); // Add to selected if not already selected
-                            }
-                            $(this).prop('checked', true);
-                        } else {
-                            selectedRows = selectedRows.filter(id => id !==
-                            pivotId); // Remove from selected
-                            $(this).prop('checked', false);
-                        }
-                    });
-                });
-                // Handle row selection
-                $('#ctzlist').on('change', '.select-pivot', function() {
-                    let pivotId = $(this).data('id');
-                    if ($(this).is(':checked')) {
-                        selectedRows.push(pivotId); // Add to selected
-                        console.log('select one ', selectedRows);
+@push('scripts')
+// ...existing scripts...
+@endpush
 
-                    } else {
-                        selectedRows = selectedRows.filter(id => id !== pivotId); // Remove from selected
-                        console.log('removed one ', selectedRows);
+<style>
+.btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center;
+}
 
-                    }
-                });
+.btn-secondary {
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center;
+}
 
-                // Persist selected rows when changing pages
-                $('#ctzlist').on('page.dt', function() {
-                    console.log('changing', selectedRows)
-                    setTimeout(function() {
-                        // Rerender checkboxes based on selectedRows
-                        selectedRows.forEach(function(id) {
-                            $(`input[data-id="${id}"]`).prop('checked', true);
-                        });
-                    }, 0);
-                });
-                // js for actions 
-                // Action: Make them done
-                $('#make-done').click(function() {
-                    updateSelectedCitizens('done', 1);
-                });
+.btn-success {
+    @apply bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center;
+}
 
-                // Action: Make them undone
-                $('#make-undone').click(function() {
-                    updateSelectedCitizens('done', 0);
-                });
+.btn-danger {
+    @apply bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center;
+}
 
-                // Action: Delete from distribution
-                $('#delete-from-distribution').click(function() {
-                    deleteSelectedCitizens();
-                });
+.stat-card {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
 
-                 // Action: Delete from distribution
-                 $('#add-all-to-distribution').click(function() {
-                    addAllToDistribution();
-                });
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-                // Action: Delete from distribution
-                $('#give-all').click(function() {
-                    // addAllToDistribution();
-                });
-
-                function addAllToDistribution(){
-                    $.ajax({
-                        url: '{{ route('distributions.addAllCitizens', $distribution) }}',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            distributionId: {{$distribution->id}}
-                        },
-                        success: function(response) {
-                            oTable.ajax.reload(); // Reload the table
-                           alert('تمت الاضافة بنجاح')
-                        },
-                        error: function(err) {
-                            console.error("Error deleting citizens:", err);
-                        }
-                    });
-                }
-                // Function to update citizens
-                function updateSelectedCitizens(field, value) {
-                    if (selectedRows.length === 0) {
-                        alert("No rows selected!");
-                        return;
-                    }
-
-                    $.ajax({
-                        url: '{{ route('distributions.updateCitizens', $distribution->id) }}',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            citizens: selectedRows,
-                            field: field,
-                            value: value,
-                        },
-                        success: function(response) {
-                            oTable.ajax.reload(); // Reload the table
-                        },
-                        error: function(err) {
-                            console.error("Error updating citizens:", err);
-                        }
-                    });
-                }
-
-                // Function to delete citizens from distribution
-
-                function deleteSelectedCitizens() {
-                    if (selectedRows.length === 0) {
-                        alert("No rows selected!");
-                        return;
-                    }
-
-                    $.ajax({
-                        url: '{{ route('distributions.deleteCitizens', $distribution->id) }}',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            citizens: selectedRows
-                        },
-                        success: function(response) {
-                            oTable.ajax.reload(); // Reload the table
-                            selectedRows = []; // Clear the selection
-                        },
-                        error: function(err) {
-                            console.error("Error deleting citizens:", err);
-                        }
-                    });
-                }
-                // oTable = $("#ctzlist").DataTable({
-                //     "scrollX": true,
-                //     responsive: true,
-                //     lengthMenu: [ 25, 50, 100,300,600,1200,3000,6000,1000,12000],
-                // });
-
-                $('#searchbar').keyup(function() {
-                    oTable.search($(this).val()).draw();
-                });
-
-
-                $(document).on('click', '#update-button', function() {
-                    console.log('cl');
-
-                    var pivotId = $(this).data('id');
-                    var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
-                    var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
-                    var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
-                    var note = $(this).closest('tr').find('input[name="note"]').val();
-                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
-                    var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
-                    var status = isChecked ? 1 : 0;
-                    console.log();
-
-                    console.log($(this).closest('tr').find('a[id="name"]'))
-                    $.ajax({
-                        url: '/update-pivot',
-                        method: 'POST',
-                        data: {
-                            pivotId: pivotId,
-                            isChecked: status,
-                            selectedDate: selectedDate,
-                            quantity: quantity,
-                            recipient: recipient,
-                            note: note,
-                        },
-                        success: function(response) {
-                            // Handle success response
-                            console.log(response);
-                            alert(' تم تحديث  ' + ctzName);
-
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.error(xhr.responseText);
-                            alert('Failed to update pivot');
-                        }
-                    });
-                });
-                $('#ctzlist tbody').on('change', 'input[id="done"]', function() {
-                    var pivotId = $(this).data('id');
-                    var selectedDate = $(this).closest('tr').find('input[name="date"]').val();
-                    var quantity = $(this).closest('tr').find('input[name="quantity"]').val();
-                    var recipient = $(this).closest('tr').find('input[name="recipient"]').val();
-                    var note = $(this).closest('tr').find('input[name="note"]').val();
-                    var ctzName = $(this).closest('tr').find('input[name="name"]').val();
-                    var isChecked = $(this).closest('tr').find('input[name="done"]').prop('checked');
-                    var status = isChecked ? 1 : 0;
-                    console.log();
-                    console.log('clicked')
-                    console.log(pivotId)
-                    console.log('clicked')
-                    console.log(ctzName)
-                    $.ajax({
-                        url: '/update-pivot',
-                        method: 'POST',
-                        data: {
-                            pivotId: pivotId,
-                            isChecked: status,
-                            selectedDate: selectedDate,
-                            quantity: quantity,
-                            recipient: recipient,
-                            note: note,
-                        },
-                        success: function(response) {
-                            // Handle success response
-                            console.log(response);
-                            if (status) {
-                                alert(' تم تسليم  ' + ctzName + ' {{ $distribution->name }} ');
-                            } else {
-                                alert(' تم الغاء تسليم  ' + ctzName +
-                                    ' {{ $distribution->name }} ');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.error(xhr.responseText);
-                            alert('Failed to update pivot');
-                        }
-                    });
-                });
-
-            });
-        </script>
-        <script src="{{ asset('assets/js/ui-modals.js') }}"></script>
-    @endpush
-@endsection
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+</style>

@@ -1,6 +1,5 @@
 <?php
 
- 
 namespace App\Services;
 use Carbon\Carbon;
 use App\Models\Citizen;
@@ -57,15 +56,17 @@ class StatisticsService
     public function getBenefitedCitizensStatistics()
     {
         $benefitedCitizens = Citizen::whereHas('distributions', function ($query) {
-            $query->where('distributions.done', 1); // Assuming done=true marks aid received
+            $query->where('distribution_citizens.done', 1); // Specify the table name
         })->count();
 
-        $totalDistributedByPerson = Citizen::withCount('distributions')
+        $totalDistributedByPerson = Citizen::withCount(['distributions' => function ($query) {
+            $query->where('distribution_citizens.done', 1); // Specify the table name
+        }])
             ->whereHas('distributions', function ($query) {
-                $query->where('distributions.done', 1);
+                $query->where('distribution_citizens.done', 1); // Specify the table name
             })
             ->get()
-            ->avg('distributions_count'); // Average distributions per person
+            ->avg('distributions_count');
 
         return [
             'benefited_citizens_count' => $benefitedCitizens,
@@ -79,12 +80,12 @@ class StatisticsService
     public function getRegionalStatistics()
     {
         $benefitedRegions = Region::whereHas('citizens.distributions', function ($query) {
-            $query->where('done', true);
+            $query->where('distribution_citizens.done', 1); // Specify the table name
         })->count();
 
         $citizensByRegion = Region::withCount(['citizens' => function ($query) {
             $query->whereHas('distributions', function ($query) {
-                $query->where('done', true);
+                $query->where('distribution_citizens.done', 1); // Specify the table name
             });
         }])->get()->mapWithKeys(function ($region) {
             return [$region->name => $region->citizens_count];
