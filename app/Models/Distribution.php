@@ -63,7 +63,7 @@ class Distribution extends Model
                 DB::raw('SUM(CASE WHEN distribution_citizens.done = 1 THEN 1 ELSE 0 END) as completed'),
                 DB::raw('SUM(distribution_citizens.quantity) as total_quantity')
             )
-            ->groupBy('regions.name')
+            ->groupBy('regions.name', 'distribution_citizens.distribution_id', 'distribution_citizens.citizen_id', 'distribution_citizens.id', 'distribution_citizens.quantity', 'distribution_citizens.recipient', 'distribution_citizens.note', 'distribution_citizens.done', 'distribution_citizens.date')
             ->orderBy('count', 'desc')
             ->get();
     }

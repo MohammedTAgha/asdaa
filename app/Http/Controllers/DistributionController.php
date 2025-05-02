@@ -94,23 +94,15 @@ class DistributionController extends Controller
             ->with("success", "Distribution created successfully.");
     }
 
-    public function show($id, DistributionReportService $distributionReportService)
+    public function show($id ,DistributionReportService $distributionReportService )
     {
-        $distribution = Distribution::with(['citizens', 'citizens.region', 'category', 'source'])->findOrFail($id);
+        $distributions = Distribution::all();
+        $citizens = Citizen::all();
+        $distribution = Distribution::findOrFail($id);
+        $regions = Region::all();
         $stats = $distributionReportService->calculateStats($distribution);
-        
-        // Add regions summary to stats
-        $regions_summary = $distribution->citizens()
-            ->join('regions', 'citizens.region_id', '=', 'regions.id')
-            ->select('regions.name', DB::raw('count(*) as count'))
-            ->groupBy('regions.name')
-            ->orderBy('count', 'desc')
-            ->get()
-            ->toArray();
-        
-        $stats['regions_summary'] = $regions_summary;
-        
-        return view("distributions.show", compact("distribution", "stats"));
+       
+        return view("distributions.show", compact("distribution", "citizens", "distributions", 'regions','stats'));
     }
 
     public function edit(Distribution $distribution)
