@@ -37,6 +37,7 @@ Route::get('/linkstorage', function () {
     Artisan::call('storage:link');
 });
 
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // File Management Routes (Available to all authenticated users)
 Route::middleware('auth')->group(function () {
