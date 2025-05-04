@@ -7,7 +7,6 @@ use App\Models\Records\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
-// use App\Exports\PersonsExport;
 
 class PersonController extends Controller
 {
@@ -16,45 +15,34 @@ class PersonController extends Controller
         return view('records.home');
     }
     
-  
-
-
-    
     public function search(Request $request)
     {
         $query = Person::query();
         if ($request->filled('id_number')) {
             $query->where('CI_ID_NUM', 'like', '%' . $request->id_number . '%');
         }
-        // Filter by first name
         if ($request->filled('first_name')) {
             $query->where('CI_FIRST_ARB', 'like', '%' . $request->first_name . '%');
         }
-
-        // Filter by father's name
         if ($request->filled('father_name')) {
             $query->where('CI_FATHER_ARB', 'like', '%' . $request->father_name . '%');
         }
-
-        // Filter by grandfather's name
         if ($request->filled('grandfather_name')) {
             $query->where('CI_GRAND_FATHER_ARB', 'like', '%' . $request->grandfather_name . '%');
         }
-
-        // Filter by family name
         if ($request->filled('family_name')) {
             $query->where('CI_FAMILY_ARB', 'like', '%' . $request->family_name . '%');
         }
 
         $startTime = microtime(true);
         $cacheKey = 'search_results:' . md5(serialize($request->all()));
+        
         if (Cache::has($cacheKey)) {
             $results = Cache::get($cacheKey);
-            $executionTime = 0; // Cache hit, set execution time to 0
+            $executionTime = 0;
         } else {
             $results = Cache::remember($cacheKey, 60, function () use ($request, $query) {
-                $results = $query->with('relations')->get();
-                return $results;
+                return $query->get();
             });
             $endTime = microtime(true);
             $executionTime = round(($endTime - $startTime) * 1000, 2);
@@ -62,30 +50,29 @@ class PersonController extends Controller
 
         return view('records.home', compact('results', 'executionTime'));
     }
+
     public function show($id)
     {
         $citizen = Person::findOrFail($id);
-        // dd($citizen->getWife());
-
-        // Fetch first-level relatives
-        $relatives = Relation::with('relative')
-            ->where('CF_ID_NUM', $id)
-            ->get();
+        
+        // Eager load first-level relatives with their basic information
+        $relatives = Relation::with(['relative' => function($query) {
+            $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_FAMILY_ARB');
+        }])->where('CF_ID_NUM', $id)->get();
     
-        // Prepare a list to store categorized second-level relatives
         $secondLevelRelatives = collect();
     
-        // Process each first-level relative
         foreach ($relatives as $relation) {
             $relativeId = $relation->CF_ID_RELATIVE;
     
-            // Fetch relatives of the current relative (second-level relatives)
-            $secondRelatives = Relation::with('relative')
-                ->where('CF_ID_NUM', $relativeId)
-                ->where('CF_ID_RELATIVE', '!=', $id) // Exclude the main citizen
-                ->get();
+            // Eager load second-level relatives with their basic information
+            $secondRelatives = Relation::with(['relative' => function($query) {
+                $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB');
+            }])
+            ->where('CF_ID_NUM', $relativeId)
+            ->where('CF_ID_RELATIVE', '!=', $id)
+            ->get();
     
-            // Categorize these second-level relatives
             foreach ($secondRelatives as $secondRelation) {
                 $relationName = $relation->relation_name;
     
@@ -101,19 +88,9 @@ class PersonController extends Controller
         return view('records.citizen-details', [
             'citizen' => $citizen,
             'relatives' => $relatives,
-            'secondLevelRelatives' => $secondLevelRelatives->unique('relative.CI_ID_NUM'), // Remove duplicates
+            'secondLevelRelatives' => $secondLevelRelatives->unique('relative.CI_ID_NUM'),
         ]);
     }
-
-    public function export(Request $request)
-    {
-        // $ids = explode(',', $request->query('ids'));
-        // $ids = array_map('trim', $ids);
-        // $results = Person::whereIn('CI_ID_NUM', $ids)->get();
-        // // dd($results);
-        // return Excel::download(new PersonsExport($results), 'citizens.xlsx');
-    }
-
 
     public function showSearchByIdsForm()
     {
@@ -123,7 +100,10 @@ class PersonController extends Controller
     public function searchByIds(Request $request)
     {
         $ids = explode(PHP_EOL, $request->input('ids'));
-        $results = Person::whereIn('CI_ID_NUM', $ids)->with('relations')->get();
+        $results = Person::whereIn('CI_ID_NUM', $ids)
+            ->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB', 
+                'CI_PERSONAL_CD', 'CITTTTY', 'CITY', 'CI_BIRTH_DT', 'CI_SEX_CD', 'CI_DEAD_DT')
+            ->get();
 
         $request->session()->put('search_ids', $request->input('ids'));
 

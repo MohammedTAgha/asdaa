@@ -17,7 +17,7 @@
                 @foreach ($results as $citizen)
                     <tr>
                         <td>{{ $citizen->CI_ID_NUM }}</td>
-                        <td>{{ $citizen->CI_FIRST_ARB }} {{ $citizen->CI_FATHER_ARB }} {{ $citizen->CI_GRAND_FATHER_ARB }} {{ $citizen->CI_FAMILY_ARB }}</td>
+                        <td>{{ $citizen->full_name }}</td>
                         <td>{{ $citizen->age ? $citizen->age . ' سنة' : 'غير متوفر' }}</td>
                         <td>
                             <a href="{{ route('citizen.details', $citizen->CI_ID_NUM) }}" class="btn btn-info btn-sm">عرض التفاصيل</a>

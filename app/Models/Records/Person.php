@@ -15,12 +15,27 @@ class Person extends Model
     protected $table = 'persons';
     protected $connection = 'sqlite';
 
-    // Add commonly accessed relations and attributes
-    protected $with = ['relations'];
+    // Only load essential attributes by default
+    protected $with = [];
     protected $appends = ['age', 'full_name'];
 
-    // Add attribute caching duration
+    // Cache duration for attributes and relationships
     protected $cacheDuration = 1440; // 24 hours in minutes
+
+    // Define which attributes should be eagerly loaded
+    protected $visible = [
+        'CI_ID_NUM',
+        'CI_FIRST_ARB',
+        'CI_FATHER_ARB',
+        'CI_GRAND_FATHER_ARB',
+        'CI_FAMILY_ARB',
+        'CI_PERSONAL_CD',
+        'CI_BIRTH_DT',
+        'CI_SEX_CD',
+        'CI_DEAD_DT',
+        'age',
+        'full_name'
+    ];
 
     public function relations()
     {
@@ -33,6 +48,19 @@ class Person extends Model
         return Cache::remember($cacheKey, $this->cacheDuration, function () {
             return "{$this->CI_FIRST_ARB} {$this->CI_FATHER_ARB} {$this->CI_GRAND_FATHER_ARB} {$this->CI_FAMILY_ARB}";
         });
+    }
+
+    public function getAgeAttribute()
+    {
+        if ($this->CI_BIRTH_DT) {
+            try {
+                $birthDate = \Carbon\Carbon::createFromFormat('d/m/Y', $this->CI_BIRTH_DT);
+                return $birthDate->age;
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     public function getWifes()
@@ -64,34 +92,6 @@ class Person extends Model
                 ->where('relations.CF_ID_NUM', $this->CI_ID_NUM)
                 ->where('relations.CF_RELATIVE_CD', 4)
                 ->first();
-        });
-    }
-
-    public function getAgeAttribute()
-    {
-        if (!$this->CI_BIRTH_DT) {
-            return null;
-        }
-
-        static $ages = [];
-        $personId = $this->CI_ID_NUM;
-
-        if (isset($ages[$personId])) {
-            return $ages[$personId];
-        }
-
-        $cacheKey = "person_age_{$this->CI_ID_NUM}";
-        return Cache::remember($cacheKey, $this->cacheDuration, function () use (&$ages, $personId) {
-            try {
-                $birthDate = \DateTime::createFromFormat('d/m/Y', $this->CI_BIRTH_DT);
-                if (!$birthDate) {
-                    return null;
-                }
-                $ages[$personId] = $birthDate->diff(new \DateTime('now'))->y;
-                return $ages[$personId];
-            } catch (\Exception $e) {
-                return null;
-            }
         });
     }
 
