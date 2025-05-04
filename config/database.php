@@ -39,10 +39,20 @@ return [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),
             'database' => database_path('database.sqlite'),
-
-            
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+            'options' => [
+                PDO::ATTR_TIMEOUT => 60,  // Increase timeout
+                PDO::ATTR_EMULATE_PREPARES => true,
+                PDO::ATTR_PERSISTENT => true,  // Keep persistent connections
+            ],
+            'pragma' => [
+                'journal_mode' => 'WAL',  // Write-Ahead Logging
+                'busy_timeout' => 60000,  // Wait up to 60s on locks
+                'temp_store' => 'MEMORY',
+                'synchronous' => 'NORMAL',
+                'cache_size' => -2000000, // about 2GB memory
+            ],
         ],
 
         'mysql' => [

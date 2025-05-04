@@ -127,7 +127,7 @@
 
                                     <td>{{ $citizen->CI_PERSONAL_CD }}</td>
                                     <td>{{ !empty($citizen->getWife()) ? $citizen->getWife()->CI_ID_NUM :"0" }}</td>
-                                    <td>{{ !empty($citizen->getWife()) ? $citizen->getWife()->fullName() :"0" }}</td>
+                                    <td>{{ !empty($citizen->getWife()) ? $citizen->getWife()->full_name : "0" }}</td>
                                     <td>{{ $citizen->CITTTTY }}</td>
                                     <td>{{ $citizen->CITY }}</td>
                                     <td>{{ $citizen->CI_BIRTH_DT }}</td>
