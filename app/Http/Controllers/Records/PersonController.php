@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Records;
 use App\Http\Controllers\Controller;
-
-use App\Models\Person;
-use App\Models\Relation;
+use App\Models\Records\Person;
+use App\Models\Records\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;

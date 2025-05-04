@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Records;
+
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,9 @@ class Person extends Model
     use HasFactory;
     protected $primaryKey = 'CI_ID_NUM';
     public $timestamps = false;
-    protected $table='persons';
+    protected $table = 'persons';
+    protected $connection = 'sqlite';  // Specify the SQLite connection
+
     public function relations()
     {
         return $this->hasMany(Relation::class, 'CF_ID_NUM', 'CI_ID_NUM');

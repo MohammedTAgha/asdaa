@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Records;
+
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,7 @@ class Relation extends Model
 {
     use HasFactory;
 
+    protected $connection = 'sqlite';  // Specify the SQLite connection
     public $timestamps = false;
 
     public function person()

@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 class Person extends Model
 {
     use HasFactory;
-    protected $connection = 'sqlite';
+    protected $connection = 'sqlite'; 
     protected $primaryKey = 'CI_ID_NUM';
     public $timestamps = false;
-    protected $table='persons';
+    protected $table = 'persons';
     // public function relations()
     // {
     //     return $this->hasMany(Relation::class, 'CF_ID_NUM', 'CI_ID_NUM');
