@@ -15,6 +15,7 @@ use App\Http\Controllers\CitizenUploadController;
 use App\Imports\CitizenDistributionImport;
 use App\Http\Controllers\CommitteeController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\Records\PersonController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\StaffController;
@@ -41,6 +42,16 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 // File Management Routes (Available to all authenticated users)
 Route::middleware('auth')->group(function () {
+    Route::prefix('records')->group(function () {
+        Route::get('/', [PersonController::class, 'index'])->name('home');
+        Route::post('/search', [PersonController::class, 'search'])->name('search');
+        Route::get('/citizen/{id}', [PersonController::class, 'show'])->name('citizen.details');
+        Route::get('/search-by-ids', [PersonController::class, 'showSearchByIdsForm'])->name('search.by.ids.form');
+        Route::post('/search-by-ids', [PersonController::class, 'searchByIds'])->name('search.by.ids');
+        Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
+    
+
+    });
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/queries', [HomeController::class, 'queries'])->name('queries');
     Route::get('/files', [FileController::class, 'index'])->name('files.index');
