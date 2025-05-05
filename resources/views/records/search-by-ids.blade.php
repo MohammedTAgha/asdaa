@@ -14,9 +14,12 @@
                         @csrf
                         <div class="form-group">
                             <label for="ids">ادخل الهويات (كل هوية في سطر جديد)</label>
-                            <textarea name="ids" id="ids" class="form-control" rows="5">{{ session('search_ids') }}</textarea>
+                            <textarea name="ids" id="ids" class="form-control mb-3" rows="5" style="direction: ltr;">{{ session('search_ids') }}</textarea>
+                            <div class="text-start">
+                                <button type="button" class="btn btn-secondary" id="validateIdsBtn">التحقق من الهويات</button>
+                                <button type="submit" class="btn btn-primary">بحث</button>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">بحث</button>
                     </form>
                 </div>
             </div>
@@ -54,15 +57,7 @@
                                     <td>{{ $citizen->CI_ID_NUM }}</td>
                                     <td>{{ $citizen->full_name }}</td>
                                     <td>{{ $citizen->CI_PERSONAL_CD }}</td>
-                                    @if($citizen->CI_PERSONAL_CD === "متزوج")
-                                        @if($citizen->getWife())
-                                            <td>{{ $citizen->getWife()->full_name }}</td>
-                                        @else
-                                            <td>-</td>
-                                        @endif
-                                    @else
-                                        <td>-</td>
-                                    @endif
+                                    <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->full_name : '-') : '-' }}</td>
                                     <td>{{ $citizen->CITTTTY }}</td>
                                     <td>{{ $citizen->CITY }}</td>
                                     <td>{{ $citizen->CI_BIRTH_DT }}</td>
@@ -83,4 +78,51 @@
     </div>
     @endif
 </div>
+
+@push('scripts')
+<script>
+document.getElementById('validateIdsBtn').addEventListener('click', function() {
+    const textarea = document.getElementById('ids');
+    const ids = textarea.value.split(/[\n,]/).map(id => id.trim()).filter(id => id);
+    const validIds = [];
+    const invalidIds = [];
+
+    ids.forEach(id => {
+        if (validatePalestinianID(id)) {
+            validIds.push(id);
+        } else {
+            invalidIds.push(id);
+        }
+    });
+
+    let message = '';
+    if (validIds.length > 0) {
+        message += `الهويات الصحيحة (${validIds.length}):\n${validIds.join('\n')}\n\n`;
+    }
+    if (invalidIds.length > 0) {
+        message += `الهويات غير الصحيحة (${invalidIds.length}):\n${invalidIds.join('\n')}`;
+    }
+
+    alert(message || 'لا يوجد هويات للتحقق منها');
+});
+
+function validatePalestinianID(id) {
+    if (id.length === 9 && /^\d{9}$/.test(id)) {
+        let sum = 0;
+        for (let i = 0; i < 8; i++) {
+            let digit = parseInt(id[i]);
+            if (i % 2 === 0) {
+                sum += digit;
+            } else {
+                let doubled = digit * 2;
+                sum += doubled > 9 ? doubled - 9 : doubled;
+            }
+        }
+        let checkDigit = (10 - (sum % 10)) % 10;
+        return checkDigit === parseInt(id[8]);
+    }
+    return false;
+}
+</script>
+@endpush
 @endsection

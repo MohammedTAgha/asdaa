@@ -10,14 +10,7 @@
         <h5 class="card-header mt-2 text-xl"> {{isset($citizen) ? 'تعديل موجود' : 'جديد'}} </h5>
         <div class="card-body mx-4">
             <h6 class="mb-b fw-semibold">1. بيانات النازح</h6>
-            <div class="row mb-3">
-                <label for="id" class="col-sm-3 col-form-label text-sm-end">الهوية</label>
-                <div class="col-sm-9">
-                    <input type="text" id="id" name="id" class="form-control" value="{{ $citizen->id ?? old('id','') }}" required>
-                    <div class="invalid-feedback">رقم غير صحيح: الطول يجب ان يكون 9 ارقام</div>
-                    <div class="valid-feedback">الهوية صحيحة</div>
-                </div>
-            </div>
+            <x-palestinian-id-input :value="$citizen->id ?? old('id','')" />
             {{-- name --}}
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label text-sm-end">الاسم </label>
