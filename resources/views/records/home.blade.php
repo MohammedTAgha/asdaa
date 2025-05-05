@@ -85,5 +85,76 @@
         </div>
     </div>
     @endif
+@if(isset($results))
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3>نتائج البحث</h3>
+                </div>
+                <div class="card-body">
+                    @if(count($results) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered shadow-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Citizen ID</th>
+                                    <th>Name</th>
+                                    <th>الاسم الاول</th>
+                                    <th>الاب</th>
+                                    <th>الجد</th>
+                                    <th>العائلة</th>
+                                    <th>الحالة</th>
+                                    <th>هوية الزوجة</th>
+                                    <th>اسم الزوجة</th>
+                                    <th>المدينة </th>
+                                    <th>العنوان </th>
+                                    <th>الميلاد </th>
+                                    <th>الجنس</th>
+                                    <th>Age</th>
+                                    <th>الوفاة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($results as $citizen)
+                                <tr>
+                                    <td>{{ $citizen->CI_ID_NUM }}</td>
+                                    <td>{{ $citizen->CI_FIRST_ARB }} {{ $citizen->CI_FATHER_ARB }} {{ $citizen->CI_GRAND_FATHER_ARB }} {{ $citizen->CI_FAMILY_ARB }}</td>
+                                    <td>{{ $citizen->CI_FIRST_ARB }}</td>
+                                    <td>{{ $citizen->CI_FATHER_ARB }}</td>
+                                    <td> {{ $citizen->CI_GRAND_FATHER_ARB }}</td>
+                                    <td>{{ $citizen->CI_FAMILY_ARB }}</td>
+
+                                    <td>{{ $citizen->CI_PERSONAL_CD }}</td>
+                                    <td>{{ !empty($citizen->getWife()) ? $citizen->getWife()->CI_ID_NUM :"0" }}</td>
+                                    <td>{{ !empty($citizen->getWife()) ? $citizen->getWife()->full_name :"0" }}</td>
+                                    <td>{{ $citizen->CITTTTY }}</td>
+                                    <td>{{ $citizen->CITY }}</td>
+                                    <td>{{ $citizen->CI_BIRTH_DT }}</td>
+                                    <td>{{ $citizen->CI_SEX_CD }}</td>
+                                    
+                                    <td>{{ $citizen->age }}</td>
+                                    <td>{{ $citizen->CI_DEAD_DT }}</td>
+
+                                    {{-- <td>
+                                        <a href="{{ route('citizen.details', $citizen->CI_ID_NUM) }}" class="btn btn-info btn-sm">View Details</a>
+                                    </td> --}}
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    @else
+                    <p>No results found.</p>
+                    @endif
+                    @if(isset($executionTime))
+                        <p>Search execution time: {{ $executionTime }} ms</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 @endsection
