@@ -3,75 +3,120 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-use App\Models\Citizen; // Assuming you have a Citizen model
+use App\Models\Citizen;
 use Illuminate\Support\Facades\Log;
-// @ fix shoing result
+
 class CitizenSearch extends Component
 {
     public $searchId = '';
+    public $searchName = '';
     public $isValid = false;
     public $errorMessage = '';
-    public $citizen = null;
+    public $citizens = [];
+    public $searchType = 'id'; // 'id' or 'name'
 
     public function updatedSearchId()
     {
-        $this->validate();
+        if ($this->searchType === 'id') {
+            $this->validateId();
+        }
+    }
+
+    public function updatedSearchName()
+    {
+        if ($this->searchType === 'name' && strlen($this->searchName) >= 3) {
+            $this->searchByName();
+        }
+    }
+
+    public function setSearchType($type)
+    {
+        $this->searchType = $type;
+        $this->reset(['searchId', 'searchName', 'citizens', 'errorMessage']);
     }
 
     public function searchCitizen()
     {
-        Log::alert('searching citizens');
-
-        try {
-            $this->validate();
-            if ($this->isValid) {
-                $this->citizen = Citizen::where('id', $this->searchId)->first();
-                // $this->errorMessage = 'no errors';
-                if (!$this->citizen) {
-                    $this->errorMessage = 'Citizen not found';
-                }
-            }
-        } catch (\Throwable $e) {
-            Log::alert('not valid');
-            $this->errorMessage = 'eroor validation input';
-            Log::alert( $e->getMessage());
+        if ($this->searchType === 'id') {
+            $this->searchById();
+        } else {
+            $this->searchByName();
         }
-       
-        Log::alert('result');
-
-        Log::alert($this->searchId);
-        Log::alert($this->isValid);
-        // Log::alert($this->citizen->name);
-        
     }
 
-    public function rules()
+    protected function searchById()
     {
-        return [
-            'searchId' => [
-                'required',
-                'string',
-                'size:9',
-                'regex:/^\d{9}$/',
-                function ($attribute, $value, $fail) {
-                    if (!$this->validateLuhn($value)) {
-                        $fail('Invalid ID');
-                    } else {
-                        $this->isValid = true;
-                    }
-                },
-            ],
-        ];
+        try {
+            if ($this->validateId()) {
+                $citizen = Citizen::where('id', $this->searchId)->first();
+                if ($citizen) {
+                    $this->citizens = [$citizen];
+                    $this->errorMessage = '';
+                } else {
+                    $this->errorMessage = 'لم يتم العثور على مواطن بهذا الرقم';
+                    $this->citizens = [];
+                }
+            }
+        } catch (\Exception $e) {
+            $this->errorMessage = 'حدث خطأ في البحث';
+        }
+    }
+
+    protected function searchByName()
+    {
+        if (strlen($this->searchName) < 3) {
+            $this->errorMessage = 'يجب إدخال 3 أحرف على الأقل';
+            return;
+        }
+
+        $searchTerms = explode(' ', $this->searchName);
+        $query = Citizen::query();
+        
+        foreach ($searchTerms as $term) {
+            $query->where(function($q) use ($term) {
+                $q->where('firstname', 'like', "%{$term}%")
+                    ->orWhere('secondname', 'like', "%{$term}%")
+                    ->orWhere('thirdname', 'like', "%{$term}%")
+                    ->orWhere('lastname', 'like', "%{$term}%");
+            });
+        }
+
+        $this->citizens = $query->limit(10)->get();
+        
+        if ($this->citizens->isEmpty()) {
+            $this->errorMessage = 'لم يتم العثور على نتائج';
+        } else {
+            $this->errorMessage = '';
+        }
+    }
+
+    protected function validateId()
+    {
+        if (!preg_match('/^\d{9}$/', $this->searchId)) {
+            $this->errorMessage = 'رقم الهوية يجب أن يتكون من 9 أرقام';
+            $this->isValid = false;
+            return false;
+        }
+
+        if (!$this->validateLuhn($this->searchId)) {
+            $this->errorMessage = 'رقم الهوية غير صالح';
+            $this->isValid = false;
+            return false;
+        }
+
+        $this->isValid = true;
+        $this->errorMessage = '';
+        return true;
     }
 
     private function validateLuhn($id)
     {
         $sum = 0;
-        $id = strrev($id); // Reverse the string to iterate from right to left
+        $id = strrev($id);
     
         for ($i = 0; $i < 8; $i++) {
-            $digit = (int) substr($id, $i, 1); // Extract each digit
-            if ($i % 2 === 1) { // Note: We changed this condition because we reversed the string
+            $digit = (int) substr($id, $i, 1);
+            if ($i % 2 === 1) {
                 $doubled = $digit * 2;
                 $sum += $doubled > 9 ? $doubled - 9 : $doubled;
             } else {
@@ -80,7 +125,7 @@ class CitizenSearch extends Component
         }
     
         $checkDigit = (10 - ($sum % 10)) % 10;
-        return $checkDigit === (int) substr($id, 8, 1); // Compare with the last digit
+        return $checkDigit === (int) substr($id, 8, 1);
     }
 
     public function render()

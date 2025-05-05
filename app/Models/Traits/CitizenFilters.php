@@ -36,13 +36,16 @@ trait CitizenFilters
             $query->where('region_id', $regionId);
         });
         $query->when($filters['first_name'] ?? null, function ($query, $first_name) {
-            $query->where('first_name',$first_name);
+            $query->where('firstname', 'like', '%' . $first_name . '%');
         });
         $query->when($filters['third_name'] ?? null, function ($query, $third_name) {
-            $query->where('third_name',$third_name);
+            $query->where('thirdname', 'like', '%' . $third_name . '%');
         });
         $query->when($filters['second_name'] ?? null, function ($query, $second_name) {
-            $query->where('second_name',$second_name);
+            $query->where('secondname', 'like', '%' . $second_name . '%');
+        });
+        $query->when($filters['last_name'] ?? null, function ($query, $last_name) {
+            $query->where('lastname', 'like', '%' . $last_name . '%');
         });
         $query->when($filters['id'] ?? null, function ($query, $id) {
             $query->where('id',$id);

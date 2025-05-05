@@ -35,12 +35,24 @@ class HomeController extends Controller
         return view('home.index');
     }
 
-    public function queries()
+    public function queries(Request $request)
     {
-               $regions = Region::all();
-        //        $citizens = Citizen::all();
-        //        $distributions = Distribution::with('category')->get();
-        return view('home.queries',compact('regions'));
+        $regions = Region::all();
+        $citizens = null;
+
+        if ($request->hasAny(['search', 'first_name', 'second_name', 'third_name', 'last_name'])) {
+            $filters = array_filter([
+                'search' => $request->search,
+                'first_name' => $request->first_name,
+                'second_name' => $request->second_name,
+                'third_name' => $request->third_name,
+                'last_name' => $request->last_name
+            ]);
+            
+            $citizens = Citizen::filter($filters)->get();
+        }
+
+        return view('home.queries', compact('regions', 'citizens'));
     }
 
     public function test()
