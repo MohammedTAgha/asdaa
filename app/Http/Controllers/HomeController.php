@@ -49,7 +49,7 @@ class HomeController extends Controller
                 'last_name' => $request->last_name
             ]);
             
-            $citizens = Citizen::filter($filters)->get();
+            $citizens = Citizen::filter($filters)->paginate(15);
         }
 
         return view('home.queries', compact('regions', 'citizens'));

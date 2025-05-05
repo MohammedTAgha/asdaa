@@ -104,6 +104,10 @@
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <div class="d-flex justify-content-center mt-4">
+                            {{ $citizens->appends(request()->except('page'))->links() }}
+                        </div>
                     </div>
                 @elseif(request()->hasAny(['search', 'first_name', 'second_name', 'third_name', 'last_name']))
                     <div class="alert alert-info">
