@@ -63,24 +63,43 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 					href="{{ route('queries') }}">
 					<span class="menu-icon">
 						<span class="svg-icon svg-icon-2">
-							<i class="ti ti-serach"></i>
+							<i class="ti ti-search"></i>
 						</span>
 					</span>
 					<span class="menu-title">الاستعلامات</span>
 				</a>
 			</div>
-			{{-- <!-- Test -->
-			<div class="menu-item">
-				<a class="menu-link {{ request()->routeIs('test') ? 'active' : '' }}"
-					href="{{ route('test') }}">
+
+			<!-- Records Search -->
+			<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('records.*') ? 'here show' : '' }}">
+				<span class="menu-link">
 					<span class="menu-icon">
 						<span class="svg-icon svg-icon-2">
-							<i class="ti ti-smart-home"></i>
+							<i class="ti ti-search"></i>
 						</span>
 					</span>
-					<span class="menu-title">test</span>
-				</a>
-			</div> --}}
+					<span class="menu-title">البحث في السجل المدني</span>
+					<span class="menu-arrow"></span>
+				</span>
+				<div class="menu-sub menu-sub-accordion">
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('records.search') ? 'active' : '' }}" href="{{ route('records.search') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">بحث عام</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('search.by.ids.form') ? 'active' : '' }}" href="{{ route('search.by.ids.form') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">بحث بالهوية</span>
+						</a>
+					</div>
+				</div>
+			</div>
 
 			<!-- Citizens -->
 			<div data-kt-menu-trigger="click"

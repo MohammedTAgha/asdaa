@@ -6,6 +6,7 @@ use App\Models\Records\Person;
 use App\Models\Records\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PersonController extends Controller
@@ -18,30 +19,34 @@ class PersonController extends Controller
     public function search(Request $request)
     {
         $query = Person::query();
-        if ($request->filled('id_number')) {
-            $query->where('CI_ID_NUM', 'like', '%' . $request->id_number . '%');
+        
+        // Handle both GET and POST methods
+        $data = $request->isMethod('post') ? $request->all() : $request->query();
+        
+        if (!empty($data['id_number'])) {
+            $query->where('CI_ID_NUM', 'like', '%' . $data['id_number'] . '%');
         }
-        if ($request->filled('first_name')) {
-            $query->where('CI_FIRST_ARB', 'like', '%' . $request->first_name . '%');
+        if (!empty($data['first_name'])) {
+            $query->where('CI_FIRST_ARB', 'like', '%' . $data['first_name'] . '%');
         }
-        if ($request->filled('father_name')) {
-            $query->where('CI_FATHER_ARB', 'like', '%' . $request->father_name . '%');
+        if (!empty($data['father_name'])) {
+            $query->where('CI_FATHER_ARB', 'like', '%' . $data['father_name'] . '%');
         }
-        if ($request->filled('grandfather_name')) {
-            $query->where('CI_GRAND_FATHER_ARB', 'like', '%' . $request->grandfather_name . '%');
+        if (!empty($data['grandfather_name'])) {
+            $query->where('CI_GRAND_FATHER_ARB', 'like', '%' . $data['grandfather_name'] . '%');
         }
-        if ($request->filled('family_name')) {
-            $query->where('CI_FAMILY_ARB', 'like', '%' . $request->family_name . '%');
+        if (!empty($data['family_name'])) {
+            $query->where('CI_FAMILY_ARB', 'like', '%' . $data['family_name'] . '%');
         }
 
         $startTime = microtime(true);
-        $cacheKey = 'search_results:' . md5(serialize($request->all()));
+        $cacheKey = 'search_results:' . md5(serialize($data));
         
         if (Cache::has($cacheKey)) {
             $results = Cache::get($cacheKey);
             $executionTime = 0;
         } else {
-            $results = Cache::remember($cacheKey, 60, function () use ($request, $query) {
+            $results = Cache::remember($cacheKey, 60, function () use ($query) {
                 return $query->get();
             });
             $endTime = microtime(true);
@@ -99,11 +104,41 @@ class PersonController extends Controller
 
     public function searchByIds(Request $request)
     {
+        // Clean and prepare the input IDs
         $ids = explode(PHP_EOL, $request->input('ids'));
-        $results = Person::whereIn('CI_ID_NUM', $ids)
+        $ids = array_map('trim', $ids);
+        $ids = array_filter($ids);
+        
+        // Get existing records
+        $existingResults = Person::whereIn('CI_ID_NUM', $ids)
             ->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB', 
                 'CI_PERSONAL_CD', 'CITTTTY', 'CITY', 'CI_BIRTH_DT', 'CI_SEX_CD', 'CI_DEAD_DT')
-            ->get();
+            ->get()
+            ->keyBy('CI_ID_NUM');
+
+        // Create a collection with all IDs, including non-existent ones
+        $results = collect($ids)->map(function($id) use ($existingResults) {
+            if ($existingResults->has($id)) {
+                return $existingResults->get($id);
+            }
+            
+            // Create a dummy record for non-existent ID
+            $emptyPerson = new Person([
+                'CI_ID_NUM' => $id,
+                'CI_FIRST_ARB' => 'غير موجود',
+                'CI_FATHER_ARB' => '',
+                'CI_GRAND_FATHER_ARB' => '',
+                'CI_FAMILY_ARB' => '',
+                'CI_PERSONAL_CD' => '',
+                'CITTTTY' => '',
+                'CITY' => '',
+                'CI_BIRTH_DT' => '',
+                'CI_SEX_CD' => '',
+                'CI_DEAD_DT' => ''
+            ]);
+            
+            return $emptyPerson;
+        });
 
         $request->session()->put('search_ids', $request->input('ids'));
 

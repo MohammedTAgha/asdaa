@@ -37,6 +37,20 @@ class Person extends Model
         'full_name'
     ];
 
+    protected $fillable = [
+        'CI_ID_NUM',
+        'CI_FIRST_ARB',
+        'CI_FATHER_ARB',
+        'CI_GRAND_FATHER_ARB',
+        'CI_FAMILY_ARB',
+        'CI_PERSONAL_CD',
+        'CITTTTY',
+        'CITY',
+        'CI_BIRTH_DT',
+        'CI_SEX_CD',
+        'CI_DEAD_DT'
+    ];
+
     public function relations()
     {
         return $this->hasMany(Relation::class, 'CF_ID_NUM', 'CI_ID_NUM');

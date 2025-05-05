@@ -10,7 +10,8 @@
                     <h3>بحث عن مواطن</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('records.search') }}" method="GET">
+                    <form action="{{ route('records.search') }}" method="POST">
+                        @csrf
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="searchFirstName" class="form-label">الاسم الاول</label>
