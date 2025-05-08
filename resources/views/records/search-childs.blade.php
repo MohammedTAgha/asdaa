@@ -1,5 +1,5 @@
 @extends('dashboard')
-@section('title', "بحث بالهوية")
+@section('title', "بحث childs")
 
 @section('content')
 <div class="container">
@@ -10,7 +10,7 @@
                     <h3>البحث برقم الهوية</h3>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('records.search-by-ids') }}" method="POST">
+                    <form action="{{ route('records.search-childs') }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="ids">ادخل الهويات (كل هوية في سطر جديد)</label>
@@ -41,33 +41,34 @@
                                 <tr>
                                     <th>رقم الهوية</th>
                                     <th>الاسم</th>
-                                    <th>الحالة</th>
-                                    <th>الزوجة</th>
-                                    <th>الزوجة</th>
-                                    <th>المدينة</th>
-                                    <th>العنوان</th>
+                                    
+                                    <th>الاب</th>
+                                    <th>الاب</th>
                                     <th>الميلاد</th>
-                                    <th>الجنس</th>
                                     <th>العمر</th>
-                                    <th>الوفاة</th>
+                                    <th>الجنس</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($results as $citizen)
-                                <tr>
-                                    <td>{{ $citizen->CI_ID_NUM }}</td>
-                                    <td>{{ $citizen->full_name }}</td>
-                                    <td>{{ $citizen->CI_PERSONAL_CD }}</td>
-                                    <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->CI_ID_NUM : '-') : '-' }}</td>
 
-                                    <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->full_name : '-') : '-' }}</td>
-                                    <td>{{ $citizen->CITTTTY }}</td>
-                                    <td>{{ $citizen->CITY }}</td>
-                                    <td>{{ $citizen->CI_BIRTH_DT }}</td>
-                                    <td>{{ $citizen->CI_SEX_CD }}</td>
-                                    <td>{{ $citizen->age }}</td>
-                                    <td>{{ $citizen->CI_DEAD_DT }}</td>
-                                </tr>
+                                @if (!empty($citizen->getChilds()))
+                                    @foreach ($citizen->getChilds() as $child )
+                                    <tr>
+                                        <td>{{ $child->CI_ID_NUM }}</td>
+                                        <td>{{ $child->full_name }}</td>
+                                        <td>{{ $citizen->CI_ID_NUM }}</td>
+                                        <td>{{ $citizen->full_name }}</td>
+                                        <td>{{ $child->CI_BIRTH_DT }}</td>
+                                        <td>{{ $child->age }}</td>
+
+                                        <td>{{ $child->CI_SEX_CD }}</td>
+                                      
+                                    </tr>
+                                    @endforeach
+                                @endif
+                                
                                 @endforeach
                             </tbody>
                         </table>

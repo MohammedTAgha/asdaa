@@ -93,6 +93,25 @@ class Person extends Model
         });
     }
 
+    
+    public function getChilds()
+    {
+        if ($this->CI_PERSONAL_CD == "اعزب") {
+            return collect();
+        }
+
+        $cacheKey = "person_child_{$this->CI_ID_NUM}";
+        return Cache::remember($cacheKey, $this->cacheDuration, function () {
+            return $this->select('persons.*')
+                ->join('relations', 'persons.CI_ID_NUM', '=', 'relations.CF_ID_RELATIVE')
+                ->where('relations.CF_ID_NUM', $this->CI_ID_NUM)
+                ->where('relations.CF_RELATIVE_CD', 3)
+                ->get();
+        });
+    }
+
+    
+
     public function getWife()
     {
         if ($this->CI_PERSONAL_CD !== "متزوج") {

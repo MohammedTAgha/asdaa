@@ -14,6 +14,7 @@ use App\Http\Controllers\ChildController;
 use App\Http\Controllers\CitizenUploadController;
 use App\Imports\CitizenDistributionImport;
 use App\Http\Controllers\CommitteeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\Records\PersonController;
 use App\Http\Controllers\ReportController;
@@ -38,7 +39,7 @@ Route::get('/linkstorage', function () {
     Artisan::call('storage:link');
 });
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // File Management Routes (Available to all authenticated users)
 Route::middleware('auth')->group(function () {
@@ -48,9 +49,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/citizen/{id}', [PersonController::class, 'show'])->name('citizen.details');
         Route::get('/search-by-ids', [PersonController::class, 'showSearchByIdsForm'])->name('search.by.ids.form');
         Route::post('/search-by-ids', [PersonController::class, 'searchByIds'])->name('records.search-by-ids');
+        Route::get('/search-childs', [PersonController::class, 'showChildForm'])->name('search.childs.form');
+        Route::post('/search-childs', [PersonController::class, 'searchChilds'])->name('records.search-childs');
+
         Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
     });
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/queries', [HomeController::class, 'queries'])->name('queries');
     Route::get('/files', [FileController::class, 'index'])->name('files.index');
     Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
@@ -146,7 +150,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
         });
-        Route::get('/', [HomeController::class, 'index'])->name('home');
+        // Route::get('/', [HomeController::class, 'index'])->name('home');
         Route::resource('staff', StaffController::class);
         // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

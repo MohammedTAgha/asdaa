@@ -59,7 +59,7 @@ class PersonController extends Controller
     public function show($id)
     {
         $citizen = Person::findOrFail($id);
-        
+       
         // Eager load first-level relatives with their basic information
         $relatives = Relation::with(['relative' => function($query) {
             $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_FAMILY_ARB');
@@ -143,5 +143,53 @@ class PersonController extends Controller
         $request->session()->put('search_ids', $request->input('ids'));
 
         return view('records.search-by-ids', compact('results'));
+    }
+
+    public function showChildForm()
+    {
+        return view('records.search-childs');
+    }
+
+    public function searchChilds(Request $request)
+    {
+        // Clean and prepare the input IDs
+        $ids = explode(PHP_EOL, $request->input('ids'));
+        $ids = array_map('trim', $ids);
+        $ids = array_filter($ids);
+        
+        // Get existing records
+        $existingResults = Person::whereIn('CI_ID_NUM', $ids)
+            ->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB', 
+                'CI_PERSONAL_CD', 'CITTTTY', 'CITY', 'CI_BIRTH_DT', 'CI_SEX_CD', 'CI_DEAD_DT')
+            ->get()
+            ->keyBy('CI_ID_NUM');
+
+        // Create a collection with all IDs, including non-existent ones
+        $results = collect($ids)->map(function($id) use ($existingResults) {
+            if ($existingResults->has($id)) {
+                return $existingResults->get($id);
+            }
+            
+            // Create a dummy record for non-existent ID
+            $emptyPerson = new Person([
+                'CI_ID_NUM' => $id,
+                'CI_FIRST_ARB' => 'غير موجود',
+                'CI_FATHER_ARB' => '',
+                'CI_GRAND_FATHER_ARB' => '',
+                'CI_FAMILY_ARB' => '',
+                'CI_PERSONAL_CD' => '',
+                'CITTTTY' => '',
+                'CITY' => '',
+                'CI_BIRTH_DT' => '',
+                'CI_SEX_CD' => '',
+                'CI_DEAD_DT' => ''
+            ]);
+            
+            return $emptyPerson;
+        });
+
+        $request->session()->put('search_ids', $request->input('ids'));
+
+        return view('records.search-childs', compact('results'));
     }
 }
