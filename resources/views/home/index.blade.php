@@ -96,14 +96,14 @@
 </div>
 
 <!-- Section 3: Big Region Cards -->
-<div class="p-6">
+{{-- <div class="p-6">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">المناطق الكبرى</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($bigRegions as $bigRegion)
             <x-big-region-card :big-region="$bigRegion" />
         @endforeach
     </div>
-</div>
+</div> --}}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
