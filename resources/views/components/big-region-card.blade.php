@@ -6,7 +6,9 @@
 
 @php
     $bigRegionService = app(App\Services\BigRegionService::class);
+  
     $stats = $bigRegionService->getBigRegionStatistics($bigRegion->id)->first();
+
 @endphp
 
 <div class="bg-white rounded-lg shadow-lg overflow-hidden">
