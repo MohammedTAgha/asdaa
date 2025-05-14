@@ -83,7 +83,7 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 				</span>
 				<div class="menu-sub menu-sub-accordion">
 					<div class="menu-item">
-						<a class="menu-link {{ request()->routeIs('records.search') ? 'active' : '' }}" href="{{ route('records.search') }}">
+						<a class="menu-link {{ request()->routeIs('records.home') ? 'active' : '' }}" href="{{ route('records.home') }}">
 							<span class="menu-bullet">
 								<span class="bullet bullet-dot"></span>
 							</span>
@@ -96,6 +96,14 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 								<span class="bullet bullet-dot"></span>
 							</span>
 							<span class="menu-title">بحث بالهوية</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('search.childs.form') ? 'active' : '' }}" href="{{ route('search.childs.form') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">بحث الابناء</span>
 						</a>
 					</div>
 				</div>
