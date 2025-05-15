@@ -23,11 +23,12 @@ class DistributionReportService
             ->select(
                 'regions.name as region_name',
                 'distributions.name as project_name',
+                'distributions.id as distribution_id',
                 DB::raw('count(DISTINCT citizens.id) as total_citizens'),
                 DB::raw('count(DISTINCT CASE WHEN distribution_citizens.done = true THEN citizens.id END) as benefited_citizens'),
                 DB::raw('ROUND((count(DISTINCT CASE WHEN distribution_citizens.done = true THEN citizens.id END) / count(DISTINCT citizens.id)) * 100, 2) as percentage')
             )
-            ->groupBy('regions.name', 'distributions.name')
+            ->groupBy('regions.name', 'distributions.name', 'distributions.id')
             ->get();
 
         // Query for statistics without regions
@@ -35,10 +36,11 @@ class DistributionReportService
             ->leftJoin('distribution_citizens', 'distributions.id', '=', 'distribution_citizens.distribution_id')
             ->select(
                 'distributions.name as project_name',
+                'distributions.id as distribution_id',
                 DB::raw('count(DISTINCT distribution_citizens.citizen_id) as total_citizens'),
                 DB::raw('count(DISTINCT CASE WHEN distribution_citizens.done = true THEN distribution_citizens.citizen_id END) as benefited_citizens')
             )
-            ->groupBy('distributions.name')
+            ->groupBy('distributions.name', 'distributions.id')
             ->get();
 
         return [
