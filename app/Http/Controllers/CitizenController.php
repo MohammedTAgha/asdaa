@@ -260,8 +260,12 @@ class CitizenController extends Controller
             return back()->withErrors($result['errors'] ?? [$result['message']]);
         }
 
-        session()->flash('import_result', $result);
-        return redirect()->route('citizens.import');
+        // Store the result in the session with a longer timeout
+        session()->put('import_result', $result);
+        session()->save();
+
+        return redirect()->route('citizens.import')
+            ->with('success', 'تم استيراد البيانات بنجاح');
     }
     public function removeSelectedCitizens(Request $request){
         $citizensIds=$request->input('citizenIds',[]);
@@ -297,13 +301,27 @@ class CitizenController extends Controller
 public function exportImportReport(Request $request)
 {
     if (!session()->has('import_result')) {
-        return back()->with('error', 'No import report available to export');
+        return redirect()->route('citizens.import')
+            ->with('error', 'لا يوجد تقرير استيراد متاح للتصدير. الرجاء قم بعملية الاستيراد أولاً.');
     }
 
-    $importResult = session('import_result');
-    return Excel::download(
-        new ImportReportExport($importResult),
-        'import_report_' . now()->format('Y-m-d_H-i-s') . '.xlsx'
-    );
+    try {
+        $importResult = session('import_result');
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        $fileName = "تقرير_استيراد_المواطنين_{$timestamp}.xlsx";
+        
+        return Excel::download(
+            new ImportReportExport($importResult),
+            $fileName
+        );
+    } catch (\Exception $e) {
+        Log::error('Error exporting import report:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return redirect()->route('citizens.import')
+            ->with('error', 'حدث خطأ أثناء تصدير التقرير. الرجاء المحاولة مرة أخرى.');
+    }
 }
 }
