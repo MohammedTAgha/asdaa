@@ -6,7 +6,20 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card">
         <div class="card-body">
-            <form method="GET" action="{{ route('queries') }}" class="mb-4">
+            <form method="GET" action="{{ route('queries') }}" class="mb-4" id="searchForm">
+                <!-- Search Actions -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="card-title mb-0">بحث عن مواطن</h5>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="ti ti-search me-1"></i>بحث
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="clearForm">
+                            <i class="ti ti-eraser me-1"></i>مسح النموذج
+                        </button>
+                    </div>
+                </div>
+
                 <!-- General Search -->
                 <div class="row g-3 mb-4">
                     <div class="col-12">
@@ -18,9 +31,9 @@
                                    value="{{ request('search') }}"
                                    placeholder="ابحث بالهوية, الاسم, اسم الزوجة, او الملاحظات..."
                                    dir="rtl">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="ti ti-search me-1"></i>بحث
-                            </button>
+                            <span class="input-group-text bg-light">
+                                <i class="ti ti-search"></i>
+                            </span>
                         </div>
                         <small class="text-muted">
                             يمكنك البحث باستخدام رقم الهوية, الاسم الكامل او الجزئي, اسم الزوجة, او الملاحظات
@@ -31,41 +44,48 @@
                 <!-- Detailed Name Search -->
                 <div class="row g-3">
                     <div class="col-12">
-                        <div class="card bg-light">
+                        <div class="card bg-light border">
                             <div class="card-body">
-                                <h6 class="card-subtitle mb-3 text-muted">بحث تفصيلي بالاسم</h6>
-                                <div class="row g-3">
-                                    <div class="col-md-3">
-                                        <label class="form-label">الاسم الأول</label>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               name="first_name" 
-                                               value="{{ request('first_name') }}"
-                                               placeholder="الاسم الأول">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">اسم الأب</label>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               name="second_name" 
-                                               value="{{ request('second_name') }}"
-                                               placeholder="اسم الأب">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">اسم الجد</label>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               name="third_name" 
-                                               value="{{ request('third_name') }}"
-                                               placeholder="اسم الجد">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label class="form-label">العائلة</label>
-                                        <input type="text" 
-                                               class="form-control" 
-                                               name="last_name" 
-                                               value="{{ request('last_name') }}"
-                                               placeholder="العائلة">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="card-subtitle text-muted mb-0">بحث تفصيلي بالاسم</h6>
+                                    <button type="button" class="btn btn-link btn-sm p-0" id="toggleDetailedSearch">
+                                        <i class="ti ti-chevron-down"></i>
+                                    </button>
+                                </div>
+                                <div id="detailedSearchFields">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <label class="form-label">الاسم الأول</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="first_name" 
+                                                   value="{{ request('first_name') }}"
+                                                   placeholder="الاسم الأول">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">اسم الأب</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="second_name" 
+                                                   value="{{ request('second_name') }}"
+                                                   placeholder="اسم الأب">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">اسم الجد</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="third_name" 
+                                                   value="{{ request('third_name') }}"
+                                                   placeholder="اسم الجد">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">العائلة</label>
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   name="last_name" 
+                                                   value="{{ request('last_name') }}"
+                                                   placeholder="العائلة">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -119,4 +139,43 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Clear form functionality
+    document.getElementById('clearForm').addEventListener('click', function() {
+        const form = document.getElementById('searchForm');
+        const inputs = form.querySelectorAll('input[type="text"]');
+        inputs.forEach(input => input.value = '');
+    });
+
+    // Toggle detailed search
+    const toggleBtn = document.getElementById('toggleDetailedSearch');
+    const detailedFields = document.getElementById('detailedSearchFields');
+    let isCollapsed = false;
+
+    toggleBtn.addEventListener('click', function() {
+        isCollapsed = !isCollapsed;
+        if (isCollapsed) {
+            detailedFields.style.display = 'none';
+            toggleBtn.querySelector('i').classList.replace('ti-chevron-down', 'ti-chevron-up');
+        } else {
+            detailedFields.style.display = 'block';
+            toggleBtn.querySelector('i').classList.replace('ti-chevron-up', 'ti-chevron-down');
+        }
+    });
+
+    // Add animation to search results
+    const searchResults = document.getElementById('searchResults');
+    if (searchResults) {
+        searchResults.style.opacity = '0';
+        searchResults.style.transition = 'opacity 0.3s ease-in-out';
+        setTimeout(() => {
+            searchResults.style.opacity = '1';
+        }, 100);
+    }
+});
+</script>
+@endpush
 @endsection
