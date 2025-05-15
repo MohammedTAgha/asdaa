@@ -18,14 +18,17 @@ use Dotenv\Exception\ValidationException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\CitizenImportService;
 
 class CitizenController extends Controller
 {
     protected $citizenService;
+    protected $citizenImportService;
 
-    public function __construct(CitizenService $citizenService)
+    public function __construct(CitizenService $citizenService, CitizenImportService $citizenImportService)
     {
         $this->citizenService = $citizenService;
+        $this->citizenImportService = $citizenImportService;
     }
     public function index(Request $request)
     {
@@ -240,74 +243,21 @@ class CitizenController extends Controller
     }
     public function upload(Request $request)
     {
-        Log::error("--------------:", ["--------------" => "--------------"]);
         $request->validate([
-            'regionId'=>'nullable',
+            'regionId' => 'nullable|exists:regions,id',
             'excel_file' => 'required|mimes:xlsx,xls,csv',
         ]);
-        $region=null;
-        if ($request->has('regionId')) {
-            $region=$request->regionId;
-            Log::info('$region is zero ? founded:');
-            Log::info($region);
-        }
-        Log::info('$region');
-        Log::error($region );
-        Log::error($request);
-        $file = $request->file('excel_file');
-        $import = new CitizensImport($region);
-        Log::error($file);
-        try {
-            $initialCount = Citizen::count(); // Count before import
-            Excel::import($import, $file);
-            $finalCount = Citizen::count(); // Count after import
-            $addedCount = $finalCount - $initialCount; // Calculate actually added rows
-            Log::error("success:", ["-->>" => 'ok']);
-        } catch (ValidationException $e) {
-            Log::error("catch error:", ["-->>" => $e->failures()]);
-            return back()->withErrors($e->failures());
+
+        $result = $this->citizenImportService->import(
+            $request->file('excel_file'),
+            $request->input('regionId')
+        );
+
+        if (!$result['success']) {
+            return back()->withErrors($result['errors'] ?? [$result['message']]);
         }
 
-        $failedRows = $import->failedRows;
-
-        // Generate Excel file with failed rows
-        $failedExcelPath = null;
-        if (!empty($failedRows)) {
-            $user = Auth::user();
-            
-            if ($request->has('regionId')) {
-                $regionid=$request->regionId;
-                $region = Region::find($regionid);
-                try {
-                    Log::alert($region);
-                $regionmsg = $region->name;
-                Log::alert($regionmsg);
-                if(!empty($region->representatives)){
-                    Log::alert($region->representatives);
-                    $regionmsg=$region->representatives->first()->name;
-                }
-                } catch (\Throwable $th) {
-                    $regionmsg = 'تعذر التحديد';
-                }
-            }else{
-                $regionmsg = 'no region';
-            }
-            Log::error("data fails:", ["-->>" => 'xxxx']);
-            $failedExcelPath = 'failed_citizens_'.$user->name.'_' .$regionmsg . "_".time() . '.xlsx';
-            Excel::store(new FailedRowsExport($failedRows), $failedExcelPath, 'public');
-        }
-
-        $result = [
-            'message' => 'Import completed',
-            'addedCount' => $addedCount,
-            'failedCount' => count($import->failedRows),
-            'failedRows' => $import->failedRows,
-            'failedExcelPath' => $failedExcelPath ? Storage::url($failedExcelPath) : null,
-        ];
-        // Flash the result data to the session
         session()->flash('import_result', $result);
-
-        // Redirect to the index page
         return redirect()->route('citizens.index');
     }
     public function removeSelectedCitizens(Request $request){
