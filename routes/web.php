@@ -96,6 +96,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
             Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
             Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
+            Route::get('/export-import-report', [CitizenController::class, 'exportImportReport'])
+                ->name('citizens.export-import-report');
         });
         Route::get('/actions', [HomeController::class, 'actions'])->name('actions');
         Route::get('/test', [HomeController::class, 'test'])->name('test');
@@ -129,6 +131,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
             Route::post('/{id}/restore', [CitizenController::class, 'restore'])->name('citizens.restore');
             Route::post('/restore-multiple', [CitizenController::class, 'restoreMultiple'])->name('citizens.restore-multiple');
+            Route::get('/export-import-report', [CitizenController::class, 'exportImportReport'])
+                ->name('citizens.export-import-report');
         });
         Route::get('/test', [HomeController::class, 'test'])->name('test');
         Route::resource('citizens', CitizenController::class);

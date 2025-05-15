@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\CitizenImportService;
+use App\Exports\ImportReportExport;
 
 class CitizenController extends Controller
 {
@@ -291,5 +292,18 @@ class CitizenController extends Controller
     public function exportWithDistributions(CitizensAndDistributionExportService $exportService)
 {
     return $exportService->export();
+}
+
+public function exportImportReport(Request $request)
+{
+    if (!session()->has('import_result')) {
+        return back()->with('error', 'No import report available to export');
+    }
+
+    $importResult = session('import_result');
+    return Excel::download(
+        new ImportReportExport($importResult),
+        'import_report_' . now()->format('Y-m-d_H-i-s') . '.xlsx'
+    );
 }
 }
