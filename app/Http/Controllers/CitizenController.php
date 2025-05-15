@@ -246,11 +246,13 @@ class CitizenController extends Controller
         $request->validate([
             'regionId' => 'nullable|exists:regions,id',
             'excel_file' => 'required|mimes:xlsx,xls,csv',
+            'should_update_existing' => 'boolean'
         ]);
 
         $result = $this->citizenImportService->import(
             $request->file('excel_file'),
-            $request->input('regionId')
+            $request->input('regionId'),
+            $request->boolean('should_update_existing')
         );
 
         if (!$result['success']) {
@@ -258,7 +260,7 @@ class CitizenController extends Controller
         }
 
         session()->flash('import_result', $result);
-        return redirect()->route('citizens.index');
+        return redirect()->route('citizens.import');
     }
     public function removeSelectedCitizens(Request $request){
         $citizensIds=$request->input('citizenIds',[]);

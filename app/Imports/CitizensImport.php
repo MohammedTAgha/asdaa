@@ -16,14 +16,20 @@ use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\Importable;
 use Illuminate\Support\Str;
+
 class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, WithEvents
 {
+    use Importable, SkipsFailures;
 
-     use Importable, SkipsFailures;
     public $failedRows = [];
+    public $successfulImports = [];
+    public $updatedCitizens = [];
+    public $skippedExisting = [];
     private $errors = [];
     private $regionId;
     private $regionRule;
+    private $shouldUpdateExisting;
+
     // Arabic to English header mapping
     private $headerMapping = [
         'رقم الهوية' => 'id',
@@ -53,24 +59,21 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         'تاريخ الميلاد' => 'date_of_birth',
         'الجنس'=>'gender',
         'عدد كبار السن'=>'elderly_count',
-
     ];
 
     private $slugToOriginal = [];
 
-    public function __construct($regionId)
+    public function __construct($regionId, $shouldUpdateExisting = false)
     {
         $this->regionId = $regionId;
+        $this->shouldUpdateExisting = $shouldUpdateExisting;
+        
         if ($regionId === null || $regionId === '') {
-            Log::alert('region is null');
-            Log::alert($regionId);
             $this->regionRule = 'required|exists:regions,id';
         } else {
-            Log::alert('region is not null');
             $this->regionRule = 'nullable';
         }
 
-        // Create a mapping of slugified headers to original headers
         foreach ($this->headerMapping as $arabicHeader => $englishColumn) {
             $slug = Str::slug($arabicHeader, '_');
             $this->slugToOriginal[$slug] = $arabicHeader;
@@ -81,9 +84,59 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     {
         $mappedRow = $this->mapRow($row);
         $regionId = $this->regionId ?? $mappedRow['region_id'] ?? 0;
+        $citizenId = $mappedRow['id'];
 
-        return new Citizen([
-            'id' => $mappedRow['id'],
+        // Check if citizen already exists
+        $existingCitizen = Citizen::find($citizenId);
+        
+        if ($existingCitizen) {
+            if ($this->shouldUpdateExisting) {
+                $oldRegion = $existingCitizen->region_id;
+                $existingCitizen->update([
+                    'firstname' => $mappedRow['firstname'],
+                    'secondname' => $mappedRow['secondname'] ?? null,
+                    'thirdname' => $mappedRow['thirdname'] ?? null,
+                    'lastname' => $mappedRow['lastname'],
+                    'phone' => $mappedRow['phone'] ?? null,
+                    'phone2' => $mappedRow['phone2'] ?? null,
+                    'family_members' => $mappedRow['family_members'] ?? null,
+                    'wife_id' => $mappedRow['wife_id'] ?? null,
+                    'wife_name' => $mappedRow['wife_name'] ?? null,
+                    'mails_count' => $mappedRow['mails_count'] ?? null,
+                    'femails_count' => $mappedRow['femails_count'] ?? null,
+                    'leesthan3' => $mappedRow['leesthan3'] ?? null,
+                    'obstruction' => $mappedRow['obstruction'] ?? null,
+                    'obstruction_description' => $mappedRow['obstruction_description'] ?? null,
+                    'disease' => $mappedRow['disease'] ?? null,
+                    'disease_description' => $mappedRow['disease_description'] ?? null,
+                    'job' => $mappedRow['job'] ?? null,
+                    'living_status' => $mappedRow['living_status'] ?? null,
+                    'original_address' => $mappedRow['original_address'] ?? null,
+                    'note' => $mappedRow['note'] ?? null,
+                    'region_id' => $regionId,
+                    'social_status' => $mappedRow['social_status'] ?? null,
+                    'is_archived' => $mappedRow['is_archived'] ?? 0
+                ]);
+
+                $this->updatedCitizens[] = [
+                    'citizen' => $existingCitizen,
+                    'old_region' => $oldRegion,
+                    'new_region' => $regionId
+                ];
+
+                return null; // Skip creating new record
+            } else {
+                $this->skippedExisting[] = [
+                    'id' => $citizenId,
+                    'name' => $mappedRow['firstname'] . ' ' . $mappedRow['lastname'],
+                    'current_region' => $existingCitizen->region_id
+                ];
+                return null;
+            }
+        }
+
+        $citizen = new Citizen([
+            'id' => $citizenId,
             'firstname' => $mappedRow['firstname'],
             'secondname' => $mappedRow['secondname'] ?? null,
             'thirdname' => $mappedRow['thirdname'] ?? null,
@@ -103,11 +156,19 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             'job' => $mappedRow['job'] ?? null,
             'living_status' => $mappedRow['living_status'] ?? null,
             'original_address' => $mappedRow['original_address'] ?? null,
-            'note' => $mappedRow['note']?? null,
+            'note' => $mappedRow['note'] ?? null,
             'region_id' => $regionId,
             'social_status' => $mappedRow['social_status'] ?? null,
-             'is_archived'=>$row['is_archived'] ?? 0
+            'is_archived' => $mappedRow['is_archived'] ?? 0
         ]);
+
+        $this->successfulImports[] = [
+            'id' => $citizenId,
+            'name' => $mappedRow['firstname'] . ' ' . $mappedRow['lastname'],
+            'region_id' => $regionId
+        ];
+
+        return $citizen;
     }
 
     private function mapRow(array $row)
@@ -126,7 +187,7 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
     public function rules(): array
     {
         return [
-            'rkm_alhoy' => 'required|unique:citizens,id',
+            'rkm_alhoy' => 'required',
             'alasm_alaol' => 'required',
             'asm_alaaayl' => 'required',
             'region_id' => $this->regionRule,
@@ -163,7 +224,6 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
         }
     }
 
-
     public function registerEvents(): array
     {
         return [
@@ -172,5 +232,4 @@ class CitizensImport implements ToModel, WithHeadingRow, WithValidation, SkipsOn
             },
         ];
     }
-
 }
