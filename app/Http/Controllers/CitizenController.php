@@ -378,16 +378,17 @@ class CitizenController extends Controller
             ->unique()
             ->values();
 
-        // Get all existing citizens regardless of ID validity
-        $existingCitizens = Citizen::with([
-            'distributions' => function($query) {
-                $query->select('distributions.*', 'distribution_citizens.done')
-                    ->withPivot('done');
-            },
-            'region'
-        ])
-        ->whereIn('id', $allIds)
-        ->get();
+        // Get all existing citizens regardless of ID validity, including soft deleted ones
+        $existingCitizens = Citizen::withTrashed()
+            ->with([
+                'distributions' => function($query) {
+                    $query->select('distributions.*', 'distribution_citizens.done')
+                        ->withPivot('done');
+                },
+                'region'
+            ])
+            ->whereIn('id', $allIds)
+            ->get();
 
         // Prepare results for each ID
         $results = $allIds->map(function($id) use ($existingCitizens) {
@@ -421,6 +422,8 @@ class CitizenController extends Controller
                     'total_distributions' => 0,
                     'completed_distributions' => 0,
                     'family_members' => 0,
+                    'is_deleted' => false,
+                    'is_archived' => false,
                     'status_text' => $isValid ? 'غير موجود' : 'رقم هوية غير صالح وغير موجود'
                 ];
             }
@@ -434,11 +437,36 @@ class CitizenController extends Controller
                 'total_distributions' => $citizen->distributions->count(),
                 'completed_distributions' => $citizen->distributions->where('pivot.done', 1)->count(),
                 'family_members' => $citizen->family_members,
-                'status_text' => $isValid ? 'موجود' : 'رقم هوية غير صالح ولكن موجود'
+                'is_deleted' => $citizen->trashed(),
+                'is_archived' => $citizen->is_archived,
+                'status_text' => $this->getCitizenStatusText($isValid, $citizen->trashed(), $citizen->is_archived)
             ];
         })->toArray();
 
         return redirect()->back()->with('check_results', $results);
+    }
+
+    private function getCitizenStatusText($isValid, $isDeleted, $isArchived)
+    {
+        $status = [];
+        
+        if (!$isValid) {
+            $status[] = 'رقم هوية غير صالح';
+        }
+        
+        if ($isDeleted) {
+            $status[] = 'محذوف';
+        }
+        
+        if ($isArchived) {
+            $status[] = 'مؤرشف';
+        }
+        
+        if (empty($status)) {
+            return 'موجود وصالح';
+        }
+        
+        return implode(' و', $status);
     }
 
     public function changeRegionForCheckedCitizens(Request $request)

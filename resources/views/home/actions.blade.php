@@ -168,17 +168,21 @@
                         </thead>
                         <tbody>
                             @foreach(session('check_results') as $result)
-                            <tr class="citizen-row {{ !$result['is_valid'] ? 'table-danger' : '' }}">
+                            <tr class="citizen-row {{ !$result['is_valid'] ? 'table-danger' : '' }} {{ $result['is_deleted'] ? 'table-secondary' : '' }} {{ $result['is_archived'] ? 'table-warning' : '' }}">
                                 <td>{{ $result['id'] }}</td>
                                 <td>
-                                    @if($result['exists'] && $result['is_valid'])
-                                        <span class="badge bg-success">موجود وصالح</span>
-                                    @elseif($result['exists'] && !$result['is_valid'])
-                                        <span class="badge bg-warning">موجود وغير صالح</span>
-                                    @elseif(!$result['exists'] && $result['is_valid'])
-                                        <span class="badge bg-info">غير موجود وصالح</span>
+                                    @if($result['exists'])
+                                        @if($result['is_deleted'])
+                                            <span class="badge bg-secondary">{{ $result['status_text'] }}</span>
+                                        @elseif($result['is_archived'])
+                                            <span class="badge bg-warning">{{ $result['status_text'] }}</span>
+                                        @elseif(!$result['is_valid'])
+                                            <span class="badge bg-danger">{{ $result['status_text'] }}</span>
+                                        @else
+                                            <span class="badge bg-success">{{ $result['status_text'] }}</span>
+                                        @endif
                                     @else
-                                        <span class="badge bg-danger">غير موجود وغير صالح</span>
+                                        <span class="badge bg-info">{{ $result['status_text'] }}</span>
                                     @endif
                                 </td>
                                 <td>{{ $result['name'] }}</td>
@@ -221,6 +225,12 @@
     }
     .table-danger {
         background-color: #ffe6e6 !important;
+    }
+    .table-secondary {
+        background-color: #f8f9fa !important;
+    }
+    .table-warning {
+        background-color: #fff3cd !important;
     }
     .card {
         margin-bottom: 1.5rem;
