@@ -425,4 +425,28 @@ public function checkCitizens(Request $request)
 
     return redirect()->back()->with('check_results', $results);
 }
+
+public function changeRegionForCheckedCitizens(Request $request)
+{
+    $request->validate([
+        'citizen_ids' => 'required|string',
+        'region_id' => 'required|exists:regions,id'
+    ]);
+
+    // Split and clean the IDs
+    $citizenIds = collect(explode("\n", $request->citizen_ids))
+        ->map(fn($id) => trim($id))
+        ->filter()
+        ->unique()
+        ->values()
+        ->toArray();
+
+    $result = app(CitizenService::class)->changeRegion($citizenIds, $request->region_id);
+
+    if ($result) {
+        return redirect()->back()->with('success', 'تم تغيير المنطقة بنجاح');
+    }
+
+    return redirect()->back()->with('error', 'حدث خطأ أثناء تغيير المنطقة');
+}
 }

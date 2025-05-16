@@ -10,23 +10,66 @@
             <h5 class="modal-title" id="AddCitizensIdListModalLabel">إجراءات على المواطنين</h5>
         </div>
         <div class="modal-body">
-            <form id="check-citizens-form" method="POST" action="{{ route('citizens.check') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="citizen-ids">أدخل أرقام الهوية الوطنية للمواطنين (كل رقم في سطر)</label>
-                    <textarea class="form-control" id="citizen-ids" name="citizen_ids" rows="6" placeholder="......&#10;.....&#10;..." required></textarea>
-                    <small class="form-text text-muted">يجب أن تكون الهوية 9 أرقام وصالحة حسب معادلة التحقق</small>
+            <!-- Main Form Section -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">إدخال أرقام الهوية</h6>
                 </div>
+                <div class="card-body">
+                    <div class="form-group mb-4">
+                        <label for="citizen-ids">أدخل أرقام الهوية الوطنية للمواطنين (كل رقم في سطر)</label>
+                        <textarea class="form-control" id="citizen-ids" rows="6" placeholder="......&#10;.....&#10;..." required></textarea>
+                        <small class="form-text text-muted">يجب أن تكون الهوية 9 أرقام وصالحة حسب معادلة التحقق</small>
+                    </div>
 
-                <div class="modal-footer" style="direction: rtl">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-search"></i> فحص المواطنين
-                    </button>
-                    <button type="button" class="btn btn-danger" onclick="document.getElementById('citizen-ids').value = ''">
-                        <i class="fas fa-eraser"></i> مسح
-                    </button>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Check Citizens Form -->
+                            <form id="check-citizens-form" method="POST" action="{{ route('citizens.check') }}" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="citizen_ids" id="check-ids-input">
+                                <button type="submit" class="btn btn-primary" onclick="return copyIdsToForm('check-ids-input')">
+                                    <i class="fas fa-search"></i> فحص المواطنين
+                                </button>
+                            </form>
+                            
+                            <button type="button" class="btn btn-danger" onclick="document.getElementById('citizen-ids').value = ''">
+                                <i class="fas fa-eraser"></i> مسح
+                            </button>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <!-- Change Region Form -->
+                            <form action="{{ route('citizens.change-region-checked') }}" method="POST" class="d-inline" id="changeRegionForm">
+                                @csrf
+                                <input type="hidden" name="citizen_ids" id="region-ids-input">
+                                <div class="input-group">
+                                    <select name="region_id" class="form-select" required style="width: auto">
+                                        <option value="">اختر المنطقة</option>
+                                        @foreach(\App\Models\Region::all() as $region)
+                                            <option value="{{ $region->id }}">{{ $region->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-warning" onclick="return copyIdsToForm('region-ids-input') && confirm('هل أنت متأكد من تغيير المنطقة للمواطنين المحددين؟')">
+                                        <i class="fas fa-map-marker-alt"></i> تغيير المنطقة
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            @if(session('success'))
+                <div class="alert alert-success mt-3">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger mt-3">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             @if(session('check_results'))
             <div class="mt-4">
@@ -34,13 +77,13 @@
                     <h6>نتائج الفحص:</h6>
                     <form action="{{ route('citizens.export-selected') }}" method="POST" class="d-inline">
                         @csrf
-                        <input type="hidden" name="citizen_ids" value="{{ session('last_checked_ids') }}">
-                        <button type="submit" class="btn btn-success">
+                        <input type="hidden" name="citizen_ids" id="export-ids-input">
+                        <button type="submit" class="btn btn-success" onclick="return copyIdsToForm('export-ids-input')">
                             <i class="fas fa-file-excel"></i> تصدير النتائج
                         </button>
                     </form>
                 </div>
-                
+
                 <!-- Filters -->
                 <div class="row mb-3">
                     <div class="col-md-3">
@@ -133,32 +176,43 @@
     .table-danger {
         background-color: #ffe6e6 !important;
     }
+    .card {
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0,0,0,.125);
+        border-radius: 0.25rem;
+    }
+    .card-header {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 0;
+        background-color: rgba(0,0,0,.03);
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+    .card-body {
+        padding: 1.25rem;
+    }
+    .input-group {
+        display: inline-flex;
+        width: auto;
+    }
+    .btn {
+        margin-left: 0.5rem;
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script>
-    // ID validation on input
-    document.getElementById('check-citizens-form').addEventListener('submit', function(e) {
+    // Function to copy IDs from main textarea to hidden inputs
+    function copyIdsToForm(targetInputId) {
         const textarea = document.getElementById('citizen-ids');
-        const ids = textarea.value.trim().split(/\r?\n/).filter(id => id.trim() !== '');
-        
-        if (ids.length === 0) {
-            e.preventDefault();
+        const targetInput = document.getElementById(targetInputId);
+        if (textarea.value.trim() === '') {
             alert('الرجاء إدخال رقم هوية واحد على الأقل');
-            return;
+            return false;
         }
-
-        // Validate each ID
-        // const invalidIds = ids.filter(id => !isValidPalestinianId(id));
-        // if (invalidIds.length > 0) {
-        //     e.preventDefault();
-        //     alert('الأرقام التالية غير صالحة:\n' + invalidIds.join('\n'));
-        //     return;
-        // }
-        
-        textarea.value = ids.join('\n');
-    });
+        targetInput.value = textarea.value;
+        return true;
+    }
 
     // Palestinian ID validation function
     function isValidPalestinianId(id) {
