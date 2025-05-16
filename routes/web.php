@@ -23,6 +23,7 @@ use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FamilyMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,6 +183,13 @@ Route::middleware(['auth'])->group(function () {
 
     // Guest routes
     Route::middleware(['role:Guest'])->group(function () {});
+
+    // Family Members Routes
+    Route::get('/citizens/{citizen}/family-members/create', [FamilyMemberController::class, 'create'])->name('citizens.family-members.create');
+    Route::post('/citizens/{citizen}/family-members', [FamilyMemberController::class, 'store'])->name('citizens.family-members.store');
+    Route::get('/citizens/{citizen}/family-members/{member}/edit', [FamilyMemberController::class, 'edit'])->name('citizens.family-members.edit');
+    Route::put('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'update'])->name('citizens.family-members.update');
+    Route::delete('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'destroy'])->name('citizens.family-members.destroy');
 });
 
 // Logout route
