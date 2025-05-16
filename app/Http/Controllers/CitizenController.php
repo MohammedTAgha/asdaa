@@ -268,12 +268,23 @@ class CitizenController extends Controller
             ->with('success', 'تم استيراد البيانات بنجاح');
     }
     public function removeSelectedCitizens(Request $request){
-        $citizensIds=$request->input('citizenIds',[]);
-        $result = $this->citizenService->removeCitizens($citizensIds);
-        if(empty($citizensIds)){return response()->json(['erorr'=>'no citizens']);}
-        return $result ?  response()->json(['success'=>'romvid successfuly6']):
-         response()->json(['success'=>'romvid successfuly6']);
-         
+        // Split and clean the IDs from the textarea input
+        $citizenIds = collect(explode("\n", $request->input('citizenIds')))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        if(empty($citizenIds)){
+            return response()->json(['error' => 'لم يتم تحديد أي مواطن للحذف']);
+        }
+
+        $result = $this->citizenService->removeCitizens($citizenIds);
+        
+        return $result 
+            ? response()->json(['success' => 'تم حذف المواطنين بنجاح'])
+            : response()->json(['error' => 'حدث خطأ أثناء حذف المواطنين'], 500);
     }
 
     public function changeRegionForSelectedCitizens(Request $request){

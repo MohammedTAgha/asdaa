@@ -58,6 +58,19 @@
                             </form>
                         </div>
                         <div>
+                            <!-- Delete Citizens Form -->
+                            <form action="{{ route('citizens.remove') }}" method="POST" class="d-inline" id="deleteCitizensForm">
+                                @csrf
+                                <input type="hidden" name="citizenIds" id="delete-ids-input">
+                                <div class="flex space-x-2">
+                                    <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700" 
+                                            onclick="return handleDelete(event)">
+                                        <i class="fas fa-trash"></i> حذف المواطنين
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div>
                             <!-- Export with Distributions Form -->
                             <form action="{{ route('citizens.export-with-distributions') }}" method="POST" class="d-inline" id="exportDistributionsForm">
                                 @csrf
@@ -337,6 +350,50 @@
     document.getElementById('nameFilter').addEventListener('input', filterTable);
     document.getElementById('regionFilter').addEventListener('input', filterTable);
     document.getElementById('statusFilter').addEventListener('change', filterTable);
+
+    function handleDelete(event) {
+        event.preventDefault();
+        
+        if (!copyIdsToForm('delete-ids-input')) {
+            return false;
+        }
+
+        if (!confirm('هل أنت متأكد من حذف المواطنين المحددين؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+            return false;
+        }
+
+        const form = document.getElementById('deleteCitizensForm');
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.success);
+                // Clear the textarea after successful deletion
+                document.getElementById('citizen-ids').value = '';
+                // If there's a results table, refresh it
+                if (document.getElementById('resultsTable')) {
+                    location.reload();
+                }
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('حدث خطأ أثناء حذف المواطنين');
+        });
+
+        return false;
+    }
 </script>
 @endpush
 
