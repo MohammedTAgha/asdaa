@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::post('/check-citizens', [CitizenController::class, 'checkCitizens'])->name('citizens.check');
     Route::post('/export-selected-citizens', [CitizenController::class, 'exportSelectedCitizens'])->name('citizens.export-selected');
+    Route::post('/export-with-distributions', [CitizenController::class, 'exportSelectedWithDistributions'])->name('citizens.export-with-distributions');
     Route::post('/change-region-checked', [CitizenController::class, 'changeRegionForCheckedCitizens'])->name('citizens.change-region-checked');
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/queries', [HomeController::class, 'queries'])->name('queries');

@@ -294,159 +294,185 @@ class CitizenController extends Controller
     }
 
     public function exportWithDistributions(CitizensAndDistributionExportService $exportService)
-{
-    return $exportService->export();
-}
-
-public function exportImportReport(Request $request)
-{
-    if (!session()->has('import_result')) {
-        return redirect()->route('citizens.import')
-            ->with('error', 'لا يوجد تقرير استيراد متاح للتصدير. الرجاء قم بعملية الاستيراد أولاً.');
+    {
+        // Get all citizens' IDs since no specific IDs are provided
+        $allCitizenIds = Citizen::pluck('id')->toArray();
+        
+        // Use the exportSelected method with all citizens and no specific distribution filter
+        return CitizensAndDistributionExportService::exportSelected($allCitizenIds);
     }
 
-    try {
-        $importResult = session('import_result');
-        $timestamp = now()->format('Y-m-d_H-i-s');
-        $fileName = "تقرير_استيراد_المواطنين_{$timestamp}.xlsx";
-        
-        return Excel::download(
-            new ImportReportExport($importResult),
-            $fileName
-        );
-    } catch (\Exception $e) {
-        Log::error('Error exporting import report:', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
+    public function exportImportReport(Request $request)
+    {
+        if (!session()->has('import_result')) {
+            return redirect()->route('citizens.import')
+                ->with('error', 'لا يوجد تقرير استيراد متاح للتصدير. الرجاء قم بعملية الاستيراد أولاً.');
+        }
+
+        try {
+            $importResult = session('import_result');
+            $timestamp = now()->format('Y-m-d_H-i-s');
+            $fileName = "تقرير_استيراد_المواطنين_{$timestamp}.xlsx";
+            
+            return Excel::download(
+                new ImportReportExport($importResult),
+                $fileName
+            );
+        } catch (\Exception $e) {
+            Log::error('Error exporting import report:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('citizens.import')
+                ->with('error', 'حدث خطأ أثناء تصدير التقرير. الرجاء المحاولة مرة أخرى.');
+        }
+    }
+
+    public function exportSelectedCitizens(Request $request)
+    {
+        $request->validate([
+            'citizen_ids' => 'required|string'
         ]);
 
-        return redirect()->route('citizens.import')
-            ->with('error', 'حدث خطأ أثناء تصدير التقرير. الرجاء المحاولة مرة أخرى.');
+        // Split and clean the IDs
+        $citizenIds = collect(explode("\n", $request->citizen_ids))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values();
+
+        $citizens = Citizen::whereIn('id', $citizenIds)
+            ->with('region')
+            ->get();
+
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        return Excel::download(new CitizensExport($citizens), "citizens_export_{$timestamp}.xlsx");
     }
-}
 
-public function exportSelectedCitizens(Request $request)
-{
-    $request->validate([
-        'citizen_ids' => 'required|string'
-    ]);
+    public function checkCitizens(Request $request)
+    {
+        $request->validate([
+            'citizen_ids' => 'required|string'
+        ]);
 
-    // Split and clean the IDs
-    $citizenIds = collect(explode("\n", $request->citizen_ids))
-        ->map(fn($id) => trim($id))
-        ->filter()
-        ->unique()
-        ->values();
+        // Store the IDs in session for export functionality
+        $rawIds = $request->citizen_ids;
+        session(['last_checked_ids' => $rawIds]);
 
-    $citizens = Citizen::whereIn('id', $citizenIds)
-        ->with('region')
+        // Split and clean the IDs
+        $allIds = collect(explode("\n", $request->citizen_ids))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values();
+
+        // Get all existing citizens regardless of ID validity
+        $existingCitizens = Citizen::with([
+            'distributions' => function($query) {
+                $query->select('distributions.*', 'distribution_citizens.done')
+                    ->withPivot('done');
+            },
+            'region'
+        ])
+        ->whereIn('id', $allIds)
         ->get();
 
-    $timestamp = now()->format('Y-m-d_H-i-s');
-    return Excel::download(new CitizensExport($citizens), "citizens_export_{$timestamp}.xlsx");
-}
-
-public function checkCitizens(Request $request)
-{
-    $request->validate([
-        'citizen_ids' => 'required|string'
-    ]);
-
-    // Store the IDs in session for export functionality
-    $rawIds = $request->citizen_ids;
-    session(['last_checked_ids' => $rawIds]);
-
-    // Split and clean the IDs
-    $allIds = collect(explode("\n", $request->citizen_ids))
-        ->map(fn($id) => trim($id))
-        ->filter()
-        ->unique()
-        ->values();
-
-    // Get all existing citizens regardless of ID validity
-    $existingCitizens = Citizen::with([
-        'distributions' => function($query) {
-            $query->select('distributions.*', 'distribution_citizens.done')
-                ->withPivot('done');
-        },
-        'region'
-    ])
-    ->whereIn('id', $allIds)
-    ->get();
-
-    // Prepare results for each ID
-    $results = $allIds->map(function($id) use ($existingCitizens) {
-        // Check ID validity
-        $isValid = false;
-        if (strlen($id) === 9 && preg_match('/^\d{9}$/', $id)) {
-            $sum = 0;
-            for ($i = 0; $i < 8; $i++) {
-                $digit = intval($id[$i]);
-                if ($i % 2 === 0) {
-                    $sum += $digit;
-                } else {
-                    $doubled = $digit * 2;
-                    $sum += $doubled > 9 ? $doubled - 9 : $doubled;
+        // Prepare results for each ID
+        $results = $allIds->map(function($id) use ($existingCitizens) {
+            // Check ID validity
+            $isValid = false;
+            if (strlen($id) === 9 && preg_match('/^\d{9}$/', $id)) {
+                $sum = 0;
+                for ($i = 0; $i < 8; $i++) {
+                    $digit = intval($id[$i]);
+                    if ($i % 2 === 0) {
+                        $sum += $digit;
+                    } else {
+                        $doubled = $digit * 2;
+                        $sum += $doubled > 9 ? $doubled - 9 : $doubled;
+                    }
                 }
+                $checkDigit = (10 - ($sum % 10)) % 10;
+                $isValid = $checkDigit === intval($id[8]);
             }
-            $checkDigit = (10 - ($sum % 10)) % 10;
-            $isValid = $checkDigit === intval($id[8]);
-        }
 
-        $citizen = $existingCitizens->firstWhere('id', $id);
-        $exists = $citizen !== null;
+            $citizen = $existingCitizens->firstWhere('id', $id);
+            $exists = $citizen !== null;
 
-        if (!$exists) {
+            if (!$exists) {
+                return [
+                    'id' => $id,
+                    'exists' => false,
+                    'is_valid' => $isValid,
+                    'name' => 'غير موجود في النظام',
+                    'region' => '-',
+                    'total_distributions' => 0,
+                    'completed_distributions' => 0,
+                    'family_members' => 0,
+                    'status_text' => $isValid ? 'غير موجود' : 'رقم هوية غير صالح وغير موجود'
+                ];
+            }
+
             return [
                 'id' => $id,
-                'exists' => false,
+                'exists' => true,
                 'is_valid' => $isValid,
-                'name' => 'غير موجود في النظام',
-                'region' => '-',
-                'total_distributions' => 0,
-                'completed_distributions' => 0,
-                'family_members' => 0,
-                'status_text' => $isValid ? 'غير موجود' : 'رقم هوية غير صالح وغير موجود'
+                'name' => $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname,
+                'region' => $citizen->region ? $citizen->region->name : 'غير محدد',
+                'total_distributions' => $citizen->distributions->count(),
+                'completed_distributions' => $citizen->distributions->where('pivot.done', 1)->count(),
+                'family_members' => $citizen->family_members,
+                'status_text' => $isValid ? 'موجود' : 'رقم هوية غير صالح ولكن موجود'
             ];
-        }
+        })->toArray();
 
-        return [
-            'id' => $id,
-            'exists' => true,
-            'is_valid' => $isValid,
-            'name' => $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname,
-            'region' => $citizen->region ? $citizen->region->name : 'غير محدد',
-            'total_distributions' => $citizen->distributions->count(),
-            'completed_distributions' => $citizen->distributions->where('pivot.done', 1)->count(),
-            'family_members' => $citizen->family_members,
-            'status_text' => $isValid ? 'موجود' : 'رقم هوية غير صالح ولكن موجود'
-        ];
-    })->toArray();
-
-    return redirect()->back()->with('check_results', $results);
-}
-
-public function changeRegionForCheckedCitizens(Request $request)
-{
-    $request->validate([
-        'citizen_ids' => 'required|string',
-        'region_id' => 'required|exists:regions,id'
-    ]);
-
-    // Split and clean the IDs
-    $citizenIds = collect(explode("\n", $request->citizen_ids))
-        ->map(fn($id) => trim($id))
-        ->filter()
-        ->unique()
-        ->values()
-        ->toArray();
-
-    $result = app(CitizenService::class)->changeRegion($citizenIds, $request->region_id);
-
-    if ($result) {
-        return redirect()->back()->with('success', 'تم تغيير المنطقة بنجاح');
+        return redirect()->back()->with('check_results', $results);
     }
 
-    return redirect()->back()->with('error', 'حدث خطأ أثناء تغيير المنطقة');
-}
+    public function changeRegionForCheckedCitizens(Request $request)
+    {
+        $request->validate([
+            'citizen_ids' => 'required|string',
+            'region_id' => 'required|exists:regions,id'
+        ]);
+
+        // Split and clean the IDs
+        $citizenIds = collect(explode("\n", $request->citizen_ids))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        $result = app(CitizenService::class)->changeRegion($citizenIds, $request->region_id);
+
+        if ($result) {
+            return redirect()->back()->with('success', 'تم تغيير المنطقة بنجاح');
+        }
+
+        return redirect()->back()->with('error', 'حدث خطأ أثناء تغيير المنطقة');
+    }
+
+    public function exportSelectedWithDistributions(Request $request)
+    {
+        $request->validate([
+            'citizen_ids' => 'required|string',
+            'distribution_ids' => 'nullable|array',
+            'distribution_ids.*' => 'exists:distributions,id'
+        ]);
+
+        // Split and clean the IDs
+        $citizenIds = collect(explode("\n", $request->citizen_ids))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+        
+        // If no specific distributions are selected, pass null to export all
+        $distributionIds = $request->has('distribution_ids') ? $request->distribution_ids : null;
+        // dd($citizenIds, $distributionIds);
+        return app(CitizensAndDistributionExportService::class)::exportSelected($citizenIds, $distributionIds);
+    }
 }

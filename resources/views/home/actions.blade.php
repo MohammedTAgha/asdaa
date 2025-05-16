@@ -11,53 +11,86 @@
         </div>
         <div class="modal-body">
             <!-- Main Form Section -->
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-header bg-light">
-                    <h6 class="mb-0">إدخال أرقام الهوية</h6>
+                    <h6 class="mb-0 fw-bold">إدخال أرقام الهوية</h6>
                 </div>
                 <div class="card-body">
                     <div class="form-group mb-4">
-                        <label for="citizen-ids">أدخل أرقام الهوية الوطنية للمواطنين (كل رقم في سطر)</label>
-                        <textarea class="form-control" id="citizen-ids" rows="6" placeholder="......&#10;.....&#10;..." required></textarea>
-                        <small class="form-text text-muted">يجب أن تكون الهوية 9 أرقام وصالحة حسب معادلة التحقق</small>
+                        <label for="citizen-ids" class="block text-sm font-medium text-gray-700 mb-1">أدخل أرقام الهوية الوطنية للمواطنين (كل رقم في سطر)</label>
+                        <textarea class="w-full px-4 py-2 border rounded-md" id="citizen-ids" rows="6" placeholder="......&#10;.....&#10;..." required></textarea>
+                        <small class="text-gray-500">يجب أن تكون الهوية 9 أرقام وصالحة حسب معادلة التحقق</small>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
                             <!-- Check Citizens Form -->
                             <form id="check-citizens-form" method="POST" action="{{ route('citizens.check') }}" class="d-inline">
                                 @csrf
                                 <input type="hidden" name="citizen_ids" id="check-ids-input">
-                                <button type="submit" class="btn btn-primary" onclick="return copyIdsToForm('check-ids-input')">
-                                    <i class="fas fa-search"></i> فحص المواطنين
-                                </button>
+                                <div class="flex space-x-2">
+                                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="return copyIdsToForm('check-ids-input')">
+                                        <i class="fas fa-search"></i> فحص المواطنين
+                                    </button>
+                                    
+                                    <button type="button" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600" onclick="document.getElementById('citizen-ids').value = ''">
+                                        <i class="fas fa-eraser"></i> مسح
+                                    </button>
+                                </div>
                             </form>
-                            
-                            <button type="button" class="btn btn-danger" onclick="document.getElementById('citizen-ids').value = ''">
-                                <i class="fas fa-eraser"></i> مسح
-                            </button>
                         </div>
-                        <div class="col-md-6 text-end">
+                        <div>
                             <!-- Change Region Form -->
                             <form action="{{ route('citizens.change-region-checked') }}" method="POST" class="d-inline" id="changeRegionForm">
                                 @csrf
                                 <input type="hidden" name="citizen_ids" id="region-ids-input">
-                                <div class="input-group">
-                                    <select name="region_id" class="form-select" required style="width: auto">
+                                <div class="flex space-x-2">
+                                    <select name="region_id" class="w-full px-4 py-2 border rounded-md" required>
                                         <option value="">اختر المنطقة</option>
                                         @foreach(\App\Models\Region::all() as $region)
                                             <option value="{{ $region->id }}">{{ $region->name }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-warning" onclick="return copyIdsToForm('region-ids-input') && confirm('هل أنت متأكد من تغيير المنطقة للمواطنين المحددين؟')">
+                                    <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600" onclick="return copyIdsToForm('region-ids-input') && confirm('هل أنت متأكد من تغيير المنطقة للمواطنين المحددين؟')">
                                         <i class="fas fa-map-marker-alt"></i> تغيير المنطقة
                                     </button>
                                 </div>
                             </form>
                         </div>
+                        <div>
+                            <!-- Export with Distributions Form -->
+                            <form action="{{ route('citizens.export-with-distributions') }}" method="POST" class="d-inline" id="exportDistributionsForm">
+                                @csrf
+                                <input type="hidden" name="citizen_ids" id="export-dist-ids-input">
+                                <div class="flex flex-col space-y-2">
+                                    <select name="distribution_ids[]" multiple class="w-full px-4 py-2 border rounded-md" id="distribution-select">
+                                        <option value="">كل المساعدات</option>
+                                        @foreach(\App\Models\Distribution::all() as $distribution)
+                                            <option value="{{ $distribution->id }}">{{ $distribution->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600" onclick="return handleDistributionExport()">
+                                        <i class="fas fa-file-excel"></i> تصدير مع المساعدات
+                                    </button>
+                                </div>
+                                <small class="text-gray-500">اختر المساعدات المطلوب تصديرها (اترك فارغاً لتصدير الكل)</small>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <script>
+                $(document).ready(function() {
+                    $('#distribution-select').select2({
+                        theme: "classic",
+                        dir: "rtl",
+                        width: '100%',
+                        placeholder: "اختر المساعدات",
+                        allowClear: true
+                    });
+                });
+            </script>
 
             @if(session('success'))
                 <div class="alert alert-success mt-3">
@@ -193,16 +226,20 @@
     .input-group {
         display: inline-flex;
         width: auto;
+        margin-bottom: 0.5rem;
     }
     .btn {
         margin-left: 0.5rem;
+    }
+    select[multiple] {
+        height: auto;
+        min-height: 38px;
     }
 </style>
 @endpush
 
 @push('scripts')
 <script>
-    // Function to copy IDs from main textarea to hidden inputs
     function copyIdsToForm(targetInputId) {
         const textarea = document.getElementById('citizen-ids');
         const targetInput = document.getElementById(targetInputId);
@@ -211,6 +248,19 @@
             return false;
         }
         targetInput.value = textarea.value;
+        return true;
+    }
+
+    function handleDistributionExport() {
+        if (!copyIdsToForm('export-dist-ids-input')) {
+            return false;
+        }
+        
+        const select = document.getElementById('distribution-select');
+        // If "All Distributions" is selected, clear other selections
+        if (Array.from(select.selectedOptions).some(option => option.value === '')) {
+            select.value = '';
+        }
         return true;
     }
 
