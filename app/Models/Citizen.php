@@ -134,4 +134,52 @@ class Citizen extends Model
         return $query->where('is_archived', 0);
     }
 
+    /**
+     * Get all family members associated with this citizen
+     */
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class);
+    }
+
+    /**
+     * Get the father of the family (if exists)
+     */
+    public function father()
+    {
+        return $this->hasOne(FamilyMember::class)->where('relationship', 'father');
+    }
+
+    /**
+     * Get the mother of the family (if exists)
+     */
+    public function mother()
+    {
+        return $this->hasOne(FamilyMember::class)->where('relationship', 'mother');
+    }
+
+    /**
+     * Get all children (including accompanying children)
+     */
+    public function allChildren()
+    {
+        return $this->hasMany(FamilyMember::class)
+            ->where(function($query) {
+                $query->where('relationship', 'son')
+                      ->orWhere('relationship', 'daughter');
+            });
+    }
+
+    /**
+     * Get only accompanying children
+     */
+    public function accompanyingChildren()
+    {
+        return $this->hasMany(FamilyMember::class)
+            ->where(function($query) {
+                $query->where('relationship', 'son')
+                      ->orWhere('relationship', 'daughter');
+            })
+            ->where('is_accompanying', true);
+    }
 }

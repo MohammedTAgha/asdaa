@@ -258,45 +258,7 @@
 
         @endcomponent
 
-    @component('components.box',['title'=>'الابناء','styles'=>'mt-4'])
-        @slot('side')
-           <!-- Button to trigger modal -->
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-md" onclick="showChildModal()">Add Child</button>
-        @endslot
-        
-        <div   class="mt-4">
-        <table id="childrenTable" class="min-w-full bg-white">
-            <thead class="bg-gray-800 text-white">
-                <tr>
-                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الاسم</th>
-                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">العمر</th>
-                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">الجنس</th>
-                    <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Actions</th>
-                </tr>
-            </thead>
-            <tbody  id='childrenList'>
-            @if (!$citizen->children->isEmpty())
-                @foreach($citizen->children as $child)
-                <tr data-id="{{ $child->id }}">
-                    <td>{{ $child->name }}</td>
-                    <td>{{ $child->date_of_birth }}</td>
-                    <td>{{ $child->gender }}</td>
-                    <td>
-                        <a href="{{ route('children.edit' , $child->id) }}">
-                            <button class="edit-button bg-blue-500 text-white px-3 py-1 rounded-md mr-2" data-id="{{ $child->id }}">Edit</button>
-                        </a>
-                        <button class="delete-button bg-red-500 text-white px-3 py-1 rounded-md" data-id="{{ $child->id }}">Delete</button>
-                    </td>
-                </tr>
-                @endforeach
-                @else
-                    <h2>لم يتم تسجيل اطفال </h2>
-                @endif
-            </tbody>
-        </table>
-                </div>
-                
-    @endcomponent
+
 
 </div>
   
