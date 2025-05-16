@@ -237,10 +237,36 @@ class CitizenController extends Controller
     
     public function restoreMultiple(Request $request)
     {
-        $ids = $request->input('ids');
-        $restoredCount = $this->citizenService->restore($ids);
+        // Split and clean the IDs from the textarea input
+        $ids = collect(explode("\n", $request->input('ids')))
+            ->map(fn($id) => trim($id))
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
 
-        return response()->json(['message' => "{$restoredCount} citizens restored successfully"]);
+        if (empty($ids)) {
+            return response()->json(['error' => 'لم يتم تحديد أي مواطن للاستعادة']);
+        }
+
+        try {
+            $restoredCount = $this->citizenService->restore($ids);
+
+            if ($restoredCount > 0) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "تم استعادة {$restoredCount} مواطن بنجاح"
+                ]);
+            } else {
+                return response()->json([
+                    'error' => 'لم يتم العثور على مواطنين محذوفين للاستعادة'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'حدث خطأ أثناء محاولة استعادة المواطنين'
+            ], 500);
+        }
     }
     public function upload(Request $request)
     {

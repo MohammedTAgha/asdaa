@@ -71,6 +71,19 @@
                             </form>
                         </div>
                         <div>
+                            <!-- Restore Citizens Form -->
+                            <form action="{{ route('citizens.restore-multiple') }}" method="POST" class="d-inline" id="restoreCitizensForm">
+                                @csrf
+                                <input type="hidden" name="ids" id="restore-ids-input">
+                                <div class="flex space-x-2">
+                                    <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" 
+                                            onclick="return handleRestore(event)">
+                                        <i class="fas fa-undo"></i> استعادة المواطنين
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div>
                             <!-- Export with Distributions Form -->
                             <form action="{{ route('citizens.export-with-distributions') }}" method="POST" class="d-inline" id="exportDistributionsForm">
                                 @csrf
@@ -400,6 +413,48 @@
         .catch(error => {
             console.error('Error:', error);
             alert('حدث خطأ أثناء حذف المواطنين');
+        });
+
+        return false;
+    }
+
+    function handleRestore(event) {
+        event.preventDefault();
+        
+        if (!copyIdsToForm('restore-ids-input')) {
+            return false;
+        }
+
+        if (!confirm('هل أنت متأكد من استعادة المواطنين المحددين؟')) {
+            return false;
+        }
+
+        const form = document.getElementById('restoreCitizensForm');
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // If there's a results table, refresh the page to show updated status
+                if (document.getElementById('resultsTable')) {
+                    location.reload();
+                }
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('حدث خطأ أثناء استعادة المواطنين');
         });
 
         return false;
