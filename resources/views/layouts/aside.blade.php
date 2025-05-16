@@ -109,6 +109,18 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 				</div>
 			</div>
 
+			<div class="menu-item">
+				<a class="menu-link {{ request()->routeIs('actions') ? 'active' : '' }}"
+					href="{{ route('actions') }}">
+					<span class="menu-icon">
+						<span class="svg-icon svg-icon-2">
+							<i class="ti ti-file-check"></i>
+						</span>
+					</span>
+					<span class="menu-title"> اجراءات</span>
+				</a>
+			</div>
+
 			<!-- Citizens -->
 			<div data-kt-menu-trigger="click"
 				class="menu-item menu-accordion {{ request()->routeIs('citizens.*') ? 'here show' : '' }}">
@@ -152,15 +164,7 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 						</a>
 					</div>
 
-					<div class="menu-item">
-						<a class="menu-link {{ request()->routeIs('actions') ? 'active' : '' }}"
-							href="{{ route('actions') }}">
-							<span class="menu-bullet">
-								<span class="bullet bullet-dot"></span>
-							</span>
-							<span class="menu-title">رفع كشف</span>
-						</a>
-					</div>
+					
 				</div>
 			</div>
 

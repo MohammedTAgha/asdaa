@@ -54,6 +54,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
     });
+    Route::post('/check-citizens', [CitizenController::class, 'checkCitizens'])->name('citizens.check');
+    Route::post('/export-selected-citizens', [CitizenController::class, 'exportSelectedCitizens'])->name('citizens.export-selected');
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/queries', [HomeController::class, 'queries'])->name('queries');
     Route::get('/files', [FileController::class, 'index'])->name('files.index');

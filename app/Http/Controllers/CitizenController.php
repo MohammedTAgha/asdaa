@@ -324,4 +324,105 @@ public function exportImportReport(Request $request)
             ->with('error', 'حدث خطأ أثناء تصدير التقرير. الرجاء المحاولة مرة أخرى.');
     }
 }
+
+public function exportSelectedCitizens(Request $request)
+{
+    $request->validate([
+        'citizen_ids' => 'required|string'
+    ]);
+
+    // Split and clean the IDs
+    $citizenIds = collect(explode("\n", $request->citizen_ids))
+        ->map(fn($id) => trim($id))
+        ->filter()
+        ->unique()
+        ->values();
+
+    $citizens = Citizen::whereIn('id', $citizenIds)
+        ->with('region')
+        ->get();
+
+    $timestamp = now()->format('Y-m-d_H-i-s');
+    return Excel::download(new CitizensExport($citizens), "citizens_export_{$timestamp}.xlsx");
+}
+
+public function checkCitizens(Request $request)
+{
+    $request->validate([
+        'citizen_ids' => 'required|string'
+    ]);
+
+    // Store the IDs in session for export functionality
+    $rawIds = $request->citizen_ids;
+    session(['last_checked_ids' => $rawIds]);
+
+    // Split and clean the IDs
+    $allIds = collect(explode("\n", $request->citizen_ids))
+        ->map(fn($id) => trim($id))
+        ->filter()
+        ->unique()
+        ->values();
+
+    // Get all existing citizens regardless of ID validity
+    $existingCitizens = Citizen::with([
+        'distributions' => function($query) {
+            $query->select('distributions.*', 'distribution_citizens.done')
+                ->withPivot('done');
+        },
+        'region'
+    ])
+    ->whereIn('id', $allIds)
+    ->get();
+
+    // Prepare results for each ID
+    $results = $allIds->map(function($id) use ($existingCitizens) {
+        // Check ID validity
+        $isValid = false;
+        if (strlen($id) === 9 && preg_match('/^\d{9}$/', $id)) {
+            $sum = 0;
+            for ($i = 0; $i < 8; $i++) {
+                $digit = intval($id[$i]);
+                if ($i % 2 === 0) {
+                    $sum += $digit;
+                } else {
+                    $doubled = $digit * 2;
+                    $sum += $doubled > 9 ? $doubled - 9 : $doubled;
+                }
+            }
+            $checkDigit = (10 - ($sum % 10)) % 10;
+            $isValid = $checkDigit === intval($id[8]);
+        }
+
+        $citizen = $existingCitizens->firstWhere('id', $id);
+        $exists = $citizen !== null;
+
+        if (!$exists) {
+            return [
+                'id' => $id,
+                'exists' => false,
+                'is_valid' => $isValid,
+                'name' => 'غير موجود في النظام',
+                'region' => '-',
+                'total_distributions' => 0,
+                'completed_distributions' => 0,
+                'family_members' => 0,
+                'status_text' => $isValid ? 'غير موجود' : 'رقم هوية غير صالح وغير موجود'
+            ];
+        }
+
+        return [
+            'id' => $id,
+            'exists' => true,
+            'is_valid' => $isValid,
+            'name' => $citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname,
+            'region' => $citizen->region ? $citizen->region->name : 'غير محدد',
+            'total_distributions' => $citizen->distributions->count(),
+            'completed_distributions' => $citizen->distributions->where('pivot.done', 1)->count(),
+            'family_members' => $citizen->family_members,
+            'status_text' => $isValid ? 'موجود' : 'رقم هوية غير صالح ولكن موجود'
+        ];
+    })->toArray();
+
+    return redirect()->back()->with('check_results', $results);
+}
 }
