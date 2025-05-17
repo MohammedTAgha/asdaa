@@ -53,6 +53,15 @@ class FamilyMemberController extends Controller
                 'relation_code' => $relation->CF_RELATIVE_CD
             ];
         });
+
+        // Prepend the main citizen (father) to the relatives list
+        $father = [
+            'relative' => $person,
+            'relation_type' => 'زوج', // or 'father' if you want to map directly
+            'relation_code' => null,
+            'is_father' => true,
+        ];
+        $records_relatives = collect([$father])->concat($records_relatives);
     
         $parents = $this->familyMemberService->getParents($citizen);
         $children = $this->familyMemberService->getChildren($citizen);
