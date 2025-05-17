@@ -31,6 +31,7 @@
                             <table class="min-w-full bg-white">
                                 <thead class="bg-gray-800 text-white">
                                     <tr>
+                                        
                                         <th class="py-2 px-4 text-right">اختيار</th>
                                         <th class="py-2 px-4 text-right">رقم الهوية</th>
                                         <th class="py-2 px-4 text-right">الاسم الكامل</th>
@@ -45,6 +46,9 @@
                                             $isSingle = ($relative['relative']->CI_PERSONAL_CD === 'اعزب');
                                             $age = $relative['relative']->age;
                                             $isWife = false;
+                                            $isFather = isset($relative['is_father']) && $relative['is_father'];
+                                            $isExistingMember = in_array($relative['relative']->CI_ID_NUM, $citizen->familyMembers->pluck('national_id')->toArray());
+                                            
                                             // Mark as wife if relation_type or relation_code indicates wife
                                             if (
                                                 (isset($relative['relation_type']) && Str::contains($relative['relation_type'], 'زوجة')) ||
@@ -52,8 +56,11 @@
                                             ) {
                                                 $isWife = true;
                                             }
+                                            
                                             $rowStyle = '';
-                                            if ($isWife) {
+                                            if ($isFather) {
+                                                $rowStyle = 'background-color: #dbeafe;'; // light blue
+                                            } elseif ($isWife) {
                                                 $rowStyle = 'background-color: #fbcfe8;'; // rose color
                                             } elseif ($isSingle && $age !== null && $age < 20) {
                                                 $rowStyle = 'background-color: #d1fae5;'; // light green
@@ -61,11 +68,19 @@
                                                 $rowStyle = 'background-color: #fef9c3;'; // light yellow
                                             }
                                         @endphp
-                                        <tr @if($rowStyle) style="{{ $rowStyle }}" @endif>
+                                        <tr style="@if($rowStyle) {{ $rowStyle }} @endif @if($isExistingMember) border: 2px solid #4f46e5; position: relative; @endif">
+                                            @if($isExistingMember)
+                                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                            <i class="ti ti-check-circle text-green-500"></i>
+                                            
+                                            </span>
+                                        @endif
                                             <td class="py-2 px-4">
+                                             
                                                 <input type="checkbox" name="selected_relatives[]" value="{{ $relative['relative']->CI_ID_NUM }}" 
                                                     data-relation="{{ $relative['relation_type'] }}"
-                                                    class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                    class="h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                                                    >
                                             </td>
                                             <td class="py-2 px-4">{{ $relative['relative']->CI_ID_NUM }}</td>
                                             <td class="py-2 px-4">
@@ -73,6 +88,7 @@
                                                 {{ $relative['relative']->CI_FATHER_ARB }} 
                                                 {{ $relative['relative']->CI_GRAND_FATHER_ARB }} 
                                                 {{ $relative['relative']->CI_FAMILY_ARB }}
+                                                @if($isFather) <span class="text-blue-600 font-bold">(رب الاسرة)</span> @endif
                                             </td>
                                             <td class="py-2 px-4">
                                                 {{ $relative['relative']->age !== null ? $relative['relative']->age : 'غير متوفر' }}
