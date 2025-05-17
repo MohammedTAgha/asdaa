@@ -3,7 +3,72 @@
 
 @section('content')
     <div class="container mx-auto px-4">
-        @component('components.box', ['title' => 'اضافة فرد جديد للعائلة - ' . $citizen->firstname . ' ' . $citizen->lastname])
+        if
+
+        @component('components.box', ['title' => 'البحث في السجل المدني'])
+            <div class="mb-6">
+                <form action="{{ route('citizens.family-members.search-records', $citizen) }}" method="GET" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="search_id" class="block text-sm font-medium text-gray-700">البحث برقم الهوية</label>
+                            <input type="text" name="search_id" id="search_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700">
+                                بحث في السجل المدني
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            @if(isset($records_relatives))
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">نتائج البحث في السجل المدني</h3>
+                    <form action="{{ route('citizens.family-members.import-records', $citizen) }}" method="POST">
+                        @csrf
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-white">
+                                <thead class="bg-gray-800 text-white">
+                                    <tr>
+                                        <th class="py-2 px-4 text-right">اختيار</th>
+                                        <th class="py-2 px-4 text-right">رقم الهوية</th>
+                                        <th class="py-2 px-4 text-right">الاسم الكامل</th>
+                                        <th class="py-2 px-4 text-right">صلة القرابة</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($records_relatives as $relative)
+                                        <tr>
+                                            <td class="py-2 px-4">
+                                                <input type="checkbox" name="selected_relatives[]" value="{{ $relative['relative']->CI_ID_NUM }}" 
+                                                    data-relation="{{ $relative['relation_type'] }}"
+                                                    class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                            </td>
+                                            <td class="py-2 px-4">{{ $relative['relative']->CI_ID_NUM }}</td>
+                                            <td class="py-2 px-4">
+                                                {{ $relative['relative']->CI_FIRST_ARB }} 
+                                                {{ $relative['relative']->CI_FATHER_ARB }} 
+                                                {{ $relative['relative']->CI_GRAND_FATHER_ARB }} 
+                                                {{ $relative['relative']->CI_FAMILY_ARB }}
+                                            </td>
+                                            <td class="py-2 px-4">{{ $relative['relation_type'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 flex justify-end">
+                            <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-green-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-700">
+                                إضافة المحدد
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @endif
+        @endcomponent
+
+        @component('components.box', ['title' => 'اضافة فرد جديد للعائلة يدوياً', 'styles' => 'mt-6'])
             <form action="{{ route('citizens.family-members.store', $citizen) }}" method="POST" class="space-y-6">
                 @csrf
                 
@@ -120,4 +185,40 @@
             @endcomponent
         @endif
     </div>
+
+    <script>
+        // Add this JavaScript to automatically map relationships
+        document.addEventListener('DOMContentLoaded', function() {
+            const relationshipMap = {
+                'زوج': 'father',
+                'زوجة': 'mother',
+                'ابن': 'son',
+                'ابنة': 'daughter',
+                // Add more mappings as needed
+            };
+
+            const checkboxes = document.querySelectorAll('input[name="selected_relatives[]"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        const relation = this.getAttribute('data-relation');
+                        const mappedRelation = relationshipMap[relation] || 'other';
+                        
+                        // Create a hidden input for the relationship
+                        const hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = `relationships[${this.value}]`;
+                        hiddenInput.value = mappedRelation;
+                        this.parentNode.appendChild(hiddenInput);
+                    } else {
+                        // Remove the hidden input when unchecked
+                        const hiddenInput = this.parentNode.querySelector(`input[name="relationships[${this.value}]"]`);
+                        if (hiddenInput) {
+                            hiddenInput.remove();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 @endsection 
