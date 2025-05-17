@@ -9,6 +9,7 @@ use App\Models\Records\Relation;
 use App\Services\FamilyMemberService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class FamilyMemberController extends Controller
 {
@@ -42,7 +43,7 @@ class FamilyMemberController extends Controller
 
         // Get relatives from Records database
         $relatives = Relation::with(['relative' => function($query) {
-            $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB');
+            $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB','age','full_name','CI_PERSONAL_CD','CI_BIRTH_DT');
         }])->where('CF_ID_NUM', $request->search_id)->get();
 
         $records_relatives = $relatives->map(function($relation) {
@@ -52,21 +53,28 @@ class FamilyMemberController extends Controller
                 'relation_code' => $relation->CF_RELATIVE_CD
             ];
         });
-
+    
         $parents = $this->familyMemberService->getParents($citizen);
         $children = $this->familyMemberService->getChildren($citizen);
-
+        // Log::alert('realtions of him are',$records_relatives);
         return view('family-members.create', compact('citizen', 'parents', 'children', 'records_relatives'));
     }
 
     public function importRecords(Request $request, Citizen $citizen)
     {
+        // dd([
+        //     'citizen_id' => $citizen->id,
+        //     'selected_relatives' => $request->selected_relatives,
+        //     'relationships' => $request->relationships,
+        //     'request' => $request->all()
+             
+        // ]);
         Log::info('Importing family members from records', [
             'citizen_id' => $citizen->id,
             'selected_relatives' => $request->selected_relatives,
             'relationships' => $request->relationships
         ]);
-
+        
         $request->validate([
             'selected_relatives' => 'required|array',
             'selected_relatives.*' => 'required|string',
@@ -80,13 +88,30 @@ class FamilyMemberController extends Controller
             $person = Person::where('CI_ID_NUM', $relativeId)->first();
             
             if ($person) {
+                $dateOfBirth = $person->CI_BIRTH_DT;
+                $parsedDate = null;
+                if ($dateOfBirth) {
+                    try {
+                        // Try to parse d/m/Y format
+                        $parsedDate = Carbon::createFromFormat('d/m/Y', $dateOfBirth)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        // If parsing fails, fallback to null or log the error
+                        Log::warning('Failed to parse date_of_birth', [
+                            'input' => $dateOfBirth,
+                            'error' => $e->getMessage(),
+                            'relative_id' => $relativeId
+                        ]);
+                        $parsedDate = null;
+                    }
+                }
+
                 $memberData = [
                     'firstname' => $person->CI_FIRST_ARB,
                     'secondname' => $person->CI_FATHER_ARB,
                     'thirdname' => $person->CI_GRAND_FATHER_ARB,
                     'lastname' => $person->CI_FAMILY_ARB,
                     'national_id' => $person->CI_ID_NUM,
-                    'date_of_birth' => $person->CI_BIRTH_DT,
+                    'date_of_birth' => $parsedDate,
                     'gender' => $person->CI_SEX_CD == 1 ? 'male' : 'female',
                     'relationship' => $request->relationships[$relativeId],
                 ];
@@ -129,7 +154,6 @@ class FamilyMemberController extends Controller
             'national_id' => 'required|string|unique:family_members,national_id',
             'notes' => 'nullable|string',
         ]);
-
         $member = $this->familyMemberService->addMember($validated, $citizen);
 
         return redirect()

@@ -34,11 +34,14 @@
                                         <th class="py-2 px-4 text-right">اختيار</th>
                                         <th class="py-2 px-4 text-right">رقم الهوية</th>
                                         <th class="py-2 px-4 text-right">الاسم الكامل</th>
+                                        <th class="py-2 px-4 text-right">العمر</th>
+                                        <th class="py-2 px-4 text-right">الحالة الاجتماعية</th>
                                         <th class="py-2 px-4 text-right">صلة القرابة</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($records_relatives as $relative)
+                                        {{-- @dump($relative['relative']) --}}
                                         <tr>
                                             <td class="py-2 px-4">
                                                 <input type="checkbox" name="selected_relatives[]" value="{{ $relative['relative']->CI_ID_NUM }}" 
@@ -51,6 +54,12 @@
                                                 {{ $relative['relative']->CI_FATHER_ARB }} 
                                                 {{ $relative['relative']->CI_GRAND_FATHER_ARB }} 
                                                 {{ $relative['relative']->CI_FAMILY_ARB }}
+                                            </td>
+                                            <td class="py-2 px-4">
+                                                {{ $relative['relative']->age !== null ? $relative['relative']->age : 'غير متوفر' }}
+                                            </td>
+                                            <td class="py-2 px-4">
+                                                {{ $relative['relative']->CI_PERSONAL_CD }}
                                             </td>
                                             <td class="py-2 px-4">{{ $relative['relation_type'] }}</td>
                                         </tr>
@@ -191,7 +200,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const relationshipMap = {
                 'زوج': 'father',
-                'زوجة': 'mother',
+                'زوج/ة': 'mother',
                 'ابن': 'son',
                 'ابنة': 'daughter',
                 // Add more mappings as needed
