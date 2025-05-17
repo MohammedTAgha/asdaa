@@ -41,8 +41,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach($records_relatives as $relative)
-                                        {{-- @dump($relative['relative']) --}}
-                                        <tr>
+                                        @php
+                                            $isSingle = ($relative['relative']->CI_PERSONAL_CD === 'اعزب');
+                                            $age = $relative['relative']->age;
+                                            $isWife = false;
+                                            // Mark as wife if relation_type or relation_code indicates wife
+                                            if (
+                                                (isset($relative['relation_type']) && Str::contains($relative['relation_type'], 'زوجة')) ||
+                                                (isset($relative['relation_code']) && in_array($relative['relation_code'], [4, '4']))
+                                            ) {
+                                                $isWife = true;
+                                            }
+                                            $rowStyle = '';
+                                            if ($isWife) {
+                                                $rowStyle = 'background-color: #fbcfe8;'; // rose color
+                                            } elseif ($isSingle && $age !== null && $age < 20) {
+                                                $rowStyle = 'background-color: #d1fae5;'; // light green
+                                            } elseif ($isSingle && $age !== null && $age >= 20) {
+                                                $rowStyle = 'background-color: #fef9c3;'; // light yellow
+                                            }
+                                        @endphp
+                                        <tr @if($rowStyle) style="{{ $rowStyle }}" @endif>
                                             <td class="py-2 px-4">
                                                 <input type="checkbox" name="selected_relatives[]" value="{{ $relative['relative']->CI_ID_NUM }}" 
                                                     data-relation="{{ $relative['relation_type'] }}"
