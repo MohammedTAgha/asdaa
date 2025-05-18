@@ -21,43 +21,85 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
     public function __construct(FamilyMemberService $familyMemberService)
     {
         $this->familyMemberService = $familyMemberService;
-    }
-
-    public function collection(Collection $rows)
+    }    public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
             try {
+                // Log the current row for debugging
+                Log::info('Processing row:', ['row' => $row]);
+
+                // Check for citizen
                 $citizen = Citizen::find($row['citizen_id']);
-                
                 if (!$citizen) {
                     $this->failures[] = [
                         'row' => $row,
-                        'error' => 'رقم هوية رب الأسرة غير موجود'
+                        'error' => sprintf('رقم هوية رب الأسرة غير موجود: %s', $row['citizen_id'])
                     ];
                     continue;
                 }
 
+                // Handle date of birth
                 $dateOfBirth = null;
                 try {
-                    $dateOfBirth = Carbon::createFromFormat('Y-m-d', $row['date_of_birth'])->format('Y-m-d');
+                    // Try multiple date formats
+                    $dateFormats = ['Y-m-d', 'd/m/Y', 'm/d/Y', 'Y/m/d'];
+                    $dateValue = $row['date_of_birth'];
+                    
+                    foreach ($dateFormats as $format) {
+                        try {
+                            $dateOfBirth = Carbon::createFromFormat($format, $dateValue)->format('Y-m-d');
+                            break;
+                        } catch (\Exception $e) {
+                            continue;
+                        }
+                    }
+
+                    if (!$dateOfBirth) {
+                        throw new \Exception('Unable to parse date');
+                    }
+
                 } catch (\Exception $e) {
                     $this->failures[] = [
                         'row' => $row,
-                        'error' => 'صيغة تاريخ الميلاد غير صحيحة. يجب أن تكون YYYY-MM-DD'
+                        'error' => sprintf('صيغة تاريخ الميلاد غير صحيحة للقيمة "%s". الصيغ المقبولة: YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY', $row['date_of_birth'])
+                    ];
+                    continue;
+                }                // Validate gender
+                $gender = strtolower(trim($row['gender']));
+                if (!in_array($gender, ['male', 'female', 'ذكر', 'انثى', 'أنثى'])) {
+                    $this->failures[] = [
+                        'row' => $row,
+                        'error' => sprintf('قيمة الجنس غير صحيحة: %s. القيم المقبولة: male, female, ذكر, انثى', $row['gender'])
                     ];
                     continue;
                 }
 
+                // Convert Arabic gender to English
+                if (in_array($gender, ['ذكر'])) {
+                    $gender = 'male';
+                } elseif (in_array($gender, ['انثى', 'أنثى'])) {
+                    $gender = 'female';
+                }                // Handle national_id - ensure it's a string and has 9 digits
+                $nationalId = (string) $row['national_id'];
+                if (!preg_match('/^\d{9}$/', $nationalId)) {
+                    $this->failures[] = [
+                        'row' => $row,
+                        'error' => sprintf('رقم الهوية يجب أن يتكون من 9 أرقام. القيمة المدخلة: %s', $row['national_id'])
+                    ];
+                    continue;
+                }
+
+                // Prepare member data
                 $memberData = [
                     'firstname' => $row['firstname'],
                     'secondname' => $row['secondname'],
                     'thirdname' => $row['thirdname'] ?? null,
                     'lastname' => $row['lastname'],
                     'date_of_birth' => $dateOfBirth,
-                    'gender' => $row['gender'],
-                    'relationship' => $row['relationship'],
-                    'is_accompanying' => $row['is_accompanying'] ?? false,
-                    'national_id' => $row['national_id'],
+                    'gender' => $gender,
+                    'relationship' => strtolower(trim($row['relationship'])),
+                    'is_accompanying' => isset($row['is_accompanying']) ? filter_var($row['is_accompanying'], FILTER_VALIDATE_BOOLEAN) : false,
+                    'national_id' => $nationalId,
                     'notes' => $row['notes'] ?? null,
                 ];
 
@@ -76,19 +118,19 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
                 ];
             }
         }
-    }
-
-    public function rules(): array
+    }    public function rules(): array
     {
         return [
-            'citizen_id' => 'required',
+            'citizen_id' => 'required|exists:citizens,id',
             'firstname' => 'required|string|max:255',
             'secondname' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'relationship' => 'required|in:father,mother,son,daughter',
-            'national_id' => 'required|string|unique:family_members,national_id',
+            'date_of_birth' => 'required',
+            'gender' => 'required',
+            'relationship' => 'required',
+            'national_id' => 'required',  // We'll handle the validation in the collection method
+            'thirdname' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
         ];
     }
 
