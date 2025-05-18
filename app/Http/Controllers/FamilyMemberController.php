@@ -209,10 +209,10 @@ class FamilyMemberController extends Controller
             Excel::import($import, $request->file('file'));
 
             $report = $import->getReport();
-            
-            return view('family-members.import-report', [
+              return view('family-members.import-report', [
                 'successes' => $report['successes'],
-                'failures' => $report['failures']
+                'failures' => $report['failures'],
+                'successRows' => $report['successRows']
             ]);
 
         } catch (\Exception $e) {

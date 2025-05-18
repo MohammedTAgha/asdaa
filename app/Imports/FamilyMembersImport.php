@@ -16,6 +16,7 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
 {
     protected $successes = 0;
     protected $failures = [];
+    protected $successRows = [];
     protected $familyMemberService;
 
     public function __construct(FamilyMemberService $familyMemberService)
@@ -119,10 +120,12 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
                     'is_accompanying' => isset($row['is_accompanying']) ? filter_var($row['is_accompanying'], FILTER_VALIDATE_BOOLEAN) : false,
                     'national_id' => $nationalId,
                     'notes' => $row['notes'] ?? null,
-                ];
-
-                $this->familyMemberService->addMember($memberData, $citizen);
+                ];                $member = $this->familyMemberService->addMember($memberData, $citizen);
                 $this->successes++;
+                $this->successRows[] = array_merge($row->toArray(), [
+                    'date_of_birth' => $dateOfBirth,
+                    'gender' => $gender
+                ]);
 
             } catch (\Exception $e) {
                 Log::error('Error importing family member', [
@@ -150,13 +153,12 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
             'thirdname' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ];
-    }
-
-    public function getReport(): array
+    }    public function getReport(): array
     {
         return [
             'successes' => $this->successes,
-            'failures' => $this->failures
+            'failures' => $this->failures,
+            'successRows' => $this->successRows
         ];
     }
 }
