@@ -9,3 +9,19 @@ enhance actions
 
 create services 
 -service for uploading files
+
+I want to import members (children) by uploading an Excel file.
+The file contains the following header:
+citizen_id
+firstname
+secondname
+thirdname
+lastname
+date_of_birth
+gender
+relationship
+is_accompanying
+national_id
+notes
+i need to be able to import members to the system (thay citizen_id is existing citizen i need to add the members to him)
+it should show a report after each process 
