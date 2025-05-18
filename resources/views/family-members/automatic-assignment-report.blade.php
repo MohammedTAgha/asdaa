@@ -63,12 +63,13 @@
                                         <th>الخطأ</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach($results['errors'] as $error)
+                                <tbody>                                    @foreach($results['errors'] as $errorEntry)
+                                    @foreach($errorEntry['errors'] as $error)
                                     <tr>
-                                        <td>{{ $error['citizen_id'] }}</td>
-                                        <td>{{ $error['error'] }}</td>
+                                        <td>{{ $errorEntry['citizen_id'] }}</td>
+                                        <td>{{ $error }}</td>
                                     </tr>
+                                    @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
@@ -89,12 +90,13 @@
                                         <th>السبب</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach($results['skipped'] as $skipped)
+                                <tbody>                                    @foreach($results['skipped'] as $skippedEntry)
+                                    @foreach($skippedEntry['reasons'] as $reason)
                                     <tr>
-                                        <td>{{ $skipped['citizen_id'] }}</td>
-                                        <td>{{ $skipped['reason'] }}</td>
+                                        <td>{{ $skippedEntry['citizen_id'] }}</td>
+                                        <td>{{ $reason }}</td>
                                     </tr>
+                                    @endforeach
                                     @endforeach
                                 </tbody>
                             </table>

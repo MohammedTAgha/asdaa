@@ -27,7 +27,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        parent::boot();
+
+        \App\Models\Citizen::observe(\App\Observers\CitizenObserver::class);
     }
 
     /**

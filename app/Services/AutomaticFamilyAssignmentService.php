@@ -4,9 +4,10 @@ namespace App\Services;
 
 use App\Models\Citizen;
 use App\Models\FamilyMember;
+use App\Models\Records\Person;
 use Illuminate\Support\Facades\Log;
-use Exception;
 use Carbon\Carbon;
+use Exception;
 
 class AutomaticFamilyAssignmentService
 {
@@ -36,16 +37,16 @@ class AutomaticFamilyAssignmentService
                 // Aggregate results
                 $results['father_added'] += $citizenResults['father_added'];
                 $results['mother_added'] += $citizenResults['mother_added'];
-                if (!empty($citizenResults['error'])) {
+                if (!empty($citizenResults['errors'])) {
                     $results['errors'][] = [
                         'citizen_id' => $citizen->id,
-                        'error' => $citizenResults['error']
+                        'errors' => $citizenResults['errors']
                     ];
                 }
                 if (!empty($citizenResults['skipped'])) {
                     $results['skipped'][] = [
                         'citizen_id' => $citizen->id,
-                        'reason' => $citizenResults['skipped']
+                        'reasons' => $citizenResults['skipped']
                     ];
                 }
             }
@@ -64,25 +65,39 @@ class AutomaticFamilyAssignmentService
         $results = [
             'father_added' => 0,
             'mother_added' => 0,
-            'error' => null,
-            'skipped' => null
+            'errors' => [],
+            'skipped' => []
         ];
 
         try {
-            // Try to assign father if this is a male citizen
-            if ($citizen->gender === '0') { // Male
-                $fatherResult = $this->assignAsFather($citizen);
-                $results['father_added'] = $fatherResult ? 1 : 0;
+            // First, process citizen.id
+            $personFromId = Person::where('CI_ID_NUM', $citizen->id)->first();
+            if ($personFromId) {
+                if ($personFromId->CI_SEX_CD === 'ذكر') {
+                    $this->assignAsFather($citizen, $personFromId, $results);
+                } elseif ($personFromId->CI_SEX_CD === 'أنثى') {
+                    $this->assignAsMother($citizen, $personFromId, $results);
+                }
+            } else {
+                $results['skipped'][] = "لم يتم العثور على سجل الشخص برقم الهوية {$citizen->id}";
             }
 
-            // Try to assign mother from wife_id if present
+            // Then, process wife_id if it exists
             if ($citizen->wife_id) {
-                $motherResult = $this->assignAsMother($citizen);
-                $results['mother_added'] = $motherResult ? 1 : 0;
+                $personFromWifeId = Person::where('CI_ID_NUM', $citizen->wife_id)->first();
+                if ($personFromWifeId) {
+                    if ($personFromWifeId->CI_SEX_CD === 'ذكر') {
+                        $this->assignAsFather($citizen, $personFromWifeId, $results);
+                    } elseif ($personFromWifeId->CI_SEX_CD === 'أنثى') {
+                        $this->assignAsMother($citizen, $personFromWifeId, $results);
+                    }
+                } else {
+                    $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+                }
             }
 
         } catch (Exception $e) {
-            $results['error'] = $e->getMessage();
+            $results['errors'][] = $e->getMessage();
             Log::error('Error assigning family members', [
                 'citizen_id' => $citizen->id,
                 'error' => $e->getMessage()
@@ -92,79 +107,81 @@ class AutomaticFamilyAssignmentService
         return $results;
     }
 
-    protected function assignAsFather(Citizen $citizen)
+    protected function assignAsFather(Citizen $citizen, Person $person, &$results)
     {
         // Skip if already has a father
         if ($this->familyMemberService->getParents($citizen)->where('relationship', 'father')->count() > 0) {
-            return false;
+            $results['skipped'][] = "يوجد أب مسجل بالفعل";
+            return;
         }
 
         try {
-            $data = [
-                'firstname' => $citizen->firstname,
-                'secondname' => $citizen->secondname,
-                'thirdname' => $citizen->thirdname,
-                'lastname' => $citizen->lastname,
-                'date_of_birth' => $citizen->date_of_birth,
-                'gender' => '0', // Male
+            $dateOfBirth = null;
+            if ($person->CI_BIRTH_DT) {
+                try {
+                    $dateOfBirth = Carbon::createFromFormat('d/m/Y', $person->CI_BIRTH_DT)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    Log::warning('Failed to parse father date_of_birth', [
+                        'input' => $person->CI_BIRTH_DT,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            $this->familyMemberService->addMember([
+                'firstname' => $person->CI_FIRST_ARB,
+                'secondname' => $person->CI_FATHER_ARB,
+                'thirdname' => $person->CI_GRAND_FATHER_ARB,
+                'lastname' => $person->CI_FAMILY_ARB,
+                'date_of_birth' => $dateOfBirth,
+                'gender' => 'male',
                 'relationship' => 'father',
-                'national_id' => $citizen->id,
+                'national_id' => $person->CI_ID_NUM,
                 'notes' => 'تم إضافته تلقائياً كأب'
-            ];
+            ], $citizen);
 
-            $this->familyMemberService->addMember($data, $citizen);
-            return true;
-
+            $results['father_added']++;
         } catch (Exception $e) {
-            Log::error('Error assigning father', [
-                'citizen_id' => $citizen->id,
-                'error' => $e->getMessage()
-            ]);
-            return false;
+            $results['errors'][] = "فشل إضافة الأب: " . $e->getMessage();
         }
     }
 
-    protected function assignAsMother(Citizen $citizen)
+    protected function assignAsMother(Citizen $citizen, Person $person, &$results)
     {
         // Skip if already has a mother
         if ($this->familyMemberService->getParents($citizen)->where('relationship', 'mother')->count() > 0) {
-            return false;
+            $results['skipped'][] = "يوجد أم مسجلة بالفعل";
+            return;
         }
 
         try {
-            $wife = Citizen::find($citizen->wife_id);
-            
-            // Validate wife exists and is female
-            if (!$wife || $wife->gender !== '1') { // 1 = Female
-                Log::warning('Invalid wife record for mother assignment', [
-                    'citizen_id' => $citizen->id,
-                    'wife_id' => $citizen->wife_id
-                ]);
-                return false;
+            $dateOfBirth = null;
+            if ($person->CI_BIRTH_DT) {
+                try {
+                    $dateOfBirth = Carbon::createFromFormat('d/m/Y', $person->CI_BIRTH_DT)->format('Y-m-d');
+                } catch (\Exception $e) {
+                    Log::warning('Failed to parse mother date_of_birth', [
+                        'input' => $person->CI_BIRTH_DT,
+                        'error' => $e->getMessage()
+                    ]);
+                }
             }
 
-            $data = [
-                'firstname' => $wife->firstname,
-                'secondname' => $wife->secondname,
-                'thirdname' => $wife->thirdname,
-                'lastname' => $wife->lastname,
-                'date_of_birth' => $wife->date_of_birth,
-                'gender' => '1', // Female
+            $this->familyMemberService->addMember([
+                'firstname' => $person->CI_FIRST_ARB,
+                'secondname' => $person->CI_FATHER_ARB,
+                'thirdname' => $person->CI_GRAND_FATHER_ARB,
+                'lastname' => $person->CI_FAMILY_ARB,
+                'date_of_birth' => $dateOfBirth,
+                'gender' => 'female',
                 'relationship' => 'mother',
-                'national_id' => $wife->id,
+                'national_id' => $person->CI_ID_NUM,
                 'notes' => 'تم إضافتها تلقائياً كأم'
-            ];
+            ], $citizen);
 
-            $this->familyMemberService->addMember($data, $citizen);
-            return true;
-
+            $results['mother_added']++;
         } catch (Exception $e) {
-            Log::error('Error assigning mother', [
-                'citizen_id' => $citizen->id,
-                'wife_id' => $citizen->wife_id,
-                'error' => $e->getMessage()
-            ]);
-            return false;
+            $results['errors'][] = "فشل إضافة الأم: " . $e->getMessage();
         }
     }
 }
