@@ -58,9 +58,7 @@ class AutomaticFamilyAssignmentService
         }
 
         return $results;
-    }
-
-    public function assignFamilyMembers(Citizen $citizen)
+    }    public function assignFamilyMembers(Citizen $citizen)
     {
         $results = [
             'father_added' => 0,
@@ -70,20 +68,18 @@ class AutomaticFamilyAssignmentService
         ];
 
         try {
-            // First, process citizen.id
+            // First, process citizen.id - only add as mother if female
             $personFromId = Person::where('CI_ID_NUM', $citizen->id)->first();
             if ($personFromId) {
-                if ($personFromId->CI_SEX_CD === 'ذكر') {
-                    $this->assignAsFather($citizen, $personFromId, $results);
-                } elseif ($personFromId->CI_SEX_CD === 'أنثى') {
+                if ($personFromId->CI_SEX_CD === 'أنثى') {
                     $this->assignAsMother($citizen, $personFromId, $results);
                 }
             } else {
                 $results['skipped'][] = "لم يتم العثور على سجل الشخص برقم الهوية {$citizen->id}";
             }
 
-            // Then, process wife_id if it exists
-            if ($citizen->wife_id) {
+            // Then, process wife_id if it exists and not 0
+            if ($citizen->wife_id && $citizen->wife_id !== '0') {
                 $personFromWifeId = Person::where('CI_ID_NUM', $citizen->wife_id)->first();
                 if ($personFromWifeId) {
                     if ($personFromWifeId->CI_SEX_CD === 'ذكر') {
@@ -94,6 +90,8 @@ class AutomaticFamilyAssignmentService
                 } else {
                     $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
                 }
+            } else {
+                $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
             }
 
         } catch (Exception $e) {
