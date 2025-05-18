@@ -78,11 +78,10 @@ class FamilyAssignmentFailuresExport implements FromCollection, WithHeadings, Wi
                 'horizontal' => Alignment::HORIZONTAL_CENTER,
                 'vertical' => Alignment::VERTICAL_CENTER
             ]
-        ]);
-
-        // Highlight failed IDs in red
+        ]);        // Highlight failed IDs in red
         foreach ($sheet->getRowIterator(2) as $row) {
-            if (!empty($row->getCellByColumnAndRow(2, $row->getRowIndex())->getValue())) {
+            $cell = $sheet->getCellByColumnAndRow(2, $row->getRowIndex());
+            if (!empty($cell->getValue())) {
                 $sheet->getStyle('B' . $row->getRowIndex())->applyFromArray([
                     'font' => ['color' => ['rgb' => 'FF0000']]
                 ]);
