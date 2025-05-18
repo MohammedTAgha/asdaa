@@ -9,6 +9,7 @@ use App\Models\Records\Relation;
 use App\Models\Region;
 use App\Services\FamilyMemberService;
 use App\Services\FamilyMemberFilterService;
+use App\Services\AutomaticFamilyAssignmentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -21,13 +22,16 @@ class FamilyMemberController extends Controller
 {
     protected $familyMemberService;
     protected $familyMemberFilterService;
+    protected $automaticFamilyAssignmentService;
 
     public function __construct(
         FamilyMemberService $familyMemberService,
-        FamilyMemberFilterService $familyMemberFilterService
+        FamilyMemberFilterService $familyMemberFilterService,
+        AutomaticFamilyAssignmentService $automaticFamilyAssignmentService
     ) {
         $this->familyMemberService = $familyMemberService;
         $this->familyMemberFilterService = $familyMemberFilterService;
+        $this->automaticFamilyAssignmentService = $automaticFamilyAssignmentService;
     }
 
     public function index(Request $request)
@@ -307,5 +311,51 @@ class FamilyMemberController extends Controller
     public function downloadTemplate()
     {
         return Excel::download(new FamilyMembersTemplateExport, 'family-members-template.xlsx');
+    }
+
+    public function showAutomaticAssignmentForm()
+    {
+        return view('family-members.automatic-assignment');
+    }
+
+    public function processAutomaticAssignment()
+    {
+        try {
+            $results = $this->automaticFamilyAssignmentService->processAllCitizens();
+            return view('family-members.automatic-assignment-report', compact('results'));
+        } catch (Exception $e) {
+            return redirect()
+                ->route('family-members.index')
+                ->with('error', 'حدث خطأ أثناء المعالجة التلقائية لأفراد العائلة: ' . $e->getMessage());
+        }
+    }
+
+    public function processAutomaticAssignmentForCitizen(Citizen $citizen)
+    {
+        try {
+            $results = $this->automaticFamilyAssignmentService->assignFamilyMembers($citizen);
+            
+            $message = sprintf(
+                'تمت المعالجة التلقائية: تم إضافة %d أب و %d أم',
+                $results['father_added'],
+                $results['mother_added']
+            );
+
+            if (!empty($results['error'])) {
+                $message .= "\nحدث خطأ: " . $results['error'];
+            }
+
+            if (!empty($results['skipped'])) {
+                $message .= "\nتم تخطي: " . $results['skipped'];
+            }
+
+            return redirect()
+                ->route('citizens.show', $citizen)
+                ->with('success', $message);
+        } catch (Exception $e) {
+            return redirect()
+                ->route('citizens.show', $citizen)
+                ->with('error', 'حدث خطأ أثناء المعالجة التلقائية لأفراد العائلة: ' . $e->getMessage());
+        }
     }
 }
