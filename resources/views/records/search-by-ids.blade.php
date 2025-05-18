@@ -36,11 +36,20 @@
                 <div class="card-body">
                     @if(count($results) > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered shadow-sm">
+                        <div class="mb-2 text-end">
+                            <button class="btn btn-outline-success btn-sm" id="copyTableBtn">
+                                نسخ الجدول
+                            </button>
+                        </div>
+                        <table class="table table-striped table-hover table-bordered shadow-sm" id="resultsTable">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>رقم الهوية</th>
                                     <th>الاسم</th>
+                                    <th>الاسم الأول</th>
+                                    <th>اسم الأب</th>
+                                    <th>اسم الجد</th>
+                                    <th>اسم العائلة</th>
                                     <th>الحالة</th>
                                     <th>الزوجة</th>
                                     <th>الزوجة</th>
@@ -57,10 +66,13 @@
                                 <tr>
                                     <td>{{ $citizen->CI_ID_NUM }}</td>
                                     <td>{{ $citizen->full_name }}</td>
-                                    <td>{{ $citizen->CI_PERSONAL_CD }}</td>
-                                    <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->CI_ID_NUM : '-') : '-' }}</td>
-
+                                    <td>{{ $citizen->CI_FIRST_ARB }}</td>
+                                    <td>{{ $citizen->CI_FATHER_ARB }}</td>
+                                    <td>{{ $citizen->CI_GRAND_FATHER_ARB }}</td>
+                                    <td>{{ $citizen->CI_FAMILY_ARB }}</td>
+                                     <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->CI_ID_NUM : '-') : '-' }}</td>
                                     <td>{{ $citizen->CI_PERSONAL_CD === "متزوج" ? ($citizen->getWife() ? $citizen->getWife()->full_name : '-') : '-' }}</td>
+                                    <td>{{ $citizen->CI_PERSONAL_CD }}</td>
                                     <td>{{ $citizen->CITTTTY }}</td>
                                     <td>{{ $citizen->CITY }}</td>
                                     <td>{{ $citizen->CI_BIRTH_DT }}</td>
@@ -71,6 +83,23 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @push('scripts')
+                        <script>
+                        document.getElementById('copyTableBtn').addEventListener('click', function() {
+                            const table = document.getElementById('resultsTable');
+                            let rows = Array.from(table.rows);
+                            let text = rows.map(row =>
+                                Array.from(row.cells).map(cell => cell.innerText).join('\t')
+                            ).join('\n');
+                            // Copy to clipboard
+                            navigator.clipboard.writeText(text).then(function() {
+                                alert('تم نسخ الجدول! يمكنك لصقه في Excel.');
+                            }, function() {
+                                alert('حدث خطأ أثناء النسخ.');
+                            });
+                        });
+                        </script>
+                        @endpush
                     </div>
                     @else
                     <p>لم يتم العثور على نتائج.</p>

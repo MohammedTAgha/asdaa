@@ -57,9 +57,14 @@
                     <i class="fas fa-filter ml-1"></i> تطبيق الفلتر
                 </button>
 
-                <button type="submit" name="export" value="1" class="btn btn-success">
-                    <i class="fas fa-file-excel ml-1"></i> تصدير النتائج
-                </button>
+                <div class="space-x-2">
+                    <a href="{{ route('family-members.import-form') }}" class="btn btn-success">
+                        <i class="fas fa-file-import ml-1"></i> استيراد من ملف
+                    </a>
+                    <button type="submit" name="export" value="1" class="btn btn-success">
+                        <i class="fas fa-file-excel ml-1"></i> تصدير النتائج
+                    </button>
+                </div>
             </div>
         </form>
     @endcomponent

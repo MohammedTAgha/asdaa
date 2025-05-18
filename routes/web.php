@@ -192,6 +192,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'update'])->name('citizens.family-members.update');
     Route::delete('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'destroy'])->name('citizens.family-members.destroy');
     Route::get('/citizens/{citizen}/family-members/search-records', [FamilyMemberController::class, 'searchRecords'])->name('citizens.family-members.search-records');
+    Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
+    Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
     Route::post('/citizens/{citizen}/family-members/import-records', [FamilyMemberController::class, 'importRecords'])->name('citizens.family-members.import-records');
 });
 

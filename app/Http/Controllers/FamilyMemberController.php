@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\FamilyMembersImport;
 
 class FamilyMemberController extends Controller
 {
@@ -187,6 +189,35 @@ class FamilyMemberController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'حدث خطأ أثناء استيراد أفراد العائلة: ' . $e->getMessage());
+        }
+    }
+
+    public function importForm()
+    {
+        return view('family-members.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            $import = new FamilyMembersImport($this->familyMemberService);
+            Excel::import($import, $request->file('file'));
+
+            $report = $import->getReport();
+            
+            return view('family-members.import-report', [
+                'successes' => $report['successes'],
+                'failures' => $report['failures']
+            ]);
+
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء استيراد الملف: ' . $e->getMessage());
         }
     }
 
