@@ -263,6 +263,40 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 				</a>
 			</div>
 
+			<!-- Family Members -->
+			<div data-kt-menu-trigger="click" 
+				class="menu-item menu-accordion {{ request()->routeIs('family-members.*') ? 'here show' : '' }}">
+				<span class="menu-link">
+					<span class="menu-icon">
+						<span class="svg-icon svg-icon-2">
+							<i class="ti ti-users-group"></i>
+						</span>
+					</span>
+					<span class="menu-title">أفراد العائلات</span>
+					<span class="menu-arrow"></span>
+				</span>
+				<div class="menu-sub menu-sub-accordion">
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('family-members.index') ? 'active' : '' }}"
+							href="{{ route('family-members.index') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">عرض الكل</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('family-members.import-form') ? 'active' : '' }}"
+							href="{{ route('family-members.import-form') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">استيراد من ملف</span>
+						</a>
+					</div>
+				</div>
+			</div>
+
 			<!-- Regions -->
 			<div class="menu-item">
 				<a class="menu-link {{ request()->routeIs('regions.index') ? 'active' : '' }}"
