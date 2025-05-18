@@ -9,11 +9,12 @@ use Carbon\Carbon;
 use App\Exports\FamilyMembersExport;
 
 class FamilyMemberFilterService
-{
-    public function getFilteredMembers(array $filters)
+{    public function getFilteredMembers(array $filters)
     {
         $query = FamilyMember::query()
-            ->with(['citizen.region']);
+            ->with(['citizen' => function($query) {
+                $query->select('id', 'firstname', 'secondname', 'thirdname', 'lastname', 'date_of_birth', 'region_id');
+            }, 'citizen.region']);
 
         if (!empty($filters['relationship'])) {
             $query->where('relationship', $filters['relationship']);

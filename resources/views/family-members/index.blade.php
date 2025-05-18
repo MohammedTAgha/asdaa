@@ -66,14 +66,19 @@
 
     @component('components.box', ['title' => 'نتائج البحث', 'styles' => 'mt-6'])
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+            <table class="min-w-full divide-y divide-gray-200">                <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            رقم الهوية
+                            رقم هوية رب الأسرة
                         </th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            الاسم الكامل
+                            اسم رب الأسرة
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            رقم هوية الفرد
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            اسم الفرد
                         </th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             صلة القرابة
@@ -89,12 +94,17 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($members as $member)
+                <tbody class="bg-white divide-y divide-gray-200">                    @forelse($members as $member)
                         <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $member->citizen->id ?? 'غير محدد' }}</td>
+                            <td class="px-6 py-4">
+                                {{ $member->citizen ? $member->citizen->firstname . ' ' . $member->citizen->secondname . ' ' . 
+                                   ($member->citizen->thirdname ? $member->citizen->thirdname . ' ' : '') . $member->citizen->lastname : 'غير محدد' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $member->national_id }}</td>
                             <td class="px-6 py-4">
-                                {{ $member->firstname }} {{ $member->secondname }} {{ $member->lastname }}
+                                {{ $member->firstname }} {{ $member->secondname }} 
+                                {{ $member->thirdname ? $member->thirdname . ' ' : '' }}{{ $member->lastname }}
                             </td>
                             <td class="px-6 py-4">
                                 @switch($member->relationship)
@@ -118,7 +128,7 @@
                                 {{ $member->gender === 'male' ? 'ذكر' : 'أنثى' }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ Carbon\Carbon::parse($member->date_of_birth)->age }}
+                                {{ $member->date_of_birth ? Carbon\Carbon::parse($member->date_of_birth)->age : 'غير محدد' }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ $member->citizen->region->name ?? 'غير محدد' }}
