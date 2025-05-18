@@ -17,6 +17,7 @@ use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FamilyMembersImport;
 use App\Exports\FamilyMembersTemplateExport;
+use App\Exports\FamilyAssignmentFailuresExport;
 
 class FamilyMemberController extends Controller
 {
@@ -322,6 +323,19 @@ class FamilyMemberController extends Controller
     {
         try {
             $results = $this->automaticFamilyAssignmentService->processAllCitizens();
+            
+            // Generate failures report if there are any failures
+            $failures = $this->automaticFamilyAssignmentService->getFailures();
+            if (!empty($failures)) {
+                $export = new FamilyAssignmentFailuresExport($failures);
+                $fileName = 'family_assignment_failures_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+                Excel::store($export, 'reports/' . $fileName, 'public');
+                $reportUrl = asset('storage/reports/' . $fileName);
+                
+                // Add report URL to results
+                $results['failure_report_url'] = $reportUrl;
+            }
+
             return view('family-members.automatic-assignment-report', compact('results'));
         } catch (Exception $e) {
             return redirect()

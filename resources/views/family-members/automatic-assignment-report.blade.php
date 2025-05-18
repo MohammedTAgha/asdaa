@@ -104,6 +104,14 @@
                     </div>
                     @endif
 
+                    @if(isset($results['failure_report_url']))
+                    <div class="text-center mb-4">
+                        <a href="{{ $results['failure_report_url'] }}" class="btn btn-warning btn-lg" target="_blank">
+                            <i class="fas fa-download"></i> تحميل تقرير الإضافات الفاشلة
+                        </a>
+                    </div>
+                    @endif
+
                     <div class="text-center mt-4">
                         <a href="{{ route('family-members.index') }}" class="btn btn-primary">
                             <i class="fas fa-arrow-left"></i> العودة إلى قائمة أفراد العائلة

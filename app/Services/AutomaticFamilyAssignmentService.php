@@ -12,14 +12,33 @@ use Exception;
 class AutomaticFamilyAssignmentService
 {
     protected $familyMemberService;
+    protected $failures = [];
 
     public function __construct(FamilyMemberService $familyMemberService)
     {
         $this->familyMemberService = $familyMemberService;
     }
 
+    public function getFailures()
+    {
+        return $this->failures;
+    }
+
+    protected function recordFailure($citizenId, $personId, $relationship, $reason, $notes = '')
+    {
+        $this->failures[] = [
+            'citizen_id' => $citizenId,
+            'person_id' => $personId,
+            'relationship' => $relationship,
+            'reason' => $reason,
+            'notes' => $notes,
+            'attempt_date' => now()->format('Y-m-d H:i:s')
+        ];
+    }
+
     public function processAllCitizens()
     {
+        $this->failures = []; // Reset failures at start
         $results = [
             'processed' => 0,
             'father_added' => 0,
@@ -75,6 +94,7 @@ class AutomaticFamilyAssignmentService
                 }
             } else {
                 $results['skipped'][] = "لم يتم العثور على سجل الشخص برقم الهوية {$citizen->id}";
+                $this->recordFailure($citizen->id, null, null, 'Person record not found', 'Citizen ID');
             }
 
             // Then, process wife_id if it exists and not 0
@@ -88,9 +108,11 @@ class AutomaticFamilyAssignmentService
                     }
                 } else {
                     $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+                    $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Spouse record not found', 'Wife ID');
                 }
             } else {
                 $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
+                $this->recordFailure($citizen->id, null, null, 'No spouse ID linked', 'Wife ID');
             }
 
         } catch (Exception $e) {
@@ -99,6 +121,7 @@ class AutomaticFamilyAssignmentService
                 'citizen_id' => $citizen->id,
                 'error' => $e->getMessage()
             ]);
+            $this->recordFailure($citizen->id, null, null, 'Exception occurred', $e->getMessage());
         }
 
         return $results;
@@ -141,6 +164,7 @@ class AutomaticFamilyAssignmentService
                 }
             } else {
                 $results['skipped'][] = "لم يتم العثور على سجل الشخص برقم الهوية {$citizen->id}";
+                $this->recordFailure($citizen->id, null, null, 'Person record not found', 'Citizen ID');
             }
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
@@ -148,6 +172,7 @@ class AutomaticFamilyAssignmentService
                 'citizen_id' => $citizen->id,
                 'error' => $e->getMessage()
             ]);
+            $this->recordFailure($citizen->id, null, null, 'Exception occurred', $e->getMessage());
         }
 
         return $results;
@@ -165,6 +190,7 @@ class AutomaticFamilyAssignmentService
         try {
             if (!$citizen->wife_id || $citizen->wife_id === '0') {
                 $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
+                $this->recordFailure($citizen->id, null, null, 'No spouse ID linked', 'Wife ID');
                 return $results;
             }
 
@@ -177,6 +203,7 @@ class AutomaticFamilyAssignmentService
                 }
             } else {
                 $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+                $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Spouse record not found', 'Wife ID');
             }
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
@@ -185,6 +212,7 @@ class AutomaticFamilyAssignmentService
                 'wife_id' => $citizen->wife_id,
                 'error' => $e->getMessage()
             ]);
+            $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Exception occurred', $e->getMessage());
         }
 
         return $results;
@@ -195,6 +223,7 @@ class AutomaticFamilyAssignmentService
         // Skip if already has a father
         if ($this->familyMemberService->getParents($citizen)->where('relationship', 'father')->count() > 0) {
             $results['skipped'][] = "يوجد أب مسجل بالفعل";
+            $this->recordFailure($citizen->id, $person->CI_ID_NUM, 'father', 'Father already exists', 'Skipped');
             return;
         }
 
@@ -226,6 +255,7 @@ class AutomaticFamilyAssignmentService
             $results['father_added']++;
         } catch (Exception $e) {
             $results['errors'][] = "فشل إضافة الأب: " . $e->getMessage();
+            $this->recordFailure($citizen->id, $person->CI_ID_NUM, 'father', 'Failed to add father', $e->getMessage());
         }
     }
 
@@ -234,6 +264,7 @@ class AutomaticFamilyAssignmentService
         // Skip if already has a mother
         if ($this->familyMemberService->getParents($citizen)->where('relationship', 'mother')->count() > 0) {
             $results['skipped'][] = "يوجد أم مسجلة بالفعل";
+            $this->recordFailure($citizen->id, $person->CI_ID_NUM, 'mother', 'Mother already exists', 'Skipped');
             return;
         }
 
@@ -265,6 +296,7 @@ class AutomaticFamilyAssignmentService
             $results['mother_added']++;
         } catch (Exception $e) {
             $results['errors'][] = "فشل إضافة الأم: " . $e->getMessage();
+            $this->recordFailure($citizen->id, $person->CI_ID_NUM, 'mother', 'Failed to add mother', $e->getMessage());
         }
     }
 }
