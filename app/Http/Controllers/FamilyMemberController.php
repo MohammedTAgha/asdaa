@@ -7,6 +7,7 @@ use App\Models\FamilyMember;
 use App\Models\Records\Person;
 use App\Models\Records\Relation;
 use App\Services\FamilyMemberService;
+use App\Services\FamilyMemberFilterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -233,6 +234,33 @@ class FamilyMemberController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'حدث خطأ أثناء حذف الفرد: ' . $e->getMessage());
+        }
+    }
+
+    public function index(Request $request, FamilyMemberFilterService $filterService)
+    {
+        try {
+            $query = FamilyMember::with('citizen')
+                ->orderBy('created_at', 'desc');
+
+            $filters = $request->only(['type', 'gender', 'region', 'min_age', 'max_age']);
+            $query = $filterService->applyFilters($query, $filters);
+
+            $members = $query->paginate(15);
+            $regions = $filterService->getAvailableRegions();
+
+            if ($request->has('export')) {
+                $csv = $filterService->exportToCsv($query->get());
+                return response($csv)
+                    ->header('Content-Type', 'text/csv')
+                    ->header('Content-Disposition', 'attachment; filename="family_members.csv"');
+            }
+
+            return view('family-members.index', compact('members', 'regions', 'filters'));
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء عرض البيانات: ' . $e->getMessage());
         }
     }
 } 
