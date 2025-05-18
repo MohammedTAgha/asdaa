@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FamilyMembersImport;
+use App\Exports\FamilyMembersTemplateExport;
 
 class FamilyMemberController extends Controller
 {
@@ -301,5 +302,10 @@ class FamilyMemberController extends Controller
                 ->back()
                 ->with('error', 'حدث خطأ أثناء حذف الفرد: ' . $e->getMessage());
         }
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new FamilyMembersTemplateExport, 'family-members-template.xlsx');
     }
 }

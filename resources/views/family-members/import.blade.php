@@ -52,13 +52,18 @@
                               hover:file:bg-blue-100"
                        required
                        accept=".xlsx,.xls,.csv">
-            </div>
-
-            <div class="flex justify-between">
-                <a href="{{ route('family-members.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-right ml-1"></i>
-                    عودة للقائمة
-                </a>
+            </div>            <div class="flex justify-between">
+                <div>
+                    <a href="{{ route('family-members.index') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ml-1"></i>
+                        عودة للقائمة
+                    </a>
+                    
+                    <a href="{{ route('family-members.template') }}" class="btn btn-info">
+                        <i class="fas fa-download ml-1"></i>
+                        تحميل نموذج Excel
+                    </a>
+                </div>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-upload ml-1"></i>

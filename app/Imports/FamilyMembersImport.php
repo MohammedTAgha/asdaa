@@ -36,21 +36,34 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
                         'error' => sprintf('رقم هوية رب الأسرة غير موجود: %s', $row['citizen_id'])
                     ];
                     continue;
-                }
-
-                // Handle date of birth
+                }                // Handle date of birth
                 $dateOfBirth = null;
                 try {
-                    // Try multiple date formats
-                    $dateFormats = ['Y-m-d', 'd/m/Y', 'm/d/Y', 'Y/m/d'];
                     $dateValue = $row['date_of_birth'];
                     
-                    foreach ($dateFormats as $format) {
+                    // First try to handle Excel serial date
+                    if (is_numeric($dateValue)) {
                         try {
-                            $dateOfBirth = Carbon::createFromFormat($format, $dateValue)->format('Y-m-d');
-                            break;
+                            // Convert Excel serial date to Unix timestamp
+                            // Excel dates are counted from 1900-01-01, but there's a leap year bug
+                            // so we need to subtract one day if the date is after 1900-02-28
+                            $unixDate = ($dateValue - 25569) * 86400;
+                            $dateOfBirth = Carbon::createFromTimestamp($unixDate)->format('Y-m-d');
                         } catch (\Exception $e) {
-                            continue;
+                            // If Excel date conversion fails, continue to other formats
+                        }
+                    }
+                    
+                    // If not a valid Excel date, try other formats
+                    if (!$dateOfBirth) {
+                        $dateFormats = ['Y-m-d', 'd/m/Y', 'm/d/Y', 'Y/m/d'];
+                        foreach ($dateFormats as $format) {
+                            try {
+                                $dateOfBirth = Carbon::createFromFormat($format, $dateValue)->format('Y-m-d');
+                                break;
+                            } catch (\Exception $e) {
+                                continue;
+                            }
                         }
                     }
 
@@ -58,13 +71,18 @@ class FamilyMembersImport implements ToCollection, WithHeadingRow, WithValidatio
                         throw new \Exception('Unable to parse date');
                     }
 
+                    // Validate the date is not in the future
+                    if (Carbon::parse($dateOfBirth)->isFuture()) {
+                        throw new \Exception('تاريخ الميلاد لا يمكن أن يكون في المستقبل');
+                    }
+
                 } catch (\Exception $e) {
                     $this->failures[] = [
                         'row' => $row,
-                        'error' => sprintf('صيغة تاريخ الميلاد غير صحيحة للقيمة "%s". الصيغ المقبولة: YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY', $row['date_of_birth'])
+                        'error' => sprintf('صيغة تاريخ الميلاد غير صحيحة للقيمة "%s". الصيغ المقبولة: YYYY-MM-DD, DD/MM/YYYY, MM/DD/YYYY أو التاريخ من Excel', $row['date_of_birth'])
                     ];
                     continue;
-                }                // Validate gender
+                }// Validate gender
                 $gender = strtolower(trim($row['gender']));
                 if (!in_array($gender, ['male', 'female', 'ذكر', 'انثى', 'أنثى'])) {
                     $this->failures[] = [
