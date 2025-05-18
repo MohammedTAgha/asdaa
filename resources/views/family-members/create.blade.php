@@ -3,7 +3,28 @@
 
 @section('content')
     <div class="container mx-auto px-4">
-        if
+        @if(session('error'))
+            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @if(session('errors') && is_array(session('errors')))
+            <div class="mb-4 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                <strong class="font-bold">تنبيه!</strong>
+                <ul class="mt-2 list-disc list-inside">
+                    @foreach(session('errors') as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
 
         @component('components.box', ['title' => 'البحث في السجل المدني'])
             <div class="mb-6">
