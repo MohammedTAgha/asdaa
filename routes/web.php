@@ -82,6 +82,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
     Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
     Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
+    Route::get('/family-members', [FamilyMemberController::class, 'index'])->name('family-members.index');
 });
 
 // Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');

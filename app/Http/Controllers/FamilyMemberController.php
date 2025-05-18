@@ -6,7 +6,9 @@ use App\Models\Citizen;
 use App\Models\FamilyMember;
 use App\Models\Records\Person;
 use App\Models\Records\Relation;
+use App\Models\Region;
 use App\Services\FamilyMemberService;
+use App\Services\FamilyMemberFilterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -15,10 +17,34 @@ use Exception;
 class FamilyMemberController extends Controller
 {
     protected $familyMemberService;
+    protected $familyMemberFilterService;
 
-    public function __construct(FamilyMemberService $familyMemberService)
-    {
+    public function __construct(
+        FamilyMemberService $familyMemberService,
+        FamilyMemberFilterService $familyMemberFilterService
+    ) {
         $this->familyMemberService = $familyMemberService;
+        $this->familyMemberFilterService = $familyMemberFilterService;
+    }
+
+    public function index(Request $request)
+    {
+        $filters = $request->only([
+            'relationship',
+            'gender',
+            'min_age',
+            'max_age',
+            'region_id'
+        ]);
+
+        $regions = Region::all();
+        $members = $this->familyMemberFilterService->getFilteredMembers($filters);
+
+        if ($request->has('export')) {
+            return $this->familyMemberFilterService->export($filters);
+        }
+
+        return view('family-members.index', compact('members', 'regions', 'filters'));
     }
 
     public function create(Citizen $citizen)
@@ -70,7 +96,9 @@ class FamilyMemberController extends Controller
                 'is_father' => true,
             ];
             $records_relatives = collect([$father])->concat($records_relatives);
-        
+            Log::alert('Records relatives', [
+                'records_relatives' => $records_relatives
+            ]);
             $parents = $this->familyMemberService->getParents($citizen);
             $children = $this->familyMemberService->getChildren($citizen);
 
@@ -91,7 +119,10 @@ class FamilyMemberController extends Controller
                 'relationships' => 'required|array',
                 'relationships.*' => 'required|in:father,mother,son,daughter,other'
             ]);
-
+            Log::alert('reeq', [
+                'selected_relatives' => $request->all(),
+                
+            ]);
             $imported = 0;
             $errors = [];
 
@@ -130,6 +161,11 @@ class FamilyMemberController extends Controller
                     ];
 
                     $this->familyMemberService->addMember($memberData, $citizen);
+                    Log::info('Imported family member', [
+                        'citizen_id' => $citizen->id,
+                        'relative_id' => $relativeId,
+                        'data' => $memberData
+                    ]);
                     $imported++;
                 } catch (Exception $e) {
                     $errors[] = "فشل إضافة الفرد برقم الهوية $relativeId: " . $e->getMessage();
@@ -235,4 +271,4 @@ class FamilyMemberController extends Controller
                 ->with('error', 'حدث خطأ أثناء حذف الفرد: ' . $e->getMessage());
         }
     }
-} 
+}
