@@ -30,25 +30,20 @@ class AutomaticFamilyAssignmentService
 
         try {
             $citizens = Citizen::all();
+            
+            // First pass: Process all citizen.id records
             foreach ($citizens as $citizen) {
                 $results['processed']++;
-                $citizenResults = $this->assignFamilyMembers($citizen);
+                $citizenResults = $this->processCitizenId($citizen);
                 
-                // Aggregate results
-                $results['father_added'] += $citizenResults['father_added'];
-                $results['mother_added'] += $citizenResults['mother_added'];
-                if (!empty($citizenResults['errors'])) {
-                    $results['errors'][] = [
-                        'citizen_id' => $citizen->id,
-                        'errors' => $citizenResults['errors']
-                    ];
-                }
-                if (!empty($citizenResults['skipped'])) {
-                    $results['skipped'][] = [
-                        'citizen_id' => $citizen->id,
-                        'reasons' => $citizenResults['skipped']
-                    ];
-                }
+                $this->aggregateResults($results, $citizen, $citizenResults);
+            }
+
+            // Second pass: Process all wife_id records
+            foreach ($citizens as $citizen) {
+                $wifeResults = $this->processWifeId($citizen);
+                
+                $this->aggregateResults($results, $citizen, $wifeResults);
             }
         } catch (Exception $e) {
             Log::error('Error in automatic family assignment', [
@@ -58,7 +53,9 @@ class AutomaticFamilyAssignmentService
         }
 
         return $results;
-    }    public function assignFamilyMembers(Citizen $citizen)
+    }
+
+    public function assignFamilyMembers(Citizen $citizen)
     {
         $results = [
             'father_added' => 0,
@@ -67,7 +64,8 @@ class AutomaticFamilyAssignmentService
             'skipped' => []
         ];
 
-        try {            // First, process citizen.id - add as father if male, mother if female
+        try {
+            // First, process citizen.id - add as father if male, mother if female
             $personFromId = Person::where('CI_ID_NUM', $citizen->id)->first();
             if ($personFromId) {
                 if ($personFromId->CI_SEX_CD === 'ذكر') {
@@ -99,6 +97,92 @@ class AutomaticFamilyAssignmentService
             $results['errors'][] = $e->getMessage();
             Log::error('Error assigning family members', [
                 'citizen_id' => $citizen->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return $results;
+    }
+
+    protected function aggregateResults(&$results, $citizen, $newResults)
+    {
+        $results['father_added'] += $newResults['father_added'];
+        $results['mother_added'] += $newResults['mother_added'];
+        if (!empty($newResults['errors'])) {
+            $results['errors'][] = [
+                'citizen_id' => $citizen->id,
+                'errors' => $newResults['errors']
+            ];
+        }
+        if (!empty($newResults['skipped'])) {
+            $results['skipped'][] = [
+                'citizen_id' => $citizen->id,
+                'reasons' => $newResults['skipped']
+            ];
+        }
+    }
+
+    public function processCitizenId(Citizen $citizen)
+    {
+        $results = [
+            'father_added' => 0,
+            'mother_added' => 0,
+            'errors' => [],
+            'skipped' => []
+        ];
+
+        try {
+            $personFromId = Person::where('CI_ID_NUM', $citizen->id)->first();
+            if ($personFromId) {
+                if ($personFromId->CI_SEX_CD === 'ذكر') {
+                    $this->assignAsFather($citizen, $personFromId, $results);
+                } elseif ($personFromId->CI_SEX_CD === 'أنثى') {
+                    $this->assignAsMother($citizen, $personFromId, $results);
+                }
+            } else {
+                $results['skipped'][] = "لم يتم العثور على سجل الشخص برقم الهوية {$citizen->id}";
+            }
+        } catch (Exception $e) {
+            $results['errors'][] = $e->getMessage();
+            Log::error('Error processing citizen.id', [
+                'citizen_id' => $citizen->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return $results;
+    }
+
+    public function processWifeId(Citizen $citizen)
+    {
+        $results = [
+            'father_added' => 0,
+            'mother_added' => 0,
+            'errors' => [],
+            'skipped' => []
+        ];
+
+        try {
+            if (!$citizen->wife_id || $citizen->wife_id === '0') {
+                $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
+                return $results;
+            }
+
+            $personFromWifeId = Person::where('CI_ID_NUM', $citizen->wife_id)->first();
+            if ($personFromWifeId) {
+                if ($personFromWifeId->CI_SEX_CD === 'ذكر') {
+                    $this->assignAsFather($citizen, $personFromWifeId, $results);
+                } elseif ($personFromWifeId->CI_SEX_CD === 'أنثى') {
+                    $this->assignAsMother($citizen, $personFromWifeId, $results);
+                }
+            } else {
+                $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+            }
+        } catch (Exception $e) {
+            $results['errors'][] = $e->getMessage();
+            Log::error('Error processing wife_id', [
+                'citizen_id' => $citizen->id,
+                'wife_id' => $citizen->wife_id,
                 'error' => $e->getMessage()
             ]);
         }
