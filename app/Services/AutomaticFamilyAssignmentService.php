@@ -67,11 +67,12 @@ class AutomaticFamilyAssignmentService
             'skipped' => []
         ];
 
-        try {
-            // First, process citizen.id - only add as mother if female
+        try {            // First, process citizen.id - add as father if male, mother if female
             $personFromId = Person::where('CI_ID_NUM', $citizen->id)->first();
             if ($personFromId) {
-                if ($personFromId->CI_SEX_CD === 'أنثى') {
+                if ($personFromId->CI_SEX_CD === 'ذكر') {
+                    $this->assignAsFather($citizen, $personFromId, $results);
+                } elseif ($personFromId->CI_SEX_CD === 'أنثى') {
                     $this->assignAsMother($citizen, $personFromId, $results);
                 }
             } else {
