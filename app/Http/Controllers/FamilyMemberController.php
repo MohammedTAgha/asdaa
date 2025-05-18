@@ -125,7 +125,7 @@ class FamilyMemberController extends Controller
                         'lastname' => $person->CI_FAMILY_ARB,
                         'national_id' => $person->CI_ID_NUM,
                         'date_of_birth' => $parsedDate,
-                        'gender' => $person->CI_SEX_CD == 1 ? 'male' : 'female',
+                        'gender' => $person->CI_SEX_CD === 'ذكر' ? 'male' : 'female',
                         'relationship' => $request->relationships[$relativeId],
                     ];
 
