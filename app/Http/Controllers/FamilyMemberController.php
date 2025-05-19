@@ -342,7 +342,10 @@ class FamilyMemberController extends Controller
                 $results['failure_report_url'] = url('storage/reports/' . $fileName);
             }
 
-            return view('family-members.automatic-assignment-report', compact('results'));
+            return view('family-members.automatic-assignment-report', [
+                'results' => $results,
+                'failures' => $failures
+            ]);
         } catch (Exception $e) {
             return redirect()
                 ->route('family-members.index')

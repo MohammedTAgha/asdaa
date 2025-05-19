@@ -105,6 +105,48 @@
                     @endif
 
                     @if(isset($results['failure_report_url']))
+                    <div class="card card-danger mb-4">
+                        <div class="card-header">
+                            <h3 class="card-title">تقرير الإضافات الفاشلة</h3>
+                        </div>
+                        <div class="card-body table-responsive p-0">
+                            <table class="table table-hover table-bordered text-nowrap">
+                                <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th>رقم المواطن</th>
+                                        <th>جنس المواطن</th>
+                                        <th>رقم الزوج/ة</th>
+                                        <th>جنس الزوج/ة</th>
+                                        <th>نوع العلاقة</th>
+                                        <th>نوع الإضافة</th>
+                                        <th>الحالة</th>
+                                        <th>سبب الفشل</th>
+                                        <th>تاريخ المحاولة</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($failures as $failure)
+                                    <tr>
+                                        <td class="text-primary">{{ $failure['citizen_id'] }}</td>
+                                        <td class="{{ $failure['citizen_gender'] === 'ذكر' ? 'bg-info bg-opacity-10' : ($failure['citizen_gender'] === 'أنثى' ? 'bg-pink bg-opacity-10' : '') }}">
+                                            {{ $failure['citizen_gender'] ?? '---' }}
+                                        </td>
+                                        <td class="text-danger">{{ $failure['person_id'] ?? '---' }}</td>
+                                        <td class="{{ $failure['person_gender'] === 'ذكر' ? 'bg-info bg-opacity-10' : ($failure['person_gender'] === 'أنثى' ? 'bg-pink bg-opacity-10' : '') }}">
+                                            {{ $failure['person_gender'] ?? '---' }}
+                                        </td>
+                                        <td>{{ $failure['relationship'] ?? '---' }}</td>
+                                        <td>{{ $failure['relationship'] === 'father' ? 'إضافة كأب' : 'إضافة كأم' }}</td>
+                                        <td class="text-danger bg-danger bg-opacity-10">فشل</td>
+                                        <td>{{ $failure['reason'] }}</td>
+                                        <td>{{ $failure['attempt_date'] }}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="text-center mb-4">
                         <a href="{{ $results['failure_report_url'] }}" class="btn btn-warning btn-lg" target="_blank">
                             <i class="fas fa-download"></i> تحميل تقرير الإضافات الفاشلة
