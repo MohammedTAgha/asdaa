@@ -540,4 +540,40 @@ class CitizenController extends Controller
         // dd($citizenIds, $distributionIds);
         return app(CitizensAndDistributionExportService::class)::exportSelected($citizenIds, $distributionIds);
     }
+
+    public function showCareProviderForm(Citizen $citizen)
+    {
+        $familyMembers = $citizen->familyMembers;
+        return view('citizens.care-provider', compact('citizen', 'familyMembers'));
+    }
+
+    public function updateCareProvider(Request $request, Citizen $citizen)
+    {
+        try {
+            $validated = $request->validate([
+                'care_provider_id' => [
+                    'nullable',
+                    'exists:family_members,id',
+                    function ($attribute, $value, $fail) use ($citizen) {
+                        if ($value) {
+                            $member = FamilyMember::find($value);
+                            if ($member->citizen_id !== $citizen->id) {
+                                $fail(__('مقدم الرعاية يجب أن يكون من أفراد العائلة'));
+                            }
+                        }
+                    }
+                ]
+            ]);
+
+            $citizen->update($validated);
+
+            return redirect()
+                ->route('citizens.show', $citizen)
+                ->with('success', __('تم تحديث مقدم الرعاية بنجاح'));
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', __('حدث خطأ أثناء تحديث مقدم الرعاية'));
+        }
+    }
 }

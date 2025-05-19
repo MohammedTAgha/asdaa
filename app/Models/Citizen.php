@@ -182,4 +182,12 @@ class Citizen extends Model
             })
             ->where('is_accompanying', true);
     }
+
+    /**
+     * Get the care provider family member
+     */
+    public function careProvider()
+    {
+        return $this->belongsTo(FamilyMember::class, 'care_provider_id');
+    }
 }

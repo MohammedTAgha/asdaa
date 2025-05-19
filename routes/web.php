@@ -86,6 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/family-members/automatic-assignment', [FamilyMemberController::class, 'showAutomaticAssignmentForm'])->name('family-members.automatic-assignment');
     Route::post('/family-members/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignment'])->name('family-members.process-automatic-assignment');
     Route::post('/citizens/{citizen}/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen-automatic-assignment');
+    Route::get('/citizens/{citizen}/care-provider', [CitizenController::class, 'showCareProviderForm'])->name('citizens.care-provider');
+    Route::put('/citizens/{citizen}/care-provider', [CitizenController::class, 'updateCareProvider'])->name('citizens.update-care-provider');
 });
 
 // Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');

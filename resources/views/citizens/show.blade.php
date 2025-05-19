@@ -181,6 +181,26 @@
           
     @endcomponent
 
+    <div class="bg-white p-4 rounded-lg shadow mt-4">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-lg font-semibold mb-2">{{ __('مقدم الرعاية') }}</h3>
+                @if($citizen->careProvider)
+                    <div class="mb-2">
+                        <p class="text-gray-800">{{ $citizen->careProvider->firstname }} {{ $citizen->careProvider->secondname }} {{ $citizen->careProvider->lastname }}</p>
+                        <p class="text-sm text-gray-600">{{ __($citizen->careProvider->relationship) }}</p>
+                        <p class="text-sm text-gray-600">{{ __('رقم الهوية: ') }}{{ $citizen->careProvider->national_id }}</p>
+                    </div>
+                @else
+                    <p class="text-gray-600">{{ __('لم يتم تعيين مقدم رعاية بعد') }}</p>
+                @endif
+            </div>
+            <a href="{{ route('citizens.care-provider', $citizen) }}" class="btn-primary">
+                {{ __('تعديل مقدم الرعاية') }}
+            </a>
+        </div>
+    </div>
+
     @component('components.box',['title'=>'الكشوفات','styles'=>'mt-2'])
     @slot('side')
             <button class="px-4 py-2 btn btn-primary waves-effect waves-light" onclick="showModal()">اضافة</button>
