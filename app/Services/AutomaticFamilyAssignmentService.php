@@ -22,13 +22,25 @@ class AutomaticFamilyAssignmentService
     public function getFailures()
     {
         return $this->failures;
-    }
-
-    protected function recordFailure($citizenId, $personId, $relationship, $reason, $notes = '')
+    }    protected function recordFailure($citizenId, $personId, $relationship, $reason, $notes = '', $citizenGender = null, $personGender = null)
     {
+        // Get the citizen's gender from Person model if not provided
+        if (!$citizenGender) {
+            $citizenPerson = Person::where('CI_ID_NUM', $citizenId)->first();
+            $citizenGender = $citizenPerson ? $citizenPerson->CI_SEX_CD : '---';
+        }
+
+        // Get the person's gender from Person model if not provided
+        if ($personId && !$personGender) {
+            $person = Person::where('CI_ID_NUM', $personId)->first();
+            $personGender = $person ? $person->CI_SEX_CD : '---';
+        }
+
         $this->failures[] = [
             'citizen_id' => $citizenId,
+            'citizen_gender' => $citizenGender,
             'person_id' => $personId,
+            'person_gender' => $personGender,
             'relationship' => $relationship,
             'reason' => $reason,
             'notes' => $notes,

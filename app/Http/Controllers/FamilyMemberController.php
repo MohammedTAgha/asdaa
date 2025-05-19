@@ -326,14 +326,20 @@ class FamilyMemberController extends Controller
             
             // Generate failures report if there are any failures
             $failures = $this->automaticFamilyAssignmentService->getFailures();
-            if (!empty($failures)) {
-                $export = new FamilyAssignmentFailuresExport($failures);
+            if (!empty($failures)) {                $export = new FamilyAssignmentFailuresExport($failures);
                 $fileName = 'family_assignment_failures_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
-                Excel::store($export, 'reports/' . $fileName, 'public');
-                $reportUrl = asset('storage/reports/' . $fileName);
                 
-                // Add report URL to results
-                $results['failure_report_url'] = $reportUrl;
+                // Make sure the directory exists
+                $storagePath = storage_path('app/public/reports');
+                if (!file_exists($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                
+                // Store the file
+                Excel::store($export, 'reports/' . $fileName, 'public');
+                
+                // Generate the correct public URL
+                $results['failure_report_url'] = url('storage/reports/' . $fileName);
             }
 
             return view('family-members.automatic-assignment-report', compact('results'));
