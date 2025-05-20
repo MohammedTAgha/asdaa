@@ -85,7 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/family-members', [FamilyMemberController::class, 'index'])->name('family-members.index');
     Route::get('/family-members/automatic-assignment', [FamilyMemberController::class, 'showAutomaticAssignmentForm'])->name('family-members.automatic-assignment');
     Route::post('/family-members/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignment'])->name('family-members.process-automatic-assignment');
-    Route::post('/citizens/{citizen}/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen-automatic-assignment');
+    Route::post('/citizens/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen');
     Route::get('/citizens/{citizen}/care-provider', [CitizenController::class, 'showCareProviderForm'])->name('citizens.care-provider');
     Route::put('/citizens/{citizen}/care-provider', [CitizenController::class, 'updateCareProvider'])->name('citizens.update-care-provider');
 });

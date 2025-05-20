@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\CitizenImportService;
 use App\Exports\ImportReportExport;
+use App\Models\FamilyMember;
 
 class CitizenController extends Controller
 {

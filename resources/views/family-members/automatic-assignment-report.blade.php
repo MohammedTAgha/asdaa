@@ -17,7 +17,7 @@
                                 <span class="info-box-icon bg-info"><i class="fas fa-users"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">تمت معالجتهم</span>
-                                    <span class="info-box-number">{{ $results['processed'] }}</span>
+                                    <span class="info-box-number">{{ $results['processed'] ?? '-'}}</span>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                 <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-triangle"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text">الأخطاء</span>
-                                    <span class="info-box-number">{{ count($results['errors']) }}</span>
+                                    <span class="info-box-number">{{ count($results['errors']) ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>

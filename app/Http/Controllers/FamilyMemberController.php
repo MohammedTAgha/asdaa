@@ -353,8 +353,16 @@ class FamilyMemberController extends Controller
         }
     }
 
-    public function processAutomaticAssignmentForCitizen(Citizen $citizen)
+    public function processAutomaticAssignmentForCitizen(Request $request )
     {
+          $request->validate([
+            'id' => 'nullable|exists:citizens,id',
+        ]);
+        if ($request->has('id')){
+            $citizen = Citizen::find($request->id);
+        }
+         
+        // dd($citizen);
         try {
             $results = $this->automaticFamilyAssignmentService->assignFamilyMembers($citizen);
             
@@ -371,7 +379,9 @@ class FamilyMemberController extends Controller
             if (!empty($results['skipped'])) {
                 $message .= "\nتم تخطي: " . $results['skipped'];
             }
-
+        //         return view('family-members.automatic-assignment-report', [
+        //         'results' => $results,                
+        // ]);
             return redirect()
                 ->route('citizens.show', $citizen)
                 ->with('success', $message);
