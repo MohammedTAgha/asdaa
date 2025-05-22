@@ -39,6 +39,16 @@
                                 </div>
                             </div>
                         </div>
+
+                          <div class="col-md-3">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-success"><i class="fas fa-female"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text">الابناء المضافات</span>
+                                    <span class="info-box-number">{{ $results['children_added'] ?? 0 }}</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-3">
                             <div class="info-box">
                                 <span class="info-box-icon bg-warning"><i class="fas fa-exclamation-triangle"></i></span>
@@ -63,14 +73,15 @@
                                         <th>الخطأ</th>
                                     </tr>
                                 </thead>
-                                <tbody>                                    @foreach($results['errors'] as $errorEntry)
+                                <tbody>
+                                                                        {{-- @foreach($results['errors'] as $errorEntry)
                                     @foreach($errorEntry['errors'] as $error)
                                     <tr>
                                         <td>{{ $errorEntry['citizen_id'] }}</td>
                                         <td>{{ $error }}</td>
                                     </tr>
                                     @endforeach
-                                    @endforeach
+                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>

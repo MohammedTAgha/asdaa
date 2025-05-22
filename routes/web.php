@@ -205,6 +205,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/citizens/{citizen}/family-members/import-records', [FamilyMemberController::class, 'importRecords'])->name('citizens.family-members.import-records');
     Route::post('/citizens/{citizen}/family-members/add-children', [FamilyMemberController::class, 'addChildren'])
         ->name('citizens.family-members.add-children');
+    Route::post('/family-members/automatic-assignment-with-children', 
+        [FamilyMemberController::class, 'processAutomaticAssignmentWithChildren'])
+        ->name('family-members.process-automatic-assignment-with-children');
 });
 
 // Logout route

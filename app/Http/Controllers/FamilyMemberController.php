@@ -318,7 +318,8 @@ class FamilyMemberController extends Controller
 
     public function showAutomaticAssignmentForm()
     {
-        return view('family-members.automatic-assignment');
+        $regions=Region::all();
+        return view('family-members.automatic-assignment',compact('regions'));
     }
 
     public function processAutomaticAssignment()
@@ -411,15 +412,77 @@ class FamilyMemberController extends Controller
                 $message .= "\nالأخطاء:\n" . implode("\n", $result['errors']);
             }
 
-            return redirect()
-                ->route('citizens.show', $citizen)
-                ->with('success', $message)
-                ->with('errors', $result['errors']);
+             return view('family-members.automatic-assignment-report', [
+                'results' => $result,
+                'failures' => []
+            ]);
+            // return redirect()
+            //     ->route('citizens.show', $citizen)
+            //     ->with('success', $message)
+            //     ->with('errors', $result['errors']);
 
         } catch (Exception $e) {
             return redirect()
                 ->back()
                 ->with('error', 'حدث خطأ أثناء إضافة الأبناء: ' . $e->getMessage());
+        }
+    }
+
+    public function processAutomaticAssignmentWithChildren(Request $request)
+    {
+        try {
+            $filters = $request->validate([
+                'min_age' => 'nullable|integer|min:0',
+                'max_age' => 'nullable|integer|min:0',
+                'social_status' => 'nullable|string',
+                'gender' => 'nullable|in:male,female',
+                'region_id' => 'nullable|exists:regions,id'
+            ]);
+
+            $results = $this->automaticFamilyAssignmentService->processAllCitizensWithChildren(
+                $filters,
+                $request->region_id
+            );
+            
+            // Generate failures report if there are any failures
+            $failures = $this->automaticFamilyAssignmentService->getFailures();
+            if (!empty($failures)) {                $export = new FamilyAssignmentFailuresExport($failures);
+                $fileName = 'family_assignment_failures_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+                
+                // Make sure the directory exists
+                $storagePath = storage_path('app/public/reports');
+                if (!file_exists($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                
+                // Store the file
+                Excel::store($export, 'reports/' . $fileName, 'public');
+                
+                // Generate the correct public URL
+                $results['failure_report_url'] = url('storage/reports/' . $fileName);
+            }
+            $message = sprintf(
+                'تمت المعالجة التلقائية: تم إضافة %d أب و %d أم و %d ابن',
+                $results['father_added'],
+                $results['mother_added'],
+                $results['children_added']
+            );
+
+            if (!empty($results['errors'])) {
+                $message .= "\nالأخطاء:\n" . implode("\n", $results['errors']);
+            }
+ return view('family-members.automatic-assignment-report', [
+                'results' => $results,
+                'failures' => []
+            ]);
+            // return redirect()
+            //     ->route('family-members.index')
+            //     ->with('success', $message);
+
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء المعالجة التلقائية: ' . $e->getMessage());
         }
     }
 }

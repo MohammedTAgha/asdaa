@@ -316,5 +316,116 @@ class AutomaticFamilyAssignmentService
         }
     }
 
+    public function processAllCitizensWithChildren(array $filters = [], $regionId = null)
+    {
+        $this->failures = []; // Reset failures at start
+        $results = [
+            'processed' => 0,
+            'father_added' => 0,
+            'mother_added' => 0,
+            'children_added' => 0,
+            'errors' => [],
+            'skipped' => []
+        ];
+
+        try {
+            // Build query with region filter if specified
+            $query = Citizen::query();
+            if ($regionId) {
+                $query->where('region_id', $regionId);
+            }
+            // Execute the query to get Citizen models
+            $citizens = $query->get();
+            
+            foreach ($citizens as $citizen) {
+                $results['processed']++;
+                
+                // Process parents (existing functionality)
+                $citizenResults = $this->processCitizenId($citizen);
+                $this->aggregateResults($results, $citizen, $citizenResults);
+                
+                // Process children with filters
+                $childrenResults = $this->processChildren($citizen, $filters);
+                $results['children_added'] += $childrenResults['added'];
+                if (!empty($childrenResults['errors'])) {
+                    $results['errors'] = array_merge($results['errors'], $childrenResults['errors']);
+                }
+            }
+        } catch (Exception $e) {
+            Log::error('Error in automatic family assignment with children', [
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ أثناء المعالجة التلقائية لأفراد العائلة');
+        }
+
+        return $results;
+    }
+
+    protected function processChildren(Citizen $citizen, array $filters = [])
+    {
+        $results = [
+            'added' => 0,
+            'errors' => []
+        ];
+
+        try {
+            $children = $this->familyMemberService->getChildrenRecords($citizen, $filters);
+            
+            foreach ($children as $child) {
+                try {
+                    // Check if child already exists as family member
+                    $existingMember = $citizen->familyMembers()
+                        ->where('national_id', $child->CI_ID_NUM)
+                        ->first();
+
+                    if ($existingMember) {
+                        $results['errors'][] = "الابن {$child->CI_FIRST_ARB} موجود بالفعل في النظام";
+                        continue;
+                    }
+
+                    // Parse date of birth
+                    $dateOfBirth = null;
+                    if ($child->CI_BIRTH_DT) {
+                        try {
+                            $dateOfBirth = Carbon::createFromFormat('d/m/Y', $child->CI_BIRTH_DT)->format('Y-m-d');
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse child date_of_birth', [
+                                'input' => $child->CI_BIRTH_DT,
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                    }
+
+                    // Determine relationship based on gender
+                    $relationship = $child->CI_SEX_CD === 'ذكر' ? 'son' : 'daughter';
+
+                    $memberData = [
+                        'firstname' => $child->CI_FIRST_ARB,
+                        'secondname' => $child->CI_FATHER_ARB,
+                        'thirdname' => $child->CI_GRAND_FATHER_ARB,
+                        'lastname' => $child->CI_FAMILY_ARB,
+                        'national_id' => $child->CI_ID_NUM,
+                        'date_of_birth' => $dateOfBirth,
+                        'gender' => $child->CI_SEX_CD === 'ذكر' ? 'male' : 'female',
+                        'relationship' => $relationship,
+                        'notes' => 'تم إضافته تلقائياً كابن'
+                    ];
+
+                    $this->familyMemberService->addMember($memberData, $citizen);
+                    $results['added']++;
+                } catch (Exception $e) {
+                    $results['errors'][] = "فشل إضافة الابن {$child->CI_FIRST_ARB}: " . $e->getMessage();
+                }
+            }
+        } catch (Exception $e) {
+            Log::error('Error processing children', [
+                'citizen_id' => $citizen->id,
+                'error' => $e->getMessage()
+            ]);
+            $results['errors'][] = "حدث خطأ أثناء معالجة الأبناء: " . $e->getMessage();
+        }
+
+        return $results;
+    }
 
 }

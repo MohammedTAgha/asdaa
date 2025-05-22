@@ -108,7 +108,7 @@ class CitizenController extends Controller
         $citizens = Citizen::all();
         $citizen = Citizen::findOrFail($id);
         $search = $this->familyMemberService->getChildrenRecords($citizen);
-        dd($search);
+        // dd($search);
         return view('citizens.show', compact('citizen', 'citizens'));
     }
 

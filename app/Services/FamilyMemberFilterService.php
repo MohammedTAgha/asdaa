@@ -48,7 +48,8 @@ class FamilyMemberFilterService
 
     public function export(array $filters)
     {
-        $members = $this->getFilteredMembers($filters)->getCollection();
+        // $members = $this->getFilteredMembers($filters)->getCollection();
+        $members = $this->getFilteredMembers($filters);
         $timestamp = now()->format('Y-m-d_H-i-s');
         return Excel::download(new FamilyMembersExport($members), "family_members_{$timestamp}.xlsx");
     }
