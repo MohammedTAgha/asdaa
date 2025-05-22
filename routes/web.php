@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/search-by-ids', [PersonController::class, 'showSearchByIdsForm'])->name('search.by.ids.form');
         Route::post('/search-by-ids', [PersonController::class, 'searchByIds'])->name('records.search-by-ids');
         Route::get('/search-childs', [PersonController::class, 'showChildForm'])->name('search.childs.form');
-        Route::post('/search-childs', [PersonController::class, 'searchChilds'])->name('records.search-childs');
+        Route::post('/search-childs', [PersonController::class, 'searchChilds'])->name('records.search-childs');        Route::get('/search-by-id', [PersonController::class, 'searchById'])->name('records.search-by-id');
 
         Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
     });
