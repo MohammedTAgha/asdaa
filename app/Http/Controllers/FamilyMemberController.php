@@ -393,4 +393,33 @@ class FamilyMemberController extends Controller
                 ->with('error', 'حدث خطأ أثناء المعالجة التلقائية لأفراد العائلة: ' . $e->getMessage());
         }
     }
+
+    public function addChildren(Request $request, Citizen $citizen)
+    {
+        try {
+            $filters = $request->validate([
+                'min_age' => 'nullable|integer|min:0',
+                'max_age' => 'nullable|integer|min:0',
+                'social_status' => 'nullable|string',
+                'gender' => 'nullable|in:male,female'
+            ]);
+
+            $result = $this->familyMemberService->addChildrenAsMembers($citizen, $filters);
+
+            $message = "تم إضافة {$result['added']} من الأبناء بنجاح";
+            if (!empty($result['errors'])) {
+                $message .= "\nالأخطاء:\n" . implode("\n", $result['errors']);
+            }
+
+            return redirect()
+                ->route('citizens.show', $citizen)
+                ->with('success', $message)
+                ->with('errors', $result['errors']);
+
+        } catch (Exception $e) {
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء إضافة الأبناء: ' . $e->getMessage());
+        }
+    }
 }

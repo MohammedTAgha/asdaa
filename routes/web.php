@@ -203,6 +203,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
     Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
     Route::post('/citizens/{citizen}/family-members/import-records', [FamilyMemberController::class, 'importRecords'])->name('citizens.family-members.import-records');
+    Route::post('/citizens/{citizen}/family-members/add-children', [FamilyMemberController::class, 'addChildren'])
+        ->name('citizens.family-members.add-children');
 });
 
 // Logout route

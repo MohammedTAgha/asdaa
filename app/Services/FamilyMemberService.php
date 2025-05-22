@@ -9,6 +9,7 @@ use App\Models\Records\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Carbon\Carbon;
 
 class FamilyMemberService
 {
@@ -43,11 +44,9 @@ class FamilyMemberService
         }
     }
 
-        public function searchRecords( Citizen $citizen)
+    public function searchRecords(Citizen $citizen)
     {
         try {
-            
-
             // Get the person from Records database
             $person = Person::where('CI_ID_NUM', $citizen->id)->first();
             
@@ -95,15 +94,56 @@ class FamilyMemberService
         }
     }
 
-    public function getChildrenRecords(Citizen $citizen){ // return persons fo a family
-        $id=$citizen->id;
-        $person= Person::find($id);
-        if ($person) {
-            $childs =  $person->getChilds();
-            return $childs;
-        }
-        return [];
+    public function getChildrenRecords(Citizen $citizen, array $filters = [])
+    {
+        try {
+            $id = $citizen->id;
+            $person = Person::find($id);
+            
+            if (!$person) {
+                return [];
+            }
 
+            $children = $person->getChilds();
+            
+            // Apply filters
+            if (!empty($filters)) {
+                $children = $children->filter(function ($child) use ($filters) {
+                    $matches = true;
+                    
+                    // Filter by age
+                    if (isset($filters['min_age']) && $child->age < $filters['min_age']) {
+                        $matches = false;
+                    }
+                    if (isset($filters['max_age']) && $child->age > $filters['max_age']) {
+                        $matches = false;
+                    }
+                    
+                    // Filter by social status (CI_PERSONAL_CD)
+                    if (isset($filters['social_status']) && $child->CI_PERSONAL_CD !== $filters['social_status']) {
+                        $matches = false;
+                    }
+                    
+                    // Filter by gender
+                    if (isset($filters['gender'])) {
+                        $childGender = $child->CI_SEX_CD === 'ذكر' ? 'male' : 'female';
+                        if ($childGender !== $filters['gender']) {
+                            $matches = false;
+                        }
+                    }
+                    
+                    return $matches;
+                });
+            }
+            
+            return $children;
+        } catch (Exception $e) {
+            Log::error('Error getting children records', [
+                'citizen_id' => $citizen->id,
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ أثناء جلب بيانات الأبناء');
+        }
     }
     
     public function addChildsToDb(Citizen $citizen){ // return persons fo a family
@@ -201,6 +241,73 @@ class FamilyMemberService
                 'error' => $e->getMessage()
             ]);
             throw new Exception('حدث خطأ أثناء حذف الفرد من العائلة');
+        }
+    }
+
+    public function addChildrenAsMembers(Citizen $citizen, array $filters = [])
+    {
+        try {
+            $children = $this->getChildrenRecords($citizen, $filters);
+            $added = 0;
+            $errors = [];
+
+            foreach ($children as $child) {
+                try {
+                    // Check if child already exists as family member
+                    $existingMember = $citizen->familyMembers()
+                        ->where('national_id', $child->CI_ID_NUM)
+                        ->first();
+
+                    if ($existingMember) {
+                        $errors[] = "الابن {$child->CI_FIRST_ARB} موجود بالفعل في النظام";
+                        continue;
+                    }
+
+                    // Parse date of birth
+                    $dateOfBirth = null;
+                    if ($child->CI_BIRTH_DT) {
+                        try {
+                            $dateOfBirth = Carbon::createFromFormat('d/m/Y', $child->CI_BIRTH_DT)->format('Y-m-d');
+                        } catch (\Exception $e) {
+                            Log::warning('Failed to parse child date_of_birth', [
+                                'input' => $child->CI_BIRTH_DT,
+                                'error' => $e->getMessage()
+                            ]);
+                        }
+                    }
+
+                    // Determine relationship based on gender
+                    $relationship = $child->CI_SEX_CD === 'ذكر' ? 'son' : 'daughter';
+
+                    $memberData = [
+                        'firstname' => $child->CI_FIRST_ARB,
+                        'secondname' => $child->CI_FATHER_ARB,
+                        'thirdname' => $child->CI_GRAND_FATHER_ARB,
+                        'lastname' => $child->CI_FAMILY_ARB,
+                        'national_id' => $child->CI_ID_NUM,
+                        'date_of_birth' => $dateOfBirth,
+                        'gender' => $child->CI_SEX_CD === 'ذكر' ? 'male' : 'female',
+                        'relationship' => $relationship,
+                        'notes' => 'تم إضافته تلقائياً كابن'
+                    ];
+
+                    $this->addMember($memberData, $citizen);
+                    $added++;
+                } catch (Exception $e) {
+                    $errors[] = "فشل إضافة الابن {$child->CI_FIRST_ARB}: " . $e->getMessage();
+                }
+            }
+
+            return [
+                'added' => $added,
+                'errors' => $errors
+            ];
+        } catch (Exception $e) {
+            Log::error('Error adding children as members', [
+                'citizen_id' => $citizen->id,
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ أثناء إضافة الأبناء كأعضاء في العائلة');
         }
     }
 } 
