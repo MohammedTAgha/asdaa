@@ -1,7 +1,7 @@
 <div>
     <div class="row mb-3">
         <label for="{{ $name }}" class="col-sm-3 col-form-label text-sm-end">{{ $label }}</label>
-        <div class="col-sm-7">
+        <div class="col-sm-9">
             <input type="text" 
                 id="{{ $name }}" 
                 name="{{ $name }}" 
@@ -10,9 +10,6 @@
                 {{ $required ? 'required' : '' }}>
             <div class="invalid-feedback">رقم غير صحيح: الطول يجب ان يكون 9 ارقام</div>
             <div class="valid-feedback">الهوية صحيحة</div>
-        </div>
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-primary search-by-id" disabled>بحث</button>
         </div>
     </div>
 </div>
@@ -58,85 +55,11 @@
         return false;
     }
 
-    // Function to search and fill person details    function searchAndFillPersonDetails(input) {
-        const searchButton = input.closest('.row').querySelector('.search-by-id');
-        searchButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري البحث...';
-        searchButton.disabled = true;
-
-        console.log('Starting search for ID:', input.value);        fetch(`/records/search-by-id?id=${input.value}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })            .then(response => {
-                console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Received data:', data);
-                if (data.person) {
-                    // Fill the form fields
-                    document.getElementById('firstname').value = data.person.firstname || '';
-                    document.getElementById('secondname').value = data.person.secondname || '';
-                    document.getElementById('thirdname').value = data.person.thirdname || '';
-                    document.getElementById('lastname').value = data.person.lastname || '';
-                    
-                    // Handle date of birth formatting
-                    if (data.person.date_of_birth) {
-                        const parts = data.person.date_of_birth.split('/');
-                        if (parts.length === 3) {
-                            const formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-                            document.getElementById('date_of_birth').value = formattedDate;
-                        }
-                    }
-
-                    // Handle gender
-                    const genderSelect = document.getElementById('gender');
-                    if (genderSelect) {
-                        genderSelect.value = data.person.gender === 'ذكر' ? '0' : '1';
-                    }
-
-                    // Handle social status
-                    const socialStatusSelect = document.getElementById('social_status');
-                    if (socialStatusSelect) {
-                        socialStatusSelect.value = data.person.social_status || '';
-                    }
-
-                    // Handle wife information if available
-                    if (data.person.wife_id) {
-                        document.getElementById('wife_id').value = data.person.wife_id;
-                        document.getElementById('wife_name').value = data.person.wife_name;
-                    }
-                }            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('حدث خطأ أثناء البحث عن البيانات');
-            })
-            .finally(() => {
-                console.log('Search completed, resetting button');
-                searchButton.innerHTML = 'بحث';
-                searchButton.disabled = false;
-            });
-    }
-
-    // Add validation and search button functionality to all Palestinian ID inputs
+    // Add validation to all Palestinian ID inputs
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.palestinian-id').forEach(input => {
-            const searchButton = input.closest('.row').querySelector('.search-by-id');
-            
-            input.addEventListener('input', () => {
-                const isValid = validatePalestinianID(input);
-                searchButton.disabled = !isValid;
-            });
-
-            searchButton.addEventListener('click', () => {
-                if (validatePalestinianID(input)) {
-                    searchAndFillPersonDetails(input);
-                }
-            });
+            input.addEventListener('input', () => validatePalestinianID(input));
+            input.addEventListener('blur', () => validatePalestinianID(input));
         });
     });
 </script>

@@ -7,7 +7,6 @@ use App\Models\Records\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PersonController extends Controller
@@ -192,36 +191,5 @@ class PersonController extends Controller
         $request->session()->put('search_ids', $request->input('ids'));
 
         return view('records.search-childs', compact('results'));
-    }    public function searchById(Request $request)
-    {
-        $id = $request->input('id');
-        
-        Log::info('Searching for ID: ' . $id); // Add logging
-        
-        $person = Person::where('CI_ID_NUM', $id)->first();
-        
-        if (!$person) {
-            Log::info('Person not found for ID: ' . $id); // Add logging
-            return response()->json(['error' => 'Person not found'], 404);
-        }
-        
-        Log::info('Found person: ' . json_encode($person)); // Add logging
-        
-        $data = [
-            'person' => [
-                'firstname' => $person->CI_FIRST_ARB,
-                'secondname' => $person->CI_FATHER_ARB,
-                'thirdname' => $person->CI_GRAND_FATHER_ARB,
-                'lastname' => $person->CI_FAMILY_ARB,
-                'gender' => $person->CI_SEX_CD == 1 ? 'ذكر' : 'انثى',
-                'date_of_birth' => $person->CI_BIRTH_DT,
-                'social_status' => $person->CI_PERSONAL_CD,
-                'wife_id' => $person->spouse_id,
-                'wife_name' => $person->spouse_name,
-            ]
-        ];
-        
-        Log::info('Returning data: ' . json_encode($data)); // Add logging
-        return response()->json($data);
     }
 }
