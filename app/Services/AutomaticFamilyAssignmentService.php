@@ -22,7 +22,8 @@ class AutomaticFamilyAssignmentService
     public function getFailures()
     {
         return $this->failures;
-    }    protected function recordFailure($citizenId, $personId, $relationship, $reason, $notes = '', $citizenGender = null, $personGender = null)
+    }
+    protected function recordFailure($citizenId, $personId, $relationship, $reason, $notes = '', $citizenGender = null, $personGender = null)
     {
         // Get the citizen's gender from Person model if not provided
         if (!$citizenGender) {
@@ -61,7 +62,7 @@ class AutomaticFamilyAssignmentService
 
         try {
             $citizens = Citizen::all();
-            
+
             // First pass: Process all citizen.id records
             foreach ($citizens as $citizen) {
                 $results['processed']++;
@@ -74,7 +75,7 @@ class AutomaticFamilyAssignmentService
             // Second pass: Process all wife_id records
             foreach ($citizens as $citizen) {
                 $wifeResults = $this->processWifeId($citizen);
-                
+
                 $this->aggregateResults($results, $citizen, $wifeResults);
             }
         } catch (Exception $e) {
@@ -127,7 +128,6 @@ class AutomaticFamilyAssignmentService
                 $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
                 $this->recordFailure($citizen->id, null, null, 'No spouse ID linked', 'Wife ID');
             }
-
         } catch (Exception $e) {
             $results['errors'][] = $e->getMessage();
             Log::error('Error assigning family members', [
@@ -140,9 +140,7 @@ class AutomaticFamilyAssignmentService
         return $results;
     }
 
-    public function addFamilyChildren(){
-        
-    }
+    public function addFamilyChildren() {}
     protected function aggregateResults(&$results, $citizen, $newResults)
     {
         $results['father_added'] += $newResults['father_added'];
@@ -265,7 +263,9 @@ class AutomaticFamilyAssignmentService
                 'gender' => 'male',
                 'relationship' => 'father',
                 'national_id' => $person->CI_ID_NUM,
-                'notes' => 'تم إضافته تلقائياً كأب'
+                'notes' => 'تم إضافته تلقائياً كأب',
+                'status' => $person->CI_PERSONAL_CD
+
             ], $citizen);
 
             $results['father_added']++;
@@ -306,7 +306,8 @@ class AutomaticFamilyAssignmentService
                 'gender' => 'female',
                 'relationship' => 'mother',
                 'national_id' => $person->CI_ID_NUM,
-                'notes' => 'تم إضافتها تلقائياً كأم'
+                'notes' => 'تم إضافتها تلقائياً كأم',
+                'status' => $person->CI_PERSONAL_CD
             ], $citizen);
 
             $results['mother_added']++;
@@ -336,14 +337,14 @@ class AutomaticFamilyAssignmentService
             }
             // Execute the query to get Citizen models
             $citizens = $query->get();
-            
+
             foreach ($citizens as $citizen) {
                 $results['processed']++;
-                
+
                 // Process parents (existing functionality)
                 $citizenResults = $this->processCitizenId($citizen);
                 $this->aggregateResults($results, $citizen, $citizenResults);
-                
+
                 // Process children with filters
                 $childrenResults = $this->processChildren($citizen, $filters);
                 $results['children_added'] += $childrenResults['added'];
@@ -370,7 +371,7 @@ class AutomaticFamilyAssignmentService
 
         try {
             $children = $this->familyMemberService->getChildrenRecords($citizen, $filters);
-            
+
             foreach ($children as $child) {
                 try {
                     // Check if child already exists as family member
@@ -408,6 +409,7 @@ class AutomaticFamilyAssignmentService
                         'date_of_birth' => $dateOfBirth,
                         'gender' => $child->CI_SEX_CD === 'ذكر' ? 'male' : 'female',
                         'relationship' => $relationship,
+                          'status' => $child->CI_PERSONAL_CD,
                         'notes' => 'تم إضافته تلقائياً كابن'
                     ];
 
@@ -427,5 +429,4 @@ class AutomaticFamilyAssignmentService
 
         return $results;
     }
-
 }

@@ -22,7 +22,8 @@ class FamilyMember extends Model
         'relationship', // 'father', 'mother', 'son', 'daughter', 'other'
         'is_accompanying', // for accompanying children
         'national_id',
-        'notes'
+        'notes',
+        'status'
     ];
 
     protected $casts = [
