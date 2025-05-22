@@ -37,6 +37,7 @@ class FamilyMemberController extends Controller
 
     public function index(Request $request)
     {
+        // $test = $this->familyMemberService->
         $filters = $request->only([
             'relationship',
             'gender',
@@ -135,6 +136,7 @@ class FamilyMemberController extends Controller
             $errors = [];
 
             foreach ($request->selected_relatives as $relativeId) {
+                //for each select id of reletive list its adds the one 
                 try {
                     $person = Person::where('CI_ID_NUM', $relativeId)->first();
                     

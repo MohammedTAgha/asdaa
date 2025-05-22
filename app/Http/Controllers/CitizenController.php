@@ -21,16 +21,19 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Services\CitizenImportService;
 use App\Exports\ImportReportExport;
 use App\Models\FamilyMember;
+use App\Services\FamilyMemberService;
 
 class CitizenController extends Controller
 {
     protected $citizenService;
     protected $citizenImportService;
-
-    public function __construct(CitizenService $citizenService, CitizenImportService $citizenImportService)
+    protected $familyMemberService;
+    public function __construct(CitizenService $citizenService, CitizenImportService $citizenImportService,FamilyMemberService $familyMemberService,)
     {
         $this->citizenService = $citizenService;
         $this->citizenImportService = $citizenImportService;
+        $this->familyMemberService = $familyMemberService;
+
     }
     public function index(Request $request)
     {
@@ -104,6 +107,8 @@ class CitizenController extends Controller
     {
         $citizens = Citizen::all();
         $citizen = Citizen::findOrFail($id);
+        $search = $this->familyMemberService->getChildrenRecords($citizen);
+        dd($search);
         return view('citizens.show', compact('citizen', 'citizens'));
     }
 

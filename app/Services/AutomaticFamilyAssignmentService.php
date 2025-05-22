@@ -65,8 +65,9 @@ class AutomaticFamilyAssignmentService
             // First pass: Process all citizen.id records
             foreach ($citizens as $citizen) {
                 $results['processed']++;
+                // fetch the citezen fater and mother
                 $citizenResults = $this->processCitizenId($citizen);
-                
+                //record the result of addition diatails and erorrs
                 $this->aggregateResults($results, $citizen, $citizenResults);
             }
 
@@ -139,6 +140,9 @@ class AutomaticFamilyAssignmentService
         return $results;
     }
 
+    public function addFamilyChildren(){
+        
+    }
     protected function aggregateResults(&$results, $citizen, $newResults)
     {
         $results['father_added'] += $newResults['father_added'];
@@ -311,4 +315,6 @@ class AutomaticFamilyAssignmentService
             $this->recordFailure($citizen->id, $person->CI_ID_NUM, 'mother', 'Failed to add mother', $e->getMessage());
         }
     }
+
+
 }

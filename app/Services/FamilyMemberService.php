@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\FamilyMember;
 use App\Models\Citizen;
+use App\Models\Records\Person;
+use App\Models\Records\Relation;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -41,7 +43,82 @@ class FamilyMemberService
         }
     }
 
-    public function addMember(array $data, Citizen $citizen)
+        public function searchRecords( Citizen $citizen)
+    {
+        try {
+            
+
+            // Get the person from Records database
+            $person = Person::where('CI_ID_NUM', $citizen->id)->first();
+            
+            if (!$person) {
+                return redirect()->back()->with('error', 'لم يتم العثور على الشخص في السجل المدني');
+            }
+
+            // Get relatives from Records database
+            $relatives = Relation::with(['relative' => function($query) {
+                $query->select('CI_ID_NUM', 'CI_FIRST_ARB', 'CI_FATHER_ARB', 'CI_GRAND_FATHER_ARB', 'CI_FAMILY_ARB','age','full_name','CI_PERSONAL_CD','CI_BIRTH_DT');
+            }])->where('CF_ID_NUM', $citizen->id)->get();
+
+            $records_relatives = $relatives->map(function($relation) {
+                return [
+                    'relative' => $relation->relative,
+                    'relation_type' => $relation->relation_name,
+                    'relation_code' => $relation->CF_RELATIVE_CD
+                ];
+            });
+
+            // Prepend the main citizen (father) to the relatives list
+            $father = [
+                'relative' => $person,
+                'relation_type' => 'زوج',
+                'relation_code' => null,
+                'is_father' => true,
+            ];
+            $records_relatives = collect([$father])->concat($records_relatives);
+            Log::alert('Records relatives', [
+                'records_relatives' => $records_relatives
+            ]);
+            $parents = $this->getParents($citizen);
+            $children = $this->getChildren($citizen);
+            $result= [
+                'parents' => $parents,
+                'children' => $children,
+                ' $records_relatives' =>  $records_relatives,
+                'relatives' => $relatives,
+            ];
+            return $result;
+            // return view('family-members.create', compact('citizen', 'parents', 'children', 'records_relatives'));
+        } catch (Exception $e) {
+            Log::error('searchRecords service erorr',$e->getMessage());
+            return false;
+        }
+    }
+
+    public function getChildrenRecords(Citizen $citizen){ // return persons fo a family
+        $id=$citizen->id;
+        $person= Person::find($id);
+        if ($person) {
+            $childs =  $person->getChilds();
+            return $childs;
+        }
+        return [];
+
+    }
+    
+    public function addChildsToDb(Citizen $citizen){ // return persons fo a family
+        $id=$citizen->id;
+        $person= Person::find($id);
+        if ($person) {
+            $childs =  $person->getChilds();
+            return $childs;
+        }
+        return [];
+
+    }
+    
+
+    public function addMember(array $data, Citizen $citizen) // add member with array of data
     {
         try {
             // Check if member already exists
@@ -50,7 +127,7 @@ class FamilyMemberService
                 ->first();
 
             if ($existingMember) {
-                throw new Exception('هذا الفرد موجود بالفعل في العائلة');
+                throw new Exception('هذا الفرد موجود بالفعل في النظام');
             }
 
             return $citizen->familyMembers()->create([
