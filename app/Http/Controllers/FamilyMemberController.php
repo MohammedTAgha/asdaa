@@ -327,23 +327,23 @@ class FamilyMemberController extends Controller
         try {
             $results = $this->automaticFamilyAssignmentService->processAllCitizens();
             
-            // Generate failures report if there are any failures
-            $failures = $this->automaticFamilyAssignmentService->getFailures();
-            if (!empty($failures)) {                $export = new FamilyAssignmentFailuresExport($failures);
-                $fileName = 'family_assignment_failures_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+            // // Generate failures report if there are any failures
+            // $failures = $this->automaticFamilyAssignmentService->getFailures();
+            // if (!empty($failures)) {                $export = new FamilyAssignmentFailuresExport($failures);
+            //     $fileName = 'family_assignment_failures_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
                 
-                // Make sure the directory exists
-                $storagePath = storage_path('app/public/reports');
-                if (!file_exists($storagePath)) {
-                    mkdir($storagePath, 0755, true);
-                }
+            //     // Make sure the directory exists
+            //     $storagePath = storage_path('app/public/reports');
+            //     if (!file_exists($storagePath)) {
+            //         mkdir($storagePath, 0755, true);
+            //     }
                 
-                // Store the file
-                Excel::store($export, 'reports/' . $fileName, 'public');
+            //     // Store the file
+            //     Excel::store($export, 'reports/' . $fileName, 'public');
                 
-                // Generate the correct public URL
-                $results['failure_report_url'] = url('storage/reports/' . $fileName);
-            }
+            //     // Generate the correct public URL
+            //     $results['failure_report_url'] = url('storage/reports/' . $fileName);
+            // }
 
             return view('family-members.automatic-assignment-report', [
                 'results' => $results,
