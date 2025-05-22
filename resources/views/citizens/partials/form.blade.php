@@ -56,8 +56,9 @@
                 <div class="col-sm-2">
                     <label for="gender" class="form-label">الجنس</label>
                     <select id="gender" name="gender" class="form-select" required>
-                        <option value="0" {{isset($citizen) && $citizen->gender=='0' ? 'selected' : ''}}>ذكر</option>
-                        <option value="1" {{isset($citizen) && $citizen->gender=='1' ? 'selected' : ''}}>انثى</option>
+                        <option value="">اختر الجنس</option>
+                        <option value="0">ذكر</option>
+                        <option value="1">انثى</option>
                     </select>
                 </div>
                 <!-- date_of_birth -->
@@ -242,12 +243,10 @@
 </div>
 
 @push('scripts')
-    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-
     <script>
-        // Validation for Palestinian ID
+        // Existing validation code
         document.getElementById('id').addEventListener('input', validateID);
         document.getElementById('id').addEventListener('blur', validateID);
 
@@ -260,29 +259,56 @@
             document.querySelector('#id ~ .valid-feedback').textContent = '';
 
             if (id.length === 9 && /^\d{9}$/.test(id)) {
-                let sum = 0;
-                for (let i = 0; i < 8; i++) {
-                    let digit = parseInt(id[i]);
-                    if (i % 2 === 0) {
-                        sum += digit;
-                    } else {
-                        let doubled = digit * 2;
-                        sum += doubled > 9 ? doubled - 9 : doubled;
-                    }
-                }
-
-                let checkDigit = (10 - (sum % 10)) % 10;
-                if (checkDigit === parseInt(id[8])) {
-                    idInput.classList.add('is-valid');
-                    document.querySelector('#id ~ .valid-feedback').textContent = 'الهوية صحيحة!';
-                } else {
-                    idInput.classList.add('is-invalid');
-                    document.querySelector('#id ~ .invalid-feedback').textContent = 'الهوية غير صالحة!';
-                }
+                fetchPersonDetails(id);
             } else if (id.length > 0) {
                 idInput.classList.add('is-invalid');
                 document.querySelector('#id ~ .invalid-feedback').textContent = 'يجب ان يكون الطول 9 خانات ';
             }
+        }
+
+        function fetchPersonDetails(id) {
+            fetch(`{{ route('person.search') }}?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Auto-fill the form fields
+                        document.getElementById('firstname').value = data.data.firstname || '';
+                        document.getElementById('secondname').value = data.data.secondname || '';
+                        document.getElementById('thirdname').value = data.data.thirdname || '';
+                        document.getElementById('lastname').value = data.data.lastname || '';
+                        document.getElementById('date_of_birth').value = formatDate(data.data.date_of_birth) || '';
+                        
+                        if (data.data.gender !== undefined) {
+                            const genderSelect = document.getElementById('gender');
+                            if (genderSelect) {
+                                genderSelect.value = data.data.gender;
+                            }
+                        }
+
+                        document.querySelector('#id ~ .valid-feedback').textContent = 'تم العثور على البيانات!';
+                        document.getElementById('id').classList.add('is-valid');
+                    } else {
+                        document.querySelector('#id ~ .invalid-feedback').textContent = 'لم يتم العثور على هذه الهوية';
+                        document.getElementById('id').classList.add('is-invalid');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.querySelector('#id ~ .invalid-feedback').textContent = 'حدث خطأ في جلب البيانات';
+                    document.getElementById('id').classList.add('is-invalid');
+                });
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            
+            // Parse the date string (assuming it's in dd/mm/yyyy format)
+            const parts = dateString.split('/');
+            if (parts.length === 3) {
+                // Convert to yyyy-mm-dd format for the input date field
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return '';
         }
     </script>
 @endpush
