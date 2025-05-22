@@ -25,3 +25,7 @@ national_id
 notes
 i need to be able to import members to the system (thay citizen_id is existing citizen i need to add the members to him)
 it should show a report after each process 
+
+
+-add status to member
+-add big region in filtring
