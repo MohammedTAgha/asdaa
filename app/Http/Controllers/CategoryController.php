@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Services\CitizenService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CategoryMembersExport;
 
 class CategoryController extends Controller
 {
@@ -50,6 +52,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        $category->load('familyMembers.citizen');
         return view('categories.show', compact('category'));
     }
 
@@ -117,5 +120,14 @@ class CategoryController extends Controller
         return back()
             ->with('error', 'Failed to add citizens to category.')
             ->withInput();
+    }
+
+    /**
+     * Export category members to Excel
+     */
+    public function export(Category $category)
+    {
+        $filename = 'category_members_' . $category->name . '_' . now()->format('Y-m-d') . '.xlsx';
+        return Excel::download(new CategoryMembersExport($category), $filename);
     }
 }

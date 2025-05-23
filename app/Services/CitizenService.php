@@ -8,6 +8,9 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Exports\CategoryMembersExport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Category;
 
 class CitizenService
 {
@@ -124,5 +127,18 @@ class CitizenService
             Log::error('Failed to add citizens to category: ' . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Export category members to Excel
+     *
+     * @param Category $category
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportCategoryMembers(Category $category)
+    {
+        $filename = 'category_members_' . $category->name . '_' . now()->format('Y-m-d') . '.xlsx';
+        
+        return Excel::download(new CategoryMembersExport($category), $filename);
     }
 }

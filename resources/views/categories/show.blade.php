@@ -9,6 +9,12 @@
                 <a href="{{ route('categories.edit', $category) }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2">
                     Edit Category
                 </a>
+                <a href="{{ route('categories.add-citizens', $category) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                    Add Citizens
+                </a>
+                <a href="{{ route('categories.export', $category) }}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded mr-2">
+                    Export to Excel
+                </a>
                 <a href="{{ route('categories.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
                     Back to List
                 </a>
