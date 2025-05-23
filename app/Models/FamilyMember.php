@@ -59,4 +59,13 @@ class FamilyMember extends Model
     {
         return $this->belongsTo(Citizen::class);
     }
-} 
+
+    /**
+     * Get the categories this family member belongs to.
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class)
+                    ->withTimestamps();
+    }
+}
