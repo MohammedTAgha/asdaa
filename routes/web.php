@@ -24,6 +24,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FamilyMemberController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -236,6 +237,21 @@ Route::get('/test', function () {
     return view('dashboard');
 });
 
+// Category Management Routes
+Route::middleware(['auth'])->group(function () {
+    Route::resource('categories', CategoryController::class);
+    
+    // Category Attributes Routes
+    Route::prefix('categories/{category}/attributes')->name('categories.attributes.')->group(function () {
+        Route::get('/', [CategoryController::class, 'attributesIndex'])->name('index');
+        Route::get('/create', [CategoryController::class, 'attributesCreate'])->name('create');
+        Route::post('/', [CategoryController::class, 'attributesStore'])->name('store');
+        Route::get('/{attribute}/edit', [CategoryController::class, 'attributesEdit'])->name('edit');
+        Route::put('/{attribute}', [CategoryController::class, 'attributesUpdate'])->name('update');
+        Route::delete('/{attribute}', [CategoryController::class, 'attributesDestroy'])->name('destroy');
+        Route::post('/reorder', [CategoryController::class, 'attributesReorder'])->name('reorder');
+    });
+});
 
 require __DIR__ . '/auth.php';
 
