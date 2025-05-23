@@ -82,8 +82,8 @@ class PersonController extends Controller
                 'gender' => $person->CI_SEX_CD == 'ذكر' ? 'ذكر' : 'انثى',
                 'date_of_birth' => $person->CI_BIRTH_DT,
                 'social_status' => $person->CI_PERSONAL_CD,
-                'wife_id' => $person->spouse_id,
-                'wife_name' => $person->spouse_name,
+                'wife_id' => $person->getWife()->CI_ID_NUM ?? 0,
+                'wife_name' => $person->getWife()->fullName ?? 0,
             ]
         ];
         

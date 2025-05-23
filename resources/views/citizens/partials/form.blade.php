@@ -309,7 +309,7 @@
                         genderSelect.value = data.person.gender === 'ذكر' ? '0' : '1';
                     }
                      // Handle wife information if available
-                    if (data.person.wife_id) {
+                    if (data.person.wife_id !==null) {
                         document.getElementById('wife_id').value = data.person.wife_id;
                         document.getElementById('wife_name').value = data.person.wife_name;
                     } 
