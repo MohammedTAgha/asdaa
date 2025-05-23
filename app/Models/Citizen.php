@@ -190,4 +190,32 @@ class Citizen extends Model
     {
         return $this->belongsTo(FamilyMember::class, 'care_provider_id');
     }
+
+    /**
+     * Get all categories associated with this citizen's family members
+     */
+    public function categories()
+    {
+        return $this->hasManyThrough(
+            Category::class,
+            FamilyMember::class,
+            'citizen_id', // Foreign key on family_members table
+            'id', // Foreign key on categories table
+            'id', // Local key on citizens table
+            'category_id' // Local key on pivot table (through family_members)
+        )->distinct();
+    }
+
+    /**
+     * Get all unique categories for this citizen's family members
+     */
+    public function getUniqueCategoriesAttribute()
+    {
+        return $this->familyMembers()
+            ->with('categories')
+            ->get()
+            ->pluck('categories')
+            ->flatten()
+            ->unique('id');
+    }
 }

@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\CitizenService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    protected $citizenService;
+
+    public function __construct(CitizenService $citizenService)
+    {
+        $this->citizenService = $citizenService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -75,5 +83,39 @@ class CategoryController extends Controller
         
         return redirect()->route('categories.index')
             ->with('success', 'Category deleted successfully.');
+    }
+
+    /**
+     * Show the form for adding citizens to the category.
+     */
+    public function showAddCitizens(Category $category)
+    {
+        return view('categories.add-citizens', compact('category'));
+    }
+
+    /**
+     * Add citizens to the category.
+     */
+    public function addCitizens(Request $request, Category $category)
+    {
+        $request->validate([
+            'citizen_ids' => 'required|string'
+        ]);
+
+        // Convert the textarea input into an array of IDs
+        $citizenIds = array_filter(
+            array_map('trim', explode("\n", $request->citizen_ids)),
+            'strlen'
+        );
+
+        if ($this->citizenService->addCitizensToCategory($citizenIds, $category->id)) {
+            return redirect()
+                ->route('categories.show', $category)
+                ->with('success', 'Citizens successfully added to category.');
+        }
+
+        return back()
+            ->with('error', 'Failed to add citizens to category.')
+            ->withInput();
     }
 }

@@ -81,4 +81,48 @@ class CitizenService
     {
         return Citizen::whereIn('id', $citizenIds)->get();
     }
+
+    /**
+     * Add multiple citizens to a category
+     *
+     * @param array $citizenIds
+     * @param int $categoryId
+     * @return bool
+     */
+    public function addCitizensToCategory(array $citizenIds, int $categoryId): bool
+    {
+        if (empty($citizenIds)) {
+            Log::alert('No citizens provided');
+            return false;
+        }
+
+        try {
+            DB::transaction(function () use ($citizenIds, $categoryId) {
+                $citizens = Citizen::whereIn('id', $citizenIds)->get();
+                
+                foreach ($citizens as $citizen) {
+                    // Get all family members of the citizen
+                    $familyMemberIds = $citizen->familyMembers()->pluck('id')->toArray();
+                    
+                    if (!empty($familyMemberIds)) {
+                        // Attach the category to all family members
+                        DB::table('category_family_member')
+                            ->insert(array_map(function($familyMemberId) use ($categoryId) {
+                                return [
+                                    'category_id' => $categoryId,
+                                    'family_member_id' => $familyMemberId,
+                                    'created_at' => now(),
+                                    'updated_at' => now()
+                                ];
+                            }, $familyMemberIds));
+                    }
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            Log::error('Failed to add citizens to category: ' . $e->getMessage());
+            return false;
+        }
+    }
 }
