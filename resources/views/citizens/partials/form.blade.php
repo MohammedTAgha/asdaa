@@ -267,27 +267,69 @@
         }
 
         function fetchPersonDetails(id) {
-            fetch(`{{ route('person.search') }}?id=${id}`)
-                .then(response => response.json())
+                        fetch(`{{ route('records.search-by-id') }}?id=${id}`)
+
+                // .then(response => response.json())
+                .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
                 .then(data => {
-                    if (data.success) {
+                    console.log('Received data:', data);
+                     if (data.person) {
+                        console.log(data);
+
                         // Auto-fill the form fields
-                        document.getElementById('firstname').value = data.data.firstname || '';
-                        document.getElementById('secondname').value = data.data.secondname || '';
-                        document.getElementById('thirdname').value = data.data.thirdname || '';
-                        document.getElementById('lastname').value = data.data.lastname || '';
-                        document.getElementById('date_of_birth').value = formatDate(data.data.date_of_birth) || '';
+                        console.log('firstname');
                         
-                        if (data.data.gender !== undefined) {
-                            const genderSelect = document.getElementById('gender');
-                            if (genderSelect) {
-                                genderSelect.value = data.data.gender;
-                            }
+                        // Fill the form fields
+                    document.getElementById('firstname').value = data.person.firstname || '';
+                    document.getElementById('secondname').value = data.person.secondname || '';
+                    document.getElementById('thirdname').value = data.person.thirdname || '';
+                    document.getElementById('lastname').value = data.person.lastname || '';
+                    
+                    // Handle date of birth formatting
+                    if (data.person.date_of_birth) {
+                        const parts = data.person.date_of_birth.split('/');
+                        if (parts.length === 3) {
+                            const formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                            document.getElementById('date_of_birth').value = formattedDate;
                         }
+                    }
+
+                    // Handle gender
+                    const genderSelect = document.getElementById('gender');
+                    if (data.person.gender) {
+                        console.log(data.person.gender)
+                        console.log(genderSelect)
+                        console.log(genderSelect.value)
+                        genderSelect.value = data.person.gender === 'ذكر' ? '0' : '1';
+                    }
+                     // Handle wife information if available
+                    if (data.person.wife_id) {
+                        document.getElementById('wife_id').value = data.person.wife_id;
+                        document.getElementById('wife_name').value = data.person.wife_name;
+                    } 
+                        // document.getElementById('firstname').value = data.data.firstname || '';
+                        // document.getElementById('secondname').value = data.data.secondname || '';
+                        // document.getElementById('thirdname').value = data.data.thirdname || '';
+                        // document.getElementById('lastname').value = data.data.lastname || '';
+                        // document.getElementById('date_of_birth').value = formatDate(data.data.date_of_birth) || '';
+                        
+                        // if (data.data.gender !== undefined) {
+                        //     const genderSelect = document.getElementById('gender');
+                        //     if (genderSelect) {
+                        //         genderSelect.value = data.data.gender;
+                        //     }
+                        // }
 
                         document.querySelector('#id ~ .valid-feedback').textContent = 'تم العثور على البيانات!';
                         document.getElementById('id').classList.add('is-valid');
                     } else {
+
                         document.querySelector('#id ~ .invalid-feedback').textContent = 'لم يتم العثور على هذه الهوية';
                         document.getElementById('id').classList.add('is-invalid');
                     }
