@@ -61,7 +61,7 @@ class FamilyMember extends Model
     }
 
     /**
-     * Get the categories this family member belongs to.
+     * Get the categories associated with the family member.
      */
     public function categories()
     {
