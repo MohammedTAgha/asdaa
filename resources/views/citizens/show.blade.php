@@ -297,6 +297,9 @@
                                     <p class="text-sm text-gray-600">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
                                 </div>
                                 <div class="flex space-x-2">
+                                     <a href="{{ route('citizens.family-members.show', [$citizen, $parent]) }}" class="text-indigo-600 hover:text-indigo-900">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
                                     <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600">
                                         <i class="fas fa-edit"></i>
                                     </a>
@@ -339,6 +342,9 @@
                                     <td class="py-2 px-4">{{ $child->date_of_birth }}</td>
                                     <td class="py-2 px-4">{{ $child->national_id }}</td>
                                     <td class="py-2 px-4">
+                                        <a href="{{ route('citizens.family-members.show', [$citizen, $child]) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
                                         <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 ml-2">
                                             <i class="fas fa-edit"></i>
                                         </a>

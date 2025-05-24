@@ -192,6 +192,42 @@
                     </div>
                 </div>
 
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-4">الفئات</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{-- @foreach($categories as $category)
+                            <div class="bg-gray-100 p-4 rounded-md">
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" name="categories[{{ $category->id }}][selected]" value="1" class="form-checkbox">
+                                    <span class="ml-2">{{ $category->name }}</span>
+                                </label>
+                                <div class="mt-2 space-y-2">
+                                    <label class="block text-sm font-medium text-gray-700">الحجم:</label>
+                                    <input type="text" name="categories[{{ $category->id }}][size]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">التاريخ:</label>
+                                    <input type="date" name="categories[{{ $category->id }}][date]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">خاصية 1:</label>
+                                    <input type="text" name="categories[{{ $category->id }}][property1]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">خاصية 2:</label>
+                                    <input type="text" name="categories[{{ $category->id }}][property2]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">خاصية 3:</label>
+                                    <input type="text" name="categories[{{ $category->id }}][property3]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">اللون:</label>
+                                    <input type="text" name="categories[{{ $category->id }}][color]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+
+                                    <label class="block text-sm font-medium text-gray-700">الكمية:</label>
+                                    <input type="number" name="categories[{{ $category->id }}][amount]" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+                            </div>
+                        @endforeach --}}
+                    </div>
+                </div>
+
                 <div class="flex justify-end space-x-3">
                     <button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         حفظ
@@ -286,4 +322,4 @@
             });
         });
     </script>
-@endsection 
+@endsection

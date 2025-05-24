@@ -138,10 +138,13 @@
                             <td class="px-6 py-4">
                                 {{ $member->citizen->region->name ?? 'غير محدد' }}
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('citizens.family-members.show', [$member->citizen, $member]) }}" class="text-indigo-600 hover:text-indigo-900">عرض</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="9" class="px-6 py-4 text-center text-gray-500">
                                 لا توجد نتائج للبحث
                             </td>
                         </tr>
@@ -156,4 +159,3 @@
     @endcomponent
 </div>
 @endsection
- 

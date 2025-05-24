@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FamilyMembersImport;
 use App\Exports\FamilyMembersTemplateExport;
 use App\Exports\FamilyAssignmentFailuresExport;
+use App\Models\Category;
 
 class FamilyMemberController extends Controller
 {
@@ -61,7 +62,7 @@ class FamilyMemberController extends Controller
         try {
             $parents = $this->familyMemberService->getParents($citizen);
             $children = $this->familyMemberService->getChildren($citizen);
-            $categories = \App\Models\Category::all();
+            $categories = Category::all();
 
             return view('family-members.create', compact('citizen', 'parents', 'children', 'categories'));
         } catch (Exception $e) {
@@ -267,7 +268,9 @@ class FamilyMemberController extends Controller
     public function edit(Citizen $citizen, FamilyMember $member)
     {
         try {
-            return view('family-members.edit', compact('citizen', 'member'));
+            $member->load('categories');
+            $categories = \App\Models\Category::all();
+            return view('family-members.edit', compact('citizen', 'member', 'categories'));
         } catch (Exception $e) {
             return redirect()
                 ->route('citizens.show', $citizen)
@@ -292,6 +295,12 @@ class FamilyMemberController extends Controller
 
             $this->familyMemberService->updateMember($member, $validated);
 
+            if ($request->has('categories')) {
+                $member->categories()->sync($request->categories);
+            } else {
+                $member->categories()->detach();
+            }
+
             return redirect()
                 ->route('citizens.show', $citizen)
                 ->with('success', 'تم تحديث بيانات الفرد بنجاح');
@@ -315,6 +324,18 @@ class FamilyMemberController extends Controller
             return redirect()
                 ->back()
                 ->with('error', 'حدث خطأ أثناء حذف الفرد: ' . $e->getMessage());
+        }
+    }
+
+    public function show(Citizen $citizen, FamilyMember $member)
+    {
+        try {
+            $member->load('categories');
+            return view('family-members.show', compact('citizen', 'member'));
+        } catch (Exception $e) {
+            return redirect()
+                ->route('citizens.show', $citizen)
+                ->with('error', 'حدث خطأ أثناء تحميل صفحة عرض الفرد: ' . $e->getMessage());
         }
     }
 
@@ -354,7 +375,7 @@ class FamilyMemberController extends Controller
 
             return view('family-members.automatic-assignment-report', [
                 'results' => $results,
-                'failures' => $failures
+                'failures' => []
             ]);
         } catch (Exception $e) {
             return redirect()
