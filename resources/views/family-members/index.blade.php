@@ -97,6 +97,9 @@
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                             المنطقة
                         </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            الإجراءات
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">                    @forelse($members as $member)
@@ -137,6 +140,11 @@
                             </td>
                             <td class="px-6 py-4">
                                 {{ $member->citizen->region->name ?? 'غير محدد' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ route('family-members.show', $member) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">
+                                    <i class="ti ti-eye"></i> عرض
+                                </a>
                             </td>
                         </tr>
                     @empty

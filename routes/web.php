@@ -24,6 +24,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FamilyMemberController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
     Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
     Route::get('/family-members', [FamilyMemberController::class, 'index'])->name('family-members.index');
+    Route::get('/family-members/{member}', [FamilyMemberController::class, 'show'])->name('family-members.show');
     Route::get('/family-members/automatic-assignment', [FamilyMemberController::class, 'showAutomaticAssignmentForm'])->name('family-members.automatic-assignment');
     Route::post('/family-members/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignment'])->name('family-members.process-automatic-assignment');
     Route::post('/citizens/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen');
@@ -236,6 +238,8 @@ Route::get('/test', function () {
     return view('dashboard');
 });
 
+Route::resource('categories', CategoryController::class);
+Route::post('categories/{category}/add-members', [CategoryController::class, 'addMembers'])->name('categories.add-members');
 
 require __DIR__ . '/auth.php';
 

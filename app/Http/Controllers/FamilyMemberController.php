@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\FamilyMembersImport;
 use App\Exports\FamilyMembersTemplateExport;
 use App\Exports\FamilyAssignmentFailuresExport;
+use App\Models\Category;
 
 class FamilyMemberController extends Controller
 {
@@ -484,5 +485,11 @@ class FamilyMemberController extends Controller
                 ->back()
                 ->with('error', 'حدث خطأ أثناء المعالجة التلقائية: ' . $e->getMessage());
         }
+    }
+
+    public function show(FamilyMember $member)
+    {
+        $categories = Category::where('status', 'active')->get();
+        return view('family-members.show', compact('member', 'categories'));
     }
 }

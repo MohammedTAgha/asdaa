@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\FamilyMember;
 use App\Models\Citizen;
+use App\Models\Category;
 use App\Models\Records\Person;
 use App\Models\Records\Relation;
 use Illuminate\Database\QueryException;
@@ -308,6 +309,54 @@ class FamilyMemberService
                 'error' => $e->getMessage()
             ]);
             throw new Exception('حدث خطأ أثناء إضافة الأبناء كأعضاء في العائلة');
+        }
+    }
+
+    /**
+     * Add multiple family members to a category
+     *
+     * @param Category $category
+     * @param array $memberIds
+     * @param array $pivotData
+     * @return void
+     * @throws Exception
+     */
+    public function addMembersToCategory(Category $category, array $memberIds, array $pivotData = [])
+    {
+        try {
+            // Get all family members that exist
+            $members = FamilyMember::whereIn('national_id', $memberIds)->get();
+            Log::info($members);
+
+            Log::info($members);
+            if ($members->isEmpty()) {
+                throw new Exception('لم يتم العثور على أي من الأعضاء المحددين');
+            }
+
+            // Prepare pivot data for each member
+            $syncData = [];
+            foreach ($members as $member) {
+                $syncData[$member->id] = $pivotData;
+            }
+
+            // Sync the members with the category
+            $category->familyMembers()->syncWithoutDetaching($syncData);
+
+            return $members;
+        } catch (QueryException $e) {
+            Log::error('Database error while adding members to category', [
+                'category_id' => $category->id,
+                'member_ids' => $memberIds,
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ في قاعدة البيانات أثناء إضافة الأعضاء إلى الفئة');
+        } catch (Exception $e) {
+            Log::error('Error adding members to category', [
+                'category_id' => $category->id,
+                'member_ids' => $memberIds,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
         }
     }
 } 

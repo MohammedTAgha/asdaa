@@ -250,6 +250,37 @@ data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle"
 				</a>
 			</div>
 
+			<!-- Categories -->
+			<div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ request()->routeIs('categories.*') ? 'here show' : '' }}">
+				<span class="menu-link">
+					<span class="menu-icon">
+						<span class="svg-icon svg-icon-2">
+							<i class="ti ti-category"></i>
+						</span>
+					</span>
+					<span class="menu-title">الفئات</span>
+					<span class="menu-arrow"></span>
+				</span>
+				<div class="menu-sub menu-sub-accordion">
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('categories.index') ? 'active' : '' }}" href="{{ route('categories.index') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">عرض الفئات</span>
+						</a>
+					</div>
+					<div class="menu-item">
+						<a class="menu-link {{ request()->routeIs('categories.create') ? 'active' : '' }}" href="{{ route('categories.create') }}">
+							<span class="menu-bullet">
+								<span class="bullet bullet-dot"></span>
+							</span>
+							<span class="menu-title">إضافة فئة جديدة</span>
+						</a>
+					</div>
+				</div>
+			</div>
+
 			<!-- Representatives -->
 			<div class="menu-item">
 				<a class="menu-link {{ request()->routeIs('representatives.index') ? 'active' : '' }}"
