@@ -59,4 +59,23 @@ class FamilyMember extends Model
     {
         return $this->belongsTo(Citizen::class);
     }
+
+    /**
+     * Get the categories that belong to this family member
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class)
+            ->withPivot([
+                'size',
+                'description',
+                'date',
+                'amount',
+                'property1',
+                'property2',
+                'property3',
+                'property4'
+            ])
+            ->withTimestamps();
+    }
 } 
