@@ -61,8 +61,9 @@ class FamilyMemberController extends Controller
         try {
             $parents = $this->familyMemberService->getParents($citizen);
             $children = $this->familyMemberService->getChildren($citizen);
+            $categories = \App\Models\Category::all();
 
-            return view('family-members.create', compact('citizen', 'parents', 'children'));
+            return view('family-members.create', compact('citizen', 'parents', 'children', 'categories'));
         } catch (Exception $e) {
             return redirect()
                 ->route('citizens.show', $citizen)
@@ -244,7 +245,13 @@ class FamilyMemberController extends Controller
                 'notes' => 'nullable|string',
             ]);
 
-            $this->familyMemberService->addMember($validated, $citizen);
+            $familyMember = $this->familyMemberService->addMember($validated, $citizen);
+
+            if ($request->has('categories')) {
+                foreach ($request->categories as $categoryId => $pivotData) {
+                    $familyMember->categories()->attach($categoryId, $pivotData);
+                }
+            }
 
             return redirect()
                 ->route('citizens.show', $citizen)

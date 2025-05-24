@@ -66,6 +66,7 @@ class FamilyMember extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class)
+                    ->withPivot(['size', 'date', 'property1', 'property2', 'property3', 'color', 'amount'])
                     ->withTimestamps();
     }
 }
