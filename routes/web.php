@@ -79,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/distributions/{distribution}/delete-citizens',  [DistributionController::class, 'deleteCitizens'])->name('distributions.deleteCitizens');
     Route::resource('big-regions', BigRegionController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('categories/add', CategoryController::class);
     //upload to distribution 
     Route::post('/upload-citizens', [CitizenUploadController::class, 'uploadCitizens'])->name('upload.citizens');
     Route::get('/upload-citizens', [CitizenUploadController::class, 'showUploadForm'])->name('upload.citizens.form');

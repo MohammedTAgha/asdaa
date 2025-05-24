@@ -33,7 +33,9 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="h-4 w-4 rounded mr-2" style="background-color: {{ $category->color }}"></div>
+                            <a href="{{route('categories.show',$category->id)}}">
                             {{ $category->name }}
+                            </a>
                         </div>
                     </td>
                     <td class="px-6 py-4">{{ Str::limit($category->description, 50) }}</td>
