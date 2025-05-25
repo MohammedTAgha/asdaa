@@ -139,9 +139,10 @@
     <!--end::Root-->
 
     <!--end::Main-->
+    {{-- @livewireScripts --}}
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
 
-    @livewireScripts
+    
     <!-- / Layout wrapper -->
 
     {{-- snake bar 1 scripts  --}}

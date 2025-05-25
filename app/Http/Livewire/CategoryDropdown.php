@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\DistributionCategory;
 use App\Models\Source;
+use Illuminate\Support\Facades\Log;
 
 class CategoryDropdown extends Component
 {
@@ -20,6 +21,8 @@ class CategoryDropdown extends Component
 
     public function mount($selectedCategory = null, $selectedSource = null)
     {
+        Log::info('livewire mount');
+
         $this->categories = DistributionCategory::all();
         $this->sources = Source::all();
         $this->selectedCategory = $selectedCategory;
@@ -37,6 +40,8 @@ class CategoryDropdown extends Component
 
     public function updatedSelectedSource($value)
     {
+        Log::info('livewire', $this->showNewSourceInput);
+        Log::info('livewire value', $value);
         if ($value === 'add_new_source') {
             $this->showNewSourceInput = true;
         } else {

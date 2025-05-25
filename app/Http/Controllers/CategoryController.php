@@ -172,4 +172,49 @@ class CategoryController extends Controller
                 ->with('error', 'حدث خطأ أثناء إضافة الأعضاء إلى الفئة');
         }
     }
+    public function addMember(Request $request)
+    {
+        Log::alert('test');
+        Log::alert( $request);
+        
+
+        $request->validate([
+            'member_id' => 'required|string',
+            'category_id' => 'required|numeric',
+            'description' => $request->description,
+            'date' => 'nullable|date',
+            'size' => 'nullable|string',
+            'amount' => 'nullable|numeric',
+            'property1' => 'nullable|string',
+            'property2' => 'nullable|string',
+            'property3' => 'nullable|string',
+            'property4' => 'nullable|string',
+        ]);
+
+        try {
+            $category=Category::find($request->category_id);
+            $pivotData = [
+                'size' => $request->size,
+                'description' => $request->description,
+                'date' => $request->date,
+                'amount' => $request->amount,
+                'property1' => $request->property1,
+                'property2' => $request->property2,
+                'property3' => $request->property3,
+                'property4' => $request->property4,
+            ];
+
+            $this->familyMemberService->addMembersToCategory($category, $memberIds, $pivotData);
+
+            return redirect()->route('categories.show', $category)
+                ->with('success', 'تم إضافة الأعضاء إلى الفئة بنجاح');
+        } catch (\Exception $e) {
+            Log::error('Error adding members to category', [
+                'category_id' => $category->id,
+                'error' => $e->getMessage()
+            ]);
+            return redirect()->back()
+                ->with('error', 'حدث خطأ أثناء إضافة الأعضاء إلى الفئة');
+        }
+    }
 }

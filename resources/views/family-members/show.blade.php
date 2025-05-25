@@ -85,7 +85,7 @@
                                     <h6 class="mb-0">إضافة إلى فئة</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form id="addToCategoryForm" method="POST">
+                                    <form action="{{ route('categories.add-member') }}" method="POST">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
@@ -117,7 +117,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label for="amount">المبلغ</label>
+                                                    <label for="amount">الكمية</label>
                                                     <input type="number" step="0.01" class="form-control" id="amount" name="amount">
                                                 </div>
                                             </div>
@@ -198,21 +198,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-document.getElementById('addToCategoryForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const categoryId = document.getElementById('category_id').value;
-    if (!categoryId) {
-        alert('الرجاء اختيار فئة');
-        return;
-    }
-    this.action = "{{ url('categories') }}/" + categoryId + "/add-members";
-    console.console.log(this.action);
-    
-    this.submit();
-});
-</script>
 @endsection 

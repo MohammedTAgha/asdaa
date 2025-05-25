@@ -359,4 +359,43 @@ class FamilyMemberService
             throw $e;
         }
     }
+
+    public function addMemberToCategory(Category $category, array $memberIds, array $pivotData = [])
+    {
+        try {
+            // Get all family members that exist
+            $members = FamilyMember::whereIn('national_id', $memberIds)->get();
+            Log::info($members);
+
+            Log::info($members);
+            if ($members->isEmpty()) {
+                throw new Exception('لم يتم العثور على أي من الأعضاء المحددين');
+            }
+
+            // Prepare pivot data for each member
+            $syncData = [];
+            foreach ($members as $member) {
+                $syncData[$member->id] = $pivotData;
+            }
+
+            // Sync the members with the category
+            $category->familyMembers()->syncWithoutDetaching($syncData);
+
+            return $members;
+        } catch (QueryException $e) {
+            Log::error('Database error while adding members to category', [
+                'category_id' => $category->id,
+                'member_ids' => $memberIds,
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ في قاعدة البيانات أثناء إضافة الأعضاء إلى الفئة');
+        } catch (Exception $e) {
+            Log::error('Error adding members to category', [
+                'category_id' => $category->id,
+                'member_ids' => $memberIds,
+                'error' => $e->getMessage()
+            ]);
+            throw $e;
+        }
+    }
 } 
