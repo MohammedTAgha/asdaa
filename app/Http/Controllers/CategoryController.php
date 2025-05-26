@@ -132,22 +132,33 @@ class CategoryController extends Controller
     {
         Log::alert('test');
         Log::alert( $request);
-        Log::alert( $category);
+      
 
-        $request->validate([
-            'member_ids' => 'required|string',
-            'size' => 'nullable|string',
-            'description' => 'nullable|string',
-            'date' => 'nullable|date',
-            'amount' => 'nullable|numeric',
-            'property1' => 'nullable|string',
-            'property2' => 'nullable|string',
-            'property3' => 'nullable|string',
-            'property4' => 'nullable|string',
-        ]);
+        // $request->validate([
+        //     'member_ids' => 'required|string',
+        //     'ids' => 'required|string',
 
+        //     'size' => 'nullable|string',
+        //     'description' => 'nullable|string',
+        //     'date' => 'nullable|date',
+        //     'amount' => 'nullable|numeric',
+        //     'property1' => 'nullable|string',
+        //     'property2' => 'nullable|string',
+        //     'property3' => 'nullable|string',
+        //     'property4' => 'nullable|string',
+        // ]);
+        // Log::alert('ids', $request->input('ids'));
+        
+        $ids = explode(PHP_EOL, $request->input('ids'));
+        
+        $ids = array_map('trim', $ids);
+        $ids = array_filter($ids);
+
+        // dd($ids);
         try {
-            $memberIds = array_filter(explode(',', $request->member_ids));
+            // $memberIds = array_filter(explode(',', $request->member_ids));
+                    // Clean and prepare the input IDs
+      
             $pivotData = [
                 'size' => $request->size,
                 'description' => $request->description,
@@ -159,7 +170,7 @@ class CategoryController extends Controller
                 'property4' => $request->property4,
             ];
 
-            $this->familyMemberService->addMembersToCategory($category, $memberIds, $pivotData);
+            $this->familyMemberService->addMembersToCategory($category, $ids, $pivotData);
 
             return redirect()->route('categories.show', $category)
                 ->with('success', 'تم إضافة الأعضاء إلى الفئة بنجاح');

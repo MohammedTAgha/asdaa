@@ -120,7 +120,6 @@ class CitizenController extends Controller
 
     public function store(Request $request)
     {
-
         $data = [
             'id' => $request->input('id'),
             'firstname' => $request->input('firstname'),
@@ -132,6 +131,10 @@ class CitizenController extends Controller
             'region_id' => $request->input('region_id'),
             'wife_id' => $request->input('wife_id'),
             'wife_name' => $request->input('wife_name'),
+            'phone' => $request->input('phone'),
+            'phone2' => $request->input('phone2'),
+            
+
             'widowed' => $request->input('widowed'),
             'social_status' => $request->input('social_status'),
             'living_status' => $request->input('living_status'),
@@ -150,9 +153,20 @@ class CitizenController extends Controller
             'obstruction_description' => $request->input('obstruction_description'),
 
         ];
-        
-        Citizen::create($data);
+        try {
+          
+            
+            $created = Citizen::create($data);
         return redirect()->route('citizens.index')->with('success', 'Citizen created successfully.');
+
+        } catch (\Exception $e) {
+            Log::error('Error adding citizn to category', [
+                'category_id' => $data,
+                'error' => $e->getMessage()
+            ]);
+            return redirect()->back()
+                ->with('error', 'حدث خطأ أثناء إضافة');
+        }
     }
 
     public function edit($id)

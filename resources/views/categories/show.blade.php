@@ -59,12 +59,14 @@
                                 <div class="card-body">
                                     <form action="{{ route('categories.add-members', $category) }}" method="POST">
                                         @csrf
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
+                                        <div class="row"> 
+                                            <div class="col-md-12">
+                                                <textarea name="ids" id="ids" class="form-control mb-3" rows="5" style="direction: ltr;">{{ session('search_ids') }}</textarea>
+
+                                                {{-- <div class="form-group">
                                                     <label for="member_ids">أرقام الأعضاء (مفصولة بفواصل)</label>
                                                     <input type="text" class="form-control" id="member_ids" name="member_ids" required>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -143,7 +145,8 @@
                                     <tbody>
                                         @foreach($category->familyMembers as $member)
                                             <tr>
-                                                <td>{{ $member->firstname }} {{ $member->lastname }}</td>
+                                                
+                                                <td>{{ $member->fullName }}</td>
                                                 <td>{{ $member->national_id }}</td>
                                                 <td>{{ $member->pivot->size }}</td>
                                                 <td>{{ $member->pivot->description }}</td>

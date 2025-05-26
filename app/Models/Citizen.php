@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
+
 class Citizen extends Model
 {
     use SoftDeletes, CitizenFilters;
@@ -182,7 +184,7 @@ class Citizen extends Model
             })
             ->where('is_accompanying', true);
     }
-
+    
     /**
      * Get the care provider family member
      */
@@ -190,4 +192,14 @@ class Citizen extends Model
     {
         return $this->belongsTo(FamilyMember::class, 'care_provider_id');
     }
+
+      public function getFullNameAttribute()
+    {
+        
+        $cacheKey = "person_fullname_{$this->id}";
+        return Cache::remember($cacheKey, $this->cacheDuration, function () {
+            return "{$this->firstname} {$this->secondname} {$this->thirdname} {$this->lastname}";
+        });
+    }
+
 }

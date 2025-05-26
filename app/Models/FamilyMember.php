@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 
 class FamilyMember extends Model
@@ -77,5 +78,14 @@ class FamilyMember extends Model
                 'property4'
             ])
             ->withTimestamps();
+    }
+
+    public function getFullNameAttribute()
+    {
+        
+        $cacheKey = "person_fullname_{$this->id}";
+        return Cache::remember($cacheKey, $this->cacheDuration, function () {
+            return "{$this->firstname} {$this->secondname} {$this->thirdname} {$this->lastname}";
+        });
     }
 } 

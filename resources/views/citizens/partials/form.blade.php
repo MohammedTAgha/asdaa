@@ -101,6 +101,20 @@
                 </div>
             </div>
 
+            <div class="row mb-3">
+                <label for="phone" class="col-sm-3 col-form-label text-sm-end">جوال </label>
+                <div class="col-sm-9">
+                    <input value="{{ $citizen->phone ?? old('phone','') }}" type="text" id="phone" name="phone" class="form-control">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="phone2" class="col-sm-3 col-form-label text-sm-end">2جوال </label>
+                <div class="col-sm-9">
+                    <input value="{{ $citizen->phone2 ?? old('phone2','') }}" type="text" id="phone2" name="phone2" class="form-control">
+                </div>
+            </div>
+ >
+            </div>
             {{-- عدد  --}}
             <div class="row mb-3">
                 <!-- Family Members -->
