@@ -69,6 +69,11 @@ class Citizen extends Model
         return $this->hasMany(Child::class);
     }
 
+    // public function familyMembers()
+    // {
+    //     return $this->hasMany(Child::class);
+    // }
+
     public function originalGovernorate()
     {
         return $this->belongsTo(Governorate::class, 'original_governorate_id');
@@ -202,4 +207,11 @@ class Citizen extends Model
         });
     }
 
+    /**
+     * Get all categories associated with the citizen's family members.
+     */
+    public function allCategories()
+    {
+        return $this->familyMembers->pluck('categories')->flatten()->unique('id');
+    }
 }

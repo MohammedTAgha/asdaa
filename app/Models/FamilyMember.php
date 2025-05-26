@@ -88,4 +88,20 @@ class FamilyMember extends Model
             return "{$this->firstname} {$this->secondname} {$this->thirdname} {$this->lastname}";
         });
     }
+
+    /**
+     * Get all category names as an array
+     */
+    public function getCategoryNamesAttribute()
+    {
+        return $this->categories->pluck('name')->toArray();
+    }
+
+    /**
+     * Get all category names as a comma-separated string
+     */
+    public function getCategoryNamesStringAttribute()
+    {
+        return implode(', ', $this->category_names);
+    }
 } 
