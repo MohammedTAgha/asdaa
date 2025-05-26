@@ -31,6 +31,7 @@ it should show a report after each process
 -add (category)classification 
 -get the families witout father as member or mother as member 
 -add calculate listed family members
+
 -add big region in filtring
 
 -fix adding child erorr for report
