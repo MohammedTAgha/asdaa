@@ -35,4 +35,7 @@ it should show a report after each process
 
 -fix adding child erorr for report
 -
--fix 
+-fix the exports of citizen
+-fix the export of members
+-import category from excel 
+
