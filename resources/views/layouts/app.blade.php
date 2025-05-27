@@ -201,7 +201,15 @@
     {{-- @stack('scripts') --}}
     {{-- vuexy scripts --}}
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-
+        <!--begin::Javascript-->
+    <!--begin::Global Javascript Bundle(used by all pages)-->
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+    <script src="{{ asset('assets/plugins/global/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/cdn.min.js') }}" defer></script>
+    
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
@@ -323,15 +331,7 @@
     <script>
         var hostUrl = "assets/";
     </script>
-    <!--begin::Javascript-->
-    <!--begin::Global Javascript Bundle(used by all pages)-->
-    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
-    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
-    <script src="{{ asset('assets/js/custom/widgets.js') }}"></script>
-    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
-    <script src="{{ asset('assets/plugins/global/popper.min.js') }}"></script>
-    <script src="{{ asset('assets/js/cdn.min.js') }}" defer></script>
-    
+
     @livewireScripts
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->

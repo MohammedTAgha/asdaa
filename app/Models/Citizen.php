@@ -238,4 +238,24 @@ class Citizen extends Model
     {
         return implode(', ', $this->category_names);
     }
+
+    /**
+     * Get the total count of family members for this citizen
+     */
+    public function getFamilyMembersCountAttribute()
+    {
+        return $this->familyMembers()->count();
+    }
+
+    /**
+     * Get the count of family members by relationship type
+     */
+    public function getFamilyMembersCountByTypeAttribute()
+    {
+        return $this->familyMembers()
+            ->selectRaw('relationship, count(*) as count')
+            ->groupBy('relationship')
+            ->pluck('count', 'relationship')
+            ->toArray();
+    }
 }
