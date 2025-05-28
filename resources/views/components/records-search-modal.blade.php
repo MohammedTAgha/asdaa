@@ -139,8 +139,8 @@
                     <td>${result.id}</td>
                     <td>${result.name}</td>
                     <td>
-                        <span class="badge badge-light-${result.source === 'citizen' ? 'primary' : 'success'}">
-                            ${result.source === 'citizen' ? 'قاعدة البيانات' : 'السجل المدني'}
+                        <span class="badge badge-light-${getSourceBadgeColor(result.source)}">
+                            ${getSourceLabel(result.source, result.relationship)}
                         </span>
                     </td>
                     <td>
@@ -168,5 +168,43 @@
         resultsDiv.classList.add('d-none');
         submitButton.setAttribute('data-kt-indicator', 'off');
     });
+
+    // Helper functions for source display
+    function getSourceBadgeColor(source) {
+        switch(source) {
+            case 'citizen':
+                return 'primary';
+            case 'family_member':
+                return 'warning';
+            case 'person':
+                return 'success';
+            default:
+                return 'info';
+        }
+    }
+
+    function getSourceLabel(source, relationship) {
+        switch(source) {
+            case 'citizen':
+                return 'قاعدة البيانات';
+            case 'family_member':
+                return `عضو عائلة (${getRelationshipLabel(relationship)})`;
+            case 'person':
+                return 'السجل المدني';
+            default:
+                return source;
+        }
+    }
+
+    function getRelationshipLabel(relationship) {
+        const labels = {
+            'father': 'أب',
+            'mother': 'أم',
+            'son': 'ابن',
+            'daughter': 'ابنة',
+            'other': 'آخر'
+        };
+        return labels[relationship] || relationship;
+    }
 </script>
 @endpush 

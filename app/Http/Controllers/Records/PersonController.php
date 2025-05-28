@@ -50,7 +50,36 @@ class PersonController extends Controller
             ];
         });
 
-        // Then search in Person table
+        // Then search in FamilyMember table
+        $familyMemberQuery = \App\Models\FamilyMember::query();
+        
+        if (!empty($data['id_number'])) {
+            $familyMemberQuery->where('national_id', 'like', '%' . $data['id_number'] . '%');
+        }
+        if (!empty($data['first_name'])) {
+            $familyMemberQuery->where('firstname', 'like', '%' . $data['first_name'] . '%');
+        }
+        if (!empty($data['father_name'])) {
+            $familyMemberQuery->where('secondname', 'like', '%' . $data['father_name'] . '%');
+        }
+        if (!empty($data['grandfather_name'])) {
+            $familyMemberQuery->where('thirdname', 'like', '%' . $data['grandfather_name'] . '%');
+        }
+        if (!empty($data['family_name'])) {
+            $familyMemberQuery->where('lastname', 'like', '%' . $data['family_name'] . '%');
+        }
+        
+        $familyMemberResults = $familyMemberQuery->get()->map(function ($member) {
+            return [
+                'id' => $member->national_id,
+                'name' => $member->full_name,
+                'source' => 'family_member',
+                'details_url' => route('citizens.show', $member->citizen_id),
+                'relationship' => $member->relationship
+            ];
+        });
+
+        // Finally search in Person table
         $personQuery = Person::query();
         
         if (!empty($data['id_number'])) {
@@ -79,7 +108,7 @@ class PersonController extends Controller
         });
 
         // Combine and deduplicate results
-        $results = $citizenResults->concat($personResults)->unique('id');
+        $results = $citizenResults->concat($familyMemberResults)->concat($personResults)->unique('id');
 
         if ($request->ajax()) {
             return response()->json([
