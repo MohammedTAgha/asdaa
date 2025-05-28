@@ -118,7 +118,7 @@
 						<!--end::New Citizen-->
 
 						<!--begin::Search Records-->
-						<a href="{{ route('records.search') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="البحث في السجلات">
+						<a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="modal" data-bs-target="#recordsSearchModal" data-bs-placement="bottom" title="البحث في السجلات">
 							<i class="bi bi-search fs-2"></i>
 						</a>
 						<!--end::Search Records-->
@@ -253,3 +253,4 @@
 	<!--end::Container-->
 </div>
 <!--end::Header-->
+@include('components.records-search-modal')

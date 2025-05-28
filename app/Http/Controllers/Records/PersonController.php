@@ -19,42 +19,75 @@ class PersonController extends Controller
     
     public function search(Request $request)
     {
-        $query = Person::query();
-        Log::error("searching"); 
-        // Handle both GET and POST methods
         $data = $request->isMethod('post') ? $request->all() : $request->query();
+        $results = collect();
+        
+        // First search in Citizen table
+        $citizenQuery = \App\Models\Citizen::query();
         
         if (!empty($data['id_number'])) {
-            $query->where('CI_ID_NUM', 'like', '%' . $data['id_number'] . '%');
+            $citizenQuery->where('id', 'like', '%' . $data['id_number'] . '%');
         }
         if (!empty($data['first_name'])) {
-            $query->where('CI_FIRST_ARB', 'like', '%' . $data['first_name'] . '%');
+            $citizenQuery->where('firstname', 'like', '%' . $data['first_name'] . '%');
         }
         if (!empty($data['father_name'])) {
-            $query->where('CI_FATHER_ARB', 'like', '%' . $data['father_name'] . '%');
+            $citizenQuery->where('secondname', 'like', '%' . $data['father_name'] . '%');
         }
         if (!empty($data['grandfather_name'])) {
-            $query->where('CI_GRAND_FATHER_ARB', 'like', '%' . $data['grandfather_name'] . '%');
+            $citizenQuery->where('thirdname', 'like', '%' . $data['grandfather_name'] . '%');
         }
         if (!empty($data['family_name'])) {
-            $query->where('CI_FAMILY_ARB', 'like', '%' . $data['family_name'] . '%');
+            $citizenQuery->where('lastname', 'like', '%' . $data['family_name'] . '%');
         }
 
-        $startTime = microtime(true);
-        $cacheKey = 'search_results:' . md5(serialize($data));
+        $citizenResults = $citizenQuery->get()->map(function ($citizen) {
+            return [
+                'id' => $citizen->id,
+                'name' => $citizen->full_name,
+                'source' => 'citizen',
+                'details_url' => route('citizens.show', $citizen->id)
+            ];
+        });
+
+        // Then search in Person table
+        $personQuery = Person::query();
         
-        if (Cache::has($cacheKey)) {
-            $results = Cache::get($cacheKey);
-            $executionTime = 0;
-        } else {
-            $results = Cache::remember($cacheKey, 60, function () use ($query) {
-                return $query->get();
-            });
-            $endTime = microtime(true);
-            $executionTime = round(($endTime - $startTime) * 1000, 2);
+        if (!empty($data['id_number'])) {
+            $personQuery->where('CI_ID_NUM', 'like', '%' . $data['id_number'] . '%');
+        }
+        if (!empty($data['first_name'])) {
+            $personQuery->where('CI_FIRST_ARB', 'like', '%' . $data['first_name'] . '%');
+        }
+        if (!empty($data['father_name'])) {
+            $personQuery->where('CI_FATHER_ARB', 'like', '%' . $data['father_name'] . '%');
+        }
+        if (!empty($data['grandfather_name'])) {
+            $personQuery->where('CI_GRAND_FATHER_ARB', 'like', '%' . $data['grandfather_name'] . '%');
+        }
+        if (!empty($data['family_name'])) {
+            $personQuery->where('CI_FAMILY_ARB', 'like', '%' . $data['family_name'] . '%');
         }
 
-        return view('records.home', compact('results', 'executionTime'));
+        $personResults = $personQuery->get()->map(function ($person) {
+            return [
+                'id' => $person->CI_ID_NUM,
+                'name' => $person->full_name,
+                'source' => 'person',
+                'details_url' => route('citizen.details', $person->CI_ID_NUM)
+            ];
+        });
+
+        // Combine and deduplicate results
+        $results = $citizenResults->concat($personResults)->unique('id');
+
+        if ($request->ajax()) {
+            return response()->json([
+                'results' => $results->values()->all()
+            ]);
+        }
+
+        return view('records.home', compact('results'));
     }
 
      public function searchById(Request $request)
