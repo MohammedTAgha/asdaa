@@ -6,6 +6,24 @@
 
 @section('content')
     <div class="container mx-auto px-1">
+        <!-- Validation Status Modal -->
+        <div id="validationModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-3/4 max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">نتائج التحقق من البيانات</h2>
+                    <button onclick="hideValidationModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="validationResults" class="space-y-4">
+                    <!-- Results will be populated here -->
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="hideValidationModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md">إغلاق</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal -->
        
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
@@ -101,16 +119,19 @@
   <!-- show.blade.php -->
     @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-2'])
             @slot('side')
-                <div class="mt-6">
+                <div class="mt-6 flex items-center space-x-2">
+                    <button id="validationStatusBtn" onclick="checkValidation()" class="px-4 py-2 bg-yellow-500 text-white rounded-md animate-pulse">
+                        <i class="fas fa-exclamation-triangle"></i> فحص الحالة
+                    </button>
                     <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
-                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعدبل</a>
+                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعديل</a>
                 </div>
             @endslot
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700"><strong>الهوية</strong></label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->id }}</p>
+                    <p class="mt-1 text-gray-900" id="citizenId">{{ $citizen->id }}</p>
                 </div>
                 
                 <div>
@@ -135,7 +156,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700">رقم الزوجة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->wife_id }}</p>
+                    <p class="mt-1 text-gray-900" id="wifeId">{{ $citizen->wife_id }}</p>
                 </div>
                 
                 <div>
@@ -541,6 +562,99 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
             alert('An error occurred.');
         });
     }
+});
+
+function checkValidation() {
+    const citizenId = document.getElementById('citizenId').textContent;
+    const wifeId = document.getElementById('wifeId').textContent;
+
+    // Show loading state
+    const validationBtn = document.getElementById('validationStatusBtn');
+    validationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الفحص...';
+    validationBtn.disabled = true;
+
+    // Make API call to validate
+    fetch(`/citizens/${citizenId}/validate`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        showValidationResults(data);
+        updateValidationStatus(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء التحقق من البيانات');
+    })
+    .finally(() => {
+        // Reset button state
+        validationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> فحص الحالة';
+        validationBtn.disabled = false;
+    });
+}
+
+function showValidationResults(data) {
+    const modal = document.getElementById('validationModal');
+    const resultsContainer = document.getElementById('validationResults');
+    
+    // Clear previous results
+    resultsContainer.innerHTML = '';
+
+    // Add overall status
+    const overallStatus = document.createElement('div');
+    overallStatus.className = `p-4 rounded-lg mb-4 ${data.is_valid ? 'bg-green-100' : 'bg-red-100'}`;
+    overallStatus.innerHTML = `
+        <h3 class="font-bold ${data.is_valid ? 'text-green-800' : 'text-red-800'}">
+            ${data.is_valid ? '✅ جميع البيانات صحيحة' : '❌ يوجد مشاكل في البيانات'}
+        </h3>
+    `;
+    resultsContainer.appendChild(overallStatus);
+
+    // Add individual validation results
+    if (data.details && data.details.length > 0) {
+        const detailsList = document.createElement('div');
+        detailsList.className = 'space-y-2';
+        
+        data.details.forEach(detail => {
+            const detailItem = document.createElement('div');
+            detailItem.className = 'p-3 bg-red-50 rounded-lg flex items-start';
+            detailItem.innerHTML = `
+                <i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i>
+                <span class="text-red-700">${detail}</span>
+            `;
+            detailsList.appendChild(detailItem);
+        });
+        
+        resultsContainer.appendChild(detailsList);
+    }
+
+    // Show the modal
+    modal.classList.remove('hidden');
+}
+
+function hideValidationModal() {
+    document.getElementById('validationModal').classList.add('hidden');
+}
+
+function updateValidationStatus(data) {
+    const validationBtn = document.getElementById('validationStatusBtn');
+    
+    if (data.is_valid) {
+        validationBtn.className = 'px-4 py-2 bg-green-500 text-white rounded-md';
+        validationBtn.innerHTML = '<i class="fas fa-check-circle"></i> البيانات صحيحة';
+    } else {
+        validationBtn.className = 'px-4 py-2 bg-red-500 text-white rounded-md animate-pulse';
+        validationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> يوجد مشاكل';
+    }
+}
+
+// Add validation status check on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkValidation();
 });
 </script>
 <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>

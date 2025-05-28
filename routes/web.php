@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FamilyMemberController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Api\CitizenValidationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
     });
+ 
     Route::post('/check-citizens', [CitizenController::class, 'checkCitizens'])->name('citizens.check');
     Route::post('/export-selected-citizens', [CitizenController::class, 'exportSelectedCitizens'])->name('citizens.export-selected');
     Route::post('/export-with-distributions', [CitizenController::class, 'exportSelectedWithDistributions'])->name('citizens.export-with-distributions');
@@ -86,7 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
 
 Route::get('/family-members/test', [FamilyMemberController::class, 'test'])->name('family-members.test');
-
+Route::get('/citizens/{citizen}/validate', [CitizenValidationController::class, 'validateCitizen'])
+->name('citizens.validate');
       // Family Members Routes
       Route::get('/citizens/{citizen}/family-members/create', [FamilyMemberController::class, 'create'])->name('citizens.family-members.create');
       Route::post('/citizens/{citizen}/family-members', [FamilyMemberController::class, 'store'])->name('citizens.family-members.store');

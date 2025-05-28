@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Citizen;
 use App\Models\FamilyMember;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CitizenValidationService
 {
@@ -13,44 +13,47 @@ class CitizenValidationService
      */
     public function validatePalestinianId(string $id): bool
     {
+        // Check if ID is exactly 9 digits
         if (!preg_match('/^\d{9}$/', $id)) {
             return false;
         }
 
         $sum = 0;
-        for ($i = 0; $i < 8; $i++) {
-            $digit = (int) $id[$i];
+        for ($i = 0; $i < 9; $i++) {
+            $digit = (int)$id[$i];
             if ($i % 2 === 0) {
-                $sum += $digit;
-            } else {
-                $doubled = $digit * 2;
-                $sum += $doubled > 9 ? $doubled - 9 : $doubled;
+                $digit *= 2;
+                if ($digit > 9) {
+                    $digit -= 9;
+                }
             }
+            $sum += $digit;
         }
 
-        $checkDigit = (10 - ($sum % 10)) % 10;
-        return $checkDigit === (int) $id[8];
+        return $sum % 10 === 0;
     }
 
     /**
-     * Check if the family members count matches the actual count
+     * Validate if the count of family members matches the family_members attribute
      */
     public function validateFamilyMembersCount(Citizen $citizen): bool
     {
         $actualCount = $citizen->familyMembers()->count();
-        return $actualCount === $citizen->family_members;
+        return $actualCount === (int)$citizen->family_members;
     }
 
     /**
-     * Check if the citizen ID is associated with a family member
+     * Validate if the citizen ID is associated with a family member
      */
     public function validateCitizenIdAssociation(Citizen $citizen): bool
     {
-        return FamilyMember::where('national_id', $citizen->id)->exists();
+        return $citizen->familyMembers()
+            ->where('national_id', $citizen->id)
+            ->exists();
     }
 
     /**
-     * Check if the wife_id is linked to a family member
+     * Validate if the wife_id is linked to a family member
      */
     public function validateWifeIdAssociation(Citizen $citizen): bool
     {
@@ -58,11 +61,14 @@ class CitizenValidationService
             return true; // No wife ID is valid
         }
 
-        return FamilyMember::where('national_id', $citizen->wife_id)->exists();
+        return $citizen->familyMembers()
+            ->where('national_id', $citizen->wife_id)
+            ->where('relationship', 'mother')
+            ->exists();
     }
 
     /**
-     * Check if the wife_id matches the mother's national_id
+     * Validate if the wife_id matches the mother's national_id
      */
     public function validateWifeIdMatchesMother(Citizen $citizen): bool
     {
@@ -72,29 +78,32 @@ class CitizenValidationService
 
         $mother = $citizen->mother;
         if (!$mother) {
-            return false; // No mother found
+            return false;
         }
 
         return $mother->national_id === $citizen->wife_id;
     }
 
     /**
-     * Run all validations on a citizen
+     * Run all validations and return results
      */
     public function validateCitizen(Citizen $citizen): array
     {
-        return [
+        $results = [
             'id_valid' => $this->validatePalestinianId($citizen->id),
-            'wife_id_valid' => $this->validatePalestinianId($citizen->wife_id),
             'family_members_count_valid' => $this->validateFamilyMembersCount($citizen),
             'citizen_id_associated' => $this->validateCitizenIdAssociation($citizen),
             'wife_id_associated' => $this->validateWifeIdAssociation($citizen),
             'wife_id_matches_mother' => $this->validateWifeIdMatchesMother($citizen)
         ];
+
+        $results['is_valid'] = !in_array(false, $results, true);
+
+        return $results;
     }
 
     /**
-     * Get detailed validation results with explanations
+     * Get detailed validation results with explanations in Arabic
      */
     public function getDetailedValidationResults(Citizen $citizen): array
     {
@@ -105,30 +114,25 @@ class CitizenValidationService
             $details[] = 'رقم الهوية غير صالح';
         }
 
-        if ($citizen->wife_id && $citizen->wife_id !== '0' && !$results['wife_id_valid']) {
-            $details[] = 'رقم هوية الزوجة غير صالح';
-        }
-
         if (!$results['family_members_count_valid']) {
-            $details[] = 'عدد أفراد العائلة المسجل لا يتطابق مع العدد الفعلي';
+            $details[] = 'عدد أفراد العائلة لا يتطابق مع العدد المسجل';
         }
 
         if (!$results['citizen_id_associated']) {
-            $details[] = 'رقم الهوية غير مرتبط بأي فرد من أفراد العائلة';
+            $details[] = 'رقم الهوية غير مرتبط بأي فرد من العائلة';
         }
 
-        if ($citizen->wife_id && $citizen->wife_id !== '0' && !$results['wife_id_associated']) {
-            $details[] = 'رقم هوية الزوجة غير مرتبط بأي فرد من أفراد العائلة';
+        if (!$results['wife_id_associated']) {
+            $details[] = 'رقم هوية الزوجة غير مرتبط بأي فرد من العائلة';
         }
 
-        if ($citizen->wife_id && $citizen->wife_id !== '0' && !$results['wife_id_matches_mother']) {
+        if (!$results['wife_id_matches_mother']) {
             $details[] = 'رقم هوية الزوجة لا يتطابق مع رقم هوية الأم';
         }
 
         return [
-            'is_valid' => empty($details),
-            'details' => $details,
-            'raw_results' => $results
+            'is_valid' => $results['is_valid'],
+            'details' => $details
         ];
     }
 } 

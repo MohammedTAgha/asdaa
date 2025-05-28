@@ -8,6 +8,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CitizenController;
 use App\Http\Controllers\API\RegionController;
 use App\Http\Controllers\API\DistributionController;
+use App\Http\Controllers\Api\CitizenValidationController;
 
 
 /*
@@ -61,3 +62,5 @@ Route::get('/testconnection',function (){
     $data = ['status'=>'connected' , 'connected'=>true];
     return response()->json($data);
 });
+
+Route::get('/citizens/{citizen}/validate', [App\Http\Controllers\Api\CitizenValidationController::class, 'validateCitizen']);
