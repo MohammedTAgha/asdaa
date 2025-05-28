@@ -8,7 +8,7 @@
     <div class="container mx-auto px-1">
    
         <!-- Modal -->
-       @dump( $validationResults)
+       {{-- @dump( $validationResults) --}}
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
             <div class="bg-white p-6 rounded-md shadow-md w-1/3">
                 <h2 class="text-lg font-semibold mb-4">اختر الكشف</h2>
