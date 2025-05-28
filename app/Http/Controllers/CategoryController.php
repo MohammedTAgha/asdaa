@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Services\FamilyMemberService;
+use App\Exports\CategoryMembersExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
@@ -227,5 +229,16 @@ class CategoryController extends Controller
             return redirect()->back()
                 ->with('error', 'حدث خطأ أثناء إضافة الأعضاء إلى الفئة');
         }
+    }
+
+    /**
+     * Export category members to Excel
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function export(Category $category)
+    {
+        return Excel::download(new CategoryMembersExport($category), "category-{$category->id}-members.xlsx");
     }
 }

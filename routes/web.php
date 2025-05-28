@@ -242,7 +242,8 @@ Route::get('/test', function () {
 });
 
 Route::resource('categories', CategoryController::class);
-Route::post('categories/{category}/add-members', [CategoryController::class, 'addMembers'])->name('categories.add-members');
+Route::post('/categories/{category}/add-members', [CategoryController::class, 'addMembers'])->name('categories.add-members');
+Route::get('/categories/{category}/export', [CategoryController::class, 'export'])->name('categories.export');
 
 require __DIR__ . '/auth.php';
 
