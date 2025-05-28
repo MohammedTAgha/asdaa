@@ -155,6 +155,16 @@
                                 <span class="menu-title">استيراد تلقائي </span>
                             </a>
                         </div>
+
+						<div class="menu-item">
+                            <a class="menu-link {{ request()->routeIs('family-members.test') ? 'active' : '' }}"
+                                href="{{ route('family-members.test') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">فحص الاقراد	</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 

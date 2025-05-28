@@ -1,8 +1,7 @@
  
 -export big region citizen
 -export region managers as excel with count
--get the families witout father as member or mother as member 
--add calculate listed family members
+ 
 
 -add big region in filtring
 -fix adding child erorr for report
