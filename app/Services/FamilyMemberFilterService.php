@@ -9,7 +9,8 @@ use Carbon\Carbon;
 use App\Exports\FamilyMembersExport;
 
 class FamilyMemberFilterService
-{    public function getFilteredMembers(array $filters)
+{
+    public function getFilteredMembers(array $filters, bool $paginate = true)
     {
         $query = FamilyMember::query()
             ->with(['citizen' => function($query) {
@@ -43,13 +44,13 @@ class FamilyMemberFilterService
             });
         }
 
-        return $query->paginate(15);
+        return $paginate ? $query->paginate(15) : $query->get();
     }
 
-    public function export(array $filters)
+    public function export($filters)
     {
-        // $members = $this->getFilteredMembers($filters)->getCollection();
-        $members = $this->getFilteredMembers($filters);
+        // Get all filtered members without pagination
+        $members = $this->getFilteredMembers($filters, false);
         $timestamp = now()->format('Y-m-d_H-i-s');
         return Excel::download(new FamilyMembersExport($members), "family_members_{$timestamp}.xlsx");
     }

@@ -8,7 +8,7 @@
 -fix adding child erorr for report
 
 -fix the export of members
--import category from excel 
+ 
 -test members and categories 
 -enhance ui ux
 -add top basr short cuts
@@ -21,4 +21,4 @@
 -add exeption handling
  -use modals for some acrion 
  -minimize the code and test its speed
- 
+

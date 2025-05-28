@@ -71,15 +71,15 @@ class CategoryMembersImport implements ToCollection, WithHeadingRow, WithValidat
     public function rules(): array
     {
         return [
-            'national_id' => 'required|string',
-            'size' => 'nullable|string',
-            'description' => 'nullable|string',
-            'date' => 'nullable|date',
-            'amount' => 'nullable|numeric',
-            'property1' => 'nullable|string',
-            'property2' => 'nullable|string',
-            'property3' => 'nullable|string',
-            'property4' => 'nullable|string',
+            'national_id' => 'required',
+            'size' => 'nullable',
+            'description' => 'nullable',
+            'date' => 'nullable',
+            'amount' => 'nullable',
+            'property1' => 'nullable',
+            'property2' => 'nullable',
+            'property3' => 'nullable',
+            'property4' => 'nullable',
         ];
     }
 
