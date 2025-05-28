@@ -27,16 +27,5 @@ i need to be able to import members to the system (thay citizen_id is existing c
 it should show a report after each process 
 
 
- 
--add (category)classification 
--get the families witout father as member or mother as member 
--add calculate listed family members
 
--add big region in filtring
-
--fix adding child erorr for report
--
--fix the exports of citizen
--fix the export of members
--import category from excel 
 

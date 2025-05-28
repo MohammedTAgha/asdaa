@@ -1,0 +1,24 @@
+ 
+-export big region citizen
+-export region managers as excel with count
+-get the families witout father as member or mother as member 
+-add calculate listed family members
+
+-add big region in filtring
+-fix adding child erorr for report
+
+-fix the export of members
+-import category from excel 
+-test members and categories 
+-enhance ui ux
+-add top basr short cuts
+-add search for person module
+-add auto fill for wife with button to search
+-fix live wire in distrinution
+-enhance citizen data perview 
+-add chart in the main pahe 
+-delete un necicary files
+-add exeption handling
+ -use modals for some acrion 
+ -minimize the code and test its speed
+ 
