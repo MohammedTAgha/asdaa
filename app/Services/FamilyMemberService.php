@@ -422,7 +422,7 @@ class FamilyMemberService
             foreach ($citizens as $citizen) {
                 // Check for self association
                 $hasSelfMember = $citizen->familyMembers->contains(function($member) use ($citizen) {
-                    return $member->national_id === $citizen->id && 
+                    return $member->national_id == $citizen->id && 
                            in_array($member->relationship, ['father', 'mother']);
                 });
 
