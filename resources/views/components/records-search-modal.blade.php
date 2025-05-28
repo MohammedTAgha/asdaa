@@ -53,7 +53,7 @@
                     <!--end::Input group-->
                     <!--begin::Actions-->
                     <div class="text-center pt-15">
-                        <button type="submit" class="btn btn-primary" data-kt-indicator="on">
+                        <button type="submit" class="btn btn-primary" data-kt-indicator="off">
                             <span class="indicator-label">بحث</span>
                             <span class="indicator-progress">جاري البحث...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -156,6 +156,17 @@
             console.error('Error:', error);
             submitButton.setAttribute('data-kt-indicator', 'off');
         });
+    });
+
+    // Reset form and results when modal is closed
+    document.getElementById('recordsSearchModal').addEventListener('hidden.bs.modal', function () {
+        const form = document.getElementById('recordsSearchForm');
+        const resultsDiv = document.getElementById('searchResults');
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        form.reset();
+        resultsDiv.classList.add('d-none');
+        submitButton.setAttribute('data-kt-indicator', 'off');
     });
 </script>
 @endpush 
