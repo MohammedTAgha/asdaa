@@ -36,7 +36,12 @@
                 <div class="card-body">
                     @if(count($results) > 0)
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover table-bordered shadow-sm">
+                        <div class="mb-2 text-end">
+                            <button class="btn btn-outline-success btn-sm" id="copyTableBtn">
+                                نسخ الجدول
+                            </button>
+                        </div>
+                        <table class="table table-striped table-hover table-bordered shadow-sm" id="resultsTable">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>رقم الهوية</th>
@@ -72,6 +77,23 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @push('scripts')
+                        <script>
+                        document.getElementById('copyTableBtn').addEventListener('click', function() {
+                            const table = document.getElementById('resultsTable');
+                            let rows = Array.from(table.rows);
+                            let text = rows.map(row =>
+                                Array.from(row.cells).map(cell => cell.innerText).join('\t')
+                            ).join('\n');
+                            // Copy to clipboard
+                            navigator.clipboard.writeText(text).then(function() {
+                                alert('تم نسخ الجدول! يمكنك لصقه في Excel.');
+                            }, function() {
+                                alert('حدث خطأ أثناء النسخ.');
+                            });
+                        });
+                        </script>
+                        @endpush
                     </div>
                     @else
                     <p>لم يتم العثور على نتائج.</p>
