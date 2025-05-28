@@ -111,18 +111,33 @@ class AutomaticFamilyAssignmentService
                 $this->recordFailure($citizen->id, null, null, 'Person record not found', 'Citizen ID');
             }
 
-            // Then, process wife_id if it exists and not 0
+            // Process spouse assignment with new logic
             if ($citizen->wife_id && $citizen->wife_id !== '0') {
+                // First try: Find spouse using wife_id from Citizen model
                 $personFromWifeId = Person::where('CI_ID_NUM', $citizen->wife_id)->first();
+                
                 if ($personFromWifeId) {
-                    if ($personFromWifeId->CI_SEX_CD === 'ذكر') {
-                        $this->assignAsFather($citizen, $personFromWifeId, $results);
-                    } elseif ($personFromWifeId->CI_SEX_CD === 'أنثى') {
+                    // Found spouse using wife_id
+                    if ($personFromWifeId->CI_SEX_CD === 'أنثى') {
                         $this->assignAsMother($citizen, $personFromWifeId, $results);
+                    } else {
+                        $results['skipped'][] = "رقم هوية الزوجة {$citizen->wife_id} يعود لشخص ذكر";
+                        $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Wife ID belongs to male person', 'Wife ID');
                     }
                 } else {
-                    $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
-                    $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Spouse record not found', 'Wife ID');
+                    // Second try: Find spouse using Person model's getWife method
+                    if ($personFromId) {
+                        $wifeFromPerson = $personFromId->getWife();
+                        if ($wifeFromPerson) {
+                            $this->assignAsMother($citizen, $wifeFromPerson, $results);
+                        } else {
+                            $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+                            $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Spouse record not found in both attempts', 'Wife ID');
+                        }
+                    } else {
+                        $results['skipped'][] = "لم يتم العثور على سجل زوج الشخص برقم الهوية {$citizen->wife_id}";
+                        $this->recordFailure($citizen->id, $citizen->wife_id, null, 'Spouse record not found', 'Wife ID');
+                    }
                 }
             } else {
                 $results['skipped'][] = "لا يوجد رقم هوية زوج مرتبط";
