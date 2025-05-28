@@ -100,38 +100,42 @@
         </div>
 
         <!-- Validation Status Modal -->
-        <div id="validationModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
-            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 max-h-[80vh] overflow-y-auto">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold">نتائج التحقق</h2>
-                    <button onclick="hideValidationModal()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times"></i>
+        <div id="validationModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full mr-2 {{ $validationResults['is_valid'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
+                        <h2 class="text-xl font-bold">{{ $validationResults['is_valid'] ? 'حالة البيانات صحيحة' : 'يوجد أخطاء في البيانات' }}</h2>
+                    </div>
+                    <button onclick="hideValidationModal()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
                     </button>
                 </div>
                 
-                <div class="mb-4">
-                    <div class="flex items-center">
-                        <div class="w-4 h-4 rounded-full mr-2 {{ $validationResults['is_valid'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
-                        <span class="font-semibold">{{ $validationResults['is_valid'] ? 'جميع البيانات صحيحة' : 'يوجد أخطاء في البيانات' }}</span>
-                    </div>
-                </div>
-
                 @if(!$validationResults['is_valid'])
                     <div class="space-y-4">
                         @foreach($validationResults['details'] as $detail)
-                            <div class="bg-red-50 border border-red-200 rounded p-4">
+                            <div class="bg-red-50 border border-red-200 rounded-lg p-4 hover:bg-red-100 transition-colors">
                                 <div class="flex items-start">
-                                    <div class="flex-shrink-0">
-                                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                                    <div class="flex-shrink-0 mt-1">
+                                        <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
                                     </div>
-                                    <div class="ml-3">
+                                    <div class="ml-3 flex-1">
                                         <h3 class="text-sm font-medium text-red-800">{{ $detail['message'] }}</h3>
                                         @if(isset($detail['id']))
-                                            <p class="mt-1 text-sm text-red-700">رقم الهوية: {{ $detail['id'] }}</p>
+                                            <p class="mt-1 text-sm text-red-700">
+                                                <span class="font-semibold">رقم الهوية:</span> {{ $detail['id'] }}
+                                            </p>
                                         @endif
                                         @if(isset($detail['expected']) && isset($detail['actual']))
                                             <p class="mt-1 text-sm text-red-700">
-                                                العدد المتوقع: {{ $detail['expected'] }} | العدد الفعلي: {{ $detail['actual'] }}
+                                                <span class="font-semibold">العدد المتوقع:</span> {{ $detail['expected'] }} | 
+                                                <span class="font-semibold">العدد الفعلي:</span> {{ $detail['actual'] }}
+                                            </p>
+                                        @endif
+                                        @if(isset($detail['details']))
+                                            <p class="mt-1 text-sm text-red-700">
+                                                {{ $detail['details']['message'] ?? '' }}
                                             </p>
                                         @endif
                                     </div>
@@ -139,25 +143,42 @@
                             </div>
                         @endforeach
                     </div>
+                @else
+                    <div class="text-center py-8">
+                        <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                        <p class="text-lg text-gray-700">جميع البيانات صحيحة ومتوافقة</p>
+                    </div>
                 @endif
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="mb-4">
-            <div class="flex items-center justify-between">
+        <div class="bg-white rounded-lg shadow-lg p-4 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
+                    <div class="flex items-center bg-gray-50 px-4 py-2 rounded-lg">
                         <div class="w-4 h-4 rounded-full mr-2 {{ $validationResults['is_valid'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
-                        <span class="font-semibold">{{ $validationResults['is_valid'] ? 'حالة البيانات: صحيحة' : 'حالة البيانات: تحتاج مراجعة' }}</span>
+                        <span class="font-semibold {{ $validationResults['is_valid'] ? 'text-green-700' : 'text-red-700' }}">
+                            {{ $validationResults['is_valid'] ? 'حالة البيانات: صحيحة' : 'حالة البيانات: تحتاج مراجعة' }}
+                        </span>
                     </div>
-                    <button onclick="showValidationModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-info-circle mr-2"></i>عرض التفاصيل
+                    <button onclick="showValidationModal()" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        عرض التفاصيل
                     </button>
                 </div>
                 <div class="flex space-x-2">
-                    <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">رجوع</a>
-                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors">تعديل</a>
+                    <a href="{{ route('citizens.index') }}" 
+                       class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center">
+                        <i class="fas fa-arrow-right ml-2"></i>
+                        رجوع
+                    </a>
+                    <a href="{{ route('citizens.edit', $citizen->id) }}" 
+                       class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors flex items-center">
+                        <i class="fas fa-edit ml-2"></i>
+                        تعديل
+                    </a>
                 </div>
             </div>
         </div>
@@ -612,15 +633,24 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
 
 function showValidationModal() {
     document.getElementById('validationModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
 }
 
 function hideValidationModal() {
     document.getElementById('validationModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
 }
 
 // Close modal when clicking outside
 document.getElementById('validationModal').addEventListener('click', function(e) {
     if (e.target === this) {
+        hideValidationModal();
+    }
+});
+
+// Close modal with escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
         hideValidationModal();
     }
 });
