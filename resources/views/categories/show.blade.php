@@ -11,6 +11,9 @@
                         <a href="{{ route('categories.export', $category) }}" class="btn btn-success">
                             <i class="fas fa-file-excel"></i> تصدير الأعضاء
                         </a>
+                        <a href="{{ route('categories.import-form', $category) }}" class="btn btn-info">
+                            <i class="fas fa-file-import"></i> استيراد أعضاء
+                        </a>
                         <a href="{{ route('categories.edit', $category) }}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> تعديل
                         </a>

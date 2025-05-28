@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Services\FamilyMemberService;
 use App\Exports\CategoryMembersExport;
+use App\Exports\CategoryMembersTemplateExport;
+use App\Imports\CategoryMembersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -240,5 +242,61 @@ class CategoryController extends Controller
     public function export(Category $category)
     {
         return Excel::download(new CategoryMembersExport($category), "category-{$category->id}-members.xlsx");
+    }
+
+    /**
+     * Show the import form for category members
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function importForm(Category $category)
+    {
+        return view('categories.import', compact('category'));
+    }
+
+    /**
+     * Import members to the category from Excel file
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function import(Request $request, Category $category)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
+
+        try {
+            $import = new CategoryMembersImport($category);
+            Excel::import($import, $request->file('file'));
+
+            $report = $import->getReport();
+            
+            return redirect()
+                ->route('categories.show', $category)
+                ->with('success', "تم استيراد {$report['successes']} عضو بنجاح")
+                ->with('import_report', $report);
+        } catch (\Exception $e) {
+            Log::error('Error importing category members', [
+                'category_id' => $category->id,
+                'error' => $e->getMessage()
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', 'حدث خطأ أثناء استيراد الملف: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download the template for importing category members
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadTemplate()
+    {
+        return Excel::download(new CategoryMembersTemplateExport, 'category-members-template.xlsx');
     }
 }
