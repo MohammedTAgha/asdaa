@@ -22,6 +22,7 @@ use App\Services\CitizenImportService;
 use App\Exports\ImportReportExport;
 use App\Models\FamilyMember;
 use App\Services\FamilyMemberService;
+use App\Services\CitizenValidationService;
 
 class CitizenController extends Controller
 {
@@ -109,7 +110,11 @@ class CitizenController extends Controller
         $citizen = Citizen::findOrFail($id);
         $search = $this->familyMemberService->getChildrenRecords($citizen);
 
-        return view('citizens.show', compact('citizen', 'citizens'));
+        // Add validation results
+        $validationService = app(CitizenValidationService::class);
+        $validationResults = $validationService->getDetailedValidationResults($citizen);
+
+        return view('citizens.show', compact('citizen', 'citizens', 'validationResults'));
     }
 
     public function create()

@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-
+        @dump($validationResults)
         <!-- Modal -->
        
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
@@ -624,7 +624,47 @@ function showValidationResults(data) {
             detailItem.className = 'p-3 bg-red-50 rounded-lg flex items-start';
             detailItem.innerHTML = `
                 <i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2"></i>
-                <span class="text-red-700">${detail}</span>
+                <div class="text-red-700">
+                    <div class="font-semibold">{{ $detail['message'] }}</div>
+                    
+                    @if(isset($detail['type']))
+                        <div class="mt-1 text-sm">
+                            @switch($detail['type'])
+                                @case('citizen_id')
+                                    <span class="font-semibold">رقم هوية المواطن:</span> {{ $detail['id'] }}
+                                    @if(isset($detail['details']))
+                                        <br>
+                                        <span class="font-semibold">التفاصيل:</span> {{ $detail['details']['message'] }}
+                                        @if(isset($detail['details']['expected']))
+                                            <br>
+                                            <span class="font-semibold">الرقم المتوقع:</span> {{ $detail['details']['expected'] }}
+                                            <br>
+                                            <span class="font-semibold">الرقم الفعلي:</span> {{ $detail['details']['actual'] }}
+                                        @endif
+                                    @endif
+                                    @break
+                                    
+                                @case('wife_association')
+                                    <span class="font-semibold">رقم هوية الزوجة:</span> {{ $detail['id'] }}
+                                    @break
+                                    
+                                @case('wife_mother_match')
+                                    <span class="font-semibold">رقم هوية الزوجة:</span> {{ $detail['id'] }}
+                                    <br>
+                                    <span class="text-sm">لا يتطابق مع رقم هوية الأم المسجلة</span>
+                                    @break
+                                    
+                                @case('family_count')
+                                    <span class="font-semibold">عدد أفراد العائلة:</span>
+                                    <br>
+                                    <span class="font-semibold">المتوقع:</span> {{ $detail['expected'] }}
+                                    <br>
+                                    <span class="font-semibold">الفعلي:</span> {{ $detail['actual'] }}
+                                    @break
+                            @endswitch
+                        </div>
+                    @endif
+                </div>
             `;
             detailsList.appendChild(detailItem);
         });
