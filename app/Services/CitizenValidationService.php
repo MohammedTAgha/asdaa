@@ -190,6 +190,30 @@ class CitizenValidationService
         $validation = $this->validateCitizen($citizen);
         $details = [];
 
+        // Validate citizen ID format
+        $citizenIdValidation = $this->validatePalestinianId($citizen->id);
+        if (!$citizenIdValidation['is_valid']) {
+            $details[] = [
+                'message' => 'رقم هوية المواطن غير صالح',
+                'id' => $citizen->id,
+                'type' => 'citizen_id_format',
+                'details' => $citizenIdValidation['details'][0] ?? null
+            ];
+        }
+
+        // Validate wife ID format if exists
+        if ($citizen->wife_id) {
+            $wifeIdValidation = $this->validatePalestinianId($citizen->wife_id);
+            if (!$wifeIdValidation['is_valid']) {
+                $details[] = [
+                    'message' => 'رقم هوية الزوجة غير صالح',
+                    'id' => $citizen->wife_id,
+                    'type' => 'wife_id_format',
+                    'details' => $wifeIdValidation['details'][0] ?? null
+                ];
+            }
+        }
+
         foreach ($validation['validations'] as $key => $result) {
             if (!$result['is_valid']) {
                 switch ($key) {
@@ -201,7 +225,7 @@ class CitizenValidationService
                             'details' => $result['details'][0] ?? null
                         ];
                         break;
-
+                        
                     case 'family_members_count':
                         $details[] = [
                             'message' => 'عدد أفراد العائلة غير متطابق',
@@ -242,8 +266,11 @@ class CitizenValidationService
             }
         }
 
+        // Update is_valid to consider the new validations
+        $isValid = empty($details);
+
         return [
-            'is_valid' => $validation['is_valid'],
+            'is_valid' => $isValid,
             'details' => $details,
             'citizen_id' => $citizen->id,
             'wife_id' => $citizen->wife_id

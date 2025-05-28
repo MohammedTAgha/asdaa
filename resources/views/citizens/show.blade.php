@@ -8,7 +8,7 @@
     <div class="container mx-auto px-1">
    
         <!-- Modal -->
-       
+       @dump( $validationResults)
         <div id="addCitizenModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
             <div class="bg-white p-6 rounded-md shadow-md w-1/3">
                 <h2 class="text-lg font-semibold mb-4">اختر الكشف</h2>
@@ -99,9 +99,72 @@
             </div>
         </div>
 
+        <!-- Validation Status Modal -->
+        <div id="validationModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">نتائج التحقق</h2>
+                    <button onclick="hideValidationModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full mr-2 {{ $validationResults['is_valid'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
+                        <span class="font-semibold">{{ $validationResults['is_valid'] ? 'جميع البيانات صحيحة' : 'يوجد أخطاء في البيانات' }}</span>
+                    </div>
+                </div>
+
+                @if(!$validationResults['is_valid'])
+                    <div class="space-y-4">
+                        @foreach($validationResults['details'] as $detail)
+                            <div class="bg-red-50 border border-red-200 rounded p-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h3 class="text-sm font-medium text-red-800">{{ $detail['message'] }}</h3>
+                                        @if(isset($detail['id']))
+                                            <p class="mt-1 text-sm text-red-700">رقم الهوية: {{ $detail['id'] }}</p>
+                                        @endif
+                                        @if(isset($detail['expected']) && isset($detail['actual']))
+                                            <p class="mt-1 text-sm text-red-700">
+                                                العدد المتوقع: {{ $detail['expected'] }} | العدد الفعلي: {{ $detail['actual'] }}
+                                            </p>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="mb-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full mr-2 {{ $validationResults['is_valid'] ? 'bg-green-500' : 'bg-red-500' }}"></div>
+                        <span class="font-semibold">{{ $validationResults['is_valid'] ? 'حالة البيانات: صحيحة' : 'حالة البيانات: تحتاج مراجعة' }}</span>
+                    </div>
+                    <button onclick="showValidationModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-info-circle mr-2"></i>عرض التفاصيل
+                    </button>
+                </div>
+                <div class="flex space-x-2">
+                    <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">رجوع</a>
+                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors">تعديل</a>
+                </div>
+            </div>
+        </div>
+
   <!-- show.blade.php -->
     @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-2'])
-            @slot('side')
+            {{-- @slot('side')
                 <div class="mt-6 flex items-center space-x-2">
                     <button id="validationStatusBtn" onclick="checkValidation()" class="px-4 py-2 bg-yellow-500 text-white rounded-md animate-pulse">
                         <i class="fas fa-exclamation-triangle"></i> فحص الحالة
@@ -109,7 +172,7 @@
                     <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
                     <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعديل</a>
                 </div>
-            @endslot
+            @endslot --}}
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -547,6 +610,20 @@ document.querySelector('#childrenTable').addEventListener('click', function(even
     }
 });
 
+function showValidationModal() {
+    document.getElementById('validationModal').classList.remove('hidden');
+}
+
+function hideValidationModal() {
+    document.getElementById('validationModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('validationModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideValidationModal();
+    }
+});
 
 </script>
 <script src="{{ asset('assets/js/jquery-3.6.0.min.js')}}"></script>
