@@ -1,5 +1,5 @@
- <!--begin::Header-->
- <div id="kt_header" style="" class="header align-items-stretch">
+<!--begin::Header-->
+<div id="kt_header" style="" class="header align-items-stretch">
 	<!--begin::Container-->
 	<div class="container-fluid d-flex align-items-stretch justify-content-between">
 		<!--begin::Aside mobile toggle-->
@@ -24,8 +24,8 @@
 		<!--end::Aside mobile toggle-->
 		<!--begin::Mobile logo-->
 		<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-			<a href="../../demo1/dist/index.html" class="d-lg-none">
-				<img alt="Logo" src="assets/media/logos/logo-2.svg" class="h-30px" />
+			<a href="{{ route('home') }}" class="d-lg-none">
+				<img alt="Logo" src="{{ asset('assets/media/logos/logo-2.svg') }}" class="h-30px" />
 			</a>
 		</div>
 		<!--end::Mobile logo-->
@@ -45,7 +45,60 @@
 					<!--begin::Menu-->
 					<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch"
 						id="#kt_header_menu" data-kt-menu="true">
+						<!--begin:Menu item-->
+						<div class="menu-item me-lg-1">
+							<a class="menu-link py-3" href="{{ route('citizens.index') }}">
+								<span class="menu-icon">
+									<i class="bi bi-people fs-2"></i>
+								</span>
+								<span class="menu-title">المواطنين</span>
+							</a>
+						</div>
+						<!--end:Menu item-->
 
+						<!--begin:Menu item-->
+						<div class="menu-item me-lg-1">
+							<a class="menu-link py-3" href="{{ route('categories.index') }}">
+								<span class="menu-icon">
+									<i class="bi bi-grid fs-2"></i>
+								</span>
+								<span class="menu-title">الفئات</span>
+							</a>
+						</div>
+						<!--end:Menu item-->
+
+						<!--begin:Menu item-->
+						<div class="menu-item me-lg-1">
+							<a class="menu-link py-3" href="{{ route('distributions.index') }}">
+								<span class="menu-icon">
+									<i class="bi bi-box-seam fs-2"></i>
+								</span>
+								<span class="menu-title">التوزيعات</span>
+							</a>
+						</div>
+						<!--end:Menu item-->
+
+						<!--begin:Menu item-->
+						<div class="menu-item me-lg-1">
+							<a class="menu-link py-3" href="{{ route('regions.index') }}">
+								<span class="menu-icon">
+									<i class="bi bi-geo-alt fs-2"></i>
+								</span>
+								<span class="menu-title">المناطق</span>
+							</a>
+						</div>
+						<!--end:Menu item-->
+
+						<!--begin:Menu item-->
+						<div class="menu-item me-lg-1">
+							<a class="menu-link py-3" href="{{ route('records.home') }}">
+								<span class="menu-icon">
+									<i class="bi bi-file-text fs-2"></i>
+								</span>
+								<span class="menu-title">السجلات</span>
+							</a>
+						</div>
+						<!--end:Menu item-->
 					</div>
 					<!--end::Menu-->
 				</div>
@@ -56,43 +109,56 @@
 			<div class="d-flex align-items-stretch flex-shrink-0">
 				<!--begin::Toolbar wrapper-->
 				<div class="d-flex align-items-stretch flex-shrink-0">
-					<!--begin::Search-->
-					<div class="d-flex align-items-stretch ms-1 ms-lg-3">
-						<!--begin::Search-->
-						<div id="kt_header_search" class="d-flex align-items-stretch"
-							data-kt-search-keypress="true" data-kt-search-min-length="2"
-							data-kt-search-enter="enter" data-kt-search-layout="menu"
-							data-kt-menu-trigger="auto" data-kt-menu-overflow="false"
-							data-kt-menu-permanent="true" data-kt-menu-placement="bottom-end">
-							<!--begin::Search toggle-->
-							<div class="d-flex align-items-center" data-kt-search-element="toggle"
-								id="kt_header_search_toggle">
-								<div
-									class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px">
-									<!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-									<span class="svg-icon svg-icon-1">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24"
-											height="24" viewBox="0 0 24 24" fill="none">
-											<rect opacity="0.5" x="17.0365" y="15.1223"
-												width="8.15546" height="2" rx="1"
-												transform="rotate(45 17.0365 15.1223)"
-												fill="black" />
-											<path
-												d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-												fill="black" />
-										</svg>
-									</span>
-									<!--end::Svg Icon-->
+					<!--begin::Quick Actions-->
+					<div class="d-flex align-items-center ms-1 ms-lg-3">
+						<!--begin::New Citizen-->
+						<a href="{{ route('citizens.create') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="إضافة مواطن جديد">
+							<i class="bi bi-plus-lg fs-2"></i>
+						</a>
+						<!--end::New Citizen-->
+
+						<!--begin::Search Records-->
+						<a href="{{ route('records.search') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="البحث في السجلات">
+							<i class="bi bi-search fs-2"></i>
+						</a>
+						<!--end::Search Records-->
+
+						<!--begin::Export Citizens-->
+						<a href="{{ route('citizens.export') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="تصدير المواطنين">
+							<i class="bi bi-download fs-2"></i>
+						</a>
+						<!--end::Export Citizens-->
+					</div>
+					<!--end::Quick Actions-->
+
+					<!--begin::Recent Categories Dropdown-->
+					<div class="d-flex align-items-center ms-1 ms-lg-3">
+						<div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="bottom" title="الفئات الأخيرة">
+							<i class="bi bi-grid fs-2"></i>
+						</div>
+						<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 w-275px" data-kt-menu="true">
+							<div class="menu-item px-3">
+								<div class="menu-content d-flex align-items-center px-3">
+									<span class="fw-bold text-muted">الفئات الأخيرة</span>
 								</div>
 							</div>
-							<!--end::Search toggle-->
-							<!--begin::Menu-->
-
-							<!--end::Menu-->
+							<div class="separator my-2"></div>
+							@php
+								$recentCategories = \App\Models\Category::latest()->take(5)->get();
+							@endphp
+							@foreach($recentCategories as $category)
+							<div class="menu-item px-5">
+								<a href="{{ route('categories.show', $category) }}" class="menu-link px-5">
+									<span class="menu-icon">
+										<i class="bi bi-tag fs-2"></i>
+									</span>
+									<span class="menu-title">{{ $category->name }}</span>
+								</a>
+							</div>
+							@endforeach
 						</div>
-						<!--end::Search-->
 					</div>
-
+					<!--end::Recent Categories Dropdown-->
 
 					<!--begin::User-->
 					<div class="d-flex align-items-center ms-1 ms-lg-3"
@@ -104,7 +170,7 @@
 							@php
 								$imgPath = isset(auth()->user()->staff->image) ? auth()->user()->staff->image : 'asdaa.jpg';
 							@endphp
-							<img src="{{   asset('storage/' . $imgPath)  }}" alt="user" />
+							<img src="{{ asset('storage/' . $imgPath) }}" alt="user" />
 						</div>
 						<!--begin::Menu-->
 						<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-275px"
@@ -114,19 +180,16 @@
 								<div class="menu-content d-flex align-items-center px-3">
 									<!--begin::Avatar-->
 									<div class="symbol symbol-50px me-5">
-										<img src="{{   asset('storage/' . $imgPath)  }}" alt="user" />
-										{{-- <img alt="Logo" src="{{   asset('storage/' . auth()->user()->staff ?? auth()->user()->staff->image : 'asdaa.jpg')  }}" /> --}}
+										<img src="{{ asset('storage/' . $imgPath) }}" alt="user" />
 									</div>
 									<!--end::Avatar-->
 									<!--begin::Username-->
-									<div class=" ">
-										<div class="fw-bolder d-flex align-items-center fs-5">{{ auth()->user()->staff->name ?? auth()->user()->name }}
+									<div class="d-flex flex-column">
+										<div class="fw-bolder d-flex align-items-center fs-5">
+											{{ auth()->user()->staff->name ?? auth()->user()->name }}
+											<span class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">{{ auth()->user()->role->name }}</span>
 										</div>
-										<span
-										class="badge badge-light-success fw-bolder fs-8 px-2 py-1 ms-2">{{ auth()->user()->role->name}}</span>
-
-										<a href="#"
-											class="fw-bold text-muted text-hover-primary fs-7">max@kt.com</a>
+										<a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ auth()->user()->email }}</a>
 									</div>
 									<!--end::Username-->
 								</div>
@@ -137,27 +200,23 @@
 							<!--end::Menu separator-->
 							<!--begin::Menu item-->
 							<div class="menu-item px-5">
-								<a href="{{ route('profile.edit') }}"
-									class="menu-link px-5">My Profile</a>
+								<a href="{{ route('profile.edit') }}" class="menu-link px-5">
+									<i class="bi bi-person fs-2 me-2"></i>
+									الملف الشخصي
+								</a>
 							</div>
 							<!--end::Menu item-->
 							<!--begin::Menu item-->
 							<div class="menu-item px-5">
-								<a class="dropdown-item" href="{{ route('logout') }}"
-								onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-
-									<i class="ti ti-logout me-2 ti-sm"></i>
-									<span class="align-middle">Log Out</span>
+								<a class="menu-link px-5" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+									<i class="bi bi-box-arrow-right fs-2 me-2"></i>
+									تسجيل الخروج
 								</a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
 									@csrf
 								</form>
 							</div>
-							
 							<!--end::Menu item-->
-							<!--begin::Menu separator-->
-							<div class="separator my-2"></div>
-							<!--end::Menu separator-->
 						</div>
 						<!--end::Menu-->
 						<!--end::Menu wrapper-->
