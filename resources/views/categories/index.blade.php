@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">الفئات</h5>
-                    <a href="{{ route('categories.create') }}" class="btn btn-primary">إضافة فئة جديدة</a>
+                    <div>
+                        <a href="{{ route('categories.create') }}" class="btn btn-primary">إضافة فئة جديدة</a>
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -18,14 +20,14 @@
                     @endif
 
                     <div class="table-responsive">
-                        <table class="table">
-                            <thead>
+                        <table class="table table-hover">
+                            <thead class="table-light">
                                 <tr>
                                     <th>الاسم</th>
                                     <th>الوصف</th>
                                     <th>عدد الأعضاء</th>
                                     <th>الحالة</th>
-                                    <th>الإجراءات</th>
+                                    <th class="text-center">الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,13 +42,21 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-info">عرض</a>
-                                            <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning">تعديل</a>
-                                            <form action="{{ route('categories.destroy', $category) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('هل أنت متأكد من حذف هذه الفئة؟')">حذف</button>
-                                            </form>
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <a href="{{ route('categories.show', $category) }}" class="btn btn-sm btn-info">
+                                                    <i class="fas fa-eye"></i> عرض
+                                                </a>
+                                                <a href="{{ route('categories.edit', $category) }}" class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-edit"></i> تعديل
+                                                </a>
+                                                <form action="{{ route('categories.destroy', $category) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('هل أنت متأكد من حذف هذه الفئة؟')">
+                                                        <i class="fas fa-trash"></i> حذف
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
