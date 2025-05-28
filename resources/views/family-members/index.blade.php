@@ -56,7 +56,9 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="fas fa-filter ml-1"></i> تطبيق الفلتر
                 </button>
-
+                <a href="{{route('family-members.test')}}" type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter ml-1"></i>فحص
+                </a >
                 <div class="space-x-2">
                     <a href="{{ route('family-members.import-form') }}" class="btn btn-success">
                         <i class="fas fa-file-import ml-1"></i> استيراد من ملف

@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
     Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
 
+Route::get('/family-members/test', [FamilyMemberController::class, 'test'])->name('family-members.test');
 
       // Family Members Routes
       Route::get('/citizens/{citizen}/family-members/create', [FamilyMemberController::class, 'create'])->name('citizens.family-members.create');
@@ -118,6 +119,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     // Super Manager routes
+
     Route::middleware(['role:Super Manager'])->group(function () {
         Route::get('/citizens/create', [CitizenController::class, 'create'])->name('citizens.create');
         Route::prefix('citizens')->group(function () {
@@ -247,6 +249,7 @@ Route::get('/categories/{category}/export', [CategoryController::class, 'export'
 Route::get('/categories/{category}/import', [CategoryController::class, 'importForm'])->name('categories.import-form');
 Route::post('/categories/{category}/import', [CategoryController::class, 'import'])->name('categories.import');
 Route::get('/categories/template', [CategoryController::class, 'downloadTemplate'])->name('categories.template');
+
 
 require __DIR__ . '/auth.php';
 

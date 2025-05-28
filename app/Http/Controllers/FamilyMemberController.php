@@ -492,4 +492,10 @@ class FamilyMemberController extends Controller
         $categories = Category::where('status', 'active')->get();
         return view('family-members.show', compact('member', 'categories'));
     }
+
+    public function test()
+    {
+        $results = $this->familyMemberService->findCitizensWithoutFamilyMembers();
+        return view('family-members.test', compact('results'));
+    }
 }

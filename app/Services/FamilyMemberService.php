@@ -398,4 +398,65 @@ class FamilyMemberService
             throw $e;
         }
     }
+
+    /**
+     * Find citizens without proper family member associations
+     * 
+     * @return array
+     */
+    public function findCitizensWithoutFamilyMembers()
+    {
+        try {
+            // Get all citizens
+            $citizens = Citizen::query()
+                ->with(['familyMembers' => function($query) {
+                    $query->whereIn('relationship', ['father', 'mother']);
+                }])
+                ->get();
+
+            $results = [
+                'without_self' => [], // Citizens without a family member with same ID
+                'without_spouse' => [], // Citizens with wife_id but no spouse family member
+            ];
+
+            foreach ($citizens as $citizen) {
+                // Check for self association
+                $hasSelfMember = $citizen->familyMembers->contains(function($member) use ($citizen) {
+                    return $member->national_id === $citizen->id && 
+                           in_array($member->relationship, ['father', 'mother']);
+                });
+
+                if (!$hasSelfMember) {
+                    $results['without_self'][] = [
+                        'citizen' => $citizen,
+                        'status' => 'No self association',
+                        'details' => 'Citizen ID: ' . $citizen->id . ' has no family member record with same ID'
+                    ];
+                }
+
+                // Check for spouse association
+                if ($citizen->wife_id) {
+                    $hasSpouseMember = $citizen->familyMembers->contains(function($member) use ($citizen) {
+                        return $member->national_id === $citizen->wife_id && 
+                               $member->relationship === 'mother';
+                    });
+
+                    if (!$hasSpouseMember) {
+                        $results['without_spouse'][] = [
+                            'citizen' => $citizen,
+                            'status' => 'No spouse association',
+                            'details' => 'Citizen has wife_id: ' . $citizen->wife_id . ' but no corresponding family member'
+                        ];
+                    }
+                }
+            }
+
+            return $results;
+        } catch (Exception $e) {
+            Log::error('Error finding citizens without family members', [
+                'error' => $e->getMessage()
+            ]);
+            throw new Exception('حدث خطأ أثناء البحث عن المواطنين بدون أفراد العائلة');
+        }
+    }
 } 
