@@ -70,10 +70,10 @@ class CitizenController extends Controller
             ->forUserRegions()
             ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
     
-               
+
         // Apply other filters
         // $query-->scopeForUserRegions();
-        
+        Log::info('ctzin');
 
         return DataTables::of($query)
             ->addColumn('region', function ($citizen) {
@@ -108,8 +108,7 @@ class CitizenController extends Controller
         $citizens = Citizen::all();
         $citizen = Citizen::findOrFail($id);
         $search = $this->familyMemberService->getChildrenRecords($citizen);
-        // dd($citizen->allCategories());
-                // dd($search);
+
         return view('citizens.show', compact('citizen', 'citizens'));
     }
 
