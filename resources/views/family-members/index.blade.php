@@ -70,6 +70,9 @@
     @endcomponent
 
     @component('components.box', ['title' => 'نتائج البحث', 'styles' => 'mt-6'])
+    @slot('side')
+    {{-- <a href="{{route('citizens.family-members.create')}}" class="btn btn-primary">إضافة فرد</a> --}}
+    @endslot
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">                <thead class="bg-gray-50">
                     <tr>

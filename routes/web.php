@@ -84,8 +84,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/report/export', [CitizenUploadController::class, 'exportReport'])->name('report.export');
     Route::get('distributions/{id}/citizens', [DistributionController::class, 'getDistributionCitizens'])->name('distributions.citizens');
     Route::post('/distributions/add-all', [DistributionController::class, 'addAllCitizens'])->name('distributions.addAllCitizens');
+
+
+      // Family Members Routes
+      Route::get('/citizens/{citizen}/family-members/create', [FamilyMemberController::class, 'create'])->name('citizens.family-members.create');
+      Route::post('/citizens/{citizen}/family-members', [FamilyMemberController::class, 'store'])->name('citizens.family-members.store');
+      Route::get('/citizens/{citizen}/family-members/{member}/edit', [FamilyMemberController::class, 'edit'])->name('citizens.family-members.edit');
+      Route::put('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'update'])->name('citizens.family-members.update');
+      Route::delete('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'destroy'])->name('citizens.family-members.destroy');
+      Route::get('/citizens/{citizen}/family-members/search-records', [FamilyMemberController::class, 'searchRecords'])->name('citizens.family-members.search-records');
+      Route::get('/family-members/template', [FamilyMemberController::class, 'downloadTemplate'])->name('family-members.template');
+      Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
+      Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
+      Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
+      Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
+      Route::post('/citizens/{citizen}/family-members/import-records', [FamilyMemberController::class, 'importRecords'])->name('citizens.family-members.import-records');
+      Route::post('/citizens/{citizen}/family-members/add-children', [FamilyMemberController::class, 'addChildren'])
+          ->name('citizens.family-members.add-children');
+      Route::post('/family-members/automatic-assignment-with-children', 
+          [FamilyMemberController::class, 'processAutomaticAssignmentWithChildren'])
+          ->name('family-members.process-automatic-assignment-with-children');
     Route::get('/family-members', [FamilyMemberController::class, 'index'])->name('family-members.index');
     Route::get('/family-members/{member}', [FamilyMemberController::class, 'show'])->name('family-members.show');
+    Route::get('/family-members/edit/{member}', [FamilyMemberController::class, 'edit'])->name('family-members.edit');
+    // Route::get('/family-members/create', [FamilyMemberController::class, 'create'])->name('family-members.create');
     Route::get('/family-members/automatic-assignment', [FamilyMemberController::class, 'showAutomaticAssignmentForm'])->name('family-members.automatic-assignment');
     Route::post('/family-members/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignment'])->name('family-members.process-automatic-assignment');
     Route::post('/citizens/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen');
@@ -193,24 +215,7 @@ Route::middleware(['auth'])->group(function () {
     // Guest routes
     Route::middleware(['role:Guest'])->group(function () {});
 
-    // Family Members Routes
-    Route::get('/citizens/{citizen}/family-members/create', [FamilyMemberController::class, 'create'])->name('citizens.family-members.create');
-    Route::post('/citizens/{citizen}/family-members', [FamilyMemberController::class, 'store'])->name('citizens.family-members.store');
-    Route::get('/citizens/{citizen}/family-members/{member}/edit', [FamilyMemberController::class, 'edit'])->name('citizens.family-members.edit');
-    Route::put('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'update'])->name('citizens.family-members.update');
-    Route::delete('/citizens/{citizen}/family-members/{member}', [FamilyMemberController::class, 'destroy'])->name('citizens.family-members.destroy');
-    Route::get('/citizens/{citizen}/family-members/search-records', [FamilyMemberController::class, 'searchRecords'])->name('citizens.family-members.search-records');
-    Route::get('/family-members/template', [FamilyMemberController::class, 'downloadTemplate'])->name('family-members.template');
-    Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
-    Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
-    Route::get('/family-members/import', [FamilyMemberController::class, 'importForm'])->name('family-members.import-form');
-    Route::post('/family-members/import', [FamilyMemberController::class, 'import'])->name('family-members.import');
-    Route::post('/citizens/{citizen}/family-members/import-records', [FamilyMemberController::class, 'importRecords'])->name('citizens.family-members.import-records');
-    Route::post('/citizens/{citizen}/family-members/add-children', [FamilyMemberController::class, 'addChildren'])
-        ->name('citizens.family-members.add-children');
-    Route::post('/family-members/automatic-assignment-with-children', 
-        [FamilyMemberController::class, 'processAutomaticAssignmentWithChildren'])
-        ->name('family-members.process-automatic-assignment-with-children');
+  
 });
 
 // Logout route
