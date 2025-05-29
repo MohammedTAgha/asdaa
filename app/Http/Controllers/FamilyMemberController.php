@@ -348,7 +348,7 @@ class FamilyMemberController extends Controller
 
             return view('family-members.automatic-assignment-report', [
                 'results' => $results,
-                'failures' => $failures
+                'failures' => []
             ]);
         } catch (Exception $e) {
             return redirect()
