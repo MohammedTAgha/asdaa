@@ -26,6 +26,35 @@
             </div>
         @endif
 
+        @component('components.box', ['title' => 'بيانات المواطن الرئيسي'])
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">الاسم الكامل</h4>
+                    <p class="text-gray-900">{{ $citizen->firstname }} {{ $citizen->secondname }} {{ $citizen->thirdname }} {{ $citizen->lastname }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">رقم الهوية</h4>
+                    <p class="text-gray-900">{{ $citizen->national_id }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">تاريخ الميلاد</h4>
+                    <p class="text-gray-900">{{ $citizen->date_of_birth }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">الجنس</h4>
+                    <p class="text-gray-900">{{ $citizen->gender == 'male' ? 'ذكر' : 'أنثى' }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">رقم الهاتف</h4>
+                    <p class="text-gray-900">{{ $citizen->phone ?? 'غير متوفر' }}</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-gray-700">العنوان</h4>
+                    <p class="text-gray-900">{{ $citizen->address ?? 'غير متوفر' }}</p>
+                </div>
+            </div>
+        @endcomponent
+
         @component('components.box', ['title' => 'البحث في السجل المدني'])
             <div class="mb-6">
                 <form action="{{ route('citizens.family-members.search-records', $citizen) }}" method="GET" class="space-y-4">
