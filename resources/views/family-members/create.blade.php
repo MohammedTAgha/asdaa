@@ -34,24 +34,24 @@
                 </div>
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-700">رقم الهوية</h4>
-                    <p class="text-gray-900">{{ $citizen->national_id }}</p>
+                    <p class="text-gray-900">{{ $citizen->id }}</p>
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg">
+                {{-- <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-700">تاريخ الميلاد</h4>
                     <p class="text-gray-900">{{ $citizen->date_of_birth }}</p>
                 </div>
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-700">الجنس</h4>
                     <p class="text-gray-900">{{ $citizen->gender == 'male' ? 'ذكر' : 'أنثى' }}</p>
-                </div>
+                </div> --}}
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-700">رقم الهاتف</h4>
                     <p class="text-gray-900">{{ $citizen->phone ?? 'غير متوفر' }}</p>
                 </div>
-                <div class="bg-gray-50 p-4 rounded-lg">
+                {{-- <div class="bg-gray-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-gray-700">العنوان</h4>
                     <p class="text-gray-900">{{ $citizen->address ?? 'غير متوفر' }}</p>
-                </div>
+                </div> --}}
             </div>
         @endcomponent
 
