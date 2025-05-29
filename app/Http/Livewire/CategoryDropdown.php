@@ -19,9 +19,14 @@ class CategoryDropdown extends Component
     public $showNewCategoryInput = false;
     public $showNewSourceInput = false;
 
+    protected $listeners = ['refreshComponent' => '$refresh'];
+
     public function mount($selectedCategory = null, $selectedSource = null)
     {
-        Log::info('livewire mount');
+        Log::info('CategoryDropdown component mounted', [
+            'selectedCategory' => $selectedCategory,
+            'selectedSource' => $selectedSource
+        ]);
 
         $this->categories = DistributionCategory::all();
         $this->sources = Source::all();
@@ -29,28 +34,46 @@ class CategoryDropdown extends Component
         $this->selectedSource = $selectedSource;
     }
 
+    public function hydrate()
+    {
+        Log::info('CategoryDropdown component hydrated');
+    }
+
+    public function dehydrate()
+    {
+        Log::info('CategoryDropdown component dehydrated');
+    }
+
     public function updatedSelectedCategory($value)
     {
+        Log::info('Selected category updated', ['value' => $value]);
+        
         if ($value === 'add_new') {
             $this->showNewCategoryInput = true;
         } else {
             $this->showNewCategoryInput = false;
         }
+        
+        $this->emit('categorySelected', $value);
     }
 
     public function updatedSelectedSource($value)
     {
-        Log::info('livewire', $this->showNewSourceInput);
-        Log::info('livewire value', $value);
+        Log::info('Selected source updated', ['value' => $value]);
+        
         if ($value === 'add_new_source') {
             $this->showNewSourceInput = true;
         } else {
             $this->showNewSourceInput = false;
         }
+        
+        $this->emit('sourceSelected', $value);
     }
 
     public function addCategory()
     {
+        Log::info('Adding new category', ['name' => $this->newCategory]);
+        
         $this->validate([
             'newCategory' => 'required|string|max:255',
         ]);
@@ -61,10 +84,18 @@ class CategoryDropdown extends Component
         $this->selectedCategory = $category->id;
         $this->showNewCategoryInput = false;
         $this->newCategory = '';
+        
+        $this->emit('categoryAdded', $category->id);
     }
 
     public function addSource()
     {
+        Log::info('Adding new source', [
+            'name' => $this->newSourceName,
+            'phone' => $this->newSourcePhone,
+            'email' => $this->newSourceEmail
+        ]);
+        
         $this->validate([
             'newSourceName' => 'required|string|max:255',
             'newSourcePhone' => 'nullable|string|max:15',
@@ -83,10 +114,17 @@ class CategoryDropdown extends Component
         $this->newSourceName = '';
         $this->newSourcePhone = '';
         $this->newSourceEmail = '';
+        
+        $this->emit('sourceAdded', $source->id);
     }
 
     public function render()
     {
+        Log::info('CategoryDropdown component rendering', [
+            'selectedCategory' => $this->selectedCategory,
+            'selectedSource' => $this->selectedSource
+        ]);
+        
         return view('livewire.category-dropdown');
     }
 }

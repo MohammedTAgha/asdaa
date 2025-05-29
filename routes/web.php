@@ -38,10 +38,6 @@ use App\Http\Controllers\Api\CitizenValidationController;
 |
 */
 
-Route::get('/linkstorage', function () {
-    Artisan::call('storage:link');
-});
-
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 // File Management Routes (Available to all authenticated users)
@@ -58,7 +54,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/search/export', [PersonController::class, 'export'])->name('search.export');
     });
- 
+    Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
+
     Route::post('/check-citizens', [CitizenController::class, 'checkCitizens'])->name('citizens.check');
     Route::post('/export-selected-citizens', [CitizenController::class, 'exportSelectedCitizens'])->name('citizens.export-selected');
     Route::post('/export-with-distributions', [CitizenController::class, 'exportSelectedWithDistributions'])->name('citizens.export-with-distributions');
@@ -75,7 +72,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/distributions/add-citizens-filter', [DistributionController::class, 'addCitizensFilter'])->name('distributions.addCitizensFilter');
     Route::get('/get-distributions', [DistributionController::class, 'getDistributions'])->name('getDistributions');
     Route::delete('/distributions/pivot/{id}', [DistributionController::class, 'removeCitizenFromDistribution'])->name('distributions.removeCitizen');
-    Route::post('/update-pivot', [DistributionController::class, 'updatePivot'])->name('update.pivot'); // Route::get('/citizens', [CitizenController::class, 'index']);
 
     Route::post('/distributions/{distribution}/update-citizens', [DistributionController::class, 'updateCitizens'])->name('distributions.updateCitizens');
     Route::post('/distributions/{distribution}/delete-citizens',  [DistributionController::class, 'deleteCitizens'])->name('distributions.deleteCitizens');
@@ -115,13 +111,6 @@ Route::get('/citizens/{citizen}/validate', [CitizenValidationController::class, 
     Route::post('/citizens/automatic-assignment', [FamilyMemberController::class, 'processAutomaticAssignmentForCitizen'])->name('family-members.process-citizen');
     Route::get('/citizens/{citizen}/care-provider', [CitizenController::class, 'showCareProviderForm'])->name('citizens.care-provider');
     Route::put('/citizens/{citizen}/care-provider', [CitizenController::class, 'updateCareProvider'])->name('citizens.update-care-provider');
-});
-
-// Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
-
-
-Route::middleware(['auth'])->group(function () {
-    // Super Manager routes
 
     Route::middleware(['role:Super Manager'])->group(function () {
         Route::get('/citizens/create', [CitizenController::class, 'create'])->name('citizens.create');
@@ -213,6 +202,15 @@ Route::middleware(['auth'])->group(function () {
         // Route::resource('distribution_categories', DistributionCategoryController::class);
         // Route::resource('children', ChildController::class);
     });
+});
+
+// Route::get('/citizens/data', [CitizenController::class, 'getData'])->name('citizens.data');
+
+
+Route::middleware(['auth'])->group(function () {
+    // Super Manager routes
+
+
 
 
     // Guest routes
