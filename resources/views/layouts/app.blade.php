@@ -106,7 +106,7 @@
                 {{-- header --}}
                 @include('layouts.header')
                 <!--begin::Content-->
-                          @if ($errors->any())
+                          @if (isset($errors) && is_object($errors) && method_exists($errors, 'any') && $errors->any())
                 <div class="error-messages">
                     @foreach ($errors->all() as $error)
                         <p style="color: red;">{{ $error }}</p>
