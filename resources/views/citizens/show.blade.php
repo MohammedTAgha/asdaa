@@ -6,6 +6,8 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-6">
+
+
     <!-- Status Bar -->
     <div class="bg-white rounded-lg shadow-lg p-4 mb-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -168,7 +170,7 @@
     </div>
 
     <!-- Care Provider Section -->
-    <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+    {{-- <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
         <div class="flex justify-between items-start">
             <div>
                 <h2 class="text-xl font-bold mb-4 text-gray-800">مقدم الرعاية</h2>
@@ -195,8 +197,89 @@
                 {{ __('تعديل مقدم الرعاية') }}
             </a>
         </div>
-    </div>
-
+    </div> --}}
+        <!-- Excel Data Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-4 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">بيانات المستفيد للتنسيق</h2>
+                <button onclick="copyToClipboard()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <i class="fas fa-copy ml-2"></i>
+                    نسخ للتصدير
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="py-2 px-4 text-right text-gray-600">رقم الهوية</th>
+                            <th class="py-2 px-4 text-right text-gray-600">الاسم رباعي</th>
+                            <th class="py-2 px-4 text-right text-gray-600">الاسم الاول</th>
+                            <th class="py-2 px-4 text-right text-gray-600">اسم الاب</th>
+                            <th class="py-2 px-4 text-right text-gray-600">اسم الجد</th>
+                            <th class="py-2 px-4 text-right text-gray-600">اسم العائلة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">رقم الجوال</th>
+                            <th class="py-2 px-4 text-right text-gray-600">رقم الجوال البديل</th>
+                            <th class="py-2 px-4 text-right text-gray-600">رقم هوية الزوجة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">اسم الزوجة رباعي</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الافراد</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الذكور</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الاناث</th>
+                            <th class="py-2 px-4 text-right text-gray-600">الحالة الاجتماعية</th>
+                            <th class="py-2 px-4 text-right text-gray-600">مكان السكن الاصلي</th>
+                            <th class="py-2 px-4 text-right text-gray-600">وصف ذوي الامراض المزمنة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">ملاحظات</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الافراد اقل من 3 سنوات</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الافراد ذوي الامراض المزمنة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد الافراد ذوي الاحتياجات الخاصة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">معيل الاسرة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">حالة السكن</th>
+                            <th class="py-2 px-4 text-right text-gray-600">وصف ذوي الاحتياجات الخاصة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">مكان السكن الاصلي</th>
+                            <th class="py-2 px-4 text-right text-gray-600">عدد كبار السن</th>
+                            <th class="py-2 px-4 text-right text-gray-600">تاريخ الميلاد</th>
+                            <th class="py-2 px-4 text-right text-gray-600">الجنس</th>
+                            <th class="py-2 px-4 text-right text-gray-600">الحالة</th>
+                            <th class="py-2 px-4 text-right text-gray-600">المندوب</th>
+                            <th class="py-2 px-4 text-right text-gray-600">المنطقة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="excelData" class="hover:bg-gray-50">
+                            <td class="py-2 px-4">{{ $citizen->id }}</td>
+                            <td class="py-2 px-4">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}</td>
+                            <td class="py-2 px-4">{{ $citizen->firstname }}</td>
+                            <td class="py-2 px-4">{{ $citizen->secondname }}</td>
+                            <td class="py-2 px-4">{{ $citizen->thirdname }}</td>
+                            <td class="py-2 px-4">{{ $citizen->lastname }}</td>
+                            <td class="py-2 px-4">{{ $citizen->phone }}</td>
+                            <td class="py-2 px-4">{{ $citizen->phone2 }}</td>
+                            <td class="py-2 px-4">{{ $citizen->wife_id }}</td>
+                            <td class="py-2 px-4">{{ $citizen->wife_name }}</td>
+                            <td class="py-2 px-4">{{ $citizen->family_members }}</td>
+                            <td class="py-2 px-4">{{ $citizen->mails_count }}</td>
+                            <td class="py-2 px-4">{{ $citizen->femails_count }}</td>
+                            <td class="py-2 px-4">{{ $citizen->social_status }}</td>
+                            <td class="py-2 px-4">{{ $citizen->original_address }}</td>
+                            <td class="py-2 px-4">{{ $citizen->disease_description }}</td>
+                            <td class="py-2 px-4">{{ $citizen->note }}</td>
+                            <td class="py-2 px-4">{{ $citizen->leesthan3 }}</td>
+                            <td class="py-2 px-4">{{ $citizen->disease ? 1 : 0 }}</td>
+                            <td class="py-2 px-4">{{ $citizen->obstruction ? 1 : 0 }}</td>
+                            <td class="py-2 px-4">{{ $citizen->job }}</td>
+                            <td class="py-2 px-4">{{ $citizen->living_status }}</td>
+                            <td class="py-2 px-4">{{ $citizen->obstruction_description }}</td>
+                            <td class="py-2 px-4">{{ $citizen->original_address }}</td>
+                            <td class="py-2 px-4">{{ $citizen->elderly_count }}</td>
+                            <td class="py-2 px-4">{{ $citizen->date_of_birth }}</td>
+                            <td class="py-2 px-4">{{ $citizen->gender == '0' ? 'ذكر' : 'انثى' }}</td>
+                            <td class="py-2 px-4">{{ $citizen->is_archived ? 'مؤرشف' : 'نشط' }}</td>
+                            <td class="py-2 px-4">{{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</td>
+                            <td class="py-2 px-4">{{ $citizen->region->name }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     <!-- Family Members Section -->
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
         <div class="flex justify-between items-center mb-4">
@@ -648,5 +731,26 @@ document.addEventListener('keydown', function(e) {
             });
         });
     });
+</script>
+<script>
+function copyToClipboard() {
+    // Get all cells from the row
+    const cells = document.querySelectorAll('#excelData td');
+    
+    // Create an array to hold the cell values
+    const values = Array.from(cells).map(cell => cell.textContent.trim());
+    
+    // Join the values with tabs for Excel compatibility
+    const textToCopy = values.join('\t');
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        // Show success message
+        alert('تم نسخ البيانات بنجاح! يمكنك الآن لصقها في Excel');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert('حدث خطأ أثناء نسخ البيانات');
+    });
+}
 </script>
 @endsection
