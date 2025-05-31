@@ -19,7 +19,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                 <!--begin::Form-->
-                <form id="recordsSearchForm" class="form" action="{{ route('records.search') }}" method="POST">
+                <form id="recordsSearchForm" class="form" action="{{ route('records.general-search') }}" method="POST">
                     @csrf
                     <!--begin::Input group-->
                     <div class="fv-row mb-7">

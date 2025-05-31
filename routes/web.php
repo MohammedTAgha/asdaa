@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('records')->group(function () {
         Route::get('/', [PersonController::class, 'index'])->name('records.home');
         Route::match(['get', 'post'], '/search', [PersonController::class, 'search'])->name('records.search');
+        Route::match(['get', 'post'], '/general-search', [PersonController::class, 'generalSearch'])->name('records.general-search');
         Route::get('/citizen/{id}', [PersonController::class, 'show'])->name('citizen.details');
         Route::get('/search-by-ids', [PersonController::class, 'showSearchByIdsForm'])->name('search.by.ids.form');
         Route::post('/search-by-ids', [PersonController::class, 'searchByIds'])->name('records.search-by-ids');

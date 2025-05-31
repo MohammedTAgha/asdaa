@@ -17,7 +17,7 @@ class PersonController extends Controller
         return view('records.home');
     }
     
-    public function search(Request $request)
+    public function generalSearch(Request $request)
     {
         $data = $request->isMethod('post') ? $request->all() : $request->query();
         $results = collect();
@@ -118,7 +118,45 @@ class PersonController extends Controller
 
         return view('records.home', compact('results'));
     }
+    public function search(Request $request)
+    {
+        $query = Person::query();
+        Log::error("searching"); 
+        // Handle both GET and POST methods
+        $data = $request->isMethod('post') ? $request->all() : $request->query();
+        
+        if (!empty($data['id_number'])) {
+            $query->where('CI_ID_NUM', 'like', '%' . $data['id_number'] . '%');
+        }
+        if (!empty($data['first_name'])) {
+            $query->where('CI_FIRST_ARB', 'like', '%' . $data['first_name'] . '%');
+        }
+        if (!empty($data['father_name'])) {
+            $query->where('CI_FATHER_ARB', 'like', '%' . $data['father_name'] . '%');
+        }
+        if (!empty($data['grandfather_name'])) {
+            $query->where('CI_GRAND_FATHER_ARB', 'like', '%' . $data['grandfather_name'] . '%');
+        }
+        if (!empty($data['family_name'])) {
+            $query->where('CI_FAMILY_ARB', 'like', '%' . $data['family_name'] . '%');
+        }
 
+        $startTime = microtime(true);
+        $cacheKey = 'search_results:' . md5(serialize($data));
+        
+        if (Cache::has($cacheKey)) {
+            $results = Cache::get($cacheKey);
+            $executionTime = 0;
+        } else {
+            $results = Cache::remember($cacheKey, 60, function () use ($query) {
+                return $query->get();
+            });
+            $endTime = microtime(true);
+            $executionTime = round(($endTime - $startTime) * 1000, 2);
+        }
+
+        return view('records.home', compact('results', 'executionTime'));
+    }
      public function searchById(Request $request)
     {
         $id = $request->input('id');
