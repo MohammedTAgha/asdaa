@@ -69,7 +69,7 @@
                                     <option value="{{ $region->id }}" 
                                         {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
                                         @if ($region->representatives->isNotEmpty())
-                                            {{ $region->name }} - {{ $region->representatives->first()->name }}
+                                            {{ $region->name }} - {{ $region->representatives->first()->name  ??'(بلا)' }} ( {{$region->count ?? '-'}})
                                         @else
                                             {{ $region->name }}
                                         @endif

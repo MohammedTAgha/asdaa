@@ -57,6 +57,10 @@ class Region extends Model
         return $this->citizens->sum('family_members');
     }
 
+    public function getCountAttribute()
+    {
+        return $this->citizens->count('id');
+    }
     public function getTotalProjectsAttribute()
     {
         return $this->citizens->flatMap->distributions->unique()->count();
