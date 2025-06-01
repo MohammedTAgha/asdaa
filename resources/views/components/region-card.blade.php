@@ -10,6 +10,16 @@
         <div class="flex justify-between items-start">
             <div>
                 <h3 class="text-xl font-bold text-gray-900">{{ $region->name }}</h3>
+          
+                @if (!empty($region->representatives()))
+                    @foreach ($region->representatives as $representative)
+                        <p class="text-sm text-gray-600 mt-1 flex items-center">
+                            <i class="fas fa-user-tie ml-2"></i>
+                            {{ $representative->name }}
+                        </p>
+                    @endforeach
+                @endif
+
                 <p class="text-sm text-gray-600 mt-1 flex items-center">
                     <i class="fas fa-map-marker-alt ml-2"></i>
                     {{ $region->position }}

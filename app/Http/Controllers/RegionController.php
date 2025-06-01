@@ -44,7 +44,7 @@ class RegionController extends Controller
             $query->whereIn('id', $regionIds);
         }
         
-        $regions = $query->paginate(10);
+        $regions = $query->paginate(20);
         $bigRegions = BigRegion::all();
         
         return view('regions.index', compact('regions', 'bigRegions'));
