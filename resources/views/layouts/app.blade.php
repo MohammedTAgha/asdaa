@@ -26,7 +26,8 @@
     rel="stylesheet" /> --}}
 
 <!-- Icons -->
-<link rel="stylesheet" href="{{ asset('assets/vendor/fonts/fontawesome.css') }}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
 <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/tabler-icons.css') }}" />
 {{-- <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/flag-icons.css') }}" /> --}}
 
@@ -106,19 +107,6 @@
                 {{-- header --}}
                 @include('layouts.header')
                 <!--begin::Content-->
-                          @if (isset($errors) && is_object($errors) && method_exists($errors, 'any') && $errors->any())
-                <div class="error-messages">
-                    @foreach ($errors->all() as $error)
-                        <p style="color: red;">{{ $error }}</p>
-                    @endforeach
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
                 @if (session('addCitizensReportHtml'))
                     {!! session('addCitizensReportHtml') !!}
                 @endif
@@ -139,10 +127,9 @@
     <!--end::Root-->
 
     <!--end::Main-->
-    {{-- @livewireScripts --}}
     <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
 
-    
+    @livewireScripts
     <!-- / Layout wrapper -->
 
     {{-- snake bar 1 scripts  --}}
