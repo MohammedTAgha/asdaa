@@ -49,7 +49,7 @@
 						<div class="menu-item me-lg-1">
 							<a class="menu-link py-3" href="{{ route('citizens.index') }}">
 								<span class="menu-icon">
-									<i class="bi bi-people fs-2"></i>
+									<i class="fas fa-users fs-2"></i>
 								</span>
 								<span class="menu-title">المواطنين</span>
 							</a>
@@ -60,7 +60,7 @@
 						<div class="menu-item me-lg-1">
 							<a class="menu-link py-3" href="{{ route('categories.index') }}">
 								<span class="menu-icon">
-									<i class="bi bi-grid fs-2"></i>
+									<i class="fas fa-layer-group fs-2"></i>
 								</span>
 								<span class="menu-title">الفئات</span>
 							</a>
@@ -71,7 +71,7 @@
 						<div class="menu-item me-lg-1">
 							<a class="menu-link py-3" href="{{ route('distributions.index') }}">
 								<span class="menu-icon">
-									<i class="bi bi-box-seam fs-2"></i>
+									<i class="fas fa-box fs-2"></i>
 								</span>
 								<span class="menu-title">التوزيعات</span>
 							</a>
@@ -82,7 +82,7 @@
 						<div class="menu-item me-lg-1">
 							<a class="menu-link py-3" href="{{ route('regions.index') }}">
 								<span class="menu-icon">
-									<i class="bi bi-geo-alt fs-2"></i>
+									<i class="fas fa-map-marker-alt fs-2"></i>
 								</span>
 								<span class="menu-title">المناطق</span>
 							</a>
@@ -93,7 +93,7 @@
 						<div class="menu-item me-lg-1">
 							<a class="menu-link py-3" href="{{ route('records.home') }}">
 								<span class="menu-icon">
-									<i class="bi bi-file-text fs-2"></i>
+									<i class="fas fa-file-alt fs-2"></i>
 								</span>
 								<span class="menu-title">السجلات</span>
 							</a>
@@ -113,19 +113,19 @@
 					<div class="d-flex align-items-center ms-1 ms-lg-3">
 						<!--begin::New Citizen-->
 						<a href="{{ route('citizens.create') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="إضافة مواطن جديد">
-							<i class="bi bi-plus-lg fs-2"></i>
+							<i class="fas fa-plus fs-2"></i>
 						</a>
 						<!--end::New Citizen-->
 
 						<!--begin::Search Records-->
 						<a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="modal" data-bs-target="#recordsSearchModal" data-bs-placement="bottom" title="البحث في السجلات">
-							<i class="bi bi-search fs-2"></i>
+							<i class="fas fa-search fs-2"></i>
 						</a>
 						<!--end::Search Records-->
 
 						<!--begin::Export Citizens-->
 						<a href="{{ route('citizens.export') }}" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px me-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="تصدير المواطنين">
-							<i class="bi bi-download fs-2"></i>
+							<i class="fas fa-download fs-2"></i>
 						</a>
 						<!--end::Export Citizens-->
 					</div>
@@ -134,7 +134,7 @@
 					<!--begin::Recent Categories Dropdown-->
 					<div class="d-flex align-items-center ms-1 ms-lg-3">
 						<div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="bottom" title="الفئات الأخيرة">
-							<i class="bi bi-grid fs-2"></i>
+							<i class="fas fa-layer-group fs-2"></i>
 						</div>
 						<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 w-275px" data-kt-menu="true">
 							<div class="menu-item px-3">
@@ -150,7 +150,7 @@
 							<div class="menu-item px-5">
 								<a href="{{ route('categories.show', $category) }}" class="menu-link px-5">
 									<span class="menu-icon">
-										<i class="bi bi-tag fs-2"></i>
+										<i class="fas fa-tag fs-2"></i>
 									</span>
 									<span class="menu-title">{{ $category->name }}</span>
 								</a>
@@ -201,7 +201,7 @@
 							<!--begin::Menu item-->
 							<div class="menu-item px-5">
 								<a href="{{ route('profile.edit') }}" class="menu-link px-5">
-									<i class="bi bi-person fs-2 me-2"></i>
+									<i class="fas fa-user fs-2 me-2"></i>
 									الملف الشخصي
 								</a>
 							</div>
@@ -209,7 +209,7 @@
 							<!--begin::Menu item-->
 							<div class="menu-item px-5">
 								<a class="menu-link px-5" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-									<i class="bi bi-box-arrow-right fs-2 me-2"></i>
+									<i class="fas fa-sign-out-alt fs-2 me-2"></i>
 									تسجيل الخروج
 								</a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
