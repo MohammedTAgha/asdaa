@@ -51,7 +51,7 @@
                     <a class="menu-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-home"></i>
+                                <i class="ti ti-smart-home"></i>
                             </span>
                         </span>
                         <span class="menu-title">الرئيسية</span>
@@ -62,7 +62,7 @@
                         href="{{ route('queries') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-search"></i>
+                                <i class="ti ti-search"></i>
                             </span>
                         </span>
                         <span class="menu-title">الاستعلامات</span>
@@ -74,7 +74,7 @@
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-users"></i>
+                                <i class="ti ti-users"></i>
                             </span>
                         </span>
                         <span class="menu-title">النازحين</span>
@@ -121,7 +121,7 @@
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-								<i class="fas fa-users"></i>
+								<i class="ti ti-users"></i>
                             </span>
                         </span>
                         <span class="menu-title">أفراد العائلات</span>
@@ -175,7 +175,7 @@
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-search"></i>
+                                <i class="ti ti-search"></i>
                             </span>
                         </span>
                         <span class="menu-title">البحث في السجل المدني</span>
@@ -217,7 +217,7 @@
                         href="{{ route('actions') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-file-check"></i>
+                                <i class="ti ti-file-check"></i>
                             </span>
                         </span>
                         <span class="menu-title"> اجراءات</span>
@@ -231,7 +231,7 @@
                     class="menu-item menu-accordion {{ request()->routeIs('distributions.*') ? 'here show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="fas fa-dice-d6"></i>
+                            <i class="icon-xl fas fa-dice-d6"></i>
                         </span>
                         <span class="menu-title">المشاريع</span>
                         <span class="menu-arrow"></span>
@@ -301,7 +301,7 @@
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-layer-group"></i>
+                                <i class="ti ti-category"></i>
                             </span>
                         </span>
                         <span class="menu-title">الفئات</span>
@@ -335,7 +335,7 @@
                         href="{{ route('representatives.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-user-tie"></i>
+                                <i class="ti ti-man"></i>
                             </span>
                         </span>
                         <span class="menu-title">المناديب</span>
@@ -350,7 +350,7 @@
                         href="{{ route('regions.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-map-marker-alt"></i>
+                                <i class="ti ti-map"></i>
                             </span>
                         </span>
                         <span class="menu-title">المناطق</span>
@@ -362,7 +362,7 @@
                         href="{{ route('big-regions.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-map"></i>
+                                <i class="ti ti-map"></i>
                             </span>
                         </span>
                         <span class="menu-title">المناطق الكبرى</span>
@@ -374,7 +374,7 @@
                         href="{{ route('staff.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-users"></i>
+                                <i class="ti ti-users"></i>
                             </span>
                         </span>
                         <span class="menu-title">الاعضاء</span>
@@ -387,7 +387,7 @@
                         href="{{ route('committees.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-flag"></i>
+                                <i class="ti ti-flag-3"></i>
                             </span>
                         </span>
                         <span class="menu-title">اللجان</span>
@@ -400,7 +400,7 @@
                         href="{{ route('users.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-users"></i>
+                                <i class="ti ti-users"></i>
                             </span>
                         </span>
                         <span class="menu-title">المستخدمين</span>
@@ -413,7 +413,7 @@
                         href="{{ route('files.index') }}">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">
-                                <i class="fas fa-folder-plus"></i>
+                                <i class="ti ti-folder-plus"></i>
                             </span>
                         </span>
                         <span class="menu-title">مدير الملفات</span>
