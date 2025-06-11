@@ -218,32 +218,31 @@
                     </div>
                 </th>
                 <th class="py-3 px-2 min-w-90px">
-                    <i class="ti ti-id me-1"></i>الهوية
+                    <i class="fas fa-id-card me-1"></i>الهوية
                 </th>
                 <th class="py-3 px-2 min-w-280px">
-                    <i class="ti ti-user me-1"></i>الاسم
+                    <i class="fas fa-user me-1"></i>الاسم
                 </th>
                 <th class="py-3 px-2 min-w-120px">
-                    <i class="ti ti-phone me-1"></i>رقم الهاتف
+                    <i class="fas fa-phone me-1"></i>رقم الهاتف
                 </th>
                 <th class="py-3 px-2 min-w-100px">
-                    <i class="ti ti-user-circle me-1"></i>هوية الزوجة
+                    <i class="fas fa-user-circle me-1"></i>هوية الزوجة
                 </th>
                 <th class="py-3 px-2 min-w-100px">
-                    <i class="ti ti-user-circle me-1"></i>اسم الزوجة
+                    <i class="fas fa-user-friends me-1"></i>اسم الزوجة
                 </th>
                 <th class="py-3 px-2 min-w-50px">
-                    <i class="ti ti-users me-1"></i>الافراد
+                    <i class="fas fa-users me-1"></i>الافراد
                 </th>
                 <th class="py-3 px-2 min-w-100px">
-                    <i class="ti ti-map-pin me-1"></i>المنطقة
+                    <i class="fas fa-map-marker-alt me-1"></i>المنطقة
                 </th>
-
                 <th class="py-3 px-2 min-w-100px">
-                    <i class="ti ti-notes me-1"></i>ملاحظة
+                    <i class="fas fa-sticky-note me-1"></i>ملاحظة
                 </th>
                 <th class="py-3 px-2 min-w-50px">
-                    <i class="ti ti-settings me-1"></i>الاجراءات
+                    <i class="fas fa-cog me-1"></i>الاجراءات
                 </th>
             </tr>
         </thead>
@@ -333,14 +332,14 @@ id
                         data: 'phone',
                         name: 'phone',
                         render: function(data) {
-                            return data ? `<a href="tel:${data}" class="text-primary"><i class="ti ti-phone me-1"></i>${data}</a>` : '-';
+                            return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
                         }
                     },
                     {
                         data: 'phone2',
                         name: 'phone2',
                         render: function(data) {
-                            return data ? `<a href="tel:${data}" class="text-primary"><i class="ti ti-phone me-1"></i>${data}</a>` : '-';
+                            return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
                         }
                     },
                     {
