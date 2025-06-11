@@ -1,4 +1,4 @@
-@props(['citizens', 'distributionId' => null, 'distributions' => [], 'regions' => [], 'regionId' => null])
+@props(['citizens', 'distributionId' => null, 'distributions' => [], 'regions' => [], 'regionId' => null, 'bigRegionIds' => []])
 <style>
     .dataTables_filter {
         display: none;
@@ -46,7 +46,7 @@
                 <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
                 <button type="submit" id="searchbtn" class="btn btn-primary">
                     بحث
-                    <span class="ti-xs ti ti-user-search ms-1"></span>
+                    <span class="fas fa-search ms-1"></span>
                 </button>
             </div>
         </div>
@@ -56,19 +56,24 @@
             
             <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
                 اضافة جديد
-                <span class="ti-xs ti ti-user-plus ms-1"></span>
+                <span class="fas fa-plus ms-1"></span>
             </a>
             
             <button id="export-btn" class="btn btn-success mx-1">
                 تصدير
-                <span class="ti-xs ti ti-table-export ms-1"></span>
+                <span class="fas fa-file-export ms-1"></span>
+            </button>
+
+            <button id="refresh-table" class="btn btn-info mx-1 text-white">
+                <i class="fas fa-sync-alt me-1"></i>
+                تحديث
             </button>
 
             <!-- Filter Button with Dropdown Menu -->
             <div class="position-relative">
                 <button id="filterButton" type="button" class="btn btn-light-primary">
                     فلترة
-                    <span class="ti-xs ti ti-filter-off ms-1"></span>
+                    <span class="fas fa-filter ms-1"></span>
                 </button>
                 <div id="filterMenu"
                     class="absolute left-0 z-10 hidden w-80 p-2 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -77,12 +82,29 @@
                     </div>
                     <form action="{{ route('citizens.index') }}" method="GET">
                         <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">اختر المنطقة الكبيرة:</label>
+                            <select id="big_regions" name="big_regions[]" style="width: 100%;"
+                                class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
+                                @foreach (\App\Models\BigRegion::with('representative')->get() as $bigRegion)
+                                    <option value="{{ $bigRegion->id }}"
+                                        {{ in_array($bigRegion->id, $bigRegionIds) ? 'selected' : '' }}>
+                                        {{ $bigRegion->name }}
+                                        @if ($bigRegion->representative)
+                                            : {{ $bigRegion->representative->name }}
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
                             <select id="regions" name="regions[]" style="width: 100%;"
                                 class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
                                 @foreach ($regions as $region)
                                     <option value="{{ $region->id }}"
-                                        {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                                        data-big-region-id="{{ $region->big_region_id }}"
+                                        {{ in_array($region->id, request('regions', [])) ? 'selected' : '' }}>
                                         @if ($region->representatives->isNotEmpty())
                                             {{ $region->name }} : {{ $region->representatives->first()->name }}
                                         @else
@@ -206,10 +228,9 @@
 @include('modals.confermation')
 
 <div class="table-responsive">
-    <table id="citizens-table"
-        class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
-        <div id="selection-indicator">
-            تم تحديد <span id="selected-count">0</span> عنصر
+    <table id="citizens-table" class="table table-bordered table-hover table-striped align-middle">
+        <div id="selection-indicator" class="alert alert-info mb-3">
+            تم تحديد <span id="selected-count" class="badge bg-primary">0</span> عنصر
         </div>
         <thead class="table-light">
             <tr>
@@ -218,15 +239,33 @@
                         <input class="form-check-input" type="checkbox" id="select-all" value="1" />
                     </div>
                 </th>
-                <th class="py-3 px-2 min-w-90px">الهوية</th>
-                <th class="py-3 px-2 min-w-280px">الاسم</th>
-                {{-- <th class="py-3 px-2 min-w-90px">تاريخ الميلاد</th>
-                <th class="py-3 px-2 min-w-40px">الجنس</th> --}}
-                <th class="py-3 px-2 min-w-100px">اسم الزوجة</th>
-                <th class="py-3 px-2 min-w-50px"> الافراد</th>
-                <th class="py-3 px-2 min-w-50px">المنطقة</th>
-                <th class="py-3 px-2 min-w-50px">ملاحظة</th>
-                <th class="py-3 px-2 min-w-50px"> - </th>
+                <th class="py-3 px-2 min-w-90px">
+                    <i class="fas fa-id-card me-1"></i>الهوية
+                </th>
+                <th class="py-3 px-2 min-w-280px">
+                    <i class="fas fa-user me-1"></i>الاسم
+                </th>
+                <th class="py-3 px-2 min-w-120px">
+                    <i class="fas fa-phone me-1"></i>رقم الهاتف
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="fas fa-user-circle me-1"></i>هوية الزوجة
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="fas fa-user-friends me-1"></i>اسم الزوجة
+                </th>
+                <th class="py-3 px-2 min-w-50px">
+                    <i class="fas fa-users me-1"></i>الافراد
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="fas fa-map-marker-alt me-1"></i>المنطقة
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="fas fa-sticky-note me-1"></i>ملاحظة
+                </th>
+                <th class="py-3 px-2 min-w-50px">
+                    <i class="fas fa-cog me-1"></i>الاجراءات
+                </th>
             </tr>
         </thead>
         <tbody class="table-border-bottom-0">
@@ -251,11 +290,54 @@ id
                 console.log('false ', regionids)
             @endif
 
-            console.log('new id ', regionids)
+            // Initialize select2 for regions
+            $('#regions').select2({
+                placeholder: "اختر المناديب",
+                allowClear: true,
+                dir: 'rtl'
+            });
+
+            // Initialize select2 for big regions
+            $('#big_regions').select2({
+                placeholder: "اختر المنطقة الكبيرة",
+                allowClear: true,
+                dir: 'rtl'
+            });
+
+            // Update regions when big region changes
+            $('#big_regions').on('change', function() {
+                var selectedBigRegions = $(this).val();
+                if (selectedBigRegions && selectedBigRegions.length > 0) {
+                    // Filter regions based on selected big regions
+                    $('#regions option').each(function() {
+                        var regionBigRegionId = $(this).data('big-region-id');
+                        if (selectedBigRegions.includes(regionBigRegionId)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                            $(this).prop('selected', false);
+                        }
+                    });
+                } else {
+                    // Show all regions if no big region is selected
+                    $('#regions option').show();
+                }
+                $('#regions').trigger('change');
+                table.draw();
+            });
+
+            // Update table when regions change
+            $('#regions').on('change', function() {
+                regionids = $(this).val();
+                table.draw();
+            });
+
+            // Export functionality
             $('#export-btn').on('click', function() {
                 var filters = {
                     search: $('#searchctz').val(),
                     regions: regionids,
+                    big_regions: $('#big_regions').val(),
                     minMembers: $('#minMembers').val(),
                     maxMembers: $('#maxMembers').val(),
                     living_status: $('#living_status').val(),
@@ -267,15 +349,17 @@ id
                 // Redirect to export route with filters
                 window.location.href = "{{ route('citizens.export') }}?" + $.param(filters);
             });
+
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
-                lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
+                lengthMenu: [25, 50, 100,200, 500, 1200, 3000, 6000],
                 ajax: {
                     url: "{{ route('citizens.data') }}",
                     data: function(d) {
                         d.search = $('#searchctz').val();
                         d.regions = regionids;
+                        d.big_regions = $('#big_regions').val();
                         d.minMembers = $('#minMembers').val();
                         d.maxMembers = $('#maxMembers').val();
                         d.living_status = $('#living_status').val();
@@ -298,39 +382,61 @@ id
                         }
                     },
                     {
-                        /*
-                        @fix seach bar 
-                        */
                         data: 'id',
-                        name: 'id'
+                        name: 'id',
+                        render: function(data) {
+                            return `<span class="badge bg-primary">${data}</span>`;
+                        }
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        render: function(data) {
+                            return `<span class="fw-bold">${data}</span>`;
+                        }
                     },
-                    // {
-                    //     data: 'date_of_birth',
-                    //     name: 'DOB'
-                    // },
-                    // {
-                    //     data: 'gender',
-                    //     name: 'gender'
-                    // },
+                    {
+                        data: 'phone',
+                        name: 'phone',
+                        render: function(data) {
+                            return data ? `<span class="fw-bold">${data}</span>` : '-';
+                        }
+                    },
+                    {
+                        data: 'wife_id',
+                        name: 'wife_id',
+                        render: function(data) {
+                            return data || '-';
+                        }
+                    },
                     {
                         data: 'wife_name',
-                        name: 'wife_name'
+                        name: 'wife_name',
+                        render: function(data) {
+                            return data || '-';
+                        }
                     },
                     {
                         data: 'family_members',
-                        name: 'family_members'
+                        name: 'family_members',
+                        render: function(data) {
+                            return `<span class="badge bg-info">${data}</span>`;
+                        }
                     },
                     {
                         data: 'region',
-                        name: 'region'
+                        name: 'region',
+                        render: function(data) {
+                            return `<span class="badge bg-success">${data}</span>`;
+                        }
                     },
+                   
                     {
                         data: 'note',
-                        name: 'note'
+                        name: 'note',
+                        render: function(data) {
+                            return data ? `<span class="text-muted">${data}</span>` : '-';
+                        }
                     },
                     {
                         data: 'action',
@@ -367,12 +473,6 @@ id
                     }
                 }
             });
-            $('#regions').on('change', function() {
-                console.log('change');
-                console.log($('#regions').val());
-                regionids = $('#regions').val()
-            });
-
             $('#filterButton').on('click', function() {
                 console.log('filter');
 
@@ -407,42 +507,80 @@ id
             function updateSelectionIndicator() {
                 const selectedCount = selectedCitizens.length;
                 $('#selected-count').text(selectedCount);
-                $('#total-count').text(totalCitizens);
-
+                
+                // Show/hide selection indicator
                 if (selectedCount > 0) {
-                    $('#selection-indicator').removeClass('d-none');
+                    $('#selection-indicator').removeClass('d-none').addClass('d-flex');
                 } else {
-                    $('#selection-indicator').addClass('d-none');
+                    $('#selection-indicator').addClass('d-none').removeClass('d-flex');
                 }
+
+                // Update action buttons state
+                const hasSelection = selectedCount > 0;
+                $('#copy-selected-ids, #restore-selected, #change-region, #remove-selected').prop('disabled', !hasSelection);
+            }
+
+            // Function to update select-all checkbox state
+            function updateSelectAllCheckbox() {
+                const visibleRows = table.rows({ 'search': 'applied' }).nodes().length;
+                const checkedRows = table.rows({ 'search': 'applied' }).nodes().filter(function() {
+                    return $(this).find('input[type="checkbox"]').prop('checked');
+                }).length;
+                
+                $('#select-all').prop('checked', visibleRows > 0 && visibleRows === checkedRows);
+            }
+
+            // Function to update selectedCitizens array
+            function updateSelectedCitizens(selectAll) {
+                if (selectAll) {
+                    // Add all visible rows to selection
+                    table.rows({ 'search': 'applied' }).data().each(function(row) {
+                        const id = standardizeId(row.id);
+                        if (!selectedCitizens.includes(id)) {
+                            selectedCitizens.push(id);
+                        }
+                    });
+                } else {
+                    // Remove all visible rows from selection
+                    table.rows({ 'search': 'applied' }).data().each(function(row) {
+                        const id = standardizeId(row.id);
+                        selectedCitizens = selectedCitizens.filter(selectedId => selectedId !== id);
+                    });
+                }
+                updateSelectionIndicator();
             }
 
             // Handle select-all checkbox
-            $('#select-all').on('click', function() {
-                var rows = table.rows({
-                    'search': 'applied'
-                }).nodes();
-                $('input[type="checkbox"]', rows).prop('checked', this.checked);
-                updateSelectedCitizens(this.checked);
+            $('#select-all').on('change', function() {
+                const isChecked = $(this).prop('checked');
+                
+                // Update all visible checkboxes
+                table.rows({ 'search': 'applied' }).nodes().each(function(row) {
+                    $(row).find('input[type="checkbox"]').prop('checked', isChecked);
+                });
+                
+                updateSelectedCitizens(isChecked);
                 updateSelectionIndicator();
             });
 
             // Handle individual row checkbox selection
             $('#citizens-table tbody').on('change', 'input[type="checkbox"]', function() {
                 const citizenId = standardizeId($(this).val());
-                if (this.checked) {
+                const isChecked = $(this).prop('checked');
+                
+                if (isChecked) {
                     if (!selectedCitizens.includes(citizenId)) {
                         selectedCitizens.push(citizenId);
                     }
                 } else {
                     selectedCitizens = selectedCitizens.filter(id => id !== citizenId);
                 }
-                console.log(citizenId);
-                console.log(selectedCitizens);
+                
                 updateSelectAllCheckbox();
                 updateSelectionIndicator();
             });
 
-            // When the page changes, keep checkboxes selected for already selected rows
+            // When the page changes, maintain checkbox states
             table.on('draw', function() {
                 table.rows().nodes().each(function(row) {
                     const checkbox = $(row).find('input[type="checkbox"]');
@@ -453,55 +591,17 @@ id
                 updateSelectionIndicator();
             });
 
-            // Function to update select-all checkbox state
-            function updateSelectAllCheckbox() {
-                var allChecked = table.rows({
-                        'search': 'applied'
-                    }).nodes().length ===
-                    table.rows({
-                        'search': 'applied'
-                    }).nodes().filter(function() {
-                        return $(this).find('input[type="checkbox"]').prop('checked');
-                    }).length;
-                $('#select-all').prop('checked', allChecked);
-            }
-
-            // Function to update selectedCitizens array
-            function updateSelectedCitizens(selectAll) {
-                if (selectAll) {
-                    table.rows({
-                        'search': 'applied'
-                    }).data().each(function(row) {
-                        const id = standardizeId(row.id);
-                        if (!selectedCitizens.includes(id)) {
-                            selectedCitizens.push(id);
-                        }
-                    });
-                } else {
-                    table.rows({
-                        'search': 'applied'
-                    }).data().each(function(row) {
-                        const id = standardizeId(row.id);
-                        selectedCitizens = selectedCitizens.filter(selectedId => selectedId !== id);
-                    });
-                }
-                console.log('Selected citizens:', selectedCitizens);
-                updateSelectionIndicator();
-            }
-
-            // New action: Unselect All Selected Citizens
+            // Unselect All action
             $('#unselect-all-action').on('click', function() {
                 selectedCitizens = [];
                 table.rows().nodes().each(function(row) {
                     $(row).find('input[type="checkbox"]').prop('checked', false);
                 });
                 $('#select-all').prop('checked', false);
-                console.log('All citizens unselected');
-                console.log('Selected citizens:', selectedCitizens);
                 updateSelectionIndicator();
             });
 
-            // New action: Select All Citizens (including those not in the current view)
+            // Select All Citizens action
             $('#select-all-citizens-action').on('click', function() {
                 selectedCitizens = [];
                 table.rows().data().each(function(row) {
@@ -512,88 +612,34 @@ id
                     $(row).find('input[type="checkbox"]').prop('checked', true);
                 });
                 $('#select-all').prop('checked', true);
-                console.log('All citizens selected');
-                console.log('Selected citizens:', selectedCitizens);
                 updateSelectionIndicator();
             });
 
-            // Initialize total count when the table is first loaded
-            table.on('init', function() {
-                totalCitizens = table.rows().count();
-                updateSelectionIndicator();
-            });
-            // Function to handle restoration
-            function restoreCitizens(ids) {
-                var url = Array.isArray(ids) ? '{{ route('citizens.restore-multiple') }}' : '/citizens/' + ids +
-                    '/restore';
-                var data = {
-                    _token: '{{ csrf_token() }}',
-                    ids: Array.isArray(ids) ? ids : null
-                };
-                console.log('ids', ids);
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    success: function(response) {
-                        alert(response.message);
-                        table.ajax.reload();
-                    },
-                    error: function(xhr) {
-                        console.log(xhr);
-                        alert('خطا في الاستعادة');
-                    }
-                });
-            }
-
-            // Single citizen restore
-            $('#citizens-table').on('click', '.restore-btn', function() {
-                var citizenId = $(this).data('id');
-                if (confirm('Are you sure you want to restore this citizen?')) {
-                    restoreCitizens(citizenId);
-                }
-            });
-
-            // Multiple citizens restore
-            $('#restore-selected').click(function() {
-                // var selectedIds = $('.citizen-checkbox:checked').map(function() {
-                //     return $(this).val();
-                // }).get();
-
+            // Copy selected IDs
+            $('#copy-selected-ids').on('click', function() {
                 if (selectedCitizens.length === 0) {
-                    alert('Please select citizens to restore');
+                    showSnackbar("لم يتم تحديد أي مواطنين", 'warning');
                     return;
                 }
-
-                if (confirm('Are you sure you want to restore these citizens? ' + selectedCitizens
-                        .length)) {
-                    restoreCitizens(selectedCitizens);
-                }
+                const ids = selectedCitizens.join('\n');
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(ids).then(function() {
+                    // Show success message using existing snackbar
+                    showSnackbar(`تم نسخ ${selectedCitizens.length} بنجاح` , 'success');
+                }).catch(function(err) {
+                    console.error('Failed to copy text: ', err);
+                    showSnackbar("فشل نسخ المعرفات", 'error');
+                });
             });
 
-
-            // When the user selects a distribution from the modal
-            $('#select-distribution-btn').click(function() {
-                var distributionId = $('#selectedDistributionId').val();
-                $('#distributionId').val(distributionId);
-                $('#add-citizens-form').submit();
-            });
-
-            $('codeConfermationModal').click(function() {
-                $('#confirmationModal').modal('hide');
-            })
             // Remove selected citizens
-            $('#remove-selected').click(function() {
+            $('#remove-selected').on('click', function() {
                 if (selectedCitizens.length === 0) {
                     alert("No citizens selected.");
                     return;
                 }
-                $('#confirmationMessage').text("Are you sure you want to remove the selected citizens?");
-                $('#confirmationModal').modal('show');
-
-                $('#confirmAction').off('click').on('click', function() {
-                    // Send AJAX request to remove citizens
+                if (confirm(`Are you sure you want to remove ${selectedCitizens.length} selected citizens?`)) {
                     $.ajax({
                         url: '/citizens/remove',
                         method: 'POST',
@@ -603,101 +649,60 @@ id
                         },
                         success: function(response) {
                             table.ajax.reload();
-
-                            $('#confirmationModal').modal('hide');
-                            console.log(response);
-
-                            console.log(selectedCitizens.length + " citizens deleted");
-
-                            alert('deleted');
+                            selectedCitizens = [];
+                            updateSelectionIndicator();
+                            alert('Selected citizens have been removed.');
                         },
-                        erorr: function(xhr, status, error) {
-                            console.log(status);
+                        error: function(xhr) {
                             console.error(xhr.responseText);
-                            alert(xhr.responseText);
+                            alert('Error removing citizens.');
                         }
                     });
-                });
-            });
-
-            $('#copy-selected-ids').click(function() {
-                if (selectedCitizens.length === 0) {
-                    alert("No citizens selected.");
-                    return;
                 }
-                const ids = selectedCitizens.join('\n'); // Join IDs with newline for text file
-                console.log(ids);
-
-                // Create a Blob with the IDs
-                const blob = new Blob([ids], {
-                    type: 'text/plain'
-                });
-                const url = URL.createObjectURL(blob);
-
-                // Create a temporary link element
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'تحديد ارقا هوايا.txt'; // Set the file name
-
-                // Append to the body, click and remove
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-
-                // Release the object URL
-                URL.revokeObjectURL(url);
-
-                alert("تم التحميل كملف نص");
             });
 
             // Change region for selected citizens
-            $('#change-region').click(function() {
+            $('#change-region').on('click', function() {
                 if (selectedCitizens.length === 0) {
                     alert("No citizens selected.");
                     return;
                 }
-                $('#confirmationMessage').text("Select a new region for the selected citizens.");
-                $('#confirmationModal').modal('show');
+                // Show region selection modal or dropdown
+                // Implementation depends on your UI requirements
+            });
 
-                $('#confirmAction').off('click').on('click', function() {
-                    // Handle region change
-                    const newRegionId = $('#regionSelect').val();
+            // Restore selected citizens
+            $('#restore-selected').on('click', function() {
+                if (selectedCitizens.length === 0) {
+                    alert("No citizens selected.");
+                    return;
+                }
+                if (confirm(`Are you sure you want to restore ${selectedCitizens.length} selected citizens?`)) {
                     $.ajax({
-                        url: '/citizens/change-region',
+                        url: '{{ route('citizens.restore-multiple') }}',
                         method: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
-                            citizenIds: selectedCitizens,
-                            regionId: newRegionId
+                            ids: selectedCitizens
                         },
                         success: function(response) {
                             table.ajax.reload();
                             selectedCitizens = [];
-                            $('#confirmationModal').modal('hide');
-                            alert(response.message);
+                            updateSelectionIndicator();
+                            alert('Selected citizens have been restored.');
+                        },
+                        error: function(xhr) {
+                            console.error(xhr.responseText);
+                            alert('Error restoring citizens.');
                         }
                     });
-                });
+                }
             });
 
-            $('#add-citizens-btn').click(function(e) {
-                e.preventDefault();
-
-                var selectedCitizens = $('input[name="citizens[]"]:checked').map(function() {
-                    return $(this).val();
-                }).get();
-                console.log(selectedCitizens)
-                if (selectedCitizens.length === 0) {
-                    alert('Please select at least one citizen.');
-                    return;
-                }
-                $('input[name="citizens"]').val(selectedCitizens.join(','));
-                // Check if the distributionId is provided
-                if ($('#distributionId').val()) {
-                    $('#add-citizens-form').submit();
-                } else {
-                    $('#distributionModal').modal('show');
-                }
+            // Initialize total count when the table is first loaded
+            table.on('init', function() {
+                totalCitizens = table.rows().count();
+                updateSelectionIndicator();
             });
         });
     </script>

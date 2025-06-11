@@ -64,16 +64,18 @@ class CitizenController extends Controller
 
     public function getData(Request $request)
     {
-
-
         $query = Citizen::with('region')
             ->filter($request->all())
             ->forUserRegions()
-            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
+            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'wife_id', 'phone', 'note']);
     
+        // Apply big region filter if provided
+        if ($request->filled('big_regions')) {
+            $query->whereHas('region', function($q) use ($request) {
+                $q->whereIn('big_region_id', $request->big_regions);
+            });
+        }
 
-        // Apply other filters
-        // $query-->scopeForUserRegions();
         Log::info('ctzin');
 
         return DataTables::of($query)
@@ -82,7 +84,6 @@ class CitizenController extends Controller
             })
             ->addColumn('name', function ($citizen) {
                 return '<a href="'.route('citizens.show', $citizen->id).'">'.$citizen->firstname . ' ' . $citizen->secondname . ' ' . $citizen->thirdname . ' ' . $citizen->lastname. '</a>';
-                
             })
             ->addColumn('action', function ($citizen) {
                 $actions = '';
@@ -90,7 +91,6 @@ class CitizenController extends Controller
                     $actions .= '<button class="btn btn-sm btn-success restore-btn" data-id="' . $citizen->id . '">Restore</button>';
                 } else {
                     $actions .= '<a href="' . route('citizens.edit', $citizen->id) . '" class="btn btn-sm btn-primary">Edit</a>';
-                    // ... other actions ...
                 }
                 return $actions;
             })
