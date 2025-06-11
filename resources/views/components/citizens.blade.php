@@ -335,13 +335,7 @@ id
                             return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
                         }
                     },
-                    {
-                        data: 'phone2',
-                        name: 'phone2',
-                        render: function(data) {
-                            return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
-                        }
-                    },
+
                     {
                         data: 'wife_name',
                         name: 'wife_name',
@@ -363,19 +357,7 @@ id
                             return `<span class="badge bg-secondary">${data}</span>`;
                         }
                     },
-                    {
-                        data: 'living_status',
-                        name: 'living_status',
-                        render: function(data) {
-                            const statusMap = {
-                                1: { text: 'سيئ', class: 'bg-danger' },
-                                2: { text: 'جيد', class: 'bg-success' },
-                                3: { text: 'ممتاز', class: 'bg-primary' }
-                            };
-                            const status = statusMap[data] || { text: 'غير محدد', class: 'bg-secondary' };
-                            return `<span class="badge ${status.class}">${status.text}</span>`;
-                        }
-                    },
+                   
                     {
                         data: 'note',
                         name: 'note',
