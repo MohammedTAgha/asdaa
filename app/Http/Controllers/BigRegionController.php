@@ -7,6 +7,7 @@ use App\Models\Region;
 use App\Models\RegionRepresentative;
 use App\Services\BigRegionService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BigRegionController extends Controller
 {
@@ -162,5 +163,11 @@ class BigRegionController extends Controller
         
         return redirect()->route('big-regions.index')
             ->with('success', 'تم حذف المنطقة الكبيرة بنجاح');
+    }
+
+    public function exportCitizens($id)
+    {
+        $export = $this->bigRegionService->exportCitizens($id);
+        return Excel::download($export, 'citizens-' . $id . '.xlsx');
     }
 }

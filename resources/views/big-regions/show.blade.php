@@ -10,11 +10,18 @@
             <i class="fas fa-arrow-right ml-2"></i>
             رجوع للمناطق الكبيرة
         </a>
-        <a href="{{ route('big-regions.edit', $bigRegion) }}" 
-           class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 flex items-center">
-            <i class="fas fa-edit ml-2"></i>
-            تعديل المنطقة
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('big-regions.edit', $bigRegion) }}" 
+               class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 flex items-center">
+                <i class="fas fa-edit ml-2"></i>
+                تعديل المنطقة
+            </a>
+            <a href="{{ route('big-regions.export-citizens', $bigRegion) }}" 
+               class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 flex items-center">
+                <i class="fas fa-file-export ml-2"></i>
+                تصدير المواطنين
+            </a>
+        </div>
     </div>
 
     {{-- Big Region Card (Detailed Mode) --}}

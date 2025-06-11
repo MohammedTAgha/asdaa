@@ -6,11 +6,20 @@
     {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold">المناطق الكبيرة</h1>
-        <a href="{{ route('big-regions.create') }}" 
-           class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 flex items-center">
-            <i class="fas fa-plus ml-2"></i>
-            إضافة منطقة كبيرة
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('big-regions.create') }}" 
+               class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 flex items-center">
+                <i class="fas fa-plus ml-2"></i>
+                إضافة منطقة كبيرة
+            </a>
+            @if($bigRegions->isNotEmpty())
+            <a href="{{ route('big-regions.export-citizens', $bigRegions->first()->id) }}" 
+               class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 flex items-center">
+                <i class="fas fa-file-export ml-2"></i>
+                تصدير المواطنين
+            </a>
+            @endif
+        </div>
     </div>
 
     {{-- Search and Filter --}}

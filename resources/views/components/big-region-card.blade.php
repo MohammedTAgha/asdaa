@@ -36,6 +36,11 @@
                    title="تعديل">
                     <i class="fas fa-edit"></i>
                 </a>
+                <a href="{{ route('big-regions.export-citizens', $bigRegion) }}" 
+                   class="text-green-600 hover:text-green-800 p-1"
+                   title="تصدير المواطنين">
+                    <i class="fas fa-file-export"></i>
+                </a>
                 @if($bigRegion->regions->isEmpty())
                     <form action="{{ route('big-regions.destroy', $bigRegion) }}" 
                           method="POST" 
