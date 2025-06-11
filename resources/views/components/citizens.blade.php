@@ -46,7 +46,7 @@
                 <input type="text" id="searchctz" name="search" class="form-control" placeholder="بحث عام...">
                 <button type="submit" id="searchbtn" class="btn btn-primary">
                     بحث
-                    <span class="ti-xs ti ti-user-search ms-1"></span>
+                    <span class="fas fa-search ms-1"></span>
                 </button>
             </div>
         </div>
@@ -56,12 +56,12 @@
             
             <a href="{{ route('citizens.create') }}" class="btn btn-primary mx-1 text-white">
                 اضافة جديد
-                <span class="ti-xs ti ti-user-plus ms-1"></span>
+                <span class="fas fa-plus ms-1"></span>
             </a>
             
             <button id="export-btn" class="btn btn-success mx-1">
                 تصدير
-                <span class="ti-xs ti ti-table-export ms-1"></span>
+                <span class="fas fa-file-export ms-1"></span>
             </button>
 
             <button id="refresh-table" class="btn btn-info mx-1 text-white">
@@ -73,7 +73,7 @@
             <div class="position-relative">
                 <button id="filterButton" type="button" class="btn btn-light-primary">
                     فلترة
-                    <span class="ti-xs ti ti-filter-off ms-1"></span>
+                    <span class="fas fa-filter ms-1"></span>
                 </button>
                 <div id="filterMenu"
                     class="absolute left-0 z-10 hidden w-80 p-2 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -353,7 +353,7 @@ id
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
-                lengthMenu: [25, 50, 100, 500, 1200, 3000, 6000, 1000, 12000],
+                lengthMenu: [25, 50, 100,200, 500, 1200, 3000, 6000],
                 ajax: {
                     url: "{{ route('citizens.data') }}",
                     data: function(d) {
@@ -427,7 +427,7 @@ id
                         data: 'region',
                         name: 'region',
                         render: function(data) {
-                            return `<span class="badge bg-secondary">${data}</span>`;
+                            return `<span class="badge bg-success">${data}</span>`;
                         }
                     },
                    
