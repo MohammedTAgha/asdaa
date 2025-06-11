@@ -184,4 +184,16 @@ class BigRegionService
             'address' => $bigRegion->representative->address
         ];
     }
+
+    public function exportCitizens($bigRegionId)
+    {
+        $bigRegion = BigRegion::with([
+            'regions.citizens.distributions',
+            'regions.citizens.region.representatives'
+        ])->findOrFail($bigRegionId);
+
+        $citizens = $bigRegion->citizens;
+        
+        return new \App\Exports\CitizensExport($citizens);
+    }
 }
