@@ -88,10 +88,18 @@ class BigRegionController extends Controller
         $bigRegion->load([
             'representative',
             'regions.representatives',
-            'regions.citizens.distributions'
+            'regions.citizens' => function($query) {
+                $query->withCount('distributions');
+            }
         ]);
 
-        return view('big-regions.show', compact('bigRegion'));
+        // Get all distributions for the citizens component
+        $distributions = \App\Models\Distribution::all();
+        
+        // Get all regions for the citizens component
+        $regions = Region::with('representatives')->get();
+
+        return view('big-regions.show', compact('bigRegion', 'distributions', 'regions'));
     }
 
     public function edit(BigRegion $bigRegion)

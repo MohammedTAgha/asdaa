@@ -38,6 +38,16 @@
         </div>
     </div>
     @endif
+
+    {{-- Citizens Table --}}
+    <div class="mt-8">
+        <h2 class="text-2xl font-bold mb-4">المواطنين</h2>
+        <x-citizens 
+            :citizens="$bigRegion->regions->flatMap->citizens" 
+            :distributions="$distributions" 
+            :regions="$regions" 
+        />
+    </div>
 </div>
 @endsection
 
