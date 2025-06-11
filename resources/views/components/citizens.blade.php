@@ -82,6 +82,22 @@
                     </div>
                     <form action="{{ route('citizens.index') }}" method="GET">
                         <div class="mb-4">
+                            <label class="block mb-1 font-medium text-gray-700">اختر المنطقة الكبيرة:</label>
+                            <select id="big_regions" name="big_regions[]" style="width: 100%;"
+                                class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
+                                @foreach (\App\Models\BigRegion::with('representative')->get() as $bigRegion)
+                                    <option value="{{ $bigRegion->id }}"
+                                        {{ in_array($bigRegion->id, request('big_regions', [])) ? 'selected' : '' }}>
+                                        {{ $bigRegion->name }}
+                                        @if ($bigRegion->representative)
+                                            : {{ $bigRegion->representative->name }}
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label class="block mb-1 font-medium text-gray-700">اختر المناديب:</label>
                             <select id="regions" name="regions[]" style="width: 100%;"
                                 class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
@@ -298,6 +314,7 @@ id
                     data: function(d) {
                         d.search = $('#searchctz').val();
                         d.regions = regionids;
+                        d.big_regions = $('#big_regions').val();
                         d.minMembers = $('#minMembers').val();
                         d.maxMembers = $('#maxMembers').val();
                         d.living_status = $('#living_status').val();
@@ -649,7 +666,32 @@ id
                 updateSelectionIndicator();
             });
 
-            // ... rest of your existing code ...
+            // Initialize select2 for big regions
+            $('#big_regions').select2({
+                placeholder: "اختر المنطقة الكبيرة",
+                allowClear: true
+            });
+
+            // Update regions when big region changes
+            $('#big_regions').on('change', function() {
+                var selectedBigRegions = $(this).val();
+                if (selectedBigRegions && selectedBigRegions.length > 0) {
+                    // Filter regions based on selected big regions
+                    $('#regions option').each(function() {
+                        var regionBigRegionId = $(this).data('big-region-id');
+                        if (selectedBigRegions.includes(regionBigRegionId)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                            $(this).prop('selected', false);
+                        }
+                    });
+                } else {
+                    // Show all regions if no big region is selected
+                    $('#regions option').show();
+                }
+                $('#regions').trigger('change');
+            });
         });
     </script>
     {{-- <script>
