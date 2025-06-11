@@ -1,4 +1,4 @@
-@props(['citizens', 'distributionId' => null, 'distributions' => [], 'regions' => [], 'regionId' => null])
+@props(['citizens', 'distributionId' => null, 'distributions' => [], 'regions' => [], 'regionId' => null, 'bigRegionIds' => []])
 <style>
     .dataTables_filter {
         display: none;
@@ -87,7 +87,7 @@
                                 class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
                                 @foreach (\App\Models\BigRegion::with('representative')->get() as $bigRegion)
                                     <option value="{{ $bigRegion->id }}"
-                                        {{ in_array($bigRegion->id, request('big_regions', [])) ? 'selected' : '' }}>
+                                        {{ in_array($bigRegion->id, $bigRegionIds) ? 'selected' : '' }}>
                                         {{ $bigRegion->name }}
                                         @if ($bigRegion->representative)
                                             : {{ $bigRegion->representative->name }}
@@ -103,7 +103,8 @@
                                 class="select2-multiple p-2 border border-gray-300 rounded-lg" multiple>
                                 @foreach ($regions as $region)
                                     <option value="{{ $region->id }}"
-                                        {{ in_array($region, request('regions', [])) ? 'selected' : '' }}>
+                                        data-big-region-id="{{ $region->big_region_id }}"
+                                        {{ in_array($region->id, request('regions', [])) ? 'selected' : '' }}>
                                         @if ($region->representatives->isNotEmpty())
                                             {{ $region->name }} : {{ $region->representatives->first()->name }}
                                         @else
@@ -289,11 +290,54 @@ id
                 console.log('false ', regionids)
             @endif
 
-            console.log('new id ', regionids)
+            // Initialize select2 for regions
+            $('#regions').select2({
+                placeholder: "اختر المناديب",
+                allowClear: true,
+                dir: 'rtl'
+            });
+
+            // Initialize select2 for big regions
+            $('#big_regions').select2({
+                placeholder: "اختر المنطقة الكبيرة",
+                allowClear: true,
+                dir: 'rtl'
+            });
+
+            // Update regions when big region changes
+            $('#big_regions').on('change', function() {
+                var selectedBigRegions = $(this).val();
+                if (selectedBigRegions && selectedBigRegions.length > 0) {
+                    // Filter regions based on selected big regions
+                    $('#regions option').each(function() {
+                        var regionBigRegionId = $(this).data('big-region-id');
+                        if (selectedBigRegions.includes(regionBigRegionId)) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                            $(this).prop('selected', false);
+                        }
+                    });
+                } else {
+                    // Show all regions if no big region is selected
+                    $('#regions option').show();
+                }
+                $('#regions').trigger('change');
+                table.draw();
+            });
+
+            // Update table when regions change
+            $('#regions').on('change', function() {
+                regionids = $(this).val();
+                table.draw();
+            });
+
+            // Export functionality
             $('#export-btn').on('click', function() {
                 var filters = {
                     search: $('#searchctz').val(),
                     regions: regionids,
+                    big_regions: $('#big_regions').val(),
                     minMembers: $('#minMembers').val(),
                     maxMembers: $('#maxMembers').val(),
                     living_status: $('#living_status').val(),
@@ -305,6 +349,7 @@ id
                 // Redirect to export route with filters
                 window.location.href = "{{ route('citizens.export') }}?" + $.param(filters);
             });
+
             var table = $('#citizens-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -354,7 +399,7 @@ id
                         data: 'phone',
                         name: 'phone',
                         render: function(data) {
-                            return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
+                            return data ? `<span class="fw-bold">${data}</span>` : '-';
                         }
                     },
                     {
@@ -428,12 +473,6 @@ id
                     }
                 }
             });
-            $('#regions').on('change', function() {
-                console.log('change');
-                console.log($('#regions').val());
-                regionids = $('#regions').val()
-            });
-
             $('#filterButton').on('click', function() {
                 console.log('filter');
 
@@ -664,33 +703,6 @@ id
             table.on('init', function() {
                 totalCitizens = table.rows().count();
                 updateSelectionIndicator();
-            });
-
-            // Initialize select2 for big regions
-            $('#big_regions').select2({
-                placeholder: "اختر المنطقة الكبيرة",
-                allowClear: true
-            });
-
-            // Update regions when big region changes
-            $('#big_regions').on('change', function() {
-                var selectedBigRegions = $(this).val();
-                if (selectedBigRegions && selectedBigRegions.length > 0) {
-                    // Filter regions based on selected big regions
-                    $('#regions option').each(function() {
-                        var regionBigRegionId = $(this).data('big-region-id');
-                        if (selectedBigRegions.includes(regionBigRegionId)) {
-                            $(this).show();
-                        } else {
-                            $(this).hide();
-                            $(this).prop('selected', false);
-                        }
-                    });
-                } else {
-                    // Show all regions if no big region is selected
-                    $('#regions option').show();
-                }
-                $('#regions').trigger('change');
             });
         });
     </script>

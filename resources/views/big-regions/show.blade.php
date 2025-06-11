@@ -47,7 +47,7 @@
             :citizens="$bigRegion->regions->flatMap->citizens" 
             :distributions="$distributions" 
             :regions="$regions"
-            :regionId="$bigRegion->id"
+            :bigRegionIds="[$bigRegion->id]"
         />
     </div>
 </div>
