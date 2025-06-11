@@ -64,6 +64,11 @@
                 <span class="ti-xs ti ti-table-export ms-1"></span>
             </button>
 
+            <button id="refresh-table" class="btn btn-info mx-1 text-white">
+                <i class="fas fa-sync-alt me-1"></i>
+                تحديث
+            </button>
+
             <!-- Filter Button with Dropdown Menu -->
             <div class="position-relative">
                 <button id="filterButton" type="button" class="btn btn-light-primary">
@@ -737,6 +742,18 @@ id
                 } else {
                     $('#distributionModal').modal('show');
                 }
+            });
+
+            // Add refresh button click handler
+            $('#refresh-table').on('click', function() {
+                // Add spinning animation to the icon
+                $(this).find('i').addClass('fa-spin');
+                
+                // Reload the table
+                table.ajax.reload(function() {
+                    // Remove spinning animation after reload
+                    $('#refresh-table').find('i').removeClass('fa-spin');
+                });
             });
         });
     </script>
