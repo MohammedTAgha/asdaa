@@ -115,7 +115,7 @@
                     @yield('content')
                     <!-- Snackbar container -->
                     <x-alert />
-                    {{-- <div id="snackbar" class="snackbar"></div> --}}
+                    <div id="snackbar" class="snackbar"></div>
                 </div>
                 <!--end::Content-->
 

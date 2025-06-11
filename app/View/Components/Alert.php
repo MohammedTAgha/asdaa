@@ -8,20 +8,25 @@ class Alert extends Component
 {
     public $type;
     public $message;
-    public function __construct()
+    public function __construct($type = null, $message = null)
     {
-        if (session('success')) {
-            $this->type = 'success';
-            $this->message = session('success');
-        } elseif (session('error')) {
-            $this->type = 'danger';
-            $this->message = session('error');
-        } elseif (session('warning')) {
-            $this->type = 'warning';
-            $this->message = session('warning');
+        if ($type && $message) {
+            $this->type = $type;
+            $this->message = $message;
         } else {
-            $this->type = 'info';
-            $this->message = session('info') ?? '';
+            if (session('success')) {
+                $this->type = 'success';
+                $this->message = session('success');
+            } elseif (session('error')) {
+                $this->type = 'danger';
+                $this->message = session('error');
+            } elseif (session('warning')) {
+                $this->type = 'warning';
+                $this->message = session('warning');
+            } else {
+                $this->type = 'info';
+                $this->message = session('info') ?? '';
+            }
         }
     }
 
