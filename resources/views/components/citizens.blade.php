@@ -335,7 +335,13 @@ id
                             return data ? `<a href="tel:${data}" class="text-primary"><i class="fas fa-phone me-1"></i>${data}</a>` : '-';
                         }
                     },
-
+                    {
+                        data: 'wife_id',
+                        name: 'wife_id',
+                        render: function(data) {
+                            return data || '-';
+                        }
+                    },
                     {
                         data: 'wife_name',
                         name: 'wife_name',
