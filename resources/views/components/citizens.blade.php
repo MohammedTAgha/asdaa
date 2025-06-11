@@ -206,10 +206,9 @@
 @include('modals.confermation')
 
 <div class="table-responsive">
-    <table id="citizens-table"
-        class="table table-bordered table-hover table-condensed table-row-bordered gy-2 table-striped">
-        <div id="selection-indicator">
-            تم تحديد <span id="selected-count">0</span> عنصر
+    <table id="citizens-table" class="table table-bordered table-hover table-striped align-middle">
+        <div id="selection-indicator" class="alert alert-info mb-3">
+            تم تحديد <span id="selected-count" class="badge bg-primary">0</span> عنصر
         </div>
         <thead class="table-light">
             <tr>
@@ -218,15 +217,34 @@
                         <input class="form-check-input" type="checkbox" id="select-all" value="1" />
                     </div>
                 </th>
-                <th class="py-3 px-2 min-w-90px">الهوية</th>
-                <th class="py-3 px-2 min-w-280px">الاسم</th>
-                {{-- <th class="py-3 px-2 min-w-90px">تاريخ الميلاد</th>
-                <th class="py-3 px-2 min-w-40px">الجنس</th> --}}
-                <th class="py-3 px-2 min-w-100px">اسم الزوجة</th>
-                <th class="py-3 px-2 min-w-50px"> الافراد</th>
-                <th class="py-3 px-2 min-w-50px">المنطقة</th>
-                <th class="py-3 px-2 min-w-50px">ملاحظة</th>
-                <th class="py-3 px-2 min-w-50px"> - </th>
+                <th class="py-3 px-2 min-w-90px">
+                    <i class="ti ti-id me-1"></i>الهوية
+                </th>
+                <th class="py-3 px-2 min-w-280px">
+                    <i class="ti ti-user me-1"></i>الاسم
+                </th>
+                <th class="py-3 px-2 min-w-120px">
+                    <i class="ti ti-phone me-1"></i>رقم الهاتف
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="ti ti-user-circle me-1"></i>هوية الزوجة
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="ti ti-user-circle me-1"></i>اسم الزوجة
+                </th>
+                <th class="py-3 px-2 min-w-50px">
+                    <i class="ti ti-users me-1"></i>الافراد
+                </th>
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="ti ti-map-pin me-1"></i>المنطقة
+                </th>
+
+                <th class="py-3 px-2 min-w-100px">
+                    <i class="ti ti-notes me-1"></i>ملاحظة
+                </th>
+                <th class="py-3 px-2 min-w-50px">
+                    <i class="ti ti-settings me-1"></i>الاجراءات
+                </th>
             </tr>
         </thead>
         <tbody class="table-border-bottom-0">
@@ -298,39 +316,73 @@ id
                         }
                     },
                     {
-                        /*
-                        @fix seach bar 
-                        */
                         data: 'id',
-                        name: 'id'
+                        name: 'id',
+                        render: function(data) {
+                            return `<span class="badge bg-primary">${data}</span>`;
+                        }
                     },
                     {
                         data: 'name',
-                        name: 'name'
+                        name: 'name',
+                        render: function(data) {
+                            return `<span class="fw-bold">${data}</span>`;
+                        }
                     },
-                    // {
-                    //     data: 'date_of_birth',
-                    //     name: 'DOB'
-                    // },
-                    // {
-                    //     data: 'gender',
-                    //     name: 'gender'
-                    // },
+                    {
+                        data: 'phone',
+                        name: 'phone',
+                        render: function(data) {
+                            return data ? `<a href="tel:${data}" class="text-primary"><i class="ti ti-phone me-1"></i>${data}</a>` : '-';
+                        }
+                    },
+                    {
+                        data: 'phone2',
+                        name: 'phone2',
+                        render: function(data) {
+                            return data ? `<a href="tel:${data}" class="text-primary"><i class="ti ti-phone me-1"></i>${data}</a>` : '-';
+                        }
+                    },
                     {
                         data: 'wife_name',
-                        name: 'wife_name'
+                        name: 'wife_name',
+                        render: function(data) {
+                            return data || '-';
+                        }
                     },
                     {
                         data: 'family_members',
-                        name: 'family_members'
+                        name: 'family_members',
+                        render: function(data) {
+                            return `<span class="badge bg-info">${data}</span>`;
+                        }
                     },
                     {
                         data: 'region',
-                        name: 'region'
+                        name: 'region',
+                        render: function(data) {
+                            return `<span class="badge bg-secondary">${data}</span>`;
+                        }
+                    },
+                    {
+                        data: 'living_status',
+                        name: 'living_status',
+                        render: function(data) {
+                            const statusMap = {
+                                1: { text: 'سيئ', class: 'bg-danger' },
+                                2: { text: 'جيد', class: 'bg-success' },
+                                3: { text: 'ممتاز', class: 'bg-primary' }
+                            };
+                            const status = statusMap[data] || { text: 'غير محدد', class: 'bg-secondary' };
+                            return `<span class="badge ${status.class}">${status.text}</span>`;
+                        }
                     },
                     {
                         data: 'note',
-                        name: 'note'
+                        name: 'note',
+                        render: function(data) {
+                            return data ? `<span class="text-muted">${data}</span>` : '-';
+                        }
                     },
                     {
                         data: 'action',

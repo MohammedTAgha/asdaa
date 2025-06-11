@@ -69,7 +69,7 @@ class CitizenController extends Controller
         $query = Citizen::with('region')
             ->filter($request->all())
             ->forUserRegions()
-            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'note']);
+            ->select(['id', 'firstname', 'secondname', 'thirdname', 'lastname', 'wife_name', 'family_members', 'region_id', 'wife_id', 'phone', 'note']);
     
 
         // Apply other filters
