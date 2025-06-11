@@ -8,7 +8,7 @@ class Alert extends Component
 {
     public $type;
     public $message;
-    public function __construct($type = null, $message = null)
+        public function __construct($type = null, $message = null)
     {
         if ($type && $message) {
             $this->type = $type;

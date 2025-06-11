@@ -626,7 +626,7 @@ id
                 // Copy to clipboard
                 navigator.clipboard.writeText(ids).then(function() {
                     // Show success message using existing snackbar
-                    showSnackbar("تم نسخ المعرفات بنجاح", 'success');
+                    showSnackbar(`تم نسخ ${selectedCitizens.length} بنجاح` , 'success');
                 }).catch(function(err) {
                     console.error('Failed to copy text: ', err);
                     showSnackbar("فشل نسخ المعرفات", 'error');
