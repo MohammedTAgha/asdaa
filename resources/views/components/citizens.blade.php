@@ -618,19 +618,19 @@ id
             // Copy selected IDs
             $('#copy-selected-ids').on('click', function() {
                 if (selectedCitizens.length === 0) {
-                    alert("No citizens selected.");
+                    showSnackbar("لم يتم تحديد أي مواطنين", 'warning');
                     return;
                 }
                 const ids = selectedCitizens.join('\n');
-                const blob = new Blob([ids], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'selected_citizens.txt';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
+                
+                // Copy to clipboard
+                navigator.clipboard.writeText(ids).then(function() {
+                    // Show success message using existing snackbar
+                    showSnackbar("تم نسخ المعرفات بنجاح", 'success');
+                }).catch(function(err) {
+                    console.error('Failed to copy text: ', err);
+                    showSnackbar("فشل نسخ المعرفات", 'error');
+                });
             });
 
             // Remove selected citizens
