@@ -183,139 +183,92 @@
             </div>
         </div>
 
-
-
-            <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Basic Information Card -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">المعلومات الأساسية</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">رقم الهوية</label>
-                    <p class="mt-1 text-gray-900 font-semibold">{{ $citizen->id }}</p>
+  <!-- show.blade.php -->
+    @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-2'])
+            {{-- @slot('side')
+                <div class="mt-6 flex items-center space-x-2">
+                    <button id="validationStatusBtn" onclick="checkValidation()" class="px-4 py-2 bg-yellow-500 text-white rounded-md animate-pulse">
+                        <i class="fas fa-exclamation-triangle"></i> فحص الحالة
+                    </button>
+                    <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
+                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعديل</a>
                 </div>
+            @endslot --}}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">الاسم الكامل</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}</p>
+                    <label class="block text-sm font-medium text-gray-700"><strong>الهوية</strong></label>
+                    <p class="mt-1 text-gray-900" id="citizenId">{{ $citizen->id }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">تاريخ الميلاد</label>
+                    <label class="block text-sm font-medium text-gray-700">الاسم</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }} </p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">الجنس</label>
+                    <label class="block text-sm font-medium text-gray-700">الجنس</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->gender == '0' ? 'ذكر' : 'انثى' }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">المنطقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
+                    <label class="block text-sm font-medium text-gray-700">اسم الزوجة</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">المندوب</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Family Information Card -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات العائلة</h2>
-            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">اسم الزوجة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name ?? 'غير متوفر' }}</p>
+                    <label class="block text-sm font-medium text-gray-700">رقم الزوجة</label>
+                    <p class="mt-1 text-gray-900" id="wifeId">{{ $citizen->wife_id }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">رقم الزوجة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->wife_id ?? 'غير متوفر' }}</p>
+                    <label class="block text-sm font-medium text-gray-700">المنطقة</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }} و مندوبه {{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">الحالة الاجتماعية</label>
+                    <label class="block text-sm font-medium text-gray-700">ارمل</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'نعم' : 'a لا ' }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">الحالة الاجتماعبة</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">الحالة المعيشية</label>
+                    <label class="block text-sm font-medium text-gray-700">الحالة المعيشية</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
                 </div>
+                
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">عدد كبار السن</label>
+                    <label class="block text-sm font-medium text-gray-700">العمل</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->job }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">العنوان الاصلي</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->original_address }}</p>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">عدد كبار السن</label>
                     <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">أرمل</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'نعم' : 'لا' }}</p>
+                
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700">ملاحطة</label>
+                    <p class="mt-1 text-gray-900">{{ $citizen->note }}</p>
                 </div>
             </div>
-        </div>
+          
+    @endcomponent
 
-        <!-- Contact & Location Card -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات الاتصال والموقع</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">رقم الهاتف</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->phone ?? 'غير متوفر' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">رقم هاتف إضافي</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->phone2 ?? 'غير متوفر' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">العنوان الأصلي</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->original_address ?? 'غير متوفر' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">المحافظة الأصلية</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->originalGovernorate->name ?? 'غير متوفر' }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Health & Special Conditions Card -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">الحالة الصحية والظروف الخاصة</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">إعاقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->obstruction ? 'نعم' : 'لا' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">وصف الإعاقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->obstruction_description ?? 'غير متوفر' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">مرض</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->disease ? 'نعم' : 'لا' }}</p>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-600">وصف المرض</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->disease_description ?? 'غير متوفر' }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Additional Information Card -->
-    <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
-        <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات إضافية</h2>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-600">المهنة</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->job ?? 'غير متوفر' }}</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-600">الحالة</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->is_archived ? 'مؤرشف' : 'نشط' }}</p>
-            </div>
-            <div class="col-span-2">
-                <label class="block text-sm font-medium text-gray-600">ملاحظات</label>
-                <p class="mt-1 text-gray-900">{{ $citizen->note ?? 'لا توجد ملاحظات' }}</p>
-            </div>
-        </div>
-    </div>
-
-    
     {{-- <div class="bg-white p-4 rounded-lg shadow mt-4">
         <div class="flex justify-between items-start">
             <div>
@@ -1132,99 +1085,31 @@ document.getElementById('addCategoryForm').addEventListener('submit', function(e
     e.preventDefault();
     
     const formData = new FormData(this);
-    const isEditMode = formData.get('edit_mode') === '1';
-    
-    const url = isEditMode 
-        ? `/categories/${formData.get('category_id')}/members/${formData.get('member_id')}`
-        : '{{ route("categories.addMember") }}';
-    
-    const method = isEditMode ? 'PUT' : 'POST';
+    formData.append('member_id', document.getElementById('familyMemberSelect').value);
+    formData.append('category_id', document.getElementById('categorySelect').value);
 
-    fetch(url, {
-        method: method,
+    fetch('{{ route("categories.addMember") }}', {
+        method: 'POST',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
         },
-        body: JSON.stringify(Object.fromEntries(formData))
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(isEditMode ? 'تم تحديث الفئة بنجاح' : 'تم إضافة الفئة بنجاح');
+            alert('تم إضافة الفئة بنجاح');
             hideCategoryModal();
-            location.reload(); // Refresh to show updated data
+            location.reload(); // Refresh to show new category
         } else {
-            alert(data.message || 'حدث خطأ');
+            alert(data.message || 'حدث خطأ أثناء إضافة الفئة');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ');
+        alert('حدث خطأ أثناء إضافة الفئة');
     });
 });
-
-function editCategoryMember(memberId, categoryId) {
-    // Get the current row data
-    const row = event.target.closest('tr');
-    const size = row.querySelector('td:nth-child(4)').textContent;
-    const amount = row.querySelector('td:nth-child(5)').textContent;
-    const description = row.querySelector('td:nth-child(6)').textContent;
-    const date = row.querySelector('td:nth-child(7)').textContent;
-
-    // Show the category modal with pre-filled data
-    document.getElementById('categoryModal').classList.remove('hidden');
-    
-    // Set the form data
-    document.getElementById('familyMemberSelect').value = memberId;
-    document.getElementById('categorySelect').value = categoryId;
-    document.querySelector('input[name="size"]').value = size;
-    document.querySelector('input[name="amount"]').value = amount;
-    document.querySelector('textarea[name="description"]').value = description;
-    document.querySelector('input[name="date"]').value = date;
-
-    // Change the form submit button text
-    document.querySelector('#addCategoryForm button[type="submit"]').textContent = 'تحديث';
-    
-    // Add a hidden input for edit mode
-    let editModeInput = document.querySelector('input[name="edit_mode"]');
-    if (!editModeInput) {
-        editModeInput = document.createElement('input');
-        editModeInput.type = 'hidden';
-        editModeInput.name = 'edit_mode';
-        document.getElementById('addCategoryForm').appendChild(editModeInput);
-    }
-    editModeInput.value = '1';
-}
-
-function removeCategoryMember(memberId, categoryId) {
-    if (!confirm('هل أنت متأكد من حذف هذه الفئة؟')) {
-        return;
-    }
-
-    fetch(`/categories/${categoryId}/members/${memberId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Remove the row from the table
-            const row = event.target.closest('tr');
-            row.remove();
-            alert('تم حذف الفئة بنجاح');
-        } else {
-            alert('حدث خطأ أثناء حذف الفئة');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('حدث خطأ أثناء حذف الفئة');
-    });
-}
 </script>
 @endsection
