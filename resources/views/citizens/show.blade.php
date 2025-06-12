@@ -440,7 +440,8 @@
                                     <p class="text-sm text-gray-500">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600 hover:text-blue-800">
+                                    {{-- <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600 hover:text-blue-800"> --}}
+                                        <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('citizens.family-members.destroy', [$citizen, $parent]) }}" method="POST" class="inline">
@@ -483,8 +484,9 @@
                                     <td class="py-2 px-4">{{ $child->date_of_birth }}</td>
                                     <td class="py-2 px-4">{{ $child->national_id }}</td>
                                     <td class="py-2 px-4">
-                                        <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 hover:text-blue-800 ml-2">
-                                            <i class="fas fa-edit"></i>
+                                        {{-- <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 hover:text-blue-800 ml-2"> --}}
+                                            <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
+                                                <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('citizens.family-members.destroy', [$citizen, $child]) }}" method="POST" class="inline">
                                             @csrf
@@ -584,94 +586,6 @@ $distributions = $citizen->distributions
 
         @endcomponent
 
-    @component('components.box',['title'=>'افراد العائلة','styles'=>'mt-2'])
-        @slot('side')
-            <div class="flex space-x-2">
-                <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
-                    <i class="fas fa-tags ml-1"></i>
-                    إضافة فئة
-                </button>
-                <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
-            </div>
-        @endslot
-
-        <div class="mb-6">
-            <h3 class="text-lg font-semibold mb-3">الوالدين</h3>
-            @if($citizen->familyMembers()->whereIn('relationship', ['father', 'mother'])->exists())
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach($citizen->familyMembers()->whereIn('relationship', ['father', 'mother'])->get() as $parent)
-                        <div class="bg-white p-4 rounded-lg shadow">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold">{{ $parent->relationship == 'father' ? 'الأب' : 'الأم' }}</h4>
-                                    <p>{{ $parent->firstname }} {{ $parent->secondname }} {{ $parent->thirdname }} {{ $parent->lastname }}</p>
-                                    <p class="text-sm text-gray-600">رقم الهوية: {{ $parent->national_id }}</p>
-                                    <p class="text-sm text-gray-600">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('citizens.family-members.destroy', [$citizen, $parent]) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600" onclick="return confirm('Are you sure?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">لا يوجد معلومات عن الوالدين</p>
-            @endif
-        </div>
-
-        <div>
-            <h3 class="text-lg font-semibold mb-3">الأبناء</h3>
-            @if($citizen->familyMembers()->whereIn('relationship', ['son', 'daughter'])->exists())
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-800 text-white">
-                            <tr>
-                                <th class="py-2 px-4 text-right">الاسم</th>
-                                <th class="py-2 px-4 text-right">الجنس</th>
-                                <th class="py-2 px-4 text-right">تاريخ الميلاد</th>
-                                <th class="py-2 px-4 text-right">رقم الهوية</th>
-                                <th class="py-2 px-4 text-right">الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($citizen->familyMembers()->whereIn('relationship', ['son', 'daughter'])->orderBy('date_of_birth')->get() as $child)
-                                <tr>
-                                    <td class="py-2 px-4">{{ $child->firstname }} {{ $child->secondname }} {{ $child->thirdname }} {{ $child->lastname }}</td>
-                                    <td class="py-2 px-4">{{ $child->gender == 'male' ? 'ذكر' : 'أنثى' }}</td>
-                                    <td class="py-2 px-4">{{ $child->date_of_birth }}</td>
-                                    <td class="py-2 px-4">{{ $child->national_id }}</td>
-                                    <td class="py-2 px-4">
-                                        <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 ml-2">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('citizens.family-members.destroy', [$citizen, $child]) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600" onclick="return confirm('Are you sure?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-gray-500">لا يوجد أبناء مسجلين</p>
-            @endif
-        </div>
-    @endcomponent
 
     @component('components.box',['title'=>'فئات العائلة','styles'=>'mt-2'])
         @slot('side')
@@ -1046,7 +960,7 @@ function copyToClipboard() {
                     <option value="">اختر العضو</option>
                     @foreach($citizen->familyMembers as $member)
                         <option value="{{ $member->national_id }}" data-name="{{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }}">
-                            {{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }} ({{ $member->national_id }})
+                            {{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }} ({{ $member->national_id }}) =>{{ $member->relationship ??"غير محدد العلاقة"  }} ,{{ $member->age }},{{ $member->gender }} 
                         </option>
                     @endforeach
                 </select>
