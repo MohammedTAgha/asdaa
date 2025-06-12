@@ -631,6 +631,55 @@ $distributions = $citizen->distributions
         </div>
     @endcomponent
 
+    @component('components.box',['title'=>'فئات العائلة','styles'=>'mt-2'])
+        @slot('side')
+            <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                <i class="fas fa-tags ml-1"></i>
+                إضافة فئة
+            </button>
+        @endslot
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-right">اسم العضو</th>
+                        <th class="py-2 px-4 text-right">رقم الهوية</th>
+                        <th class="py-2 px-4 text-right">الفئة</th>
+                        <th class="py-2 px-4 text-right">الحجم</th>
+                        <th class="py-2 px-4 text-right">المبلغ</th>
+                        <th class="py-2 px-4 text-right">الوصف</th>
+                        <th class="py-2 px-4 text-right">التاريخ</th>
+                        <th class="py-2 px-4 text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($citizen->familyMembers as $member)
+                        @foreach($member->categories as $category)
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-2 px-4">{{ $member->full_name }}</td>
+                                <td class="py-2 px-4">{{ $member->national_id }}</td>
+                                <td class="py-2 px-4">{{ $category->name }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->size }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->amount }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->description }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->date }}</td>
+                                <td class="py-2 px-4">
+                                    <button onclick="editCategoryMember({{ $member->id }}, {{ $category->id }})" class="text-blue-600 hover:text-blue-800 ml-2">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="removeCategoryMember({{ $member->id }}, {{ $category->id }})" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endcomponent
+
 </div>
   
 
