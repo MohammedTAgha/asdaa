@@ -6,13 +6,11 @@ use App\Models\Citizen;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+ 
 use Maatwebsite\Excel\Concerns\WithStyles;
+ 
 use Maatwebsite\Excel\Concerns\WithCustomStartCell;
-use App\Traits\LogsExports;
-
-class CitizensExport implements FromCollection, WithHeadings
-{
-    use LogsExports;
+class CitizensExport implements FromCollection ,WithHeadings
 {
     protected $citizens;
 

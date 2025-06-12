@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Citizen extends Model
 {
-    use SoftDeletes, CitizenFilters, \App\Traits\LogsActivity;
+    use SoftDeletes, CitizenFilters;
 
     protected $table='citizens';
     
