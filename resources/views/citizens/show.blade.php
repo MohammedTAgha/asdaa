@@ -374,9 +374,13 @@
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-800">أفراد العائلة</h2>
-            <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                إضافة فرد جديد
-            </a>
+            <div class="flex space-x-2">
+                <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                    <i class="fas fa-tags ml-1"></i>
+                    إضافة فئة
+                </button>
+                <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
+            </div>
         </div>
 
         <!-- Parents -->
@@ -540,7 +544,13 @@ $distributions = $citizen->distributions
 
     @component('components.box',['title'=>'افراد العائلة','styles'=>'mt-2'])
         @slot('side')
-            <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
+            <div class="flex space-x-2">
+                <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                    <i class="fas fa-tags ml-1"></i>
+                    إضافة فئة
+                </button>
+                <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
+            </div>
         @endslot
 
         <div class="mb-6">
@@ -557,7 +567,7 @@ $distributions = $citizen->distributions
                                     <p class="text-sm text-gray-600">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600">
+                                    <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('citizens.family-members.destroy', [$citizen, $parent]) }}" method="POST" class="inline">
@@ -925,5 +935,132 @@ function copyToClipboard() {
         alert('حدث خطأ أثناء نسخ البيانات');
     });
 }
+</script>
+
+<!-- Add Category Modal -->
+<div id="categoryModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h2 class="text-xl font-bold">إضافة فئة لعضو العائلة</h2>
+            <button onclick="hideCategoryModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="addCategoryForm" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">اختر العضو</label>
+                <select id="familyMemberSelect" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">اختر العضو</option>
+                    @foreach($citizen->familyMembers as $member)
+                        <option value="{{ $member->national_id }}" data-name="{{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }}">
+                            {{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }} ({{ $member->national_id }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">اختر الفئة</label>
+                <select id="categorySelect" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">اختر الفئة</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الحجم</label>
+                    <input type="text" name="size" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">المبلغ</label>
+                    <input type="number" step="0.01" name="amount" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+                <textarea name="description" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 1</label>
+                    <input type="text" name="property1" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 2</label>
+                    <input type="text" name="property2" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 3</label>
+                    <input type="text" name="property3" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 4</label>
+                    <input type="text" name="property4" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-2 mt-6">
+                <button type="button" onclick="hideCategoryModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md">
+                    إلغاء
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">
+                    إضافة
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showCategoryModal() {
+    document.getElementById('categoryModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideCategoryModal() {
+    document.getElementById('categoryModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('member_id', document.getElementById('familyMemberSelect').value);
+    formData.append('category_id', document.getElementById('categorySelect').value);
+
+    fetch('{{ route("categories.addMember") }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('تم إضافة الفئة بنجاح');
+            hideCategoryModal();
+            location.reload(); // Refresh to show new category
+        } else {
+            alert(data.message || 'حدث خطأ أثناء إضافة الفئة');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء إضافة الفئة');
+    });
+});
 </script>
 @endsection

@@ -248,6 +248,7 @@ Route::get('/test', function () {
 
 Route::resource('categories', CategoryController::class);
 Route::post('/categories/{category}/add-members', [CategoryController::class, 'addMembers'])->name('categories.add-members');
+Route::post('/categories/add-member', [CategoryController::class, 'addMember'])->name('categories.addMember');
 Route::get('/categories/{category}/export', [CategoryController::class, 'export'])->name('categories.export');
 Route::get('/categories/{category}/import', [CategoryController::class, 'importForm'])->name('categories.import-form');
 Route::post('/categories/{category}/import', [CategoryController::class, 'import'])->name('categories.import');

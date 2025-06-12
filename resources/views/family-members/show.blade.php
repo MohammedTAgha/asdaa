@@ -85,7 +85,7 @@
                                     <h6 class="mb-0">إضافة إلى فئة</h6>
                                 </div>
                                 <div class="card-body">
-                                    <form action="{{ route('categories.add-member') }}" method="POST">
+                                    <form action="{{ route('categories.addMember') }}" method="POST">
                                         @csrf
                                         <div class="row">
                                             <div class="col-md-6">
@@ -148,7 +148,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="member_ids" value="{{ $member->id }}">
+                                        <input type="hidden" name="member_id" value="{{ $member->national_id }}">
                                         <div class="mt-3">
                                             <button type="submit" class="btn btn-primary">إضافة إلى الفئة</button>
                                         </div>
