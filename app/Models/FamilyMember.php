@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -104,4 +105,15 @@ class FamilyMember extends Model
     {
         return implode(', ', $this->category_names);
     }
+/**
+ * Get the age of the family member
+ */
+public function getAgeAttribute()
+{
+    if (!$this->date_of_birth) {
+        return null;
+    }
+
+    return Carbon::parse($this->date_of_birth)->age;
+}
 } 

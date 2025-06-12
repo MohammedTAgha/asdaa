@@ -183,93 +183,135 @@
             </div>
         </div>
 
-  <!-- show.blade.php -->
-    @component('components.box',['title'=>'بيانات النازح'.' '.  $citizen->firstname.' '.  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname,'styles'=>'mt-2'])
-            {{-- @slot('side')
-                <div class="mt-6 flex items-center space-x-2">
-                    <button id="validationStatusBtn" onclick="checkValidation()" class="px-4 py-2 bg-yellow-500 text-white rounded-md animate-pulse">
-                        <i class="fas fa-exclamation-triangle"></i> فحص الحالة
-                    </button>
-                    <a href="{{ route('citizens.index') }}" class="px-4 py-2 bg-blue-600 text-white rounded-md">رجوع</a>
-                    <a href="{{ route('citizens.edit', $citizen->id) }}" class="px-4 py-2 bg-yellow-600 text-white rounded-md">تعديل</a>
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Basic Information Card -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">المعلومات الأساسية</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">رقم الهوية</label>
+                            <p class="mt-1 text-gray-900 font-semibold">{{ $citizen->id }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">الاسم الكامل</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">تاريخ الميلاد</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">الجنس</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->gender == '0' ? 'ذكر' : 'انثى' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">المنطقة</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->region->name }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">المندوب</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</p>
+                        </div>
+                    </div>
                 </div>
-            @endslot --}}
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700"><strong>الهوية</strong></label>
-                    <p class="mt-1 text-gray-900" id="citizenId">{{ $citizen->id }}</p>
+        
+                <!-- Family Information Card -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات العائلة</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">اسم الزوجة</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->wife_name ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">رقم الزوجة</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->wife_id ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">الحالة الاجتماعية</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">الحالة المعيشية</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">عدد كبار السن</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">أرمل</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'نعم' : 'لا' }}</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">الاسم</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->firstname . " " .  $citizen->secondname . ' ' .$citizen->thirdname. ' ' .$citizen->lastname }} </p>
+        
+                <!-- Contact & Location Card -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات الاتصال والموقع</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">رقم الهاتف</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->phone ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">رقم هاتف إضافي</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->phone2 ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">العنوان الأصلي</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->original_address ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">المحافظة الأصلية</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->originalGovernorate->name ?? 'غير متوفر' }}</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">تاريخ الميلاد</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->date_of_birth }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">الجنس</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->gender == '0' ? 'ذكر' : 'انثى' }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">اسم الزوجة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->wife_name }}</p>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">رقم الزوجة</label>
-                    <p class="mt-1 text-gray-900" id="wifeId">{{ $citizen->wife_id }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">المنطقة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->region->name }} و مندوبه {{ $citizen->region->representatives->first()->name ?? 'غير محدد' }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">ارمل</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->widowed ? 'نعم' : 'a لا ' }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">الحالة الاجتماعبة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->social_status }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">الحالة المعيشية</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->living_status }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">العمل</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->job }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">العنوان الاصلي</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->original_address }}</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">عدد كبار السن</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->elderly_count }}</p>
-                </div>
-                
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">ملاحطة</label>
-                    <p class="mt-1 text-gray-900">{{ $citizen->note }}</p>
+        
+                <!-- Health & Special Conditions Card -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">الحالة الصحية والظروف الخاصة</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">إعاقة</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->obstruction ? 'نعم' : 'لا' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">وصف الإعاقة</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->obstruction_description ?? 'غير متوفر' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">مرض</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->disease ? 'نعم' : 'لا' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600">وصف المرض</label>
+                            <p class="mt-1 text-gray-900">{{ $citizen->disease_description ?? 'غير متوفر' }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-          
-    @endcomponent
-
-    <div class="bg-white p-4 rounded-lg shadow mt-4">
+ <!-- Additional Information Card -->
+ <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+    <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">معلومات إضافية</h2>
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-600">المهنة</label>
+            <p class="mt-1 text-gray-900">{{ $citizen->job ?? 'غير متوفر' }}</p>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-600">الحالة</label>
+            <p class="mt-1 text-gray-900">{{ $citizen->is_archived ? 'مؤرشف' : 'نشط' }}</p>
+        </div>
+        <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-600">ملاحظات</label>
+            <p class="mt-1 text-gray-900">{{ $citizen->note ?? 'لا توجد ملاحظات' }}</p>
+        </div>
+    </div>
+</div>
+    {{-- <div class="bg-white p-4 rounded-lg shadow mt-4">
         <div class="flex justify-between items-start">
             <div>
                 <h3 class="text-lg font-semibold mb-2">{{ __('مقدم الرعاية') }}</h3>
@@ -287,7 +329,7 @@
                 {{ __('تعديل مقدم الرعاية') }}
             </a>
         </div>
-    </div> --}}
+    </div>  --}}
         <!-- Excel Data Section -->
         <div class="bg-white rounded-lg shadow-lg p-6 mt-4 mb-6">
             <div class="flex justify-between items-center mb-4">
@@ -374,9 +416,13 @@
     <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-800">أفراد العائلة</h2>
-            <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
-                إضافة فرد جديد
-            </a>
+            <div class="flex space-x-2">
+                <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                    <i class="fas fa-tags ml-1"></i>
+                    إضافة فئة
+                </button>
+                <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
+            </div>
         </div>
 
         <!-- Parents -->
@@ -394,7 +440,8 @@
                                     <p class="text-sm text-gray-500">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600 hover:text-blue-800">
+                                    {{-- <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600 hover:text-blue-800"> --}}
+                                        <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form action="{{ route('citizens.family-members.destroy', [$citizen, $parent]) }}" method="POST" class="inline">
@@ -437,8 +484,9 @@
                                     <td class="py-2 px-4">{{ $child->date_of_birth }}</td>
                                     <td class="py-2 px-4">{{ $child->national_id }}</td>
                                     <td class="py-2 px-4">
-                                        <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 hover:text-blue-800 ml-2">
-                                            <i class="fas fa-edit"></i>
+                                        {{-- <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 hover:text-blue-800 ml-2"> --}}
+                                            <a href="{{ route('family-members.show', $parent) }}" class="text-blue-600">
+                                                <i class="fas fa-edit"></i>
                                         </a>
                                         <form action="{{ route('citizens.family-members.destroy', [$citizen, $child]) }}" method="POST" class="inline">
                                             @csrf
@@ -538,86 +586,53 @@ $distributions = $citizen->distributions
 
         @endcomponent
 
-    @component('components.box',['title'=>'افراد العائلة','styles'=>'mt-2'])
+
+    @component('components.box',['title'=>'فئات العائلة','styles'=>'mt-2'])
         @slot('side')
-            <a href="{{ route('citizens.family-members.create', $citizen) }}" class="px-4 py-2 bg-green-600 text-white rounded-md">اضافة فرد جديد</a>
+            <button onclick="showCategoryModal()" class="px-4 py-2 bg-blue-600 text-white rounded-md">
+                <i class="fas fa-tags ml-1"></i>
+                إضافة فئة
+            </button>
         @endslot
 
-        <div class="mb-6">
-            <h3 class="text-lg font-semibold mb-3">الوالدين</h3>
-            @if($citizen->familyMembers()->whereIn('relationship', ['father', 'mother'])->exists())
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach($citizen->familyMembers()->whereIn('relationship', ['father', 'mother'])->get() as $parent)
-                        <div class="bg-white p-4 rounded-lg shadow">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-semibold">{{ $parent->relationship == 'father' ? 'الأب' : 'الأم' }}</h4>
-                                    <p>{{ $parent->firstname }} {{ $parent->secondname }} {{ $parent->thirdname }} {{ $parent->lastname }}</p>
-                                    <p class="text-sm text-gray-600">رقم الهوية: {{ $parent->national_id }}</p>
-                                    <p class="text-sm text-gray-600">تاريخ الميلاد: {{ $parent->date_of_birth }}</p>
-                                </div>
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('citizens.family-members.edit', [$citizen, $parent]) }}" class="text-blue-600">
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-800 text-white">
+                    <tr>
+                        <th class="py-2 px-4 text-right">اسم العضو</th>
+                        <th class="py-2 px-4 text-right">رقم الهوية</th>
+                        <th class="py-2 px-4 text-right">الفئة</th>
+                        <th class="py-2 px-4 text-right">الحجم</th>
+                        <th class="py-2 px-4 text-right">المبلغ</th>
+                        <th class="py-2 px-4 text-right">الوصف</th>
+                        <th class="py-2 px-4 text-right">التاريخ</th>
+                        <th class="py-2 px-4 text-right">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($citizen->familyMembers as $member)
+                        @foreach($member->categories as $category)
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-2 px-4">{{ $member->full_name }}</td>
+                                <td class="py-2 px-4">{{ $member->national_id }}</td>
+                                <td class="py-2 px-4">{{ $category->name }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->size }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->amount }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->description }}</td>
+                                <td class="py-2 px-4">{{ $category->pivot->date }}</td>
+                                <td class="py-2 px-4">
+                                    <button onclick="editCategoryMember({{ $member->id }}, {{ $category->id }})" class="text-blue-600 hover:text-blue-800 ml-2">
                                         <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('citizens.family-members.destroy', [$citizen, $parent]) }}" method="POST" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600" onclick="return confirm('Are you sure?')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500">لا يوجد معلومات عن الوالدين</p>
-            @endif
-        </div>
-
-        <div>
-            <h3 class="text-lg font-semibold mb-3">الأبناء</h3>
-            @if($citizen->familyMembers()->whereIn('relationship', ['son', 'daughter'])->exists())
-                <div class="overflow-x-auto">
-                    <table class="min-w-full bg-white">
-                        <thead class="bg-gray-800 text-white">
-                            <tr>
-                                <th class="py-2 px-4 text-right">الاسم</th>
-                                <th class="py-2 px-4 text-right">الجنس</th>
-                                <th class="py-2 px-4 text-right">تاريخ الميلاد</th>
-                                <th class="py-2 px-4 text-right">رقم الهوية</th>
-                                <th class="py-2 px-4 text-right">الإجراءات</th>
+                                    </button>
+                                    <button onclick="removeCategoryMember({{ $member->id }}, {{ $category->id }})" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($citizen->familyMembers()->whereIn('relationship', ['son', 'daughter'])->orderBy('date_of_birth')->get() as $child)
-                                <tr>
-                                    <td class="py-2 px-4">{{ $child->firstname }} {{ $child->secondname }} {{ $child->thirdname }} {{ $child->lastname }}</td>
-                                    <td class="py-2 px-4">{{ $child->gender == 'male' ? 'ذكر' : 'أنثى' }}</td>
-                                    <td class="py-2 px-4">{{ $child->date_of_birth }}</td>
-                                    <td class="py-2 px-4">{{ $child->national_id }}</td>
-                                    <td class="py-2 px-4">
-                                        <a href="{{ route('citizens.family-members.edit', [$citizen, $child]) }}" class="text-blue-600 ml-2">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('citizens.family-members.destroy', [$citizen, $child]) }}" method="POST" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600" onclick="return confirm('Are you sure?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-gray-500">لا يوجد أبناء مسجلين</p>
-            @endif
+                        @endforeach
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     @endcomponent
 
@@ -925,5 +940,132 @@ function copyToClipboard() {
         alert('حدث خطأ أثناء نسخ البيانات');
     });
 }
+</script>
+
+<!-- Add Category Modal -->
+<div id="categoryModal" class="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-3/4 lg:w-1/2 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 border-b pb-4">
+            <h2 class="text-xl font-bold">إضافة فئة لعضو العائلة</h2>
+            <button onclick="hideCategoryModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <form id="addCategoryForm" class="space-y-4">
+            @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">اختر العضو</label>
+                <select id="familyMemberSelect" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">اختر العضو</option>
+                    @foreach($citizen->familyMembers as $member)
+                        <option value="{{ $member->national_id }}" data-name="{{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }}">
+                            {{ $member->firstname }} {{ $member->secondname }} {{ $member->thirdname }} {{ $member->lastname }} ({{ $member->national_id }}) =>{{ $member->relationship ??"غير محدد العلاقة"  }} ,{{ $member->age }},{{ $member->gender }} 
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">اختر الفئة</label>
+                <select id="categorySelect" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">اختر الفئة</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">الحجم</label>
+                    <input type="text" name="size" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">المبلغ</label>
+                    <input type="number" step="0.01" name="amount" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+                <textarea name="description" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 1</label>
+                    <input type="text" name="property1" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 2</label>
+                    <input type="text" name="property2" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 3</label>
+                    <input type="text" name="property3" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">خاصية 4</label>
+                    <input type="text" name="property4" class="w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-2 mt-6">
+                <button type="button" onclick="hideCategoryModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md">
+                    إلغاء
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">
+                    إضافة
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showCategoryModal() {
+    document.getElementById('categoryModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideCategoryModal() {
+    document.getElementById('categoryModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('member_id', document.getElementById('familyMemberSelect').value);
+    formData.append('category_id', document.getElementById('categorySelect').value);
+
+    fetch('{{ route("categories.addMember") }}', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('تم إضافة الفئة بنجاح');
+            hideCategoryModal();
+            location.reload(); // Refresh to show new category
+        } else {
+            alert(data.message || 'حدث خطأ أثناء إضافة الفئة');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء إضافة الفئة');
+    });
+});
 </script>
 @endsection
