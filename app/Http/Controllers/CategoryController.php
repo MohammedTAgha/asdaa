@@ -10,6 +10,7 @@ use App\Imports\CategoryMembersImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\FamilyMember;
 
 class CategoryController extends Controller
 {
@@ -301,5 +302,15 @@ class CategoryController extends Controller
     public function downloadTemplate()
     {
         return Excel::download(new CategoryMembersTemplateExport, 'category-members-template.xlsx');
+    }
+
+    public function removeMember(Category $category, FamilyMember $member)
+    {
+        try {
+            $category->familyMembers()->detach($member->id);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 }

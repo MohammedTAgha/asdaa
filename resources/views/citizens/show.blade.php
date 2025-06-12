@@ -1085,31 +1085,99 @@ document.getElementById('addCategoryForm').addEventListener('submit', function(e
     e.preventDefault();
     
     const formData = new FormData(this);
-    formData.append('member_id', document.getElementById('familyMemberSelect').value);
-    formData.append('category_id', document.getElementById('categorySelect').value);
+    const isEditMode = formData.get('edit_mode') === '1';
+    
+    const url = isEditMode 
+        ? `/categories/${formData.get('category_id')}/members/${formData.get('member_id')}`
+        : '{{ route("categories.addMember") }}';
+    
+    const method = isEditMode ? 'PUT' : 'POST';
 
-    fetch('{{ route("categories.addMember") }}', {
-        method: 'POST',
+    fetch(url, {
+        method: method,
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: formData
+        body: JSON.stringify(Object.fromEntries(formData))
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('تم إضافة الفئة بنجاح');
+            alert(isEditMode ? 'تم تحديث الفئة بنجاح' : 'تم إضافة الفئة بنجاح');
             hideCategoryModal();
-            location.reload(); // Refresh to show new category
+            location.reload(); // Refresh to show updated data
         } else {
-            alert(data.message || 'حدث خطأ أثناء إضافة الفئة');
+            alert(data.message || 'حدث خطأ');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ أثناء إضافة الفئة');
+        alert('حدث خطأ');
     });
 });
+
+function editCategoryMember(memberId, categoryId) {
+    // Get the current row data
+    const row = event.target.closest('tr');
+    const size = row.querySelector('td:nth-child(4)').textContent;
+    const amount = row.querySelector('td:nth-child(5)').textContent;
+    const description = row.querySelector('td:nth-child(6)').textContent;
+    const date = row.querySelector('td:nth-child(7)').textContent;
+
+    // Show the category modal with pre-filled data
+    document.getElementById('categoryModal').classList.remove('hidden');
+    
+    // Set the form data
+    document.getElementById('familyMemberSelect').value = memberId;
+    document.getElementById('categorySelect').value = categoryId;
+    document.querySelector('input[name="size"]').value = size;
+    document.querySelector('input[name="amount"]').value = amount;
+    document.querySelector('textarea[name="description"]').value = description;
+    document.querySelector('input[name="date"]').value = date;
+
+    // Change the form submit button text
+    document.querySelector('#addCategoryForm button[type="submit"]').textContent = 'تحديث';
+    
+    // Add a hidden input for edit mode
+    let editModeInput = document.querySelector('input[name="edit_mode"]');
+    if (!editModeInput) {
+        editModeInput = document.createElement('input');
+        editModeInput.type = 'hidden';
+        editModeInput.name = 'edit_mode';
+        document.getElementById('addCategoryForm').appendChild(editModeInput);
+    }
+    editModeInput.value = '1';
+}
+
+function removeCategoryMember(memberId, categoryId) {
+    if (!confirm('هل أنت متأكد من حذف هذه الفئة؟')) {
+        return;
+    }
+
+    fetch(`/categories/${categoryId}/members/${memberId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the row from the table
+            const row = event.target.closest('tr');
+            row.remove();
+            alert('تم حذف الفئة بنجاح');
+        } else {
+            alert('حدث خطأ أثناء حذف الفئة');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('حدث خطأ أثناء حذف الفئة');
+    });
+}
 </script>
 @endsection
