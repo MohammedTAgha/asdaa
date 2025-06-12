@@ -11,13 +11,12 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            $table->string('size')->nullable()->change();
             $table->string('amount')->nullable()->change();
             $table->string('date')->nullable()->change();
-           
+            $table->string('size')->nullable()->change();
         });
     }
 
@@ -26,10 +25,12 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('categories', function (Blueprint $table) {
-            //
+            $table->decimal('amount', 10, 2)->nullable()->change();
+            $table->date('date')->nullable()->change();
+            $table->string('size')->nullable()->change();
         });
     }
 };
