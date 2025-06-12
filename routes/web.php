@@ -42,6 +42,12 @@ use App\Http\Controllers\Api\CitizenValidationController;
 
 // File Management Routes (Available to all authenticated users)
 Route::middleware('auth')->group(function () {
+    // Activity Logs Routes
+    Route::prefix('logs')->middleware(['role:Super Manager'])->group(function () {
+        Route::get('/', 'App\Http\Controllers\ActivityLogController@index')->name('logs.index');
+        Route::get('/data', 'App\Http\Controllers\ActivityLogController@getData')->name('logs.data');
+    });
+
     Route::prefix('records')->group(function () {
         Route::get('/', [PersonController::class, 'index'])->name('records.home');
         Route::match(['get', 'post'], '/search', [PersonController::class, 'search'])->name('records.search');
@@ -239,6 +245,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Activity Logs Routes
+    Route::get('/logs', [ActivityLogController::class, 'index'])->name('logs.index');
+    Route::get('/logs/data', [ActivityLogController::class, 'getData'])->name('logs.data');
 });
 
 Route::get('/test', function () {
