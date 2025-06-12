@@ -269,7 +269,7 @@
           
     @endcomponent
 
-    <div class="bg-white p-4 rounded-lg shadow mt-4">
+    {{-- <div class="bg-white p-4 rounded-lg shadow mt-4">
         <div class="flex justify-between items-start">
             <div>
                 <h3 class="text-lg font-semibold mb-2">{{ __('مقدم الرعاية') }}</h3>
@@ -287,7 +287,7 @@
                 {{ __('تعديل مقدم الرعاية') }}
             </a>
         </div>
-    </div> --}}
+    </div>  --}}
         <!-- Excel Data Section -->
         <div class="bg-white rounded-lg shadow-lg p-6 mt-4 mb-6">
             <div class="flex justify-between items-center mb-4">
