@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 class FamilyMember extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes ,\App\Traits\LogsActivity;
 
     protected $fillable = [
         'citizen_id',

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $fillable = ['name'];
 
     public function users()

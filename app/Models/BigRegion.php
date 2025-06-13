@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 class BigRegion extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table = 'big_regions';
 
     protected $fillable = [

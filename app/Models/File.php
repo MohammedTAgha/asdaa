@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class File extends Model
 {
+    use  \App\Traits\LogsActivity;
     public $table = 'files';
 
     public $fillable = [

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DistributionCitizen extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table = 'distribution_citizens';
     protected $primaryKey='id';
     protected $fillable = [

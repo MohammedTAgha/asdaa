@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class Distribution extends Model
 {
+    use  \App\Traits\LogsActivity;
      // use HasFactory;
      protected $table='distributions';
      protected $primaryKey='id';

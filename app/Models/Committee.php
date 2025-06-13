@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Committee extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table = 'committees';
     protected $fillable = ['name', 'manager_id', 'description', 'note'];
 

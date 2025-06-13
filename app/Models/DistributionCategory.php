@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DistributionCategory extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table='distribution_categories';
     protected $primaryKey='id';
     protected $fillable = [

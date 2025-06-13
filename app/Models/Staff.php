@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Staff extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table = 'staff';
 
     protected $primaryKey = 'id';

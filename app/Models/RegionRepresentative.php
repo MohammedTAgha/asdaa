@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class RegionRepresentative extends Model
 {
+    use  \App\Traits\LogsActivity;
     protected $table='region_representatives';
     protected $primaryKey='id';
     protected $fillable = [
