@@ -282,14 +282,7 @@
                                 <span class="menu-title">تقارير المشاريع</span>
                             </a>
                         </div>
-    
-                    <li class="menu-item {{ request()->routeIs('logs.index') ? 'active' : '' }}">
-                        <a href="{{ route('logs.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons ti ti-activity"></i>
-                            <div>سجل النشاطات</div>
-                        </a>
-                    </li>
-                     
+
                         <div class="menu-item">
                             <a class="menu-link {{ request()->routeIs('citizens.exportWithDistributions') ? 'active' : '' }}"
                                 href="{{ route('citizens.exportWithDistributions') }}">
