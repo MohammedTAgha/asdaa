@@ -10,7 +10,9 @@ class ActivityLogController extends Controller
 {
     public function index()
     {
-        return view('logs.index');
+        $logs=ActivityLog::all();
+
+        return view('logs.index',compact('logs'));
     }
 
     public function getData(Request $request)

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Log;
 
 class LogSessionActivity
 {
@@ -14,19 +15,22 @@ class LogSessionActivity
         
         if (auth()->check()) {
             $user = auth()->user();
-            
+            // Log::info('log');
+
+            // Log::info($request);
             // Log successful login
             if ($request->is('login') && $request->isMethod('post')) {
                 ActivityLog::log(
                     'LOGIN',
                     'User',
                     $user->id,
-                    'User logged in successfully'
+                    'User logged in successfully -LogSessionActivity'
                 );
             }
             
             // Log logout
-            if ($request->is('logout') && $request->isMethod('post')) {
+            if ($request->is('logout')) {
+                Log::alert('LOGOUT');
                 ActivityLog::log(
                     'LOGOUT',
                     'User',

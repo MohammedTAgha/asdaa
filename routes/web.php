@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\BigRegionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -228,10 +229,10 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Logout route
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect()->route('home');
-})->name('logout');
+// Route::get('/logout', function () {
+//     Auth::logout();
+//     return redirect()->route('home');
+// })->name('logout');
 
 // Route::get('/', function () {
 //     return view('welcome');
