@@ -20,3 +20,10 @@
  -use modals for some acrion 
  -minimize the code and test its speed
 
+
+
+-add category member edit and deltion (delete many ids)
+-get citizen family count and mails and femails and needed citizen with father and mother 
+-add RBAC for rolls 
+-add file log
+-add export with many sheets for each region and big region (each fiel have all and seperate sheet)
