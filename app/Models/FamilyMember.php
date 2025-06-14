@@ -103,7 +103,7 @@ class FamilyMember extends Model
      */
     public function getCategoryNamesStringAttribute()
     {
-        return implode(', ', $this->category_names);
+        return implode(' - ', $this->category_names);
     }
 /**
  * Get the age of the family member

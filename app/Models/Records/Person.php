@@ -149,4 +149,6 @@ class Person extends Model
                     ->when($grandfatherName, fn($q) => $q->where('CI_GRAND_FATHER_ARB', 'like', "%{$grandfatherName}%"))
                     ->when($familyName, fn($q) => $q->where('CI_FAMILY_ARB', 'like', "%{$familyName}%"));
     }
+    
+    
 }

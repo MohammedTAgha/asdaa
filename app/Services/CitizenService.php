@@ -81,4 +81,6 @@ class CitizenService
     {
         return Citizen::whereIn('id', $citizenIds)->get();
     }
+
+    
 }
