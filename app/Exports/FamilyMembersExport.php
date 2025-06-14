@@ -22,17 +22,22 @@ class FamilyMembersExport implements FromCollection, WithHeadings, WithMapping
     }    public function headings(): array
     {
         return [
-            'رقم هوية رب الأسرة',
-            'اسم رب الأسرة',
-            'تاريخ ميلاد رب الأسرة',
             'رقم هوية الفرد',
             'اسم الفرد',
             'تاريخ الميلاد',
-            'صلة القرابة',
+            ' الميلاد',
+            ' العمر',
             'الجنس',
+
+            'صلة القرابة',
             'العمر',
+            'رقم هوية رب الأسرة',
+            'اسم رب الأسرة',
+            'تاريخ ميلاد رب الأسرة',
+
             'المنطقة',
-            'ملاحظات'
+            'ملاحظات',
+            'تصنيفات',
         ];
     }
 
@@ -43,17 +48,18 @@ class FamilyMembersExport implements FromCollection, WithHeadings, WithMapping
                       ($citizen->thirdname ? $citizen->thirdname . ' ' : '') . $citizen->lastname : 'غير محدد';
         
         return [
-            $citizen ? $citizen->id : 'غير محدد',
-            $citizenName,
-            $citizen && $citizen->date_of_birth ? Carbon::parse($citizen->date_of_birth)->format('Y-m-d') : 'غير محدد',
             $member->national_id,
             $member->firstname . ' ' . $member->secondname . ' ' . ($member->thirdname ? $member->thirdname . ' ' : '') . $member->lastname,
             $member->date_of_birth ? Carbon::parse($member->date_of_birth)->format('Y-m-d') : 'غير محدد',
-            $this->getRelationshipText($member->relationship),
+            $member->age ?? ' ',
             $member->gender === 'male' ? 'ذكر' : 'أنثى',
-            $member->date_of_birth ? Carbon::parse($member->date_of_birth)->age : 'غير محدد',
+            $this->getRelationshipText($member->relationship),
+            $citizen ? $citizen->id : 'غير محدد',
+            $citizenName,
+            $citizen && $citizen->date_of_birth ? Carbon::parse($citizen->date_of_birth)->format('Y-m-d') : 'غير محدد',
             $member->citizen->region->name ?? 'غير محدد',
-            $member->notes
+            $member->notes,
+            $member->CategoryNamesString ??'-',
         ];
     }
 
