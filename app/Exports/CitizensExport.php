@@ -13,7 +13,7 @@ use App\Traits\LogsExports;
 class CitizensExport implements FromCollection, WithHeadings
 {
     use LogsExports;
-{
+
     protected $citizens;
 
     public function __construct($citizens)
