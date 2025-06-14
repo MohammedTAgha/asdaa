@@ -97,6 +97,7 @@ class Citizen extends Model
                 'lastname' => $additionalData['lastname'] ?? 'مجهول',
                 'region_id' =>$additionalData['region_id'] ?? 0,
                 'is_archived' => true,
+                'note' =>'اضافة خارجية من تحميل كشف' ,
             ]);
             Log::info('non exist citizen added , id: '.$id);
         } elseif ($citizen->trashed()) {
@@ -173,7 +174,8 @@ class Citizen extends Model
         return $this->hasMany(FamilyMember::class)
             ->where(function($query) {
                 $query->where('relationship', 'son')
-                      ->orWhere('relationship', 'daughter');
+                      ->orWhere('relationship', 'daughter')
+                      ->where('is_accompanying', true);
             });
     }
 
