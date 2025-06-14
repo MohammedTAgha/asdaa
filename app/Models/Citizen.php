@@ -179,6 +179,23 @@ class Citizen extends Model
             });
     }
 
+    public function getCategoriesAttribute()
+    {
+      $members = $this->familyMembers;
+      $categories = [];
+      foreach ($members as $member) {
+        foreach ($member->categories as $category ) {
+            $categories[]= $category->name;
+        }
+      }
+      return array_unique($categories);   
+
+    }
+
+    public function getCategoryStringAttribute()
+    {
+        return implode(' - ', $this->categories);
+    }
     /**
      * Get only accompanying children
      */

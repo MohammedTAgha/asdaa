@@ -54,6 +54,7 @@ class CitizensExport implements FromCollection, WithHeadings
 
                 $citizen->date_of_birth,
                 $citizen->gender,
+                $citizen->categoryString,
                 $citizen->is_archived,
                 $citizen->region->representatives->first()->name ?? 'مندوب غير محدد',
                 $citizen->region ? $citizen->region->name : null, // Include region name
@@ -125,6 +126,7 @@ class CitizensExport implements FromCollection, WithHeadings
             'عدد كبار السن',
             'تاريخ الميلاد',
             'الجنس',
+            'التصنيفات',
             'is_archived',
             'المندوب',
             'المنظقة',

@@ -44,7 +44,7 @@ class FamilyMember extends Model
             'national_id' => [
                 'required',
                 'string',
-                'size:10',  // Assuming national ID is 10 digits
+                'size:22',  // Assuming national ID is 10 digits
                 Rule::unique('family_members')->ignore($id),
             ],
             'firstname' => 'required|string|max:255',
