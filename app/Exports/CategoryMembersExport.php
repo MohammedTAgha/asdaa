@@ -28,20 +28,22 @@ class CategoryMembersExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'Member ID',
-            'Member Name',
-            'Member National ID',
-            'Citizen ID',
-            'Citizen Name',
-            'Citizen Phone',
-            'Size',
-            'Description',
-            'Date',
-            'Amount',
-            'Property 1',
-            'Property 2',
-            'Property 3',
-            'Property 4'
+            ' ID',
+            'اسم الفرد',
+            'هوية الفرد',
+            'هوية رب الاسرة',
+            'اسم رب الاسرة',
+            'تواصل',
+            'تاريخ الميلاد',
+            'العمر',
+            'الجنس',
+            'الوصف',
+            'تاريخ',
+            'عدد',
+            'خاصية 1',
+            'خاصية 2',
+            'خاصية 3',
+            'خاصية 4'
         ];
     }
 
@@ -56,8 +58,11 @@ class CategoryMembersExport implements FromCollection, WithHeadings, WithMapping
             $member->citizen ? 
                 $member->citizen->firstname . ' ' . $member->citizen->secondname . ' ' . 
                 ($member->citizen->thirdname ? $member->citizen->thirdname . ' ' : '') . 
-                $member->citizen->lastname : 'N/A',
+                $member->citizen->lastname : ' ',
             $member->citizen->phone ?? 'N/A',
+            $member->date_of_birth ??'N/A',
+            $member->age ??'-',
+            $member->gender ??' - ',
             $member->pivot->size ?? 'N/A',
             $member->pivot->description ?? 'N/A',
             $member->pivot->date ? $member->pivot->date->format('Y-m-d') : 'N/A',
@@ -66,6 +71,7 @@ class CategoryMembersExport implements FromCollection, WithHeadings, WithMapping
             $member->pivot->property2 ?? 'N/A',
             $member->pivot->property3 ?? 'N/A',
             $member->pivot->property4 ?? 'N/A',
+            $member->CategoryNamesString ??'-',
         ];
     }
 } 
