@@ -245,13 +245,9 @@ class CitizenController extends Controller
             $query->whereIn('region_id', $request->regions);
         }        $citizens = Citizen::filter($request->all())->with(['region', 'region.representatives'])->get();
         
-        // If detailed export requested, use region-based export
-        if ($request->has('detailed') && $request->input('detailed') == 1) {
-            $timestamp = now()->format('Y-m-d_H-i-s');
-            return Excel::download(new CitizensByRegionExport($citizens), "citizens_by_region_{$timestamp}.xlsx");
-        }
-
-        return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
+        // Always use detailed export with timestamp
+        $timestamp = now()->format('Y-m-d_H-i-s');
+        return Excel::download(new CitizensByRegionExport($citizens), "citizens_by_region_{$timestamp}.xlsx");
     }
 
     

@@ -13,13 +13,14 @@ class CitizensByRegionExport implements WithMultipleSheets
     public function __construct($citizens)
     {
         $this->citizens = $citizens;
-    }
-
-    public function sheets(): array
+    }    public function sheets(): array
     {
         $sheets = [];
         
-        // Group citizens by region
+        // Add first sheet with all citizens
+        $sheets[] = new CitizensByRegionSheet($this->citizens, 'جميع المواطنين');
+        
+        // Group citizens by region for additional sheets
         $citizensByRegion = $this->citizens->groupBy('region_id');
         
         foreach ($citizensByRegion as $regionId => $citizens) {
