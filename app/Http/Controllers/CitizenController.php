@@ -24,7 +24,6 @@ use App\Models\FamilyMember;
 use App\Services\FamilyMemberService;
 use App\Services\CitizenValidationService;
 use App\Models\Category;
-use App\Exports\CitizensDetailedExport;
 
 class CitizenController extends Controller
 {
@@ -205,6 +204,7 @@ class CitizenController extends Controller
 
     public function export(Request $request)
     {
+        
         $query = Citizen::query();
 
         // Apply the same filters as in the index method
@@ -245,11 +245,6 @@ class CitizenController extends Controller
         }
 
         $citizens = Citizen::filter($request->all())->with('region')->get();
-        
-        // Check if detailed export is requested
-        if ($request->has('detailed') && $request->input('detailed')) {
-            return Excel::download(new CitizensDetailedExport($citizens), 'citizens_detailed.xlsx');
-        }
         
         return Excel::download(new CitizensExport($citizens), 'citizens.xlsx');
     }
