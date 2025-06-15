@@ -121,6 +121,7 @@ Route::get('/citizens/{citizen}/validate', [CitizenValidationController::class, 
             Route::post('/change-region', [CitizenController::class, 'changeRegionForSelectedCitizens'])->name('citizens.change-region');
             Route::get('/import', [CitizenController::class, 'import'])->name('citizens.import');
             Route::get('/export', [CitizenController::class, 'export'])->name('citizens.export');
+            Route::get('/export-detailed', [CitizenController::class, 'export'])->name('citizens.export-detailed');
             Route::post('/upload', [CitizenController::class, 'upload'])->name('citizens.upload');
             Route::get('/template', [CitizenController::class, 'downloadTemplate'])->name('citizens.template');
             Route::get('/data', [CitizenController::class, 'getData'])->name('citizens.data');
