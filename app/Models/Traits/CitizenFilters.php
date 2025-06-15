@@ -57,10 +57,14 @@ trait CitizenFilters
 
         $query->when($filters['maxMembers'] ?? null, function ($query, $maxMembers) {
             $query->where('family_members', '<=',$maxMembers);
+        });        $query->when($filters['regions'] ?? null, function ($query, $regions) {
+            $query->whereIn('region_id', $regions);
         });
 
-        $query->when($filters['regions'] ?? null, function ($query, $regions) {
-            $query->whereIn('region_id', $regions);
+        $query->when($filters['big_regions'] ?? null, function ($query, $bigRegions) {
+            $query->whereHas('region', function($q) use ($bigRegions) {
+                $q->whereIn('big_region_id', $bigRegions);
+            });
         });
 
         $query->when($filters['gender'] ?? null, function ($query, $gender) {

@@ -237,16 +237,27 @@ class CitizenController extends Controller
         }
         if ($request->has('age')) {
             $query->where('age', $request->input('age'));
-        }
-        if ($request->has('gender') && !empty($request->input('gender'))) {
+        }        if ($request->has('gender') && !empty($request->input('gender'))) {
             $query->where('gender', $request->input('gender'));
         }
         if ($request->has('regions') && !empty($request->input('regions'))) {
             $query->whereIn('region_id', $request->regions);
-        }        $citizens = Citizen::filter($request->all())->with(['region', 'region.representatives'])->get();
-        
+        }
+        // Apply big region filter if provided
+          if ($request->filled('big_regions')) {
+            $query->whereHas('region', function($q) use ($request) {
+                $q->whereIn('big_region_id', $request->big_regions);
+            });
+        }
+
+        $citizens = Citizen::filter($request->all())->with(['region', 'region.representatives'])->get();
+        Log::info('Exporting citizens', [
+            'count' => $citizens->count(),
+            'filters' => $request->all()
+        ]);
         // Always use detailed export with timestamp
         $timestamp = now()->format('Y-m-d_H-i-s');
+        // dd(count($citizens));
         return Excel::download(new CitizensByRegionExport($citizens), "citizens_by_region_{$timestamp}.xlsx");
     }
 
